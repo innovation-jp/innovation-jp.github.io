@@ -74,7 +74,6 @@ contract InnoCoin {
     }
 
     function transfer(address _to, uint256 _value) {
-
         if (balanceOf[msg.sender] < _value) throw;
         if (balanceOf[_to] + _value < balanceOf[_to]) throw;
 
@@ -153,7 +152,6 @@ contract InnoCoin {
     }
 
     function transfer(address _to, uint256 _value) {
-
         if (balanceOf[msg.sender] < _value) throw;
         if (balanceOf[_to] + _value < balanceOf[_to]) throw;
 
@@ -176,8 +174,39 @@ contract InnoCoin {
 }
 ----
 
+では、サンクスメッセージを送ってみます。 +
+thanksボタンが出てきたと思うので、となりの箱に、"送り先アドレス","サンクスメッセージ"を書いて、thanksボタンを押してみましょう。 +
+送り先アドレスは、先ほどと同じ手順で、ドロップダウンからコピーしてみてください。 +
+また、コピーしたあとにAccountのドロップダウンを元に戻すのをお忘れなく！ドロップダウンの内容が、送り元(実行アカウント)になります。
 
-== Ethereum Classicで「いのコイン」を使ってみる
+
+なんだか送れたっぽい雰囲気ですね！ +
+メッセージが送れているか、確認してみましょう！ +
+thanksMessageボタンの横の箱に、送り先のアドレスを入れてボタンを押してみます。
+
+ちゃんと、メッセージが送れているっぽいですね。 +
+さらに、ちゃんと100innoも送れているのでしょうか？　+
+先ほどと同じように、balanceOfボタンで確認してみましょう。
+
+ばっちしですね〜！ +
+サンクスメッセージを送ると、いのコインが送られるというコントラクトが出来ました！ +
+めっちゃ簡単ですよね〜。すごすぎる！
+
+== Ethereum Classicで「いのコイン」を使ってみる(次回予告)
+
+では、実際パブリックなブロックチェーンのネットワークである、Ethereum Classicで運用してみましょう。 +
+しかし！先ほどのBrowser Solidityのテスト環境と違い、現状はProof of Work(PoW)で動いているEthereumやEthereum Classicでは、ブロックチェーンの正当性を担保してくれているマイナーに、コントラクト実行の手数料を払う必要があります。そのため、実際の仮想通貨であるETHやETCが必要です。 +
+また、勝手にいのコインをパブリックにして良いか問題も残っています笑
+
+なので、今回はものすごい中途半端なところまで書いておしまいにします！
+
+=== その準備とは？！
+
+まず、go-ethereumをインストールします。 +
+https://github.com/ethereum/go-ethereum
+からがんばってインストールするか、gethインストールで検索していただければ、簡単にインストールできますのでいい感じにインストールしてください。
+
+
 
 
 
