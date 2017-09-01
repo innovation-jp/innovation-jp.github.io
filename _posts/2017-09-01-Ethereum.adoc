@@ -7,7 +7,9 @@
 矢ヶ崎です。
 
 前回のPちゃん(うちのPepperのこと)ブログでは、顔を認識してもらって打刻をしてもらうということをやってみました！ +
-さっそく、弊社で実運用をしてみてます。いい感じに打刻されてます！
+http://tech.innovation.co.jp/2017/07/14/Pepper.html
+
+さっそく、社内で実運用をしてみてます。いい感じに打刻されてます！
 
 では、今回は引き続き、
 
@@ -18,7 +20,61 @@ Pちゃんが体調不良になり、起動しなくなってしまいました�
 カスタマーサポートさんに連絡したところ、ドナドナ決定！ +
 新しいPちゃん(なぜか少し黄ばんでる)がやってきたばかりなので、今回は急遽ブロックチェーン関係に変更しました！笑
 
+弊社では、「感謝の気持ち、ありがとうを忘れません」という行動指針や、
+サンクスカードを送るという文化があり、ちょっとしたありがとうの気持ちをカードとして送り、
+壁に貼り出す、ということをやっておりました。
+
+https://cd.zeroin.co.jp/cappy/innovation_culture/
 
 
+[source,php]
+----
+pragma solidity ^0.4.8;
+
+contract InnoCoin {
+    string public symbol;
+    uint256 public totalSupply;
+    address public owner;
+    mapping (address => uint256) public balanceOf;
+    mapping (address => string) public thanksMessage;
+
+    event Transfer(address indexed from, address indexed to, uint256 value);
+
+    function InnoCoin(uint256 _supply, string _symbol) {
+        owner = msg.sender;
+        balanceOf[owner] = _supply;
+        symbol = _symbol;
+        totalSupply = _supply;
+    }
+
+    // innoの総量は、創始者だけが増やせる(減らせない)
+    function addTotalSupply(uint256 _value) {
+        if (owner != msg.sender) throw;
+        totalSupply += _value;
+    }
+
+    function transfer(address _to, uint256 _value) {
+
+        if (balanceOf[msg.sender] < _value) throw;
+        if (balanceOf[_to] + _value < balanceOf[_to]) throw;
+
+        balanceOf[msg.sender] -= _value;
+        balanceOf[_to] += _value;
+
+        Transfer(msg.sender, _to, _value);
+    }
+
+    // サンクスを送ると、100innoも一緒に送られる
+    function thanks(address _to, string _message) {
+        transfer(_to, 100);
+        thanksMessage[_to] = _message;
+    }
+  
+    function thanksMessage(address _address) constant returns (string) {
+        return thanksMessage[_address];
+    }
+
+}
+----
 
 こちらからは以上です。
