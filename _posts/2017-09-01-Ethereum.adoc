@@ -50,9 +50,15 @@ https://remix.ethereum.org/ +
 
 Browser Solidityの左上の「＋」みたいなアイコンを押します。
 
+image::/images/yagasaki/innocoin1/ic1.png[ic1]
+
 新しいファイル「Untitled.sol」ができるので、とりあえず「InnoCoin.sol」にリネームしておきましょう。
 
+image::/images/yagasaki/innocoin1/ic2.png[ic2]
+
 右側のソースコードを書くっぽいところに、以下のコードをコピー＆ペーストしましょう。
+
+image::/images/yagasaki/innocoin1/ic3.png[ic3]
 
 [source,php]
 ----
@@ -89,11 +95,18 @@ contract InnoCoin {
 右下の方の、Createボタンのとなりに、innoの発行総量を入れて、Createボタンを押しましょう。 +
 今回は、総量として10万inno用意しておきます。
 
+image::/images/yagasaki/innocoin1/ic4.png[ic4]
+
 こんな感じになったら、もうすでに「いのコイン」が出来ました！！！ +
 totalSupplyがいのコインの総量ですが、ちゃんと10万になってますね！
 
+image::/images/yagasaki/innocoin1/ic5.png[ic5]
+
 では、innoを他のアカウントに送金してみましょう。 +
-現在、innoコインを発行したアカウントは、右の方にあるAccountと書いてある右のドロップダウンに表示されているアドレスです。 +
+現在、innoコインを発行したアカウントは、右の方にあるAccountと書いてある右のドロップダウンに表示されているアドレスです。
+
+image::/images/yagasaki/innocoin1/ic7.png[ic7]
+
 Accountのとなりにある、コピーっぽいボタンをクリックすると、画面に入りきっていない正式なアドレスがクリップボードにコピーされますので、テキストエディタなどに貼って確認してみてください。
 
 ----
@@ -101,9 +114,15 @@ Accountのとなりにある、コピーっぽいボタンをクリックする�
 ----
 
 こんな感じのものがコピーされているはずです。 +
-これが「いのコイン」を発行したアカウントなので、別のアカウントに送金してみましょう。 +
+これが「いのコイン」を発行したアカウントなので、別のアカウントに送金してみましょう。
+
+image::/images/yagasaki/innocoin1/ic6.png[ic6]
+
 Accountのドロップダウンで別の物を選んで、コピーして、さらに元の発行アカウントに戻しておきます。 +
-その状態で、コピーされたアドレスを、balanceOfボタンの右の箱にダブルクォートで囲んでペーストし、balanceOfボタンを押すと、そのアドレスのinno残高が取得できます。 +
+その状態で、コピーされたアドレスを、balanceOfボタンの右の箱にダブルクォートで囲んでペーストし、balanceOfボタンを押すと、そのアドレスのinno残高が取得できます。
+
+image::/images/yagasaki/innocoin1/ic8.png[ic8]
+
 現在は、当然 0 です。
 
 では、送金してみます。 +
@@ -111,8 +130,12 @@ transferボタンの横の箱に、"送金先アドレス", inno送金額を入�
 すると、送金出来たっぽい表示がされます。 +
 とりあえず、100inno送ってみましょう。
 
+image::/images/yagasaki/innocoin1/ic9.png[ic9]
+
 送ったinnoが反映されているか、確認してみましょう。 +
 先ほどと同じように、balanceOfボタンを押してみましょう。
+
+image::/images/yagasaki/innocoin1/ic10.png[ic10]
 
 100inno入ってますね！
 
@@ -179,23 +202,29 @@ thanksボタンが出てきたと思うので、となりの箱に、"送り先�
 送り先アドレスは、先ほどと同じ手順で、ドロップダウンからコピーしてみてください。 +
 また、コピーしたあとにAccountのドロップダウンを元に戻すのをお忘れなく！ドロップダウンの内容が、送り元(実行アカウント)になります。
 
+image::/images/yagasaki/innocoin1/ic12.png[ic12]
 
 なんだか送れたっぽい雰囲気ですね！ +
 メッセージが送れているか、確認してみましょう！ +
 thanksMessageボタンの横の箱に、送り先のアドレスを入れてボタンを押してみます。
 
+image::/images/yagasaki/innocoin1/ic14.png[ic14]
+
 ちゃんと、メッセージが送れているっぽいですね。 +
 さらに、ちゃんと100innoも送れているのでしょうか？　+
 先ほどと同じように、balanceOfボタンで確認してみましょう。
 
+image::/images/yagasaki/innocoin1/ic15.png[ic15]
+
 ばっちしですね〜！ +
 サンクスメッセージを送ると、いのコインが送られるというコントラクトが出来ました！ +
-めっちゃ簡単ですよね〜。すごすぎる！
+何回もサンクスメッセージを送ると、そのたびに100innoづつ送られているのが確認できますので試してみてください。 +
+めっちゃ簡単ですよね〜。すごすぎる！すごすぎるぞEthereum！
 
 == Ethereumで「いのコイン」を使ってみる(次回予告)
 
 では、表現的にはあれかもしれませんが、実際パブリックなブロックチェーンのネットワークである、Ethereumで運用してみましょう。 +
-しかし！先ほどのBrowser Solidityのテスト環境と違い、現状はProof of Work(PoW)で動いているEthereumやEthereum Classicでは、ブロックチェーンの正当性を担保してくれているマイナーに、コントラクト実行の手数料を払う必要があります。そのため、実際の仮想通貨であるETHやETCが必要です。 +
+しかし！先ほどのBrowser Solidityのテスト環境と違い、現状は https://www.google.co.jp/search?q=Proof+of+Work[Proof of Work(PoW)] で動いているEthereumやEthereum Classicでは、ブロックチェーンの正当性を担保してくれているマイナーに、コントラクト実行の手数料を払う必要があります。そのため、実際の仮想通貨であるETHやETCが必要です。 +
 上の方で画面に出てきたTransaction costなどの「gas」というのが、実はその手数料になります！ +
 また、勝手に「いのコイン」をパブリックにのせて良いか問題も残っています笑
 
@@ -205,9 +234,9 @@ thanksMessageボタンの横の箱に、送り先のアドレスを入れてボ�
 
 まず、go-ethereumをインストールします。 +
 https://github.com/ethereum/go-ethereum
-からがんばってインストールするか、gethインストールで検索していただければ、簡単にインストールできますのでいい感じにインストールしてください。 +
+からがんばってインストールするか、 https://www.google.co.jp/search?q=geth+インストール[gethインストール] で検索していただければ、簡単にインストールできますのでいい感じにインストールしてください。 +
 そして、gethをrpcモードでmain-netに接続する状態で起動します。 +
-あとは次回！！！
+まさかのあとは次回！！！
 
 こちらからは以上です。
 
