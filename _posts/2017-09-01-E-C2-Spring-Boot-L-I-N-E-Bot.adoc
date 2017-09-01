@@ -1,0 +1,412 @@
+# EC2 + SpringBoot でLINE@のBotアプリを作る　その１２
+:hp-alt-title:　EC2 + SpringBoot でLINE@のBotアプリを作る　その１
+:hp-tags: NewTsukamoto, EC2, SpringBoot, Java8
+
+SREチームのNew塚本です。 +
+虫歯と視力の低下に日々にビビって過ごしている今日この頃、 +
+皆さまは如何お過ごしでしょうか。
+
+さて、今回のお題はAWS上に実行サーバを構築して、 +
+LINE@のBotアプリをJavaで作ってみようと思います。
+
+## 概要
+
+今回は LINE Gateway からの WebFookリクエストをWebアプリケーションで受けて、 +
+お返事を返す部分を作成します。
+
+
+## やったこと
+
+* AWSでネットワークとサーバの準備 +
+-EC2 インスタンス（t2.micro）の作成する +
+-Route 53でドメインの取得する +
+-Certificate Manager (ACM) で証明書を取得する +
+-CloudFrontでCDNを立てる
+
+* 実行サーバの準備（Linux） +
+-Apatch、JDKのインストール
+
+* ローカル環開発境の準備とコーティング +
+-JDK８、Spring Tool Suite(STS)、mavenのダウンロードと設定 +
+-mavenプロジェクトを作成しコーディング
+
+* LINE@アカウントの取得
+
+* Google Speech APIのユーザ登録
+
+## AWSでネットワーク設定とサーバの準備
+
+基本的にAWSのコンソール画面でポチポチやればできます。 +
+
+今回、SSL通信が必須だったので、AWSで取得した証明書が使用できて、 +
+お手軽に感じたCDNを使用しました。 +
+
+CDNのOrigin Domain Nameの設定は、EC2 インスタンスのパブリック DNS (IPv4)を指定し、 +
+SSL CertificateにACMで取得した証明書を指定します。  +
+
+Route 53で取得したドメインのAレコードのAlias TargetにCDNのDomain Nameを設定します。
+
+これで、取得したドメインに対してhttpsアクセスすると、 +
+CDN経由でEC2にリクエストが届きます。
+
+
+## 実行サーバの準備（Red Hat Enterprise Linux 7.4 (HVM)）
+
+yumコマンドでJDKとApacheを入れます。
+
+++++
+<pre style="font-family: Menlo, Courier">
+$ yum search jdk
+$ yum install java-1.8.0-openjdk.x86_64
+$
+$ yum search httpd
+$ yum install httpd.x86_64
+</pre>
+++++
+
+モジュールの依存関係も解決してくれるので楽にインストールができます。
+
+作成するWebアプリケーションは組込みTomatで動作します。 +
+そのため、Tomcat単体でのインストールは不要です。  +
+Apacheで受けたリクエストを組込みTomcatへプロキシする設定を、httpd.comfへ追記します。
+
+++++
+<pre style="font-family: Menlo, Courier">
+$ vi /etc/httpd/conf/httpd.conf
+$
+$ #Tomcatへのプロキシを設定
+$ ProxyPass /api/endpoint http://localhost:9000/api/endpoint
+</pre>
+++++
+
+
+## ローカル環開発境の準備
+
+必要なモジュールをダウンロードします。 +
+後は、STSを起動してMavenプロジェクトを作成します。
+
+
+## LINE@アカウントの取得
+これもLINE Business Centerで簡単に作成できます。 +
+https://business.line.me/ja/services/bot
+
+
+## 実装
+
+今回、Spring Bootを使用していますが、 +
+とても簡単にWebApplicationを作成することができるからです。 +
+ただ、Springフレームワークを使用する際は、アノテーションというお作法がありまして、 +
+これが理解できると、よりSpring Bootの良さが分かるかと思います。 +
+
+
+1）アプリケーション起動クラス +
+
+SpringBootApplicationアノテーション +
+@Configuration、@EnableAutoConfiguration、@ComponentScanと同じ効果です。 +
+このクラスのパッケージ配下のクラスをスキャンして、 @Componentが付与されたクラスをBeanとして、 +
+DIコンテナに登録されます。
+
+++++
+<pre style="font-family: Menlo, Courier">
+@SpringBootApplication
+public class StartUp {
+　public static void main(String[] args) {
+ 　SpringApplication.run(StartUp.class, args);
+ }
+}
+</pre>
+++++
+
+
+
+2）LINE Gateway からの WebFookリクエストを受付けるクラス +
+
+RestControllerアノテーション +
+JSON形式のリクエストを応答するクラスとして DI コンテナへ登録されます。
+
+RequestMappingアノテーション +
+指定したパスのリクエストを受付けるクラス（メソッド）として動作します。
+
+Autowiredアノテーション +
+Componentアノテーション（@Controller, @Service, @Repository）が付与されたクラスから、 +
+指定したクラスをスキャンし、DIコンテナからインスタンスを取得して使用できるようにします。
+
+++++
+<pre style="font-family: Menlo, Courier">
+@RestController
+@RequestMapping("/api/endpoint")
+public class RequestController {
+
+ @RequestMapping(method = RequestMethod.POST)
+ public ResponseEntity<ReceiveMessage> post(
+   @RequestBody String requestBody,
+   @RequestHeader(required = false, value = "X-Line-Signature") String signature)
+   throws JsonParseException, JsonMappingException, IOException {
+   System.out.println(requestBody);
+   //distribute(requestBody);
+  return new ResponseEntity<ReceiveMessage>(null, new HttpHeaders(), HttpStatus.OK);
+ }
+}
+</pre>
+++++
+
+
+1)と2)を作成してWebApplicationを起動します。 +
+これで、LINEアプリからのメッセージを受付けることができます。
+
+次に、受け付けたリクエスト毎の処理と +
+LINE Gateway へ送るメッセージを作成するメソッドを追加します。
+
+++++
+<pre style="font-family: Menlo, Courier">
+ private void execute(String requestBody) throws JsonParseException, JsonMappingException, IOException {
+
+  // JSON形式からデシリアライズ
+  ReceiveMessage receiveMessage =
+            new ObjectMapper().readValue(requestBody, ReceiveMessage.class);
+
+  for (Events event : receiveMessage.getEvents()) {
+   EventType eventType = CodeEnum.getCode(EventType.class, event.getType());
+   switch (eventType) {
+   case FOLLOW:
+    break;
+   case MESSAGE:
+    MessageType messageType = CodeEnum.getCode(MessageType.class, event.getMessage().getType());
+    switch (messageType) {
+    case TEXT:
+     String srcMsg = event.getMessage().getText();
+     String sampleText = "パンケーキ";
+     sendSrv.send(createSendObject(sampleText, event.getReplyToken()));
+     break;
+    case AUDIO:
+     String msgId = event.getMessage().getId();
+     String googleMsg = ExternalSrv.getTranferMessage(msgId);
+     break;
+    default:
+     break;
+    }
+    break;
+   default:
+    break;
+   }
+  }
+ }
+</pre>
+++++
+
+++++
+<pre style="font-family: Menlo, Courier">
+ private SendMessage createSendObject(String text, String replyToken) {
+  SendMessage msgOjt = new SendMessage();
+  List<Messages> msgList = new ArrayList<Messages>();
+  Messages msg = new Messages();
+  msg.setText(text);
+  msg.setType(MessageType.TEXT.getCode());
+  msgList.add(msg);
+  msgOjt.setMessages(msgList);
+  msgOjt.setReplyToken(replyToken);
+  return msgOjt;
+ }
+}
+</pre>
+++++
+
+3）LINE Gatewayへメッセージを送信するクラス  +
+
+sendメソッドの引数は送信情報が設定されたSendMessageクラスとしています。 +
+LINE Gatewayには、JSON形式で送る必要があるため、ObjectMapperクラスを使用してシリアライズします。
+これで、SendMessageクラスのメンバ変数とその値が、JSON形式の文字列に変換されます。
+
+
+++++
+<pre style="font-family: Menlo, Courier">
+@Service
+public class SendService {
+
+ @Autowired
+ AppicationConfig config;
+
+ public String send(SendMessage sendMessage) {
+  try {
+   CloseableHttpClient httpClient = HttpClients.createDefault();
+
+   String url = config.getGatewayUrl();
+   HttpPost req = new HttpPost(url);
+   req.addHeader("Content-type", "application/json; charset=UTF-8");
+   req.addHeader("Authorization",
+         "Bearer {%s}".replace("%s", config.getlAccessToken()));
+
+   ObjectMapper mapper
+         = new ObjectMapper().setSerializationInclusion(Inclusion.NON_NULL);
+
+   final String json = mapper.writeValueAsString(sendMessage);
+
+   request.setEntity(new StringEntity(json, "UTF-8"));
+
+   String result = httpClient.execute(request, new ResponseHandler<String>(){
+    public String handleResponse(HttpResponse response) throws IOException{
+     return result = EntityUtils.toString(response.getEntity(), "UTF-8");
+    }
+   });
+   return result;
+  } catch (Exception e) {
+   e.printStackTrace();
+  }
+ }
+}
+</pre>
+++++
+
+これで、テキストメッセージの応答はできますが、何か物足りません。
+
+今度は、Google Speech APIを利用して、 +
+ボイスメッセージをテキスト変換させてみようと思います。
+
+ボイスメッセージの場合は、メッセージIDを指定して、 +
+LINE Gatewayからバイナリファイルを取得します。
+
+++++
+<pre style="font-family: Menlo, Courier">
+private byte[] getContents(String msgId) {
+ byte[] result = null;
+ CloseableHttpClient httpClient = HttpClients.createDefault();
+ String targetUrl = appConfig.getContentsUrl().replace("{messageId}", msgId);
+ HttpGet request = new HttpGet(targetUrl);
+ request.addHeader("Authorization",
+    "Bearer {%s}".replace("%s", appConfig.getChannelAccessToken()));
+ CloseableHttpResponse response = null;
+ try {
+  response = httpClient.execute(request);
+  HttpEntity entity = response.getEntity();
+  result = EntityUtils.toByteArray(entity);
+  httpClient.close();
+  EntityUtils.consume(entity);
+ } catch (Exception ex) {
+  ex.printStackTrace();
+ }
+ return result;
+}
+</pre>
+++++
+
+Base64でエンコードしたボイスデータをGoogle Speech APIのエンドポイントに送信します。 +
+
+++++
+<pre style="font-family: Menlo, Courier">
+private String googleSpeech(byte[] audioData) {
+ String speechString = null;
+ SendData sendData = new SendData();
+ Config config = new Config();
+ config.setEncoding("FLAC);
+ config.setSampleRate("16000");
+ config.setLanguageCode("ja-JP");
+ Audio audio = new Audio();
+ audio.setContent(Base64.encodeBase64(audioData));
+ sendData.setConfig(config);
+ sendData.setAudio(audio);
+
+ StringBuilder urlBuff = new StringBuilder();
+ urlBuff.append(appConfig.getGoogleCloudSpeechApi());
+ urlBuff.append(appConfig.getGoogleApiKey());
+
+try {
+ CloseableHttpClient httpClient = HttpClients.createDefault();
+ HttpPost request = new HttpPost(urlBuff.toString());
+ request.addHeader("Content-type", "application/json; charset=UTF-8");
+ ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(Inclusion.NON_NULL);
+ final String json = mapper.writeValueAsString(sendData);
+ request.setEntity(new StringEntity(json, "UTF-8"));
+
+ String result = httpClient.execute(request, new ResponseHandler<String>(){
+  public String handleResponse(HttpResponse response) throws IOException{
+   String ret = EntityUtils.toString(response.getEntity(), "UTF-8");
+   int statusCode = response.getStatusLine().getStatusCode();
+   if (statusCode == HttpStatus.SC_OK) {
+    logger.info("http_status = [" + statusCode + "], " + "response = [" + ret + "]");
+   } else {
+    logger.error("http_status = [" + statusCode + "], " + "response = [" + ret + "]");
+   }
+   return ret;
+  }
+ });
+} catch (Exception e) {
+ e.printStackTrace();
+ throw new RuntimeException(e);
+}
+return speechString;
+}
+</pre>
+++++
+
+これで実装は終了です。試してみます。
+
+## 実行
+
+STSでMavenビルドし実行形式のjarファイルを作成します。 +
+jarファイルを実行サーバに転送して、以下のコマンドを発行します。
+
+++++
+<pre style="font-family: Menlo, Courier">
+＄java -jar /tmp/demo-1.0.0-SNAPSHOT.jar
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v1.1.8.RELEASE)
+
+[main] INFO StartUp - Starting StartUp on ip-172-31-26-146.ap-northeast
+-1.compute.internal with PID 1156 (/tmp/demo-1.0.0-SNAPSHOT.jar started by root in /root)
+(StartupInfoLogger.java:52)
+
+〜〜〜　省略
+[main] INFO TomcatEmbeddedServletContainer - Tomcat started on port(s): 9000/http
+(TomcatEmbeddedServletContainer.java:227)
+[main] INFO StartUp - Started StartUp in 12.12 seconds (JVM running for 13.537)
+(StartupInfoLogger.
+</pre>
+++++
+
+組込みTomcatが起動してWebアプリケーションが開始されました。 +
+まずは、テキストメッセージを送信してみます。　　 +
+
+image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/Screenshot_20170901-140713.png[]
+
+ちゃんとお返事がきます。 +
+
+次にボイスメッセージを送信してます。 +
+
+image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/Screenshot_20170901-140733.png[]
+
+お返事が来ません・・・ +
+
+Google Speech APIのコンソールを確認すると、リクエストがきているのが確認できます。 +
+
+image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/google.png[]
+
+
+ログにはエラーは返却されてません。 +
+
+++++
+<pre style="font-family: Menlo, Courier">
+http-nio-8888-exec-1] INFO ExternalConnectionService - json : {"config":{"encoding":"LINEAR16","sampleRate":"16000","languageCode":"ja-JP"},"audio":{"content":"QUFBQUdHWjBlWEJ0Y0RReUFBQUFBR2x6YjIxdGNEUXlBQUFFZUcxdmIzWUFBQUJzYlhab1pB
+QUFBQURWem10OTFjNXJmUUFBQStnQUFCMEFBQUVBQUFFQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUF
+BQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUFBQUFBQUFBQUFBQU
+[http-nio-8888-exec-1] INFO ExternalConnectionService - http_status = [200], response = [{}]
+</pre>
+++++
+
+LINEから取得した音声データは再生できることは確認してます。
+
+・・・・・・・。もうギブ！！
+
+
+## 感想
+ブログでは簡単に諦めてますが、サンプルレート、エンコードタイプの値や音源そのものの変更したり、 +
+プログラムをゴニョゴニョ変えたり色々やったんですが・・・・音声データに怒ハマりです。 +
+唯一の救いは、自由に使えるインフラは完成したので他の事にも使えそうです。 +
+
+次回は、Google Speech APIのリベンジをしたいと思います。
+
+おわり
