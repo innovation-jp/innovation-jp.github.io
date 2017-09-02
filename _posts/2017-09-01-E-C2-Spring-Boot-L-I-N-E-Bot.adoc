@@ -21,14 +21,14 @@ LINE@のBotアプリをJavaで作ってみようと思います。
 -EC2 インスタンス（t2.micro）の作成する +
 -Route 53でドメインの取得する +
 -Certificate Manager (ACM) で証明書を取得する +
--CloudFrontでCDNを立てる
+-CloudFrontでCDNを立てる 
 
 * 実行サーバの準備（Linux） +
 -Apatch、JDKのインストール
 
 * ローカル環開発境の準備とコーティング +
--JDK８、Spring Tool Suite(STS)、mavenのダウンロードと設定 +
--mavenプロジェクトを作成しコーディング
+-JDK８、Spring Tool Suite(STS)、Mavenのダウンロードと設定 +
+-Mavenプロジェクトを作成しコーディング 
 
 * LINE@アカウントの取得
 
@@ -45,11 +45,11 @@ CDNのOrigin Domain Nameの設定は、EC2 インスタンスのパブリック
 SSL CertificateにACMで取得した証明書を指定します。  +
 
 Route 53で取得したドメインのAレコードのAlias TargetにCDNのDomain Nameを設定します。
-
+ 
 これで、取得したドメインに対してhttpsアクセスすると、 +
 CDN経由でEC2にリクエストが届きます。
-
-
+ 
+ 
 ## 実行サーバの準備（Red Hat Enterprise Linux 7.4 (HVM)）
 
 yumコマンドでJDKとApacheを入れます。
@@ -58,7 +58,7 @@ yumコマンドでJDKとApacheを入れます。
 <pre style="font-family: Menlo, Courier">
 $ yum search jdk
 $ yum install java-1.8.0-openjdk.x86_64
-$
+$ 
 $ yum search httpd
 $ yum install httpd.x86_64
 </pre>
@@ -66,14 +66,14 @@ $ yum install httpd.x86_64
 
 モジュールの依存関係も解決してくれるので楽にインストールができます。
 
-作成するWebアプリケーションは組込みTomatで動作します。 +
+作成するWebアプリケーションは組込みTomcatで動作します。 +
 そのため、Tomcat単体でのインストールは不要です。  +
-Apacheで受けたリクエストを組込みTomcatへプロキシする設定を、httpd.comfへ追記します。
+Apacheで受けたリクエストを組込みTomcatへプロキシする設定を、httpd.confへ追記します。
 
 ++++
 <pre style="font-family: Menlo, Courier">
 $ vi /etc/httpd/conf/httpd.conf
-$
+$ 
 $ #Tomcatへのプロキシを設定
 $ ProxyPass /api/endpoint http://localhost:9000/api/endpoint
 </pre>
@@ -141,7 +141,7 @@ public class RequestController {
  public ResponseEntity<ReceiveMessage> post(
    @RequestBody String requestBody,
    @RequestHeader(required = false, value = "X-Line-Signature") String signature)
-   throws JsonParseException, JsonMappingException, IOException {
+   throws JsonParseException, JsonMappingException, IOException {  
    System.out.println(requestBody);
    //distribute(requestBody);
   return new ResponseEntity<ReceiveMessage>(null, new HttpHeaders(), HttpStatus.OK);
@@ -160,11 +160,11 @@ LINE Gateway へ送るメッセージを作成するメソッドを追加しま�
 ++++
 <pre style="font-family: Menlo, Courier">
  private void execute(String requestBody) throws JsonParseException, JsonMappingException, IOException {
-
+ 
   // JSON形式からデシリアライズ
-  ReceiveMessage receiveMessage =
+  ReceiveMessage receiveMessage = 
             new ObjectMapper().readValue(requestBody, ReceiveMessage.class);
-
+  
   for (Events event : receiveMessage.getEvents()) {
    EventType eventType = CodeEnum.getCode(EventType.class, event.getType());
    switch (eventType) {
@@ -174,7 +174,6 @@ LINE Gateway へ送るメッセージを作成するメソッドを追加しま�
     MessageType messageType = CodeEnum.getCode(MessageType.class, event.getMessage().getType());
     switch (messageType) {
     case TEXT:
-     String srcMsg = event.getMessage().getText();
      String sampleText = "パンケーキ";
      sendSrv.send(createSendObject(sampleText, event.getReplyToken()));
      break;
@@ -188,7 +187,7 @@ LINE Gateway へ送るメッセージを作成するメソッドを追加しま�
     break;
    default:
     break;
-   }
+   }  
   }
  }
 </pre>
@@ -225,24 +224,24 @@ public class SendService {
 
  @Autowired
  AppicationConfig config;
-
+ 
  public String send(SendMessage sendMessage) {
   try {
    CloseableHttpClient httpClient = HttpClients.createDefault();
-
+   
    String url = config.getGatewayUrl();
    HttpPost req = new HttpPost(url);
    req.addHeader("Content-type", "application/json; charset=UTF-8");
-   req.addHeader("Authorization",
-         "Bearer {%s}".replace("%s", config.getlAccessToken()));
-
-   ObjectMapper mapper
+   req.addHeader("Authorization", 
+         "Bearer {%s}".replace("%s", config.getlAccessToken())); 
+   
+   ObjectMapper mapper 
          = new ObjectMapper().setSerializationInclusion(Inclusion.NON_NULL);
-
+         
    final String json = mapper.writeValueAsString(sendMessage);
-
+   
    request.setEntity(new StringEntity(json, "UTF-8"));
-
+   
    String result = httpClient.execute(request, new ResponseHandler<String>(){
     public String handleResponse(HttpResponse response) throws IOException{
      return result = EntityUtils.toString(response.getEntity(), "UTF-8");
@@ -272,7 +271,7 @@ private byte[] getContents(String msgId) {
  CloseableHttpClient httpClient = HttpClients.createDefault();
  String targetUrl = appConfig.getContentsUrl().replace("{messageId}", msgId);
  HttpGet request = new HttpGet(targetUrl);
- request.addHeader("Authorization",
+ request.addHeader("Authorization", 
     "Bearer {%s}".replace("%s", appConfig.getChannelAccessToken()));
  CloseableHttpResponse response = null;
  try {
@@ -297,7 +296,7 @@ private String googleSpeech(byte[] audioData) {
  String speechString = null;
  SendData sendData = new SendData();
  Config config = new Config();
- config.setEncoding("FLAC);
+ config.setEncoding("FLAC"); 
  config.setSampleRate("16000");
  config.setLanguageCode("ja-JP");
  Audio audio = new Audio();
@@ -316,8 +315,8 @@ try {
  ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(Inclusion.NON_NULL);
  final String json = mapper.writeValueAsString(sendData);
  request.setEntity(new StringEntity(json, "UTF-8"));
-
- String result = httpClient.execute(request, new ResponseHandler<String>(){
+ 
+ speechString = httpClient.execute(request, new ResponseHandler<String>(){
   public String handleResponse(HttpResponse response) throws IOException{
    String ret = EntityUtils.toString(response.getEntity(), "UTF-8");
    int statusCode = response.getStatusLine().getStatusCode();
@@ -363,7 +362,7 @@ jarファイルを実行サーバに転送して、以下のコマンドを発�
 〜〜〜　省略
 [main] INFO TomcatEmbeddedServletContainer - Tomcat started on port(s): 9000/http
 (TomcatEmbeddedServletContainer.java:227)
-[main] INFO StartUp - Started StartUp in 12.12 seconds (JVM running for 13.537)
+[main] INFO StartUp - Started StartUp in 12.12 seconds (JVM running for 13.537) 
 (StartupInfoLogger.
 </pre>
 ++++
@@ -377,7 +376,7 @@ image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/m
 
 次にボイスメッセージを送信してます。 +
 
-image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/Screenshot_20170901-140733.png[]
+image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/Screenshot_20170901-140733.png[] 
 
 お返事が来ません・・・ +
 
@@ -393,7 +392,7 @@ image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/m
 http-nio-8888-exec-1] INFO ExternalConnectionService - json : {"config":{"encoding":"LINEAR16","sampleRate":"16000","languageCode":"ja-JP"},"audio":{"content":"QUFBQUdHWjBlWEJ0Y0RReUFBQUFBR2x6YjIxdGNEUXlBQUFFZUcxdmIzWUFBQUJzYlhab1pB
 QUFBQURWem10OTFjNXJmUUFBQStnQUFCMEFBQUVBQUFFQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUF
 BQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUFBQUFBQUFBQUFBQU
-[http-nio-8888-exec-1] INFO ExternalConnectionService - http_status = [200], response = [{}]
+[http-nio-8888-exec-1] INFO ExternalConnectionService - http_status = [200], response = [{}] 
 </pre>
 ++++
 
