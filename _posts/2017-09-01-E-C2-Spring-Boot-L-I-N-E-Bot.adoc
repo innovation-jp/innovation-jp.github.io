@@ -24,7 +24,7 @@ LINE@のBotアプリをJavaで作ってみようと思います。
 -CloudFrontでCDNを立てる 
 
 * 実行サーバの準備（Linux） +
--Apatch、JDKのインストール
+-Apache、JDKのインストール
 
 * ローカル環開発境の準備とコーティング +
 -JDK８、Spring Tool Suite(STS)、Mavenのダウンロードと設定 +
@@ -56,11 +56,11 @@ yumコマンドでJDKとApacheを入れます。
 
 ++++
 <pre style="font-family: Menlo, Courier">
-$ yum search jdk
-$ yum install java-1.8.0-openjdk.x86_64
-$ 
-$ yum search httpd
-$ yum install httpd.x86_64
+$ sudo yum search jdk
+$ sudo yum install java-1.8.0-openjdk.x86_64
+
+$ sudo yum search httpd
+$ sudo yum install httpd.x86_64
 </pre>
 ++++
 
@@ -73,9 +73,9 @@ Apacheで受けたリクエストを組込みTomcatへプロキシする設定�
 ++++
 <pre style="font-family: Menlo, Courier">
 $ vi /etc/httpd/conf/httpd.conf
-$ 
-$ #Tomcatへのプロキシを設定
-$ ProxyPass /api/endpoint http://localhost:9000/api/endpoint
+ 
+#Tomcatへのプロキシを設定
+ProxyPass /api/endpoint http://localhost:9000/api/endpoint
 </pre>
 ++++
 
@@ -110,9 +110,9 @@ DIコンテナに登録されます。
 <pre style="font-family: Menlo, Courier">
 @SpringBootApplication
 public class StartUp {
-　public static void main(String[] args) {
- 　SpringApplication.run(StartUp.class, args);
- }
+  　public static void main(String[] args) {
+     　SpringApplication.run(StartUp.class, args);
+   }
 }
 </pre>
 ++++
@@ -136,16 +136,15 @@ Componentアノテーション（@Controller, @Service, @Repository）が付与�
 @RestController
 @RequestMapping("/api/endpoint")
 public class RequestController {
-
- @RequestMapping(method = RequestMethod.POST)
- public ResponseEntity<ReceiveMessage> post(
-   @RequestBody String requestBody,
-   @RequestHeader(required = false, value = "X-Line-Signature") String signature)
-   throws JsonParseException, JsonMappingException, IOException {  
-   System.out.println(requestBody);
-   //distribute(requestBody);
-  return new ResponseEntity<ReceiveMessage>(null, new HttpHeaders(), HttpStatus.OK);
- }
+  @RequestMapping(method = RequestMethod.POST)
+  public ResponseEntity<ReceiveMessage> post(
+    @RequestBody String requestBody,
+    @RequestHeader(required = false, value = "X-Line-Signature") String signature)
+    throws JsonParseException, JsonMappingException, IOException {  
+    System.out.println(requestBody);
+    //distribute(requestBody);
+    return new ResponseEntity<ReceiveMessage>(null, new HttpHeaders(), HttpStatus.OK);
+  }
 }
 </pre>
 ++++
@@ -159,43 +158,43 @@ LINE Gateway へ送るメッセージを作成するメソッドを追加しま�
 
 ++++
 <pre style="font-family: Menlo, Courier">
- private void execute(String requestBody) throws JsonParseException, JsonMappingException, IOException {
- 
+private void execute(String requestBody) throws JsonParseException, JsonMappingException, IOException {
+
   // JSON形式からデシリアライズ
   ReceiveMessage receiveMessage = 
-            new ObjectMapper().readValue(requestBody, ReceiveMessage.class);
-  
+         new ObjectMapper().readValue(requestBody, ReceiveMessage.class);
+
   for (Events event : receiveMessage.getEvents()) {
-   EventType eventType = CodeEnum.getCode(EventType.class, event.getType());
-   switch (eventType) {
-   case FOLLOW:
-    break;
-   case MESSAGE:
-    MessageType messageType = CodeEnum.getCode(MessageType.class, event.getMessage().getType());
-    switch (messageType) {
-    case TEXT:
-     String sampleText = "パンケーキ";
-     sendSrv.send(createSendObject(sampleText, event.getReplyToken()));
-     break;
-    case AUDIO:
-     String msgId = event.getMessage().getId();
-     String googleMsg = ExternalSrv.getTranferMessage(msgId);
-     break;
+    EventType eventType = CodeEnum.getCode(EventType.class, event.getType());
+    switch (eventType) {
+    case FOLLOW:
+      break;
+    case MESSAGE:
+      MessageType messageType = CodeEnum.getCode(MessageType.class, event.getMessage().getType());
+      switch (messageType) {
+      case TEXT:
+        String sampleText = "パンケーキ";
+        sendSrv.send(createSendObject(sampleText, event.getReplyToken()));
+        break;
+      case AUDIO:
+        String msgId = event.getMessage().getId();
+        String googleMsg = ExternalSrv.getTranferMessage(msgId);
+        break;
+      default:
+        break;
+      }
+      break;
     default:
-     break;
-    }
-    break;
-   default:
-    break;
-   }  
+      break;
+    }  
   }
- }
+}
 </pre>
 ++++
 
 ++++
 <pre style="font-family: Menlo, Courier">
- private SendMessage createSendObject(String text, String replyToken) {
+private SendMessage createSendObject(String text, String replyToken) {
   SendMessage msgOjt = new SendMessage();
   List<Messages> msgList = new ArrayList<Messages>();
   Messages msg = new Messages();
@@ -205,7 +204,6 @@ LINE Gateway へ送るメッセージを作成するメソッドを追加しま�
   msgOjt.setMessages(msgList);
   msgOjt.setReplyToken(replyToken);
   return msgOjt;
- }
 }
 </pre>
 ++++
@@ -222,36 +220,34 @@ LINE Gatewayには、JSON形式で送る必要があるため、ObjectMapperク�
 @Service
 public class SendService {
 
- @Autowired
- AppicationConfig config;
- 
- public String send(SendMessage sendMessage) {
-  try {
-   CloseableHttpClient httpClient = HttpClients.createDefault();
-   
-   String url = config.getGatewayUrl();
-   HttpPost req = new HttpPost(url);
-   req.addHeader("Content-type", "application/json; charset=UTF-8");
-   req.addHeader("Authorization", 
+@Autowired
+AppicationConfig config;
+
+  public String send(SendMessage sendMessage) {
+    try {
+      CloseableHttpClient httpClient = HttpClients.createDefault();
+      String url = config.getGatewayUrl();
+      HttpPost req = new HttpPost(url);
+      req.addHeader("Content-type", "application/json; charset=UTF-8");
+      req.addHeader("Authorization", 
          "Bearer {%s}".replace("%s", config.getlAccessToken())); 
-   
-   ObjectMapper mapper 
-         = new ObjectMapper().setSerializationInclusion(Inclusion.NON_NULL);
-         
-   final String json = mapper.writeValueAsString(sendMessage);
-   
-   request.setEntity(new StringEntity(json, "UTF-8"));
-   
-   String result = httpClient.execute(request, new ResponseHandler<String>(){
-    public String handleResponse(HttpResponse response) throws IOException{
-     return result = EntityUtils.toString(response.getEntity(), "UTF-8");
+
+      ObjectMapper mapper 
+        = new ObjectMapper().setSerializationInclusion(Inclusion.NON_NULL);
+       
+      final String json = mapper.writeValueAsString(sendMessage);
+      request.setEntity(new StringEntity(json, "UTF-8"));
+
+      String result = httpClient.execute(request, new ResponseHandler<String>(){
+        public String handleResponse(HttpResponse response) throws IOException{
+          return result = EntityUtils.toString(response.getEntity(), "UTF-8");
+          }
+      });
+      return result;
+    } catch (Exception e) {
+      e.printStackTrace();
     }
-   });
-   return result;
-  } catch (Exception e) {
-   e.printStackTrace();
   }
- }
 }
 </pre>
 ++++
@@ -267,23 +263,23 @@ LINE Gatewayからバイナリファイルを取得します。
 ++++
 <pre style="font-family: Menlo, Courier">
 private byte[] getContents(String msgId) {
- byte[] result = null;
- CloseableHttpClient httpClient = HttpClients.createDefault();
- String targetUrl = appConfig.getContentsUrl().replace("{messageId}", msgId);
- HttpGet request = new HttpGet(targetUrl);
- request.addHeader("Authorization", 
+  byte[] result = null;
+  CloseableHttpClient httpClient = HttpClients.createDefault();
+  String targetUrl = appConfig.getContentsUrl().replace("{messageId}", msgId);
+  HttpGet request = new HttpGet(targetUrl);
+  request.addHeader("Authorization", 
     "Bearer {%s}".replace("%s", appConfig.getChannelAccessToken()));
- CloseableHttpResponse response = null;
- try {
-  response = httpClient.execute(request);
-  HttpEntity entity = response.getEntity();
-  result = EntityUtils.toByteArray(entity);
-  httpClient.close();
-  EntityUtils.consume(entity);
- } catch (Exception ex) {
-  ex.printStackTrace();
- }
- return result;
+  CloseableHttpResponse response = null;
+  try {
+    response = httpClient.execute(request);
+    HttpEntity entity = response.getEntity();
+    result = EntityUtils.toByteArray(entity);
+    httpClient.close();
+    EntityUtils.consume(entity);
+  } catch (Exception ex) {
+    ex.printStackTrace();
+  }
+  return result;
 }
 </pre>
 ++++
@@ -293,45 +289,45 @@ Base64でエンコードしたボイスデータをGoogle Speech APIのエンド
 ++++
 <pre style="font-family: Menlo, Courier">
 private String googleSpeech(byte[] audioData) {
- String speechString = null;
- SendData sendData = new SendData();
- Config config = new Config();
- config.setEncoding("FLAC"); 
- config.setSampleRate("16000");
- config.setLanguageCode("ja-JP");
- Audio audio = new Audio();
- audio.setContent(Base64.encodeBase64(audioData));
- sendData.setConfig(config);
- sendData.setAudio(audio);
+  String speechString = null;
+  SendData sendData = new SendData();
+  Config config = new Config();
+  config.setEncoding("FLAC"); 
+  config.setSampleRate("16000");
+  config.setLanguageCode("ja-JP");
+  Audio audio = new Audio();
+  audio.setContent(Base64.encodeBase64(audioData));
+  sendData.setConfig(config);
+  sendData.setAudio(audio);
 
- StringBuilder urlBuff = new StringBuilder();
- urlBuff.append(appConfig.getGoogleCloudSpeechApi());
- urlBuff.append(appConfig.getGoogleApiKey());
+  StringBuilder urlBuff = new StringBuilder();
+  urlBuff.append(appConfig.getGoogleCloudSpeechApi());
+  urlBuff.append(appConfig.getGoogleApiKey());
 
-try {
- CloseableHttpClient httpClient = HttpClients.createDefault();
- HttpPost request = new HttpPost(urlBuff.toString());
- request.addHeader("Content-type", "application/json; charset=UTF-8");
- ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(Inclusion.NON_NULL);
- final String json = mapper.writeValueAsString(sendData);
- request.setEntity(new StringEntity(json, "UTF-8"));
- 
- speechString = httpClient.execute(request, new ResponseHandler<String>(){
-  public String handleResponse(HttpResponse response) throws IOException{
-   String ret = EntityUtils.toString(response.getEntity(), "UTF-8");
-   int statusCode = response.getStatusLine().getStatusCode();
-   if (statusCode == HttpStatus.SC_OK) {
-    logger.info("http_status = [" + statusCode + "], " + "response = [" + ret + "]");
-   } else {
-    logger.error("http_status = [" + statusCode + "], " + "response = [" + ret + "]");
-   }
-   return ret;
+  try {
+    CloseableHttpClient httpClient = HttpClients.createDefault();
+    HttpPost request = new HttpPost(urlBuff.toString());
+    request.addHeader("Content-type", "application/json; charset=UTF-8");
+    ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(Inclusion.NON_NULL);
+    final String json = mapper.writeValueAsString(sendData);
+    request.setEntity(new StringEntity(json, "UTF-8"));
+
+    speechString = httpClient.execute(request, new ResponseHandler<String>(){
+      public String handleResponse(HttpResponse response) throws IOException{
+        String ret = EntityUtils.toString(response.getEntity(), "UTF-8");
+        int statusCode = response.getStatusLine().getStatusCode();
+        if (statusCode == HttpStatus.SC_OK) {
+        logger.info("http_status = [" + statusCode + "], " + "response = [" + ret + "]");
+        } else {
+        logger.error("http_status = [" + statusCode + "], " + "response = [" + ret + "]");
+        }
+      return ret;
+      }
+    });
+  } catch (Exception e) {
+    e.printStackTrace();
   }
- });
-} catch (Exception e) {
- e.printStackTrace();
-}
-return speechString;
+  return speechString;
 }
 </pre>
 ++++
@@ -388,7 +384,7 @@ image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/m
 
 ++++
 <pre style="font-family: Menlo, Courier">
-http-nio-8888-exec-1] INFO ExternalConnectionService - json : {"config":{"encoding":"LINEAR16","sampleRate":"16000","languageCode":"ja-JP"},"audio":{"content":"QUFBQUdHWjBlWEJ0Y0RReUFBQUFBR2x6YjIxdGNEUXlBQUFFZUcxdmIzWUFBQUJzYlhab1pB
+[http-nio-8888-exec-1] INFO ExternalConnectionService - json : {"config":{"encoding":"LINEAR16","sampleRate":"16000","languageCode":"ja-JP"},"audio":{"content":"QUFBQUdHWjBlWEJ0Y0RReUFBQUFBR2x6YjIxdGNEUXlBQUFFZUcxdmIzWUFBQUJzYlhab1pB
 QUFBQURWem10OTFjNXJmUUFBQStnQUFCMEFBQUVBQUFFQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUF
 BQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUFBQUFBQUFBQUFBQU
 [http-nio-8888-exec-1] INFO ExternalConnectionService - http_status = [200], response = [{}] 
