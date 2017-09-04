@@ -1,5 +1,5 @@
 = 社内通貨(風)「いのコイン」をEthereumのスマートコントラクトで作ってみる
-:published_at: 2017-09-01
+:published_at: 2017-09-04
 :hp-tags: Yagasaki,Ethereum,Blockchain,geth,Solidity
 
 こんにちは！ +
