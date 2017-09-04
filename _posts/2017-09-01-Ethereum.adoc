@@ -105,7 +105,7 @@ totalSupplyがいのコインの総量ですが、ちゃんと10万になって�
 image::/images/yagasaki/innocoin1/ic5.png[ic5]
 
 では、innoを他のアカウントに送金してみましょう。 +
-現在、innoコインを発行したアカウントは、右の方にあるAccountと書いてある右のドロップダウンに表示されているアドレスです。
+現在、「いのコイン」を発行したアカウントは、右の方にあるAccountと書いてある右のドロップダウンに表示されているアドレスです。
 
 image::/images/yagasaki/innocoin1/ic7.png[ic7]
 
