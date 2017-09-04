@@ -119,7 +119,7 @@ public class StartUp {
 
 
 
-2）LINE Gateway からの WebFookリクエストを受付けるクラス +
+2）LINE Gateway からの WebHookリクエストを受付けるクラス +
 
 RestControllerアノテーション +
 JSON形式のリクエストを応答するクラスとして DI コンテナへ登録されます。
