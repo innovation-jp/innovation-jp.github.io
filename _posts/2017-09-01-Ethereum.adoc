@@ -48,6 +48,8 @@ https://remix.ethereum.org/ +
 
 == 最低限の「いのコイン」を作ってみる
 
+では早速、仮想通貨(風)「いのコイン」(単位inno)を作ってみようと思います！
+
 Browser Solidityの左上の「＋」みたいなアイコンを押します。
 
 image::/images/yagasaki/innocoin1/ic1.png[ic1]
