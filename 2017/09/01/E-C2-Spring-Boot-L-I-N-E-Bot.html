@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>EC2 + SpringBoot でLINE@のBotアプリを作る　その１ - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="EC2 + SpringBoot でLINE@のBotアプリを作る　その１">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="EC2 + SpringBoot でLINE@のBotアプリを作る　その１">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2017/09/01/E-C2-Spring-Boot-L-I-N-E-Bot.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="EC2 + SpringBoot でLINE@のBotアプリを作る　その１" />
+    <meta property="og:description" content="SREチームのNew塚本です。 虫歯と視力の低下に日々ビビって過ごしている今日この頃、 皆さまは如何お過ごしでしょうか。 さて、今回のお題はAWS上に実行サーバを構築して、 LINE@のBotアプリをJavaで作ってみようと思います。 概要 今回は LINE Gateway からの WebHookリクエストをWebアプリケーションで受けて、 お返事を返す部分を作成します。 やったこと AWSでネットワークとサーバの準備 -EC2 インスタンス（t2.micro）の作成する -Route 53でドメインの取得する -Certificate Manage..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2017/09/01/E-C2-Spring-Boot-L-I-N-E-Bot.html" />
+    <meta property="article:published_time" content="2017-08-31T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2017-09-04T09:10:33.838Z" />
+    <meta property="article:tag" content="NewTsukamoto" />
+    <meta property="article:tag" content="EC2" />
+    <meta property="article:tag" content="SpringBoot" />
+    <meta property="article:tag" content="Java8" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="EC2 + SpringBoot でLINE@のBotアプリを作る　その１" />
+    <meta name="twitter:description" content="SREチームのNew塚本です。 虫歯と視力の低下に日々ビビって過ごしている今日この頃、 皆さまは如何お過ごしでしょうか。 さて、今回のお題はAWS上に実行サーバを構築して、 LINE@のBotアプリをJavaで作ってみようと思います。 概要 今回は LINE Gateway からの WebHookリクエストをWebアプリケーションで受けて、 お返事を返す部分を作成します。 やったこと AWSでネットワークとサーバの準備 -EC2 インスタンス（t2.micro）の作成する -Route 53でドメインの取得する -Certificate Manage..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2017/09/01/E-C2-Spring-Boot-L-I-N-E-Bot.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars2.githubusercontent.com/u/29852256?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "EC2 + SpringBoot でLINE@のBotアプリを作る　その１",
+    "url": "http://tech.innovation.co.jp/2017/09/01/E-C2-Spring-Boot-L-I-N-E-Bot.html",
+    "datePublished": "2017-08-31T15:00:00.000Z",
+    "dateModified": "2017-09-04T09:10:33.838Z",
+    "keywords": "NewTsukamoto,  EC2,  SpringBoot,  Java8",
+    "description": "SREチームのNew塚本です。 虫歯と視力の低下に日々ビビって過ごしている今日この頃、 皆さまは如何お過ごしでしょうか。 さて、今回のお題はAWS上に実行サーバを構築して、 LINE@のBotアプリをJavaで作ってみようと思います。 概要 今回は LINE Gateway からの WebHookリクエストをWebアプリケーションで受けて、 お返事を返す部分を作成します。 やったこと AWSでネットワークとサーバの準備 -EC2 インスタンス\u001c（t2.micro）の作成する -Route 53でドメインの取得する -Certificate Manage..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-New-Tsukamoto tag-E-C2 tag-Spring-Boot tag-Java8 no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="01 Sep 2017" class="post-meta__date date">01 Sep 2017</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/New-Tsukamoto">NewTsukamoto</a>, <a href="http://tech.innovation.co.jp/tag/E-C2"> EC2</a>, <a href="http://tech.innovation.co.jp/tag/Spring-Boot"> SpringBoot</a>, <a href="http://tech.innovation.co.jp/tag/Java8"> Java8</a></span>
+        <span class="post-meta__author author"><img src="https://avatars2.githubusercontent.com/u/29852256?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">EC2 + SpringBoot でLINE@のBotアプリを作る　その１</h1>
+    </header>
+
+    <section class="post tag-New-Tsukamoto tag-E-C2 tag-Spring-Boot tag-Java8">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>SREチームのNew塚本です。<br>
+虫歯と視力の低下に日々ビビって過ごしている今日この頃、<br>
+皆さまは如何お過ごしでしょうか。</p>
+</div>
+<div class="paragraph">
+<p>さて、今回のお題はAWS上に実行サーバを構築して、<br>
+LINE@のBotアプリをJavaで作ってみようと思います。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">概要</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>今回は LINE Gateway からの WebHookリクエストをWebアプリケーションで受けて、<br>
+お返事を返す部分を作成します。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">やったこと</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>AWSでネットワークとサーバの準備<br>
+-EC2 インスタンス（t2.micro）の作成する<br>
+-Route 53でドメインの取得する<br>
+-Certificate Manager (ACM) で証明書を取得する<br>
+-CloudFrontでCDNを立てる</p>
+</li>
+<li>
+<p>実行サーバの準備（Linux）<br>
+-Apache、JDKのインストール</p>
+</li>
+<li>
+<p>ローカル環開発境の準備とコーティング<br>
+-JDK８、Spring Tool Suite(STS)、Mavenのダウンロードと設定<br>
+-Mavenプロジェクトを作成しコーディング</p>
+</li>
+<li>
+<p>LINE@アカウントの取得</p>
+</li>
+<li>
+<p>Google Speech APIのユーザ登録</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_aws">AWSでネットワーク設定とサーバの準備</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>基本的にAWSのコンソール画面でポチポチやればできます。<br></p>
+</div>
+<div class="paragraph">
+<p>今回、SSL通信が必須だったので、AWSで取得した証明書が使用できて、<br>
+お手軽に感じたCDNを使用しました。<br></p>
+</div>
+<div class="paragraph">
+<p>CDNのOrigin Domain Nameの設定は、EC2 インスタンスのパブリック DNS (IPv4)を指定し、<br>
+SSL CertificateにACMで取得した証明書を指定します。 <br></p>
+</div>
+<div class="paragraph">
+<p>Route 53で取得したドメインのAレコードのAlias TargetにCDNのDomain Nameを設定します。</p>
+</div>
+<div class="paragraph">
+<p>これで、取得したドメインに対してhttpsアクセスすると、<br>
+CDN経由でEC2にリクエストが届きます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__red_hat_enterprise_linux_7_4_hvm">実行サーバの準備（Red Hat Enterprise Linux 7.4 (HVM)）</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>yumコマンドでJDKとApacheを入れます。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+$ sudo yum search jdk
+$ sudo yum install java-1.8.0-openjdk.x86_64
+
+$ sudo yum search httpd
+$ sudo yum install httpd.x86_64
+</pre>
+<div class="paragraph">
+<p>モジュールの依存関係も解決してくれるので楽にインストールができます。</p>
+</div>
+<div class="paragraph">
+<p>作成するWebアプリケーションは組込みTomcatで動作します。<br>
+そのため、Tomcat単体でのインストールは不要です。 <br>
+Apacheで受けたリクエストを組込みTomcatへプロキシする設定を、httpd.confへ追記します。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+$ vi /etc/httpd/conf/httpd.conf
+
+#Tomcatへのプロキシを設定
+ProxyPass /api/endpoint http://localhost:9000/api/endpoint
+</pre>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">ローカル環開発境の準備</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>必要なモジュールをダウンロードします。<br>
+後は、STSを起動してMavenプロジェクトを作成します。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_line">LINE@アカウントの取得</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>これもLINE Business Centerで簡単に作成できます。<br>
+<a href="https://business.line.me/ja/services/bot" class="bare">https://business.line.me/ja/services/bot</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___4">実装</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>今回、Spring Bootを使用していますが、<br>
+とても簡単にWebApplicationを作成することができるからです。<br>
+ただ、Springフレームワークを使用する際は、アノテーションというお作法がありまして、<br>
+これが理解できると、よりSpring Bootの良さが分かるかと思います。<br></p>
+</div>
+<div class="paragraph">
+<p>1）アプリケーション起動クラス<br></p>
+</div>
+<div class="paragraph">
+<p>SpringBootApplicationアノテーション<br>
+@Configuration、@EnableAutoConfiguration、@ComponentScanと同じ効果です。<br>
+このクラスのパッケージ配下のクラスをスキャンして、 @Componentが付与されたクラスをBeanとして、<br>
+DIコンテナに登録されます。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+@SpringBootApplication
+public class StartUp {
+  　public static void main(String[] args) {
+     　SpringApplication.run(StartUp.class, args);
+   }
+}
+</pre>
+<div class="paragraph">
+<p>2）LINE Gateway からの WebHookリクエストを受付けるクラス<br></p>
+</div>
+<div class="paragraph">
+<p>RestControllerアノテーション<br>
+JSON形式のリクエストを応答するクラスとして DI コンテナへ登録されます。</p>
+</div>
+<div class="paragraph">
+<p>RequestMappingアノテーション<br>
+指定したパスのリクエストを受付けるクラス（メソッド）として動作します。</p>
+</div>
+<div class="paragraph">
+<p>Autowiredアノテーション<br>
+Componentアノテーション（@Controller, @Service, @Repository）が付与されたクラスから、<br>
+指定したクラスをスキャンし、DIコンテナからインスタンスを取得して使用できるようにします。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+@RestController
+@RequestMapping("/api/endpoint")
+public class RequestController {
+  @RequestMapping(method = RequestMethod.POST)
+  public ResponseEntity<ReceiveMessage> post(
+    @RequestBody String requestBody,
+    @RequestHeader(required = false, value = "X-Line-Signature") String signature)
+    throws JsonParseException, JsonMappingException, IOException {
+    System.out.println(requestBody);
+    //distribute(requestBody);
+    return new ResponseEntity<ReceiveMessage>(null, new HttpHeaders(), HttpStatus.OK);
+  }
+}
+</pre>
+<div class="paragraph">
+<p>1)と2)を作成してWebApplicationを起動します。<br>
+これで、LINEアプリからのメッセージを受付けることができます。</p>
+</div>
+<div class="paragraph">
+<p>次に、受け付けたリクエスト毎の処理と<br>
+LINE Gateway へ送るメッセージを作成するメソッドを追加します。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+private void execute(String requestBody) throws JsonParseException, JsonMappingException, IOException {
+
+  // JSON形式からデシリアライズ
+  ReceiveMessage receiveMessage =
+         new ObjectMapper().readValue(requestBody, ReceiveMessage.class);
+
+  for (Events event : receiveMessage.getEvents()) {
+    EventType eventType = CodeEnum.getCode(EventType.class, event.getType());
+    switch (eventType) {
+    case FOLLOW:
+      break;
+    case MESSAGE:
+      MessageType messageType = CodeEnum.getCode(MessageType.class, event.getMessage().getType());
+      switch (messageType) {
+      case TEXT:
+        String sampleText = "パンケーキ";
+        sendSrv.send(createSendObject(sampleText, event.getReplyToken()));
+        break;
+      case AUDIO:
+        String msgId = event.getMessage().getId();
+        String googleMsg = ExternalSrv.getTranferMessage(msgId);
+        break;
+      default:
+        break;
+      }
+      break;
+    default:
+      break;
+    }
+  }
+}
+</pre>
+<pre style="font-family: Menlo, Courier">
+private SendMessage createSendObject(String text, String replyToken) {
+  SendMessage msgOjt = new SendMessage();
+  List<Messages> msgList = new ArrayList<Messages>();
+  Messages msg = new Messages();
+  msg.setText(text);
+  msg.setType(MessageType.TEXT.getCode());
+  msgList.add(msg);
+  msgOjt.setMessages(msgList);
+  msgOjt.setReplyToken(replyToken);
+  return msgOjt;
+}
+</pre>
+<div class="paragraph">
+<p>3）LINE Gatewayへメッセージを送信するクラス <br></p>
+</div>
+<div class="paragraph">
+<p>sendメソッドの引数は送信情報が設定されたSendMessageクラスとしています。<br>
+LINE Gatewayには、JSON形式で送る必要があるため、ObjectMapperクラスを使用してシリアライズします。
+これで、SendMessageクラスのメンバ変数とその値が、JSON形式の文字列に変換されます。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+@Service
+public class SendService {
+
+@Autowired
+AppicationConfig config;
+
+  public String send(SendMessage sendMessage) {
+    try {
+      CloseableHttpClient httpClient = HttpClients.createDefault();
+      String url = config.getGatewayUrl();
+      HttpPost req = new HttpPost(url);
+      req.addHeader("Content-type", "application/json; charset=UTF-8");
+      req.addHeader("Authorization",
+         "Bearer {%s}".replace("%s", config.getlAccessToken()));
+
+      ObjectMapper mapper
+        = new ObjectMapper().setSerializationInclusion(Inclusion.NON_NULL);
+
+      final String json = mapper.writeValueAsString(sendMessage);
+      request.setEntity(new StringEntity(json, "UTF-8"));
+
+      String result = httpClient.execute(request, new ResponseHandler<String>(){
+        public String handleResponse(HttpResponse response) throws IOException{
+          return result = EntityUtils.toString(response.getEntity(), "UTF-8");
+          }
+      });
+      return result;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+}
+</pre>
+<div class="paragraph">
+<p>これで、テキストメッセージの応答はできますが、何か物足りません。</p>
+</div>
+<div class="paragraph">
+<p>今度は、Google Speech APIを利用して、<br>
+ボイスメッセージをテキスト変換させてみようと思います。</p>
+</div>
+<div class="paragraph">
+<p>ボイスメッセージの場合は、メッセージIDを指定して、<br>
+LINE Gatewayからバイナリファイルを取得します。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+private byte[] getContents(String msgId) {
+  byte[] result = null;
+  CloseableHttpClient httpClient = HttpClients.createDefault();
+  String targetUrl = appConfig.getContentsUrl().replace("{messageId}", msgId);
+  HttpGet request = new HttpGet(targetUrl);
+  request.addHeader("Authorization",
+    "Bearer {%s}".replace("%s", appConfig.getChannelAccessToken()));
+  CloseableHttpResponse response = null;
+  try {
+    response = httpClient.execute(request);
+    HttpEntity entity = response.getEntity();
+    result = EntityUtils.toByteArray(entity);
+    httpClient.close();
+    EntityUtils.consume(entity);
+  } catch (Exception ex) {
+    ex.printStackTrace();
+  }
+  return result;
+}
+</pre>
+<div class="paragraph">
+<p>Base64でエンコードしたボイスデータをGoogle Speech APIのエンドポイントに送信します。<br></p>
+</div>
+<pre style="font-family: Menlo, Courier">
+private String googleSpeech(byte[] audioData) {
+  String speechString = null;
+  SendData sendData = new SendData();
+  Config config = new Config();
+  config.setEncoding("FLAC");
+  config.setSampleRate("16000");
+  config.setLanguageCode("ja-JP");
+  Audio audio = new Audio();
+  audio.setContent(Base64.encodeBase64(audioData));
+  sendData.setConfig(config);
+  sendData.setAudio(audio);
+
+  StringBuilder urlBuff = new StringBuilder();
+  urlBuff.append(appConfig.getGoogleCloudSpeechApi());
+  urlBuff.append(appConfig.getGoogleApiKey());
+
+  try {
+    CloseableHttpClient httpClient = HttpClients.createDefault();
+    HttpPost request = new HttpPost(urlBuff.toString());
+    request.addHeader("Content-type", "application/json; charset=UTF-8");
+    ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(Inclusion.NON_NULL);
+    final String json = mapper.writeValueAsString(sendData);
+    request.setEntity(new StringEntity(json, "UTF-8"));
+
+    speechString = httpClient.execute(request, new ResponseHandler<String>(){
+      public String handleResponse(HttpResponse response) throws IOException{
+        String ret = EntityUtils.toString(response.getEntity(), "UTF-8");
+        int statusCode = response.getStatusLine().getStatusCode();
+        if (statusCode == HttpStatus.SC_OK) {
+        logger.info("http_status = [" + statusCode + "], " + "response = [" + ret + "]");
+        } else {
+        logger.error("http_status = [" + statusCode + "], " + "response = [" + ret + "]");
+        }
+      return ret;
+      }
+    });
+  } catch (Exception e) {
+    e.printStackTrace();
+  }
+  return speechString;
+}
+</pre>
+<div class="paragraph">
+<p>これで実装は終了です。試してみます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___5">実行</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>STSでMavenビルドし実行形式のjarファイルを作成します。<br>
+jarファイルを実行サーバに転送して、以下のコマンドを発行します。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+＄java -jar /tmp/demo-1.0.0-SNAPSHOT.jar
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v1.1.8.RELEASE)
+
+[main] INFO StartUp - Starting StartUp on ip-172-31-26-146.ap-northeast
+-1.compute.internal with PID 1156 (/tmp/demo-1.0.0-SNAPSHOT.jar started by root in /root)
+(StartupInfoLogger.java:52)
+
+〜〜〜　省略
+[main] INFO TomcatEmbeddedServletContainer - Tomcat started on port(s): 9000/http
+(TomcatEmbeddedServletContainer.java:227)
+[main] INFO StartUp - Started StartUp in 12.12 seconds (JVM running for 13.537)
+(StartupInfoLogger.
+</pre>
+<div class="paragraph">
+<p>組込みTomcatが起動してWebアプリケーションが開始されました。<br>
+まずは、テキストメッセージを送信してみます。　　<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/Screenshot_20170901-140713.png" alt="Screenshot 20170901 140713.png">
+</div>
+</div>
+<div class="paragraph">
+<p>ちゃんとお返事がきます。<br></p>
+</div>
+<div class="paragraph">
+<p>次にボイスメッセージを送信してます。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/Screenshot_20170901-140733.png" alt="Screenshot 20170901 140733.png">
+</div>
+</div>
+<div class="paragraph">
+<p>お返事が来ません・・・<br></p>
+</div>
+<div class="paragraph">
+<p>Google Speech APIのコンソールを確認すると、リクエストがきているのが確認できます。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/google.png" alt="google.png">
+</div>
+</div>
+<div class="paragraph">
+<p>ログにはエラーは返却されてません。<br></p>
+</div>
+<pre style="font-family: Menlo, Courier">
+[http-nio-8888-exec-1] INFO ExternalConnectionService - json : {"config":{"encoding":"LINEAR16","sampleRate":"16000","languageCode":"ja-JP"},"audio":{"content":"QUFBQUdHWjBlWEJ0Y0RReUFBQUFBR2x6YjIxdGNEUXlBQUFFZUcxdmIzWUFBQUJzYlhab1pB
+QUFBQURWem10OTFjNXJmUUFBQStnQUFCMEFBQUVBQUFFQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUF
+BQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUFBQUFBQUFBQUFBQU
+[http-nio-8888-exec-1] INFO ExternalConnectionService - http_status = [200], response = [{}]
+</pre>
+<div class="paragraph">
+<p>LINEから取得した音声データは再生できることは確認してます。</p>
+</div>
+<div class="paragraph">
+<p>・・・・・・・。もうギブ！！</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___6">感想</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ブログでは簡単に諦めてますが、サンプルレート、エンコードタイプの値や音源そのものの変更したり、<br>
+プログラムをゴニョゴニョ変えたり色々やったんですが・・・・音声データに怒ハマりです。<br>
+唯一の救いは、自由に使えるインフラは完成したので他の事にも使えそうです。<br></p>
+</div>
+<div class="paragraph">
+<p>次回は、Google Speech APIのリベンジをしたいと思います。</p>
+</div>
+<div class="paragraph">
+<p>おわり</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2017. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+
+</body>
+</html>
