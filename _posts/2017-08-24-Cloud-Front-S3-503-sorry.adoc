@@ -13,6 +13,10 @@ CloudFront + S3 Static website hosting で構築してみました。
 また、CloudFront+S3を使うやり方は既にウェブに幾つかありますが、 +
 一番簡単だと思われる方法を今回見つけたので、書きたいと思います。
 
+## 前提・注意点
+sorryページを表示したいサイトのホスト名で、CloudFrontを利用していないこと
+（※CloudFrontの仕様で、ホスト名が同名のディストリビューションを作成することができないため）
+
 ## 概要
 S3にエラー用ページを置き、 +
 index.htmlは置かないようにしてStatic website hostingする。
@@ -49,6 +53,7 @@ Error document: error.html
 
 ### CloudFrontを作成
 Origin Domain Name: 先ほど控えておいたEndpointのホスト名を指定 +
+Alternate Domain Names: sorryページを返すサービスのホスト名を指定 +
 残りは適宜設定する。
 
 出来上がったCloudFront設定の Error Pages タブから、 +
@@ -72,6 +77,11 @@ HTTP Response Code: 503
 あとは、出来上がったCloudFrontのホスト名を +
 メンテナンスにしたいサイトドメインのCNAMEに指定するか、 +
 ドメイン管理にRoute53を使っているなら、Aliasレコードを指定するだけでOKです。
+
+注意点としましては、 +
+既にCloudFrontを使用しているホスト名は、 +
+Alternate Domain Namesに重複登録はできませんので、 +
+この方法は使えない形になります。
 
 # 感想
 現状sorryページの最も簡単な作成方法かと思いますので、 記事にしました。
