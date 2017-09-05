@@ -55,7 +55,7 @@ var _trackingid = 'LFT-10003-1';
     <meta property="og:description" content="こんばんはこへです。 下準備 まずはスプレットシートに必要な情報を記入していく。 こ～んな感じで、 A列に日付 B列に誕生日の人の名前 C列に誕生日の人のメアド D列にメールの件名 E列にメール本文 F列にデフォルトのメールの件名 G列にデフォルトのメールの本文 を書いていく。 これで表側の準備終了！ 仕組みとしては簡単！ 誕生日の日に指定したメアドにメールを送る。 何も指定がなければ、デフォルトの件名と内容が自動的に入る。 指定すれば、指定した件名と内容が送信される！! コードを書いていこう 全部で40行もかからない。なんとお手軽。 ってことで解説。..." />
     <meta property="og:url" content="http://tech.innovation.co.jp/2016/11/24/G-A-S.html" />
     <meta property="article:published_time" content="2016-11-23T15:00:00.000Z" />
-    <meta property="article:modified_time" content="2017-05-27T17:30:11.520Z" />
+    <meta property="article:modified_time" content="2017-09-05T04:22:23.679Z" />
     <meta property="article:tag" content="GooleAppScript" />
     <meta property="article:tag" content="GAS" />
     <meta property="article:tag" content="gas" />
@@ -73,15 +73,15 @@ var _trackingid = 'LFT-10003-1';
     "publisher": "イノベーション　エンジニアブログ",
     "author": {
         "@type": "Person",
-        "name": "kohe",
-        "image": "https://avatars2.githubusercontent.com/u/17563192?v=3",
+        "name": "Akihiro YAGASAKI",
+        "image": "https://avatars1.githubusercontent.com/u/13131599?v=4",
         "url": "undefined/author/undefined",
         "sameAs": ""
     },
     "headline": "誕生日を覚えるのも、メールを送るのも忘れてしまいがちな私がGASを使って全自動化した話",
     "url": "http://tech.innovation.co.jp/2016/11/24/G-A-S.html",
     "datePublished": "2016-11-23T15:00:00.000Z",
-    "dateModified": "2017-05-27T17:30:11.520Z",
+    "dateModified": "2017-09-05T04:22:23.679Z",
     "keywords": "GooleAppScript, GAS, gas,  kohe",
     "description": "こんばんはこへです。 下準備 まずはスプレットシートに必要な情報を記入していく。 こ～んな感じで、 A列に日付 B列に誕生日の人の名前 C列に誕生日の人のメアド D列にメールの件名 E列にメール本文 F列にデフォルトのメールの件名 G列にデフォルトのメールの本文 を書いていく。 これで表側の準備終了！ 仕組みとしては簡単！ 誕生日の日に指定したメアドにメールを送る。 何も指定がなければ、デフォルトの件名と内容が自動的に入る。 指定すれば、指定した件名と内容が送信される！! コードを書いていこう 全部で40行もかからない。なんとお手軽。 ってことで解説。..."
 }
@@ -108,7 +108,7 @@ var _trackingid = 'LFT-10003-1';
     
             <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
             <hr class="panel-cover__divider" />
-            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです</p>
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
             <hr class="panel-cover__divider panel-cover__divider--secondary" />
     
             <div class="navigation-wrapper">
@@ -250,7 +250,7 @@ var _trackingid = 'LFT-10003-1';
     <header class="post-header">
       <div class="post-meta">
         <time datetime="24 Nov 2016" class="post-meta__date date">24 Nov 2016</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Goole-App-Script">GooleAppScript</a>, <a href="http://tech.innovation.co.jp/tag/G-A-S">GAS</a>, <a href="http://tech.innovation.co.jp/tag/gas">gas</a>, <a href="http://tech.innovation.co.jp/tag/kohe"> kohe</a></span>
-        <span class="post-meta__author author"><img src="https://avatars2.githubusercontent.com/u/17563192?v=3" alt="profile image for kohe" class="avatar post-meta__avatar" /> by kohe</span>
+        <span class="post-meta__author author"><img src="https://avatars1.githubusercontent.com/u/13131599?v=4" alt="profile image for Akihiro YAGASAKI" class="avatar post-meta__avatar" /> by Akihiro YAGASAKI</span>
       </div>
       <h1 class="post-title">誕生日を覚えるのも、メールを送るのも忘れてしまいがちな私がGASを使って全自動化した話</h1>
     </header>
@@ -451,6 +451,16 @@ values にセルに入っている値の情報が入る。</p>
 
     <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
     
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
 
 </body>
 </html>
