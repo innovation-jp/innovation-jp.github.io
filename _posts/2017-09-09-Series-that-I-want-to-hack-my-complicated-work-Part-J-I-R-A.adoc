@@ -1,36 +1,36 @@
-= 自分の煩雑な業務をHackしたいシリーズ~JIRA&GoogleAppsScript編~
+= 自分の煩雑な業務をHackしたいシリーズ~JIRA編~
 :published_at: 2017-09-09
 :hp-alt-title: Series that I want to hack my complicated work ~ Part JIRA
 :hp-tags: ozasa,JIRA,GoogleAppsScript
 
 こんにちは。オザサです。
 
-皆様は開発要件をどのように管理されていっらしゃいますか？ +
+皆様は開発工程をどのように管理されていっらしゃいますか？ +
 弊社ではAtlassian社製のJIRA Softwareを用いています。
 
 アジャイル開発の考え方がソフトウェアに落とし込まれているように感じて、 +
 個人的に好きなツールです。あくまで個人的にです。
 
-ですが、困ったことがありました。
+ですが、困ったことがありました。 +
 それはエピックに紐付いた課題の見積もり合計と実績の合計が見られないことです。
 
 エピックの単位については解釈が複数あるようですが、
-弊社においては「独立し単一で意味のある機能単位」という解釈になっています。
+弊社においては「独立し単一で意味のある機能単位」という解釈になっています。 +
 機能という言葉もまた解釈の余地があるかもしれませんが、ここでは本題ではないので割愛します。
 
 ### 前段
 
 #### エピックの様子
-image::ozasa/trelloToken.png[]
+image::ozasa/jira01.png[]
 
 このエピックってどれくらいと見積もってどれくらいで開発できたのだろう・・・
 
 #### 課題の様子
-image::ozasa/trelloToken.png[]
+image::ozasa/jira02.png[]
 
-見積もりと実績がグラフも付きで見られますね。
+見積もりと実績がグラフ付きで見られますね。
 
-一個ずつ見ていけば分かりますが、
+課題を一個ずつ見ていけば合計値は分かりますが、 +
 やはりエピック単位でパッと見たいですね。
 
 ### やってみましょう
@@ -43,14 +43,14 @@ image::ozasa/trelloToken.png[]
 今回はDOM操作でJIRAの画面上に合計値を載せたいという要件もあったため、
 GoogleAppsScriptを用いてみることにしました。
 
-image::ozasa/trelloToken.png[]
+image::ozasa/jiraGoogle.png[]
 
 
-①エピックにアクセスしたらcontent_scriptsが動く
-②エピックに紐づく課題の情報Lをbackgroundに送る
-③対象の課題の見積もりと実績を知るためJIRAのAPIから情報を取得
-④取得したデータをまとめてcontent_script側に送る
-⑤DOMを操作しデータを画面に描画する
+1. エピックにアクセスしたらcontent_scriptsが動く
+2. エピックに紐づく課題の情報Lをbackgroundに送る
+3. 対象の課題の見積もりと実績を知るためJIRAのAPIから情報を取得
+4. 取得したデータをまとめてcontent_script側に送る
+5. DOMを操作しデータを画面に描画する
 
 #### manifest.js
 
@@ -79,20 +79,20 @@ image::ozasa/trelloToken.png[]
  ]
 }
 
-content_scriptsのmatchesを指定することで、
-content_scriptsが発火する条件を設定します。
+----
 
+
+content_scriptsのmatchesを指定することで、 +
+content_scriptsが発火する条件を設定します。 +
 なのでここではJIRAのURLを指定しています。
 
-permissionsにtabsを設定しているのは、
+permissionsにtabsを設定しているのは、 +
 ④の際、タブを指定して情報をbackgroundから送り返すためです。
-
-----
 
 
 #### データを送る
 
-script.js
+script.jsで対象のURLを取得してbackgroundに送りましょう。
 
 [source, rust]
 ----
@@ -132,16 +132,16 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     var spentTotal = 0;
     for(let i = 0; i < urlList.length; i++) {
       var url = urlList[i];
-			// XMLHttpRequestは接続の数分インスタンス化する必要があるため、
-			// ちょっと不恰好ですが、request[i]に詰める形にしています。
-			// 関数を分けるなどの対策も可能かと思います。
+      // XMLHttpRequestは接続の数分インスタンス化する必要があるため、
+      // ちょっと不恰好ですが、request[i]に詰める形にしています。
+      // 関数を分けるなどの対策も可能かと思います。
       request[i] = new XMLHttpRequest();
       request[i].open("GET", url, true);
       request[i].responseType = "json";
       request[i].send();
       request[i].onreadystatechange = function() {
         if (request[i].readyState == 4 && request[i].status == 200) {
-				  // JIRAにおける時間の記録は秒単位になっているため、時間という単位を知るためには3600で割るなどの対応が必要になります。
+          // JIRAにおける時間の記録は秒単位になっているため、時間という単位を知るためには3600で割るなどの対応が必要になります。
           var targetOrigTxt  = (this.response.fields.aggregatetimeoriginalestimate !== undefined) ? this.response.fields.aggregatetimeoriginalestimate/3600 + "時間" : "0時間";
           var targetSpentTxt = (this.response.fields.aggregatetimespent !== undefined) ? this.response.fields.aggregatetimespent/3600 + "時間" : "0時間";
           var ticketNoArray  = {ticketNo:ticketList[i]};
@@ -153,7 +153,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
           spentTotal += (this.response.fields.aggregatetimespent !== undefined) ? this.response.fields.aggregatetimespent : 0;
           if(s == urlList.length) {
             var responseTimeArray = {origTotal, spentTotal};
-						// 最後にタブを指定して送り返します。④の部分ですね。
+            // 最後にタブを指定して送り返します。④の部分ですね。
             chrome.tabs.sendMessage(sender['tab']['id'], { message: "Finish!!", responseTimeArray: responseTimeArray});
           }
         }
@@ -169,9 +169,9 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 ----
 chrome.runtime.onMessage.addListener(function( message, sender, sendResponse ) {
   if(message.responseTimeArray) {
-    console.log(message);
     var divElement = document.createElement("div");
-    var tmp        = targetElement.appendChild(divElement);
+    // 差し込みたいところ(targetElement)にDOM操作で結果を入れましょう。
+    var tmp  = targetElement.appendChild(divElement);
     tmp.innerHTML = "<p>見積もり合計<b>" + message.responseTimeArray.origTotal / 3600 + "</b>時間。実績値合計<b>" + message.responseTimeArray.spentTotal / 3600 + "</b>時間。</p>";
   }
 });
@@ -179,7 +179,7 @@ chrome.runtime.onMessage.addListener(function( message, sender, sendResponse ) {
 
 #### 完成
 
-image::ozasa/trelloToken.png[]
+image::ozasa/jira03.png[]
 
 見られるようになった！
 
