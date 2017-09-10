@@ -1,0 +1,196 @@
+= 自分の煩雑な業務をHackしたいシリーズ~JIRA編~
+:published_at: 2017-09-09
+:hp-alt-title: Series that I want to hack my complicated work ~ Part JIRA
+:hp-tags: ozasa,JIRA,GoogleAppsScript
+
+こんにちは。オザサです。
+
+皆様は開発要件をどのように管理されていっらしゃいますか？ +
+弊社ではAtlassian社製のJIRA Softwareを用いています。
+
+アジャイル開発の考え方がソフトウェアに落とし込まれているように感じて、 +
+個人的に好きなツールです。あくまで個人的にです。
+
+ですが、困ったことがありました。
+それはエピックに紐付いた課題の見積もり合計と実績の合計が見られないことです。
+
+エピックの単位については解釈が複数あるようですが、
+弊社においては「独立し単一で意味のある機能単位」という解釈になっています。
+機能という言葉もまた解釈の余地があるかもしれませんが、ここでは本題ではないので割愛します。
+
+### 前段
+
+#### エピックの様子
+image::ozasa/trelloToken.png[]
+
+このエピックってどれくらいと見積もってどれくらいで開発できたのだろう・・・
+
+#### 課題の様子
+image::ozasa/trelloToken.png[]
+
+見積もりと実績がグラフも付きで見られますね。
+
+一個ずつ見ていけば分かりますが、
+やはりエピック単位でパッと見たいですね。
+
+### やってみましょう
+
+色々調べては見たものの少なくともデフォルトの機能ではできなさそうでした。
+ので、良い機会なので作ってみましょう
+
+#### 構成
+
+今回はDOM操作でJIRAの画面上に合計値を載せたいという要件もあったため、
+GoogleAppsScriptを用いてみることにしました。
+
+image::ozasa/trelloToken.png[]
+
+
+①エピックにアクセスしたらcontent_scriptsが動く
+②エピックに紐づく課題の情報Lをbackgroundに送る
+③対象の課題の見積もりと実績を知るためJIRAのAPIから情報を取得
+④取得したデータをまとめてcontent_script側に送る
+⑤DOMを操作しデータを画面に描画する
+
+#### manifest.js
+
+[source, rust]
+----
+{
+ "manifest_version": 2,
+ "name": "xxxxxxx",
+ "version": "0.1.0",
+ "description": "xxxxxxx",
+ "author": "xxxxxxx",
+ "background": {
+  "scripts": ["background.js"],
+  "persistent": false
+ },
+ "browser_action": {
+  "default_icon": "xxxxxxx",
+  "default_title": "xxxxxxx"
+ },
+ "content_scripts": [{
+  "matches": [ "https://xxxxxxx.atlassian.net/*" ],
+  "js": [ "script.js" ]
+ }],
+ "permissions": [
+  "tabs"
+ ]
+}
+
+content_scriptsのmatchesを指定することで、
+content_scriptsが発火する条件を設定します。
+
+なのでここではJIRAのURLを指定しています。
+
+permissionsにtabsを設定しているのは、
+④の際、タブを指定して情報をbackgroundから送り返すためです。
+
+----
+
+
+#### データを送る
+
+script.js
+
+[source, rust]
+----
+// アクセスしたページがEPICのものであることを判定します
+var nodes = document.getElementById("ghx-issues-in-epic-table");
+
+if (nodes) {
+  var t = nodes.childNodes[1];
+  var s = t.childNodes;
+  var baseUrl = "https://xxxxxxx.atlassian.net/rest/agile/1.0/issue/";
+  var urlList = [];
+  var ticketList = [];
+  for (var i = 0; i < s.length; i++) {
+     if (s[i].className == "issuerow") {
+       var ticketNo = s[i].dataset.issuekey;
+       var url = baseUrl + ticketNo;
+       urlList.push(url);
+       ticketList.push(ticketNo);
+     }
+  };
+  chrome.runtime.sendMessage({ message: "Start！", urlList: urlList, ticketList: ticketList });
+}
+----
+
+#### background.jsでいい感じにアクセスしてみる
+
+[source, rust]
+----
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+  if(message.urlList) {
+    var urlList       = message.urlList;
+    var ticketList    = message.ticketList;
+    var request       = [];
+    var responseObj   = {};
+    var s = 0;
+    var origTotal  = 0;
+    var spentTotal = 0;
+    for(let i = 0; i < urlList.length; i++) {
+      var url = urlList[i];
+			// XMLHttpRequestは接続の数分インスタンス化する必要があるため、
+			// ちょっと不恰好ですが、request[i]に詰める形にしています。
+			// 関数を分けるなどの対策も可能かと思います。
+      request[i] = new XMLHttpRequest();
+      request[i].open("GET", url, true);
+      request[i].responseType = "json";
+      request[i].send();
+      request[i].onreadystatechange = function() {
+        if (request[i].readyState == 4 && request[i].status == 200) {
+				  // JIRAにおける時間の記録は秒単位になっているため、時間という単位を知るためには3600で割るなどの対応が必要になります。
+          var targetOrigTxt  = (this.response.fields.aggregatetimeoriginalestimate !== undefined) ? this.response.fields.aggregatetimeoriginalestimate/3600 + "時間" : "0時間";
+          var targetSpentTxt = (this.response.fields.aggregatetimespent !== undefined) ? this.response.fields.aggregatetimespent/3600 + "時間" : "0時間";
+          var ticketNoArray  = {ticketNo:ticketList[i]};
+          origTxtArray       = {Orig:targetOrigTxt};
+          spentTxtArray      = {Spent:targetSpentTxt};
+          responseObj[ticketList[i]] = Object.assign(origTxtArray, spentTxtArray);
+          s++;
+          origTotal += (this.response.fields.aggregatetimeoriginalestimate !== undefined) ? this.response.fields.aggregatetimeoriginalestimate : 0;
+          spentTotal += (this.response.fields.aggregatetimespent !== undefined) ? this.response.fields.aggregatetimespent : 0;
+          if(s == urlList.length) {
+            var responseTimeArray = {origTotal, spentTotal};
+						// 最後にタブを指定して送り返します。④の部分ですね。
+            chrome.tabs.sendMessage(sender['tab']['id'], { message: "Finish!!", responseTimeArray: responseTimeArray});
+          }
+        }
+      }
+    }
+  }
+});
+----
+
+#### script.jsでいい感じに描画してあげる
+
+[source, rust]
+----
+chrome.runtime.onMessage.addListener(function( message, sender, sendResponse ) {
+  if(message.responseTimeArray) {
+    console.log(message);
+    var divElement = document.createElement("div");
+    var tmp        = targetElement.appendChild(divElement);
+    tmp.innerHTML = "<p>見積もり合計<b>" + message.responseTimeArray.origTotal / 3600 + "</b>時間。実績値合計<b>" + message.responseTimeArray.spentTotal / 3600 + "</b>時間。</p>";
+  }
+});
+----
+
+#### 完成
+
+image::ozasa/trelloToken.png[]
+
+見られるようになった！
+
+### 終わりに
+
+自らの煩雑な業務を自らの手で楽にすることができるのは、
+自分にプログラミングのスキルがあるからだと思っているので、
+そういう意味でエンジニアになってよかったと思った次第です。
+
+何より、作っている過程も楽しいですから。
+
+それでは皆様も良いエンジニアライフを。
+
+こちらからは以上です。
