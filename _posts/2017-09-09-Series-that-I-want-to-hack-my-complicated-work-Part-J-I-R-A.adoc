@@ -1,4 +1,4 @@
-= 自分の煩雑な業務をHackしたいシリーズ~JIRA編~
+= 自分の煩雑な業務をHackしたいシリーズ~JIRA&GoogleAppsScript編~
 :published_at: 2017-09-09
 :hp-alt-title: Series that I want to hack my complicated work ~ Part JIRA
 :hp-tags: ozasa,JIRA,GoogleAppsScript
