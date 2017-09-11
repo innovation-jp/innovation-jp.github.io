@@ -1,0 +1,237 @@
+= NativeScriptでWordPress.comに画像を投稿するアプリを作ってみた時に、詰まったこと
+:hp-alt-title: nativescript-and-wordpress-rest-api
+:hp-tags: kato, nativescript, wordpress, rest
+
+
+こんにちは、加藤です。
+
+最近、Webの技術の発展や進化は目を見張るものがあります。 +
+今回は、時代に取り残されないように、TypeScriptとAngularの勉強がてら、NativeScriptで遊んでみました。
+
+その中で、詰まった部分がありましたので、紹介したいと思います。
+
+
+
+
+## 作ったアプリ
+
+今回作ったアプリは、
+
+* NativeScript with Angular
+* WordPress.com REST APIを使って、メディアの新規追加、投稿の新規が出来る
+  https://developer.wordpress.com/docs/api/
+* WordPress.comで管理している複数サイトに対応できる
+
+です。
+
+
+詳細は、ソースコードを置いておきますのでそちらを見ていただくとして、 +
+本稿では開発を行うにあたって詰まった部分を紹介します。
+
+
+ソースコード(準備中)
+
+
+## 前提
+
+### 本投稿を書いている人のスキルレベル
+* iPhoneやAndroidをネイティブの言語(ObjectiveC,Swift,Java,Kotlin)での開発経験はほぼありません。
+* TypeScriptは、文法をさっと呼んだ程度で、実務経験はありません。
+* AngularJS(バージョン１)は経験がありますが、Angularバージョン２以降は初めて触りました。
+
+
+### 環境
+私の開発環境は、macOS Sierra(バージョン10.12.6)ですので、 +
+WindowsやLinux環境では参考にならないかもしれません（すいません）
+
+
+
+## 【詰まった所1】NativeScriptのインストール
+
+早速インストールから詰まりました。
+
+NativeScriptの開発環境構築は、下記のページで解説されています。 +
+https://docs.nativescript.org/start/quick-setup
+
+このページの解説に従い、早速下記のコマンドを実行しましたが、エラーが発生し、インストールできませんでした。
+
+```
+npm install -g nativescript
+```
+
+
+### 解決方法
+
+OS毎に、Advanced Setupがありますので、まずこちらから行います。 +
+特に、nodeのバージョンは6系を使うようしましょう。
+
+```
+brew install node@6
+echo 'export PATH="/usr/local/opt/node@6/bin:$PATH"' >> ~/.bash_profile
+```
+
+インストール後、下記コマンドで6.xがインストールされている事を確認します。
+
+```
+node -v
+```
+
+それ以降は、ページ内の順番に従って、丁寧にインストールします。
+
+macOS +
+https://docs.nativescript.org/start/ns-setup-win
+
+Windows + 
+https://docs.nativescript.org/start/ns-setup-os-x
+
+Linux +
+https://docs.nativescript.org/start/ns-setup-linux
+
+
+最後に、「npm install -g nativescript」でnativescriptをインストールします。 +
+うまくインストールが出来た場合、このコマンドでインストールが完了するまでに10分ほどかかりました。
+
+ターミナルで「tns」を実行した際に、下記のようになっていればOKです。
+
+
+
+
+## 【詰まった所2】Androidエミュレータで突然ネットワーク通信ができなくなる
+
+これは、NativeScriptの問題ではありませんが、挙げさせていただきます。 +
+解決策があるのでしょうか？
+
+macOSのネットワークが一時的に切断されたりすると、Androidエミュレータから外部に通信ができなくなります。 +
+ソースコードは正しいはずなのに、突然通信部分が動作しなくなったら疑いましょう。
+
+
+### 解決方法
+
+エミュレーターの再起動
+
+
+
+
+## 【詰まった所3】multipart/form-dataでのデータ送信が標準では出来ない。
+
+WordPress.com REST APIでメディアを追加する際に、画像データをPOST送信する必要がありますが、 +
+標準の機能だけでは出来ません。
+
+
+### 解決方法
+
+標準の機能では用意されていませんが、プラグインで簡単に拡張できます。
+画像などを含むデータをPOSTで送信する場所では、下記のプラグインを利用しました。
+
+*NativeScript/nativescript-background-http* +
+https://github.com/NativeScript/nativescript-background-http
+
+
+WordPress.comにメディアを追加する例は、次のようになります。
+
+
+```
+import * as bghttp from "nativescript-background-http";
+
+let session = bghttp.session("image-upload");
+let request = {
+    url        : Config.apiUrl + "/sites/" + siteId + "/media/new",
+    method     : "POST",
+    headers    : {
+        "Authorization": "Bearer [認証トークン]",
+        "Content-Type" : "application/octet-stream",
+    },
+};
+
+
+//メディアは一度に複数登録できるため、配列(media[])で指定する
+var params = [
+    {name: "media[]", filename: filePath, mimeType: 'image/jpeg'}
+];
+
+let task: bghttp.Task = session.multipartUpload(params, request);
+
+//ファイルアップロード中
+task.on("progress", this.logEvent);
+
+//ファイルアップロードエラー
+task.on("error", this.logEvent);
+
+//アップロード完了
+task.on("complete", this.logEvent);
+
+//レスポンスが帰ってきた
+task.on("responded", (e) => {
+    //アップロードしたメディア(配列)の情報がJSON形式で返ってくる
+    let media = JSON.parse(e.data).media;
+});
+    
+logEvent(e) {
+    console.log("file upload: " + e.eventName);
+}
+```
+
+
+
+## 【詰まった所4】iOSだけ、画像の取得ができない
+
+画像選択で、下記のプラグインを利用しました。
+
+*NativeScript Image Picker* +
+https://github.com/NativeScript/nativescript-imagepicker
+
+
+利用したプラグインで返ってくるfileUriを使うと、
+iOSだけパーミッションエラーで画像が取得できない
+
+
+### 解決法方
+
+エミュレータ環境のiOSでは、下記のようなfuleUriが取得できます。
+
+```
+file:///Users/username/Library/Developer/CoreSimulator/Devices/AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE/data/Media/DCIM/100APPLE/IMG_0001.JPG
+```
+
+ただ、このUriをnativescript-background-httpのパラメータのfilenameに渡しても動作しません。
+
+下記のように、先頭の「file://」を削除すると、ファイルの取得ができるようになりました。
+```
+/Users/username/Library/Developer/CoreSimulator/Devices/AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE/data/Media/DCIM/100APPLE/IMG_0001.JPG
+```
+
+        
+
+
+## 最後に
+
+今回NativeScriptを使ってみて、Angularとの親和性も良く、とても良く出来ていると思いました。
+
+特に、NativeScriptはJavascriptからiOSやAndroidのAPIを呼び出せるため、 +
+新しい機能を追加したい場合もJavascriptで機能拡張することが出来るます。 +
+
+今回利用したプラグインも、Javascriptだけで機能拡張を行っているようでした。
+
+クロスプラットフォームを謳う開発環境はいくつもありますが、 +
+新しい機能を追加する際は、プラットフォームネイティブの言語でブリッジを書かなければならない！という事が多かったのですが、
+それをうまく解消していました。
+
+今後も、引き続き勉強を進めて行きたいと思います。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
