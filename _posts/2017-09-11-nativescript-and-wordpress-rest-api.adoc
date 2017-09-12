@@ -208,7 +208,7 @@ https://github.com/NativeScript/nativescript-imagepicker
 iOSだけパーミッションエラーで画像が取得できない。
 
 
-### 解決法方
+### 解決方法
 
 エミュレータ環境のiOSでは、下記のようなfileUriが取得できます。
 
