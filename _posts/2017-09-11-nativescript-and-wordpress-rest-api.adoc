@@ -30,20 +30,20 @@
 管理サイト一覧が見れる
 
 
-image::kato/9/01.png[]
+image::kato/9/01.png?1[]
 
 
 投稿一覧が見れる
 
-image::kato/9/02.png[]
+image::kato/9/02.png?1[]
 
 画像を選択できる
 
-image::kato/9/04.png[]
+image::kato/9/04.png?1[]
 
 タイトルと画像をWordPressに投稿できる
 
-image::kato/9/05.png[]
+image::kato/9/05.png?1[]
 
 
 
@@ -116,7 +116,7 @@ https://docs.nativescript.org/start/ns-setup-linux
 ターミナルで「tns」を実行した際に、下記のようになっていればOKです。
 
 
-image::kato/9/06.png[]
+image::kato/9/06.png?1[]
 
 
 ## 【詰まった所2】Androidエミュレータで突然ネットワーク通信ができなくなる
