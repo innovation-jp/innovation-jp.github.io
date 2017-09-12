@@ -1,7 +1,7 @@
 = 自分の煩雑な業務をHackしたいシリーズ~JIRA編~
 :published_at: 2017-09-09
 :hp-alt-title: Series that I want to hack my complicated work ~ Part JIRA
-:hp-tags: ozasa,JIRA,GoogleAppsScript
+:hp-tags: ozasa,JIRA,GoogleChromeExtension
 
 こんにちは。オザサです。
 
@@ -41,7 +41,7 @@ image::ozasa/jira02.png[]
 #### 構成
 
 今回はDOM操作でJIRAの画面上に合計値を載せたいという要件もあったため、
-GoogleAppsScriptを用いてみることにしました。
+GoogleChromeの拡張機能を作ってみることにしました。
 
 image::ozasa/jiraGoogle.png[]
 
