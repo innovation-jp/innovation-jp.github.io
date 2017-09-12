@@ -29,7 +29,9 @@
 
 管理サイト一覧が見れる
 
+
 image::kato/9/01.png[]
+
 
 投稿一覧が見れる
 
@@ -55,7 +57,7 @@ image::kato/9/05.png[]
 ## 前提
 
 ### 本投稿を書いている人のスキルレベル
-* iPhoneやAndroidをネイティブの言語(ObjectiveC,Swift,Java,Kotlin)での開発経験はほぼありません。
+* iPhoneやAndroidにおけるをネイティブの言語(Objective-C,Swift,Java,Kotlin)での開発経験はほぼありません。
 * TypeScriptは、文法をさっと呼んだ程度で、実務経験はありません。
 * AngularJS(バージョン１)は経験がありますが、Angularバージョン２以降は初めて触りました。
 
@@ -83,7 +85,7 @@ npm install -g nativescript
 ### 解決方法
 
 OS毎に、Advanced Setupがありますので、まずこちらから行います。 +
-特に、nodeのバージョンは6系を使うようしましょう。
+特に、nodeのバージョンは6系を使うようにしましょう。
 
 ```
 brew install node@6
@@ -114,6 +116,7 @@ https://docs.nativescript.org/start/ns-setup-linux
 ターミナルで「tns」を実行した際に、下記のようになっていればOKです。
 
 
+image::kato/9/06.png[]
 
 
 ## 【詰まった所2】Androidエミュレータで突然ネットワーク通信ができなくなる
@@ -202,12 +205,12 @@ https://github.com/NativeScript/nativescript-imagepicker
 
 
 利用したプラグインで返ってくるfileUriを使うと、
-iOSだけパーミッションエラーで画像が取得できない
+iOSだけパーミッションエラーで画像が取得できない。
 
 
 ### 解決法方
 
-エミュレータ環境のiOSでは、下記のようなfuleUriが取得できます。
+エミュレータ環境のiOSでは、下記のようなfileUriが取得できます。
 
 ```
 file:///Users/username/Library/Developer/CoreSimulator/Devices/AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE/data/Media/DCIM/100APPLE/IMG_0001.JPG
