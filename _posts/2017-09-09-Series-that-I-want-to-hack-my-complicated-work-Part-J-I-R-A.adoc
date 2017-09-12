@@ -47,7 +47,7 @@ image::ozasa/jiraGoogle.png[]
 
 
 1. エピックにアクセスしたらcontent_scriptsが動く
-2. エピックに紐づく課題の情報Lをbackgroundに送る
+2. エピックに紐づく課題の情報をbackgroundに送る
 3. 対象の課題の見積もりと実績を知るためJIRAのAPIから情報を取得
 4. 取得したデータをまとめてcontent_script側に送る
 5. DOMを操作しデータを画面に描画する
