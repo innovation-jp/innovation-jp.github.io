@@ -1,4 +1,5 @@
 = NativeScriptでWordPress.comに画像を投稿するアプリを作ってみた時に、詰まったこと
+:published_at: 2017-09-10
 :hp-alt-title: nativescript-and-wordpress-rest-api
 :hp-tags: kato, nativescript, wordpress, rest
 
