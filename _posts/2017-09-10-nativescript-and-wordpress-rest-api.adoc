@@ -52,7 +52,7 @@ image::kato/9/05.png?1[]
 本稿では開発を行うにあたって詰まった部分を紹介します。
 
 
-ソースコード(準備中)
+http://tech.innovation.co.jp/images/kato/9/nativescript-wp.zip
 
 
 ## 前提
