@@ -1,6 +1,6 @@
 # PostgreSQLとMySQL、使うならどっち？ データベース専門家が8つの視点で徹底比較！という記事を読んで勉強したこと
 :hp-alt-title:PostgreSQLとMySQL、使うならどっち？ データベース専門家が8つの視点で徹底比較！という記事を読んで勉強したこと
-:hp-tags: Shirota, PostgresSQL, MySQL
+:hp-tags: Shirota, PostgreSQL, MySQL
 
 SREチームの城田です。
 
