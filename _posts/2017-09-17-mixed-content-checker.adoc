@@ -111,7 +111,7 @@ image::/images/nakamura/mixed_content_checker/python_result.png[]
 
 ただ残念な点が2つ。
 
-①Pythonつかってsitemap.xmlパースさせてたけど、本当はScrapyを使いたかった。けどそうするとSeleniumを使うことになってしまい、SeleniumではPhantomJSの「onResourceRequested」と同様のメソッドが見当たらず、せっかくPhantomJSで作成したのにもったいないし、Scrapyはフレームワークで結構ドキュメント読み込まないといけなそうだし。。。で断念！
+①Pythonを使ってsitemap.xmlパースさせたけど、本当はScrapyを使いたかった。けどそうするとSeleniumを使わなければならず、SeleniumではPhantomJSの「onResourceRequested」と同様のメソッドが見当たらない、せっかくPhantomJSで作成したのにもったいない、Scrapyはフレームワークで結構ドキュメント読み込まないといけなそうだし。。。で断念！
 
 ②mixed contentエラーの検出手法の②「GoogleChromeなどで出力されるmixed contentエラーを抽出」は今回断念してしまいましたが、やっぱりこの方法で本当はやりたかった！各ブラウザでも挙動が異なる可能性もあるので、それが抽出できるような仕組みが作れたら色々と捗るのにな。。。
 
