@@ -66,8 +66,7 @@ image::/images/nakamura/mixed_content_checker/phantomjs_code.png[]
 
 こんなに短いコードで記述できて感動です。。。
 
-※実行イメージ +
-$phantomjs error_scan.js https://xxxxxx.xx
+※実行イメージ
 
 image::/images/nakamura/mixed_content_checker/phantomjs_result.png[]
 
