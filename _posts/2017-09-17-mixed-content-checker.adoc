@@ -67,7 +67,8 @@ image::/images/nakamura/mixed_content_checker/phantomjs_code.png[]
 こんなに短いコードで記述できて感動です。。。
 
 ※実行イメージ +
-$phantomjs error_scan.js https://xxxxxx.xx +
+$phantomjs error_scan.js https://xxxxxx.xx
+
 image::/images/nakamura/mixed_content_checker/phantomjs_result.png[]
 
 
@@ -97,8 +98,8 @@ image::/images/nakamura/mixed_content_checker/python_code.png[]
 
 ```
 
-※実行イメージ +
-$python checker.py https://xxxxxx.xx/xxxxx.xml +
+※実行イメージ 
+
 image::/images/nakamura/mixed_content_checker/python_result.png[]
 
 
@@ -114,5 +115,5 @@ image::/images/nakamura/mixed_content_checker/python_result.png[]
 
 ②mixed contentエラーの検出手法の②「GoogleChromeなどで出力されるmixed contentエラーを抽出」は今回断念してしまいましたが、やっぱりこの方法で本当はやりたかった！各ブラウザでも挙動が異なる可能性もあるので、それが抽出できるような仕組みが作れたら色々と捗るのにな。。。
 
-他の機会にまた色々試して見ます！ +
+他の機会にまた色々試して見ます。 +
 こちらからは以上です！
