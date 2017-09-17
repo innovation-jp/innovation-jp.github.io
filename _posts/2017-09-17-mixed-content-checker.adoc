@@ -5,7 +5,11 @@
 もうすっかり秋ですね〜 +
 どうも中村です。
 
-今回はmixed contentエラーをチェックしてくれるツールを作成してみたのでご紹介します。
+さて、みなさんはHTTPS化すすんでますか？ +
+SEO的にも重要、またGoogle Chromeでは将来的にHTTPのままだと警告を出すようなので対応は必須ですよね。
+
+
+今回はそんなHTTPS化対応を行った時に発生する「mixed contentエラー」をチェックしてくれるツールを作成してみたのでご紹介します。
 
 ### mixed contentとは？
 
@@ -13,8 +17,7 @@
 
 この状態では一部のコンテンツがセキュアな状態となっていないだけでなく、ユーザーに警告が表示されるためにとても不信感を与えてしまい、サイトの離脱率が非常に高まってしまう恐れがあります。
 
-混合コンテンツとは | Web | Google Developers + 
-https://developers.google.com/web/fundamentals/security/prevent-mixed-content/what-is-mixed-content?hl=ja
+https://developers.google.com/web/fundamentals/security/prevent-mixed-content/what-is-mixed-content?hl=ja[混合コンテンツとは | Web | Google Developers]
 
 良かれと思ってHTTPS化したのにも関わらず裏目に出てしまう感じとなってしまうので、一番避けたい状態です。。。
 
