@@ -16,7 +16,13 @@ https://employment.en-japan.com/engineerhub/entry/2017/09/05/110000
 ポイントとなる部分を比較できるよう、自身の解釈で一旦表形式に落とし込みを行いました。
 
 ## 比較表
-<style>tbody .tableblock{padding-right:8px;font-size:small}</style>
+
+:frame: all
+:grid: all
+:halign: left
+:valign: top
+
+[options="header"]
 |===
 ||PostgreSQL|MySQL|補足
 
