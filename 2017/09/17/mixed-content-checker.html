@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Python + PhantomJSで「mixed content チェッカー」を作ってみた - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Python + PhantomJSで「mixed content チェッカー」を作ってみた">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Python + PhantomJSで「mixed content チェッカー」を作ってみた">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2017/09/17/mixed-content-checker.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Python + PhantomJSで「mixed content チェッカー」を作ってみた" />
+    <meta property="og:description" content="もうすっかり秋ですね〜 どうも中村です。 今回はHTTPS化対応を行った時に発生する「mixed contentエラー」をチェックしてくれるツールを作成してみたのでご紹介します。 mixed contentとは？ 「混在コンテンツ」とも言われたりしますが、要するにHTTPS接続でアクセスしているにも関わらずHTTPで通信するコンテンツが存在している状態のことを言います。 この状態では一部のコンテンツがセキュアな状態となっていないだけでなく、ユーザーに警告が表示されるためにとても不信感を与えてしまい、サイトの離脱率が非常に高まってしまう恐れがあります。..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2017/09/17/mixed-content-checker.html" />
+    <meta property="article:published_time" content="2017-09-16T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2017-09-19T10:08:20.986Z" />
+    <meta property="article:tag" content="Python3" />
+    <meta property="article:tag" content="PhantomJS" />
+    <meta property="article:tag" content="mixed content" />
+    <meta property="article:tag" content="HTTPS" />
+    <meta property="article:tag" content="SSL" />
+    <meta property="article:tag" content="Nakamura" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Python + PhantomJSで「mixed content チェッカー」を作ってみた" />
+    <meta name="twitter:description" content="もうすっかり秋ですね〜 どうも中村です。 今回はHTTPS化対応を行った時に発生する「mixed contentエラー」をチェックしてくれるツールを作成してみたのでご紹介します。 mixed contentとは？ 「混在コンテンツ」とも言われたりしますが、要するにHTTPS接続でアクセスしているにも関わらずHTTPで通信するコンテンツが存在している状態のことを言います。 この状態では一部のコンテンツがセキュアな状態となっていないだけでなく、ユーザーに警告が表示されるためにとても不信感を与えてしまい、サイトの離脱率が非常に高まってしまう恐れがあります。..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2017/09/17/mixed-content-checker.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "m_nakamura",
+        "image": "https://avatars1.githubusercontent.com/u/7381448?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "Python + PhantomJSで「mixed content チェッカー」を作ってみた",
+    "url": "http://tech.innovation.co.jp/2017/09/17/mixed-content-checker.html",
+    "datePublished": "2017-09-16T15:00:00.000Z",
+    "dateModified": "2017-09-19T10:08:20.986Z",
+    "keywords": "Python3, PhantomJS, mixed content, HTTPS, SSL, Nakamura",
+    "description": "もうすっかり秋ですね〜 どうも中村です。 今回はHTTPS化対応を行った時に発生する「mixed contentエラー」をチェックしてくれるツールを作成してみたのでご紹介します。 mixed contentとは？ 「混在コンテンツ」とも言われたりしますが、要するにHTTPS接続でアクセスしているにも関わらずHTTPで通信するコンテンツが存在している状態のことを言います。 この状態では一部のコンテンツがセキュアな状態となっていないだけでなく、ユーザーに警告が表示されるためにとても不信感を与えてしまい、サイトの離脱率が非常に高まってしまう恐れがあります。..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Python3 tag-Phantom-J-S tag-mixed-content tag-H-T-T-P-S tag-S-S-L tag-Nakamura no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="17 Sep 2017" class="post-meta__date date">17 Sep 2017</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Python3">Python3</a>, <a href="http://tech.innovation.co.jp/tag/Phantom-J-S">PhantomJS</a>, <a href="http://tech.innovation.co.jp/tag/mixed-content">mixed content</a>, <a href="http://tech.innovation.co.jp/tag/H-T-T-P-S">HTTPS</a>, <a href="http://tech.innovation.co.jp/tag/S-S-L">SSL</a>, <a href="http://tech.innovation.co.jp/tag/Nakamura">Nakamura</a></span>
+        <span class="post-meta__author author"><img src="https://avatars1.githubusercontent.com/u/7381448?v=4" alt="profile image for m_nakamura" class="avatar post-meta__avatar" /> by m_nakamura</span>
+      </div>
+      <h1 class="post-title">Python + PhantomJSで「mixed content チェッカー」を作ってみた</h1>
+    </header>
+
+    <section class="post tag-Python3 tag-Phantom-J-S tag-mixed-content tag-H-T-T-P-S tag-S-S-L tag-Nakamura">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>もうすっかり秋ですね〜<br>
+どうも中村です。</p>
+</div>
+<div class="paragraph">
+<p>今回はHTTPS化対応を行った時に発生する「mixed contentエラー」をチェックしてくれるツールを作成してみたのでご紹介します。</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mixed_content">mixed contentとは？</h3>
+<div class="paragraph">
+<p>「混在コンテンツ」とも言われたりしますが、要するにHTTPS接続でアクセスしているにも関わらずHTTPで通信するコンテンツが存在している状態のことを言います。</p>
+</div>
+<div class="paragraph">
+<p>この状態では一部のコンテンツがセキュアな状態となっていないだけでなく、ユーザーに警告が表示されるためにとても不信感を与えてしまい、サイトの離脱率が非常に高まってしまう恐れがあります。</p>
+</div>
+<div class="paragraph">
+<p><a href="https://developers.google.com/web/fundamentals/security/prevent-mixed-content/what-is-mixed-content?hl=ja">混合コンテンツとは | Web | Google Developers</a></p>
+</div>
+<div class="paragraph">
+<p>良かれと思ってHTTPS化したのにも関わらず裏目に出てしまう感じとなってしまうので、一番避けたい状態です。。。</p>
+</div>
+<div class="paragraph">
+<p>弊社サービスでもまだ全ページHTTPS化できていないものもあるので、これを機にチェックツールを作成してみることにしました！</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__">どうやってチェックするか</h3>
+<div class="paragraph">
+<p>mixed contentエラーが発生しているかチェックするには、どうしたらいいでしょうか。<br>
+自分なりに検討したところ、以下の手法を考えてみました。</p>
+</div>
+<div class="paragraph">
+<p>①ソースコード内から「http://」で始まるコードを抽出<br>
+②Google Chromeなどで出力されるmixed contentエラーを抽出<br></p>
+</div>
+<div class="paragraph">
+<p>まずHTTPS化を行う際に対応するであろう「http://」で始まるコードを抽出する①の手法を考えてみました。しかし、CSS内の記述なども含めると意外と実装が難しそうなことと、抜け漏れなく対応できる気がしなかったので却下。</p>
+</div>
+<div class="paragraph">
+<p>次は本命である②の手法。今回のブログについて検討している際にはこちらで実装する気でいました。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ヘッドレスブラウザなどでページにアクセス
+↓
+Javascriptエラーを検知
+↓
+mixed contentエラーであれば出力</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>しかし、mixed contentエラーはJavascriptエラーではないんですね(笑)<br>
+気がついてから必死にブラウザで検知しているエラー情報と同じものを抽出できる方法を調べてみたんですが、結局見つかりませんでした。</p>
+</div>
+<div class="paragraph">
+<p>色々悩んだ結果、以下のような手法で実装することにしました。</p>
+</div>
+<div class="paragraph">
+<p>③対象ページから発生しているリクエストのURLから「http://」で始まるものを抽出</p>
+</div>
+<div class="paragraph">
+<p>これなら①と違って抜け漏れなくチェックができそうです。<br>
+それでは実際に作成手順をご紹介していきます。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mixed_content_2">mixed contentエラーを検出する部分</h3>
+<div class="paragraph">
+<p>こちらはPhantomJSで作成していきます。<br>
+コードはこんな感じ。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/nakamura/mixed_content_checker/phantomjs_code.png" alt="phantomjs code.png">
+</div>
+</div>
+<div class="paragraph">
+<p>ポイントとしては、「onResourceRequested」で対象ページから発生しているリクエストに対して処理しているところでしょうか。</p>
+</div>
+<div class="paragraph">
+<p>こんなに短いコードで記述できて感動です。。。</p>
+</div>
+<div class="paragraph">
+<p>※実行イメージ</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/nakamura/mixed_content_checker/phantomjs_result.png" alt="phantomjs result.png">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___2">サイト全体のページに対してチェックさせる</h3>
+<div class="paragraph">
+<p>ページに対してmixed contentエラーの検出は完成しましたが、サイト全ページのURLを用意してコマンドを打つのは非効率です。</p>
+</div>
+<div class="paragraph">
+<p>今回はどのサイトにも設置しているであろう「sitemap.xml」を使ってサイト全体をクローリングさせることにしました。</p>
+</div>
+<div class="paragraph">
+<p>Pythonを使えばxmlのパースが簡単なため、そちらを利用して作成しました。<br>
+コードはこんな感じ。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/nakamura/mixed_content_checker/python_code.png" alt="python code.png">
+</div>
+</div>
+<div class="paragraph">
+<p>説明はほぼコメントを見ていただければ十分かなと思いますが、全体の流れだけ軽く説明をしておくと</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>①コマンドの引数として対象サイトのsitemap.xml URLを指定
+↓
+②sitemap.xmlをパースし、記載されているURLのみ取得
+↓
+③対象URLを指定してPhantomJSで作成したチェッカーを実行
+↓
+④結果に[mixed content]の文字が入っていたら対象URLをNGとし、エラー箇所を出力
+↓
+⑤ ③、④を全URL分実行</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>※実行イメージ</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/nakamura/mixed_content_checker/python_result.png" alt="python result.png">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___3">感想</h3>
+<div class="paragraph">
+<p>まずは完成できて良かった！</p>
+</div>
+<div class="paragraph">
+<p>最初検討していたものとは結構違うアプローチでエラー検出を行うことになってしまったのですが、PhantomJSのドキュメントなどを読む良いきっかけになったかなと思います。</p>
+</div>
+<div class="paragraph">
+<p>ただ残念な点が2つ。</p>
+</div>
+<div class="paragraph">
+<p>①Pythonを使ってsitemap.xmlパースさせたけど、本当はScrapyを使いたかった。けどそうするとSeleniumを使わなければならず、SeleniumではPhantomJSの「onResourceRequested」と同様のメソッドが見当たらない、せっかくPhantomJSで作成したのにもったいない、Scrapyはフレームワークで結構ドキュメント読み込まないといけなそうだし。。。で断念！</p>
+</div>
+<div class="paragraph">
+<p>②mixed contentエラーの検出手法の②「Google Chromeなどで出力されるmixed contentエラーを抽出」は今回断念してしまいましたが、やっぱりこの方法で本当はやりたかった！各ブラウザでも挙動が異なる可能性もあるので、それが抽出できるような仕組みが作れたら色々と捗るのにな。。。</p>
+</div>
+<div class="paragraph">
+<p>他の機会にまた色々試してみます。<br>
+こちらからは以上です！</p>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2017. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
