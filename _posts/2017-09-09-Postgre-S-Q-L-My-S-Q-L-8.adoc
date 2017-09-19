@@ -15,11 +15,12 @@ https://employment.en-japan.com/engineerhub/entry/2017/09/05/110000
 上記はインタビュー形式での記事でした為、 +
 ポイントとなる部分を比較できるよう、自身の解釈で一旦表形式に落とし込みを行いました。
 
+++++
+<style>tbody .tableblock{padding-right:8px;font-size:small}</style>
+++++
+
+
 ## 比較表
-
-<div>
-
-[options="header"]
 |===
 ||PostgreSQL|MySQL|補足
 
@@ -133,8 +134,6 @@ MySQL単体ではストアドプロシージャのステップ実行ができな
 |シンプルなWebサービスに向いている。
 |
 |===
-
-</div>
 
 ## 所感
 自社プロダクトでは PostgreSQL と MySQL(Aurora) を使い分けておりますが、 +
