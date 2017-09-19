@@ -17,10 +17,7 @@ https://employment.en-japan.com/engineerhub/entry/2017/09/05/110000
 
 ## 比較表
 
-:frame: all
-:grid: all
-:halign: left
-:valign: top
+<div>
 
 [options="header"]
 |===
@@ -136,6 +133,8 @@ MySQL単体ではストアドプロシージャのステップ実行ができな
 |シンプルなWebサービスに向いている。
 |
 |===
+
+</div>
 
 ## 所感
 自社プロダクトでは PostgreSQL と MySQL(Aurora) を使い分けておりますが、 +
