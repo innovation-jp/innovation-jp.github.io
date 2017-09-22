@@ -62,3 +62,40 @@ https://cloud.google.com/sdk/
 |laradock_nginx    |latest    |a028b33b0cf3  |      5 days ago      |    20MB　
 | gcr.io/xxxxxxxxxxxxx/kohe_nginx|  latest    |a028b33b0cf3  |      5 days ago      |    20MB
 |=======================
+
+
+いい感じ。
+
+あとは　`gcloud docker -- push gcr.io/xxxxxxxxxxxxxxxx/kohe_nginx` +
+で行ける！！ +
+と思いきや　*Error…* 
+
+_Error response from daemon: login attempt to https://appengine.gcr.io/v2/ failed with status: 404 Not Found_
+
+うんうん、なるほどね、とりまググる。
+
+チェックを外す。
+
+# 画像
+
+```
+8cccea641d3e: Pushed
+0e5158e5f8e2: Pushed
+1c0bd62a9ea6: Pushed
+717d526872c2: Pushed
+7989087b5764: Pushed
+4ea319796454: Pushed
+2ad4411074c9: Pushed
+040fd7841192: Layer already exists
+
+```
+
+お、うまくいってそう。
+
+GCPを確認…
+
+お、来てる！
+
+# 画像
+
+
