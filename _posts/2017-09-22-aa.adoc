@@ -1,0 +1,10 @@
+# Laradocを使ってDockerでLaravelの環境構築をし、GCPにイメージをおいたお話。
+:hp-alt-title: aa
+:hp-tags: kohe,Docker,Laradoc,GCP
+
+
+皆様こんばんは。こへです。
+そろそろ寒くなって来ており、Laradocを使って*DockerでLaravelの環境構築をし、GCPにイメージをおきたい*時期が来ましたので、やってみました。
+
+
+
