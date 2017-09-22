@@ -70,6 +70,29 @@ _これで設定終わり！_
 
 *続いてインストールやらなんやら*
 
+*docker-compose.yml*ファイルがあるディレクトリに移動 +
+workspaceコンテナを起動！ +
+`docker-compose up -d workspace` +
+コンテナへいく +
+`docker-compose exec workspace bash` +
+
+Laravelのプロジェクトを作成 + 
+`composer create-project laravel/laravel aiueo --prefer-dist` +
+`exit` +
+
+nginx と mysqlを起動！！ +
+`docker-compose up -d nginx mysql` +
+
+これで　+
+
+_http://aiueo.dev:8080/_　+
+
+で同じみのLaravel環境初期ページへ飛べる。
+
+
+
+
+
 
 ## GCP準備編
 
