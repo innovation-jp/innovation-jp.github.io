@@ -48,6 +48,8 @@ MYSQL_ROOT_PASSWORD=root
 .envの内容は　*docker-composer.yml*の内容に対応しているのでしっかり見ておくこと + 
 
 
+docker-compose.ymlをみると使えそうなコンテナがたくさんあって面白い。
+
 *続いてnginxの設定*
 
 `cd nginx/sites/` +
