@@ -51,7 +51,14 @@ https://cloud.google.com/sdk/
 `docker tag laradock_nginx gcr.io/xxxxxxxxxxxxx/kohe_nginx`
 
 フォーマットはこんな感じ　[underline]#_[HOSTNAME]/[YOUR-PROJECT-ID]/[IMAGE]_#
-                                                                     
-                                                                     
-                                                                     
-                                          
+
+
+そしたら `docker image ls`でもっかい確認
+
+
+[options="header"]
+|=======================
+|REPOSITORY  |TAG      | IMAGE ID | CREATED   | SIZE
+|laradock_nginx    |latest    |a028b33b0cf3  |      5 days ago      |    20MB　
+| gcr.io/xxxxxxxxxxxxx/kohe_nginx|  latest    |a028b33b0cf3  |      5 days ago      |    20MB
+|=======================
