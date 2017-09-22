@@ -45,10 +45,10 @@ MYSQL_PORT=3306
 MYSQL_ROOT_PASSWORD=root
 
 ```
-.envの内容は　*docker-composer.yml*の内容に対応しているのでしっかり見ておくこと 
+.envの内容は　*docker-composer.yml*の内容に対応しているのでしっかり見ておくこと + 
 
 
-続いてnginxの設定
+*続いてnginxの設定*
 
 `cd nginx/sites/` +
 
@@ -59,7 +59,17 @@ aiueo.confを↓のように変更
 server_name aiueo.dev;
 
 ```
-  
+
+*hosts の設定*
+
+```
+127.0.0.1 aiueo.dev
+```
+
+_これで設定終わり！_
+
+*続いてインストールやらなんやら*
+
 
 ## GCP準備編
 
