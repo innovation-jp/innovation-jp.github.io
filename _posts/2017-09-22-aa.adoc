@@ -76,7 +76,7 @@ _Error response from daemon: login attempt to https://appengine.gcr.io/v2/ faile
 
 チェックを外す。
 
-# 画像
+image::/images/kohe/docker_gcp_1.png[]
 
 ```
 8cccea641d3e: Pushed
@@ -96,6 +96,6 @@ GCPを確認…
 
 お、来てる！
 
-# 画像
+image::/images/kohe/docker_gcp2.png[]
 
 
