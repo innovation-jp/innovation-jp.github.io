@@ -16,6 +16,11 @@
 
 ※あとDockerを使いたかったてのもあります。
 
+まずDockerが入ってない人は +
+https://docs.docker.com/docker-for-mac/install/#download-docker-for-mac +
+からdownload私は*Stable* の方をdownloadしました。
+
+
 
 
 
