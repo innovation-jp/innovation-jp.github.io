@@ -5,7 +5,7 @@
 
 皆様こんばんは。こへです。
 そろそろ寒くなって来ており、 +
-*Laradocを使ってDockerでLaravelの環境構築をし、GCPにイメージをおきたい* +
+*Laradocを使ってDockerでLaravelの環境構築をし、GCPにimageをおきたい* +
 時期が来ましたので、やってみました。
 
 
@@ -31,3 +31,17 @@ https://cloud.google.com/sdk/
 `gcloud　confg list`　で　自分が選んだプロジェクトが選択されているか確認。
 
 上手くいかなかったりしたら `gcloud init`　で設定を何回でもやり直せるから安心。
+
+## Docker＆GCP編
+
+`docker image ls`でGCPにぶち込みたいimageをチェック
+
+[options="header"]
+|=======================
+|REPOSITORY  |TAG      | IMAGE ID | CREATED   | SIZE
+|laradock_nginx    |latest    |a028b33b0cf3  |      5 days ago      |    20MB
+|=======================
+
+
+                                                                     
+                                          
