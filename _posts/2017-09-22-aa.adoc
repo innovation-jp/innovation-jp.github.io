@@ -179,7 +179,7 @@ _Error response from daemon: login attempt to https://appengine.gcr.io/v2/ faile
 
 うんうん、なるほどね、とりまググる。
 
-チェックを外す。
+Securely store docker …　のチェックを外す。
 
 image::/images/kohe/docker_gcp_1.png[]
 
