@@ -89,6 +89,9 @@ _http://aiueo.dev:8080/_ +
 
 で同じみのLaravel環境初期ページへ飛べる。
 
+image::/images/kohe/docker_gcp_3.png[]
+
+
 
 ## Laravel編
 ここまでの設定じゃ、 +
@@ -208,3 +211,5 @@ image::/images/kohe/docker_gcp2.png[]
 後は↑でpull　すればおっけー。
 
 
+
+おわり
