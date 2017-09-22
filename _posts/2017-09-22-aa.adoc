@@ -1,24 +1,32 @@
-# Laradocを使ってDockerでLaravelの環境構築をし、GCPにイメージをおいたお話。
+# Laradockを使ってDockerでLaravelの環境構築をし、GCPにイメージをおいたお話。
 :hp-alt-title: aa
-:hp-tags: kohe,Docker,Laradoc,GCP
+:hp-tags: kohe,Docker,Laradock,GCP
 
 
 皆様こんばんは。こへです。
 そろそろ寒くなって来ており、 +
-*Laradocを使ってDockerでLaravelの環境構築をし、GCPにimageをおきたい* +
+*Laradockを使ってDockerでLaravelの環境構築をし、GCPにimageをおきたい* +
 時期が来ましたので、やってみました。
 
+
+※まずDockerが入ってない人は +
+https://docs.docker.com/docker-for-mac/install/#download-docker-for-mac +
+からdownload。私は*Stable* の方をdownloadしました。
 
 
 ## Laradoc編
 
-巷の噂でLaravelの環境構築はLaradocを使うと楽と言う噂を聞いた気がするので使ってみます。 +
+巷の噂でLaravelの環境構築はLaradockを使うと楽と言う噂を聞いた気がするので使ってみます。 +
 
 ※あとDockerを使いたかったてのもあります。
 
-まずDockerが入ってない人は +
-https://docs.docker.com/docker-for-mac/install/#download-docker-for-mac +
-からdownload私は*Stable* の方をdownloadしました。
+
+適当なディレクトリを作り + 
+`git clone https://github.com/LaraDock/laradock.git` +
+そして、laradockに移動 +
+`cd laradock` +
+そして、docker-compose 用にenvファイルをコピー +
+`cp env-example .env`
 
 
 
