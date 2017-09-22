@@ -208,8 +208,8 @@ image::/images/kohe/docker_gcp2.png[]
 
 
 `gcloud docker -- pull gcr.io/xxxxxxxxxxxxxxxxxx/kohe_nginx`  +
-後は↑でpull　すればおっけー。
+ローカルに欲しいときは↑でpull　すればおっけー。
 
-
+後は、mysql　imageやらphp-fpm imageやらどんどんGÇPにぶち込んでおけばおっけー。
 
 おわり
