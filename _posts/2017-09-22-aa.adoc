@@ -29,6 +29,22 @@ https://docs.docker.com/docker-for-mac/install/#download-docker-for-mac +
 `cp env-example .env`
 
 
+.envをこんな風に変えていく。
+
+```
+APPLICATION=../=任意のPATH=
+
+# NGINX
+NGINX_HOST_HTTP_PORT=8080
+
+# MySQL
+MYSQL_DATABASE=default
+MYSQL_USER=default
+MYSQL_PASSWORD=secret
+MYSQL_PORT=3306
+MYSQL_ROOT_PASSWORD=root
+
+```
 
 
 
