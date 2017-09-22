@@ -32,7 +32,7 @@ https://docs.docker.com/docker-for-mac/install/#download-docker-for-mac +
 .envをこんな風に変えていく。
 
 ```
-APPLICATION=../=任意のPATH=
+APPLICATION=../aiueo        //任意のバスここでは aiueoしておく。
 
 # NGINX
 NGINX_HOST_HTTP_PORT=8080
@@ -45,8 +45,21 @@ MYSQL_PORT=3306
 MYSQL_ROOT_PASSWORD=root
 
 ```
+.envの内容は　*docker-composer.yml*の内容に対応しているのでしっかり見ておくこと 
 
 
+続いてnginxの設定
+
+`cd nginx/sites/` +
+
+`cp project-1.conf.example aiueo.conf`  +
+
+```
+aiueo.confを↓のように変更
+server_name aiueo.dev;
+
+```
+  
 
 ## GCP準備編
 
