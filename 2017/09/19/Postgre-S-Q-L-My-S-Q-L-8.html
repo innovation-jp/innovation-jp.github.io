@@ -55,7 +55,7 @@ var _trackingid = 'LFT-10003-1';
     <meta property="og:description" content="SREチームの城田です。 今回は、 下記のエン・ジャパンさんのブログが私にとってとても興味深く、 大変勉強になりましたので、自分目線でまとめをしてみました。 PostgreSQLとMySQL、使うならどっち？ データベース専門家が8つの視点で徹底比較！ https://employment.en-japan.com/engineerhub/entry/2017/09/05/110000 また、 上記はインタビュー形式での記事でした為、 ポイントとなる部分を比較できるよう、自身の解釈で一旦表形式に落とし込みを行いました。 tbody .tablebloc..." />
     <meta property="og:url" content="http://tech.innovation.co.jp/2017/09/19/Postgre-S-Q-L-My-S-Q-L-8.html" />
     <meta property="article:published_time" content="2017-09-18T15:00:00.000Z" />
-    <meta property="article:modified_time" content="2017-09-22T05:54:21.988Z" />
+    <meta property="article:modified_time" content="2017-09-22T08:02:03.543Z" />
     <meta property="article:tag" content="Shirota" />
     <meta property="article:tag" content="PostgreSQL" />
     <meta property="article:tag" content="MySQL" />
@@ -80,7 +80,7 @@ var _trackingid = 'LFT-10003-1';
     "headline": "PostgreSQLとMySQL、使うならどっち？ データベース専門家が8つの視点で徹底比較！という記事を読んで勉強したこと",
     "url": "http://tech.innovation.co.jp/2017/09/19/Postgre-S-Q-L-My-S-Q-L-8.html",
     "datePublished": "2017-09-18T15:00:00.000Z",
-    "dateModified": "2017-09-22T05:54:21.988Z",
+    "dateModified": "2017-09-22T08:02:03.543Z",
     "keywords": "Shirota,  PostgreSQL,  MySQL",
     "description": "SREチームの城田です。 今回は、 下記のエン・ジャパンさんのブログが私にとってとても興味深く、 大変勉強になりましたので、自分目線でまとめをしてみました。 PostgreSQLとMySQL、使うならどっち？ データベース専門家が8つの視点で徹底比較！ https://employment.en-japan.com/engineerhub/entry/2017/09/05/110000 また、 上記はインタビュー形式での記事でした為、 ポイントとなる部分を比較できるよう、自身の解釈で一旦表形式に落とし込みを行いました。 tbody .tablebloc..."
 }
@@ -409,7 +409,7 @@ MySQL単体ではストアドプロシージャのステップ実行ができな
 文字列比較は、デフォルト設定では大文字と小文字の区別はしない。<br>
 また、バージョン8.0からは、デフォルト設定だと濁音と半濁音を区別しなくなる。<br>
 「はは」と「ぱぱ」と「ばば」はイコールになる。「びょういん」と「びよういん」もイコールになる。<br>
-これはUnicodeの仕様に依存しており、厳格さにレベル1〜4が存在し、「は」「ぱ」「ば」を区別するにはレベル2以上が、「びょういん」と「びよういん」を区別するにはレベル3以上が必要だが、MySQLは処理速度を優先しており、レベル1を採用している。厳格さと処理速度はトレードオフである。<br></p></td>
+これはUnicodeの仕様に依存しており、厳格さにレベル1〜4が存在し、「は」「ぱ」「ば」を区別するにはレベル2以上が、「びょういん」と「びよういん」を区別するにはレベル3以上が必要だが、MySQLは処理速度を優先しており、MySQL8.0はレベル1を採用している。厳格さと処理速度はトレードオフである。<br></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
