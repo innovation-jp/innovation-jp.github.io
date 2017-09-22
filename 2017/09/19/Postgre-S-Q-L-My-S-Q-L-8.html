@@ -55,7 +55,7 @@ var _trackingid = 'LFT-10003-1';
     <meta property="og:description" content="SREチームの城田です。 今回は、 下記のエン・ジャパンさんのブログが私にとってとても興味深く、 大変勉強になりましたので、自分目線でまとめをしてみました。 PostgreSQLとMySQL、使うならどっち？ データベース専門家が8つの視点で徹底比較！ https://employment.en-japan.com/engineerhub/entry/2017/09/05/110000 また、 上記はインタビュー形式での記事でした為、 ポイントとなる部分を比較できるよう、自身の解釈で一旦表形式に落とし込みを行いました。 tbody .tablebloc..." />
     <meta property="og:url" content="http://tech.innovation.co.jp/2017/09/19/Postgre-S-Q-L-My-S-Q-L-8.html" />
     <meta property="article:published_time" content="2017-09-18T15:00:00.000Z" />
-    <meta property="article:modified_time" content="2017-09-19T12:03:32.018Z" />
+    <meta property="article:modified_time" content="2017-09-22T05:54:21.988Z" />
     <meta property="article:tag" content="Shirota" />
     <meta property="article:tag" content="PostgreSQL" />
     <meta property="article:tag" content="MySQL" />
@@ -80,7 +80,7 @@ var _trackingid = 'LFT-10003-1';
     "headline": "PostgreSQLとMySQL、使うならどっち？ データベース専門家が8つの視点で徹底比較！という記事を読んで勉強したこと",
     "url": "http://tech.innovation.co.jp/2017/09/19/Postgre-S-Q-L-My-S-Q-L-8.html",
     "datePublished": "2017-09-18T15:00:00.000Z",
-    "dateModified": "2017-09-19T12:03:32.018Z",
+    "dateModified": "2017-09-22T05:54:21.988Z",
     "keywords": "Shirota,  PostgreSQL,  MySQL",
     "description": "SREチームの城田です。 今回は、 下記のエン・ジャパンさんのブログが私にとってとても興味深く、 大変勉強になりましたので、自分目線でまとめをしてみました。 PostgreSQLとMySQL、使うならどっち？ データベース専門家が8つの視点で徹底比較！ https://employment.en-japan.com/engineerhub/entry/2017/09/05/110000 また、 上記はインタビュー形式での記事でした為、 ポイントとなる部分を比較できるよう、自身の解釈で一旦表形式に落とし込みを行いました。 tbody .tablebloc..."
 }
@@ -400,10 +400,11 @@ MySQL単体ではストアドプロシージャのステップ実行ができな
 <td class="tableblock halign-left valign-top"><p class="tableblock">型変換は堅い方に寄せている。</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">バージョン5.6以前はデータ型のゆるさが問題になることが多かった。<br>
 バージョン5.7以降は堅い方に修正されていっている。<br>
-とは言え、暗黙的型変換により、以下の3つの値は同じ値とみなされる。<br>
-* (int) 1<br>
-* (string) '1'<br>
-* (string) '1Q84'<br>
+とは言え、暗黙的型変換により、以下の式の3つの値は、同じ値とみなされる。<br>
+* (int) 1 = (string) '1' = (string) '1Q84'<br>
+※int 1 と string 1 の比較でintへの暗黙的型変換が行われるので、<br>
+それに伴い、string 1Q84 にもintへの暗黙的型変換が行われ、<br>
+初めの1文字目の1がintへ変換されるため。<br>
 <br>
 文字列比較は、デフォルト設定では大文字と小文字の区別はしない。<br>
 また、バージョン8.0からは、デフォルト設定だと濁音と半濁音を区別しなくなる。<br>
