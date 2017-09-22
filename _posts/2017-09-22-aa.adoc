@@ -36,6 +36,8 @@ https://cloud.google.com/sdk/
 
 `docker image ls`でGCPにぶち込みたいimageをチェック
 
+今回のターゲットはコヤツ↓
+
 [options="header"]
 |=======================
 |REPOSITORY  |TAG      | IMAGE ID | CREATED   | SIZE
@@ -43,5 +45,13 @@ https://cloud.google.com/sdk/
 |=======================
 
 
+*laradock_nginx*　にGCPにぶち込むようのTAGを付けていく。
+
+
+`docker tag laradock_nginx gcr.io/xxxxxxxxxxxxx/kohe_nginx`
+
+フォーマットはこんな感じ　[underline]#_[HOSTNAME]/[YOUR-PROJECT-ID]/[IMAGE]_#
+                                                                     
+                                                                     
                                                                      
                                           
