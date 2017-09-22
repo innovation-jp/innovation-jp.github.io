@@ -14,7 +14,7 @@ https://docs.docker.com/docker-for-mac/install/#download-docker-for-mac +
 からdownload。私は*Stable* の方をdownloadしました。
 
 
-## Laradoc編
+## Laradock編
 
 巷の噂でLaravelの環境構築はLaradockを使うと楽と言うことを聞いた気がするので使ってみます。 +
 
