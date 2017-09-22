@@ -109,7 +109,7 @@ GCPを確認…
 image::/images/kohe/docker_gcp2.png[]
 
 
-`gcloud docker -- pull gcr.io/xxxxxxxxxxxxxxxxxx/kohe_nginx`
+`gcloud docker -- pull gcr.io/xxxxxxxxxxxxxxxxxx/kohe_nginx`  +
 後は↑でpull　すればおっけー。
 
 
