@@ -18,7 +18,7 @@ https://docs.docker.com/docker-for-mac/install/#download-docker-for-mac +
 
 巷の噂でLaravelの環境構築はLaradockを使うと楽と言うことを聞いた気がするので使ってみます。 +
 
-※あとDockerを使いたかったてのもあります。
+※あとDockerを使いたかったってのもあります。
 
 
 適当なディレクトリを作り + 
