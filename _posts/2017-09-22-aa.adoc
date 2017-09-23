@@ -103,7 +103,7 @@ image::/images/kohe/docker_gcp_3.png[]
 とやってもErrorが吐かれるのでそこら辺を設定していく。 +
 
 まず、aiueoディレクトリに移動する。 +
-そしてenvファイルをいじる。
+そして.envファイルをいじる。
 
 ```
 DB_HOST=mysql
