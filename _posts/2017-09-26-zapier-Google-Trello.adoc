@@ -1,5 +1,5 @@
 # zapier（ザピエル）でGoogleフォームの内容をTrelloに登録してみた
-:published_at: 2017-09-19
+:published_at: 2017-09-26
 :hp-tags: AMI, zapier, Trello, Google Form
 
 こんにちは、亜美です +
