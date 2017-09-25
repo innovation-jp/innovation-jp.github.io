@@ -5,7 +5,7 @@
 
 皆様こんばんは。こへです。
 そろそろ寒くなって来ており、 +
-*Laradockを使ってDockerでLaravelの環境構築をし、GCPにimageをおきたい* +
+*Laradockを使ってDockerでLaravelの環境構築をし、Google Cloud Platform(以下GCP)にimageをおきたい* +
 時期が来ましたので、やってみました。
 
 
@@ -212,6 +212,6 @@ image::/images/kohe/docker_gcp2.png[]
 `gcloud docker -- pull gcr.io/xxxxxxxxxxxxxxxxxx/kohe_nginx`  +
 ローカルに欲しいときは↑でpull　すればおっけー。
 
-後は、mysql　imageやらphp-fpm imageやらどんどんGÇPにぶち込んでおけばおっけー。
+後は、mysql imageやらphp-fpm imageやらどんどんGÇPにぶち込んでおけばおっけー。
 
 おわり
