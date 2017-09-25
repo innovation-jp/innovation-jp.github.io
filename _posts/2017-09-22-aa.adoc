@@ -1,6 +1,6 @@
-# Laradockを使ってDockerでLaravelの環境構築をし、GCPにイメージをおいたお話。
+# Laradockを使ってDockerでLaravelの環境構築をし、Container Registryを使いGCPにイメージをおいたお話。
 :hp-alt-title: aa
-:hp-tags: kohe,Docker,Laradock,GCP
+:hp-tags: kohe,Docker,Laradock,GCP,Container Registry
 
 
 皆様こんばんは。こへです。
