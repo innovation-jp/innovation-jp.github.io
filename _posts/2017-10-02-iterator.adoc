@@ -1,0 +1,407 @@
+= iteratorパターンで学ぶ抽象化
+:published_at: 2017-10-02
+:hp-tags: bigen, iterator,design pattern, GoF, abstraction
+
+どうも、bigenです。 +
+ +
+最近、GoFのデザインパターンについて勉強してまして、 +
+その中でパーツ化の難しさと抽象化の考え方について感銘を受けたので、 +
+学んだことを残しておこうかなと思います。 +
+ +
+本記事ではiteratorパターンを例にとって、 +
+単純なfor文で書いたケースと、iteratorパターンで書いたケースで、 +
+どのような場合にiteratorパターンのメリットがあるかを考察します。 +
+ +
+その後で、何故そのようなメリットを享受できるのかまで考察し、 +
+抽象化・共通化・一般化の思考って大事だね、っていう話にもっていきます。 +
+ +
+なお、コードは全てPHPで書いています。業務でよく使うので。 +
+また、iteratorパターンの概要の説明は各種サイトや本を参照してください。 +
+今回は実践的にiteratorパターンがどのようなケースで威力を発揮するかを紹介するにとどめます。 +
+参考サイト : https://qiita.com/shoheiyokoyama/items/3f42d0057d9d5a861039 +
+
+GoFパターンの勉強にあたっては次の本を多分に参考にさせていただきました。心から感謝です。 +
+参考書 : http://www.hyuki.com/dp/
+
+==== 目次
+1. 準備
+2. for文でやる
+3. iteratorパターンでやる
+4. どんな時iteratorは強いか？
+5. なぜiteratorは強いか？
+6. 抽象化がすごい
+7. おわりに
+
+
+== 1. 準備
+まず、題材とする問題設定ですが、以下のようなプログラムを書いていきたいと思います。
+
+ あるところに本が３冊あります。
+ 本には"id"と、"タイトル"と、"著者"という属性があります。
+ この時、各本の「idの一覧」「タイトルの一覧」「著者の一覧」を出力してください。
+ 
+非常に簡単ですね。 +
+ +
+なお、本は以下のようなBookクラスのインスタンスとして与えられるとします。 +
+コンストラクタで各情報を与え、get~~で取り出すだけです。 
+
+[source, php]
+----
+<?php
+
+class Book
+{
+
+    private $id     = '';
+    private $title  = '';
+    private $author = '';
+
+    public function __construct($id, $title, $author)
+    {
+        $this->id     = $id;
+        $this->title  = $title;
+        $this->author = $author;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+}
+
+----
+
+
+
+== 2. for文でやる
+では、プログラムを一般的なfor文で書いてみようと思います。
+
+[source, php]
+----
+<?php
+    require 'iterator_book.php';
+
+    // 本を格納する配列
+    $bookshelf = [];
+
+    // 本のインスタンス
+    $book_1 = new Book("1", "title1", "author1");
+    $book_3 = new Book("3", "title3", "author3");
+    $book_5 = new Book("5", "title5", "author5");
+
+    // 格納
+    array_push($bookshelf, $book_1, $book_3, $book_5);
+
+
+    // IDの一覧を出力
+    for ($i=0; $i < count($bookshelf); $i++) {
+        $book = $bookshelf[$i];
+        print($book->getId() . "\n");
+    }
+
+    // タイトルの一覧を出力
+    for ($i=0; $i < count($bookshelf); $i++) {
+        $book = $bookshelf[$i];
+        print($book->getTitle() . "\n");
+    }
+
+    // 著者の一覧を出力
+    for ($i=0; $i < count($bookshelf); $i++) {
+        $book = $bookshelf[$i];
+        print($book->getAuthor() . "\n");
+    }
+
+----
+こんな感じですね。
+出力結果は次のようになります。 +
+
+ 1
+ 3
+ 5
+ title1
+ title3
+ title5
+ author1
+ author3
+ author5
+
+== 3. iteratorパターンでやる
+
+では、iteratorパターンを使って書いてみましょう。 +
+今回はできるだけシンプルにするため、抽象クラスや各種メソッドをかなり省略しています。 +
+ +
+それでもかなり長いので、さくっと流し読みしてください。
+
+本体のソース
+[source, php]
+----
+<?php
+
+    require 'iterator_book_iterator.php';
+    require 'iterator_book_aggregate.php';
+    require 'iterator_book.php';
+
+    // 本を格納するオブジェクト
+    $bookshelf = new Book_Aggregate();
+
+    // 本のインスタンス
+    $book_1 = new Book("1", "title1", "author1");
+    $book_3 = new Book("3", "title3", "author3");
+    $book_5 = new Book("5", "title5", "author5");
+
+    // 格納
+    $bookshelf->addBook($book_1)
+              ->addBook($book_3)
+              ->addBook($book_5);
+
+
+    // イテレータを生成
+    $iterator = new Book_Iterator($bookshelf);
+    // IDを出力
+    while ($iterator->hasNext()) {
+        $book = $iterator->next();
+        print($book->getId() . "\n");
+    }
+
+    // イテレータを生成
+    $iterator = new Book_Iterator($bookshelf);
+    // 著者を出力
+    while ($iterator->hasNext()) {
+        $book = $iterator->next();
+        print($book->getTitle() . "\n");
+    }
+
+    // イテレータを生成
+    $iterator = new Book_Iterator($bookshelf);
+    // 著者を出力
+    while ($iterator->hasNext()) {
+        $book = $iterator->next();
+        print($book->getAuthor() . "\n");
+    }
+----
+
+次に、本を集めて管理するためのBook_Aggregateクラスです。本体のソースコードではインスタンスとして$bookshelfが出てきています。 
+
+[source, php]
+----
+<?php
+
+class Book_Aggregate
+{
+
+    public $books = [];
+
+    public function addBook(Book $book)
+    {
+        $this->books[] = $book;
+
+        return $this;
+    }
+
+    public function getBookAt($index)
+    {
+        return $this->books[$index];
+    }
+
+    public function getBookCnt()
+    {
+        return count($this->books);
+    }
+}
+----
+
+最後に、ループの仕方を決めるためのBook_Iteratorクラスです。本体のソースコードではインスタンスとして$iteratorが出てきています。
+
+[source, php]
+----
+<?php
+
+class Book_Iterator
+{
+
+    private $book_aggregate = null;
+    private $index = 0;
+
+    public function __construct(Book_Aggregate $book_aggregate)
+    {
+        $this->book_aggregate = $book_aggregate;
+    }
+
+    public function hasNext()
+    {
+        if ($this->index >= $this->book_aggregate->getBookCnt()) {
+            return false;
+        }
+        return true;
+    }
+    
+    public function next()
+    {
+        $next = $this->book_aggregate->getBookAt($this->index);
+        $this->index ++;
+        return $next;
+    }
+}
+
+----
+
+出力結果は、for文のときと同じものになります。
+
+== 4. どんな時iteratorは強いのか？
+
+さて、やっと本題という感じなんですが、 どういう場面でiteratorは強いでしょうか？ +
+ +
+次のような仕様変更が加わった場面を考えましょう。
+
+ id,タイトル,著者のそれぞれを、本棚に詰めたのとは、逆順で出力するようにしてください。
+ 
+現実にそんな仕様変更あんのかよ！って感じですが、例えば「逆順」ではなく「あいうえお順」とかなら有り得そうですね。 +
+実装が面倒だったので逆順を題材としました。 +
+ +
+ iteratorパターンでは、この修正はわりと簡単です。 +
+ Book_Iteratorクラスに少し変更を加えればいいのです。 +
+[source, php]
+----
+class Book_Iterator
+{
+    public function __construct(Book_Aggregate $book_aggregate)
+    {
+        $this->book_aggregate = $book_aggregate;
+        $this->index = $this->book_aggregate->getBookCnt(); // indexの初期値を変更
+    }
+    public function hasNext()
+    {
+        if ($this->index < 0) { // ループの境界を変更
+            return false;
+        }
+        return true;
+    }
+ 
+    public function next()
+    {
+        $next = $this->book_aggregate->getBookAt($this->index);
+        $this->index --; // インクリメントの変更
+        return $next;
+    }
+}	
+----
+
+一方、for文だとどうでしょう。
+[source, php]
+----
+    // IDの一覧を出力
+    for ($i=count($bookshelf); $i >= 0; $i--) { // ループカウンタの初期値、境界、インクリメントの変更
+        $book = $bookshelf[$i];
+        print($book->getId() . "\n");
+    }
+
+    // タイトルの一覧を出力
+    for ($i=count($bookshelf); $i >= 0; $i--) {// ループカウンタの初期値、境界、インクリメントの変更
+        $book = $bookshelf[$i];
+        print($book->getTitle() . "\n");
+    }
+
+    // 著者の一覧を出力
+    for ($i=count($bookshelf); $i >= 0; $i--) {// ループカウンタの初期値、境界、インクリメントの変更
+        $book = $bookshelf[$i];
+        print($book->getAuthor() . "\n");
+    }
+----
+
+そうなんです！ +
+やってる変更自体は同じですが、なんと３箇所も直さなければなりません！ +
+ +
+＼なるほどー！／ ＼なるほどー！／ ＼なるほどー！／ ＼なるほどー！／ +
+ +
+これは大きな問題で、これぐらい簡単なコードなら苦労はありませんが、 +
+「10000行あるコードに1~4箇所くらいfor文あった気がする〜」とか言われると死亡です。 +
+もうメンテナンスできません。 +
+ +
+ +
+ほかにも、
+
+ ファイルシステムのディレクトリのように、本棚も入れ子構造ができるようにしたい。
+
+などと言われると死亡です。 +
+本の集合の管理の仕方が少し複雑になるので、ループ境界である本の総数を単純にcount()では取得できなくなりました。 +
+for文の場合、また三箇所直さなければなりません。 +
+ +
+その点、iteratorパターンであれば、 +
+Book_AggregateクラスのgetBookCnt()に手を入れるだけで大丈夫です。 +
+ +
+ 
+== 5. なぜiteratorは強いか？
+本読んでるだけだと強さがイマイチわからなかったのですが、 +
+実際に自分で書いてみると「なるほどーーー」ってなりました。 +
+ +
+しかし、「なるほどーーー」と言っているだけでは応用が効かないので、もう少し掘り下げてみました。 +
+ +
+ 上で見た「なるほどポイント」は何に似ているかというと、「共通化」のアレですね。 +
+ 「ひとつ変更が加わったとき、何箇所も直さなくて済む」っていうやつ。 +
+ +
+でも、共通化の話は色々聞くのに、 +
+何故iteratorパターンに限って「なるほどレベル」が高かったのかというと、 +
+こんな所共通化できると思っていなかったからです。 +
+ +
+ +
+何十行ものコードを何箇所にもコピペする場合、 +
+人として「共通化したい」と思うのは自然なことだと思います。 +
+ +
+ですが、メンテナンス性などを考える場合には、行数は実は問題ではありません。 +
+一連のプロセスの、一部の繰り返し処理をパーツ化して切り出すすることが重要です。 +
+ +
+ for文を良く見てみると、非常に短いコードの中に様々な処理が詰め込まれています。 +
+ 
+[source, php]
+----
+for ($i=0; $i < count($bookshelf); $i++) {}
+----
+
+つまり、 +
+・ ループカウンタの初期値は何か +
+・ ループの境界は何か +
+・ ループカウンタのインクリメントはどのように行うか +
+です。 +
+ +
+そしてこれらは、「繰り返し方」や、 「繰り返す対象の構造」に強く依存し、 +
+要件によって変更を受けやすい処理でもあります。 +
+
+これらの依存関係に注目し、 +
+「繰り返す対象の構造」、「繰り返し方」に依存する処理を切り出して共通化したのが、 +
+iteratorパターンなのです。 +
+ +
+コードがこんなにも短いと「共通化しよう」という発想がなかなか出てこないんですが、 +
+偉い人はちゃんと気付けるんですね。 +
+
+== 6. 抽象化がすごい
+共通化（パーツ化）は上手くできると非常に強力なんですが、 +
+そのためには抽象化の能力が非常に重要だなぁと感じました。 +
+ +
+デザインパターンと呼ばれるものになるとめちゃくちゃ広い範囲で使いまわせる技なので、 +
+抽象化度合いがすごいんですよね。 +
+ +
+for文を見ただけで、 +
+「世の繰り返し文の主要要素は、「繰り返す対象の構造」と「繰り返し方」と「各ステップでの処理」に分けられる」 +
+とは思いつかないですよね。 +
+ +
+やはり先人たちの知恵は偉大っす。
+
+== 7. おわりに
+改めて自分の書いたブログを読み返してまぁまぁ長くて文字も多いし、控えめに言って引きました。 +
+ここまでたどり着いてくれた人には感謝です。 +
+ +
+また余力があればデザインパターン系のこと書こうかと思っていましたが、 +
+結構疲れたので次回は当分先になりそうです。 +
+ +
+ それでは。
