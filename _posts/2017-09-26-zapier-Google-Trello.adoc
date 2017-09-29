@@ -1,12 +1,12 @@
 # zapier（ザピエル）でGoogleフォームの内容をTrelloに登録してみた
 :published_at: 2017-09-26
-:hp-tags: AMI, zapier, Trello, Google Form
+:hp-tags: AMI, Zapier, Trello, Google Form
 
 こんにちは、亜美です +
 久しぶりにブログを書きます！ +
-zapierという便利なツールを使ってみたので、紹介します。 +
+Zapierという便利なツールを使ってみたので、紹介します。 +
 
-## zapier（ザピエル）とは
+## Zapier（ザピエル）とは
 システムとシステムを、簡単に連携させることができるツールです。 +
 Gmail、Trello、Slackなど、多様なツール同士を連携させることが可能です。 +
 無料でも利用することができます。 +
@@ -14,9 +14,9 @@ Gmail、Trello、Slackなど、多様なツール同士を連携させること�
 
 今回は、Googleフォームにお問い合わせすると、Trelloにタスクが追加されるというのをやってみました！
 
-まずはzapierにアカウントを登録し、システム検索画面に行きます +
+まずはZapierにアカウントを登録し、システム検索画面に行きます +
 https://zapier.com/app/explore +
-こちらの画面で、zapierが対応可能なシステムを一覧で見ることができます。 +
+こちらの画面で、Zapierが対応可能なシステムを一覧で見ることができます。 +
 
 
 image::ami/20170926/1.png[]
@@ -32,7 +32,7 @@ image::ami/20170926/2.png[]
 image::ami/20170926/3.png[]
 
 Create Trello cards from Google Forms responses +
-（Googleフォームの回答からトレロのカードを作成する） +
+（Googleフォームの回答からTrelloのカードを作成する） +
 を選択します。 +
 
 注意点が表示されます +
@@ -50,7 +50,7 @@ image::ami/20170926/5.png[]
 
 image::ami/20170926/6.png[]
 
-アカウントを選択して、save+Continueを押します +
+アカウントを選択して、Save+Continueを押します +
 
 以下のページから、該当のフォームと回答用スプレッドシートを選択します。 +
 
@@ -90,8 +90,8 @@ image::ami/20170926/12.png[]
 一度「アカウントを切り替える」からID・パスワードを再入力したところ +
 うまく認証させることができました。 +
 
-次の画面で、自分のtrelloアカウントのボードとリストを選択します。 +
-「name」は、trelloカードのタイトルの項目にあたります +
+次の画面で、自分のTrelloアカウントのボードとリストを選択します。 +
+「Name」は、Trelloカードのタイトルの項目にあたります +
 
 image::ami/20170926/13.png[]
 
@@ -104,7 +104,7 @@ Trelloの項目に、どの回答を当てはめるかを直感的に設定で�
 image::ami/20170926/14.png[]
 
 Trelloのテスト接続で、試しにこのカードを作ります、というようなことが書いてありますので、 +
-create & Continueすると・・・・ +
+Create & Continueすると・・・・ +
 
 image::ami/20170926/15.png[]
 
