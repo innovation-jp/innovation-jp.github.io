@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>zapier（ザピエル）でGoogleフォームの内容をTrelloに登録してみた - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="zapier（ザピエル）でGoogleフォームの内容をTrelloに登録してみた">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="zapier（ザピエル）でGoogleフォームの内容をTrelloに登録してみた">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2017/09/26/zapier-Google-Trello.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="zapier（ザピエル）でGoogleフォームの内容をTrelloに登録してみた" />
+    <meta property="og:description" content="こんにちは、亜美です 久しぶりにブログを書きます！ zapierという便利なツールを使ってみたので、紹介します。 zapier（ザピエル）とは システムとシステムを、簡単に連携させることができるツールです。 Gmail、Trello、Slackなど、多様なツール同士を連携させることが可能です。 無料でも利用することができます。 今回は、Googleフォームにお問い合わせすると、Trelloにタスクが追加されるというのをやってみました！ まずはzapierにアカウントを登録し、システム検索画面に行きます https://zapier.com/app/ex..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2017/09/26/zapier-Google-Trello.html" />
+    <meta property="article:published_time" content="2017-09-25T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2017-09-29T04:56:42.773Z" />
+    <meta property="article:tag" content="AMI" />
+    <meta property="article:tag" content="zapier" />
+    <meta property="article:tag" content="Trello" />
+    <meta property="article:tag" content="Google Form" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="zapier（ザピエル）でGoogleフォームの内容をTrelloに登録してみた" />
+    <meta name="twitter:description" content="こんにちは、亜美です 久しぶりにブログを書きます！ zapierという便利なツールを使ってみたので、紹介します。 zapier（ザピエル）とは システムとシステムを、簡単に連携させることができるツールです。 Gmail、Trello、Slackなど、多様なツール同士を連携させることが可能です。 無料でも利用することができます。 今回は、Googleフォームにお問い合わせすると、Trelloにタスクが追加されるというのをやってみました！ まずはzapierにアカウントを登録し、システム検索画面に行きます https://zapier.com/app/ex..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2017/09/26/zapier-Google-Trello.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "AMI",
+        "image": "https://avatars2.githubusercontent.com/u/17684148?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "zapier（ザピエル）でGoogleフォームの内容をTrelloに登録してみた",
+    "url": "http://tech.innovation.co.jp/2017/09/26/zapier-Google-Trello.html",
+    "datePublished": "2017-09-25T15:00:00.000Z",
+    "dateModified": "2017-09-29T04:56:42.773Z",
+    "keywords": "AMI,  zapier,  Trello,  Google Form",
+    "description": "こんにちは、亜美です 久しぶりにブログを書きます！ zapierという便利なツールを使ってみたので、紹介します。 zapier（ザピエル）とは システムとシステムを、簡単に連携させることができるツールです。 Gmail、Trello、Slackなど、多様なツール同士を連携させることが可能です。 無料でも利用することができます。 今回は、Googleフォームにお問い合わせすると、Trelloにタスクが追加されるというのをやってみました！ まずはzapierにアカウントを登録し、システム検索画面に行きます https://zapier.com/app/ex..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-A-M-I tag-zapier tag-Trello tag-Google-Form no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="26 Sep 2017" class="post-meta__date date">26 Sep 2017</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/A-M-I">AMI</a>, <a href="http://tech.innovation.co.jp/tag/zapier"> zapier</a>, <a href="http://tech.innovation.co.jp/tag/Trello"> Trello</a>, <a href="http://tech.innovation.co.jp/tag/Google-Form"> Google Form</a></span>
+        <span class="post-meta__author author"><img src="https://avatars2.githubusercontent.com/u/17684148?v=4" alt="profile image for AMI" class="avatar post-meta__avatar" /> by AMI</span>
+      </div>
+      <h1 class="post-title">zapier（ザピエル）でGoogleフォームの内容をTrelloに登録してみた</h1>
+    </header>
+
+    <section class="post tag-A-M-I tag-zapier tag-Trello tag-Google-Form">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんにちは、亜美です<br>
+久しぶりにブログを書きます！<br>
+zapierという便利なツールを使ってみたので、紹介します。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_zapier">zapier（ザピエル）とは</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>システムとシステムを、簡単に連携させることができるツールです。<br>
+Gmail、Trello、Slackなど、多様なツール同士を連携させることが可能です。<br>
+無料でも利用することができます。<br></p>
+</div>
+<div class="paragraph">
+<p>今回は、Googleフォームにお問い合わせすると、Trelloにタスクが追加されるというのをやってみました！</p>
+</div>
+<div class="paragraph">
+<p>まずはzapierにアカウントを登録し、システム検索画面に行きます<br>
+<a href="https://zapier.com/app/explore" class="bare">https://zapier.com/app/explore</a><br>
+こちらの画面で、zapierが対応可能なシステムを一覧で見ることができます。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/ami/20170926/1.png" alt="1.png">
+</div>
+</div>
+<div class="paragraph">
+<p>ここからGoogleフォームとTrelloを選択します。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/ami/20170926/2.png" alt="2.png">
+</div>
+</div>
+<div class="paragraph">
+<p>2つを選択すると、連携可能なシステムの組み合わせが検索結果として表示されます。<br>
+多くの連携パターンが表示され、眺めているだけでも試したくなります！<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/ami/20170926/3.png" alt="3.png">
+</div>
+</div>
+<div class="paragraph">
+<p>Create Trello cards from Google Forms responses<br>
+（Googleフォームの回答からトレロのカードを作成する）<br>
+を選択します。<br></p>
+</div>
+<div class="paragraph">
+<p>注意点が表示されます<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/ami/20170926/4.png" alt="4.png">
+</div>
+</div>
+<div class="paragraph">
+<p>使用するGoogleフォームは、回答がスプレッドシートに蓄積されるよう<br>
+設定する必要があります、といったことが書いてあります<br></p>
+</div>
+<div class="paragraph">
+<p>更に進めていくと、Googleフォームを作成するGoogleアカウントを登録する画面が現れます<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/ami/20170926/5.png" alt="5.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/ami/20170926/6.png" alt="6.png">
+</div>
+</div>
+<div class="paragraph">
+<p>アカウントを選択して、save+Continueを押します<br></p>
+</div>
+<div class="paragraph">
+<p>以下のページから、該当のフォームと回答用スプレッドシートを選択します。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/ami/20170926/7.png" alt="7.png">
+</div>
+</div>
+<div class="paragraph">
+<p>右側の下矢印をクリックすると、候補が出てきます。<br>
+※ページ下の入力欄は、回答が記録されるスプレッドシートのタブの名前が表示されます。<br></p>
+</div>
+<div class="paragraph">
+<p>次のページへ進むと、以下のページが表示されます。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/ami/20170926/8.png" alt="8.png">
+</div>
+</div>
+<div class="paragraph">
+<p>試しにGoogleフォームに接続するので、フォームに何か回答しておいて！<br>
+というような内容がかかれているので、一つお問い合わせしておきます<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/ami/20170926/9.png" alt="9.png">
+</div>
+</div>
+<div class="paragraph">
+<p>こんな感じのお問い合わせをしてみました。<br>
+Fetch &amp; Continueを押して、接続できるかを試します。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/ami/20170926/10.png" alt="10.png">
+</div>
+</div>
+<div class="paragraph">
+<p>接続に成功するとこんな感じです。<br>
+回答が1件も無い場合などは、テスト失敗の画面が表示されますが、<br>
+「Test Skipped」ボタンを押すと、一旦テストをスキップして次に進めることもできるようです。<br></p>
+</div>
+<div class="paragraph">
+<p>次にTrelloの設定に入ります。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/ami/20170926/11.png" alt="11.png">
+</div>
+</div>
+<div class="paragraph">
+<p>「Connect an Account」をクリックすると、アカウント情報を選択することができます<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/ami/20170926/12.png" alt="12.png">
+</div>
+</div>
+<div class="paragraph">
+<p>私の場合、「許可」ボタンをクリックしても、うまく認証が通らなかったのですが<br>
+一度「アカウントを切り替える」からID・パスワードを再入力したところ<br>
+うまく認証させることができました。<br></p>
+</div>
+<div class="paragraph">
+<p>次の画面で、自分のtrelloアカウントのボードとリストを選択します。<br>
+「name」は、trelloカードのタイトルの項目にあたります<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/ami/20170926/13.png" alt="13.png">
+</div>
+</div>
+<div class="paragraph">
+<p>「Show advanced options」を押すと、さらに項目を選択することができます。<br>
+Trelloの項目に、どの回答を当てはめるかを直感的に設定できます！すごい！！<br></p>
+</div>
+<div class="paragraph">
+<p>次の画面に進むと、このようになります<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/ami/20170926/14.png" alt="14.png">
+</div>
+</div>
+<div class="paragraph">
+<p>Trelloのテスト接続で、試しにこのカードを作ります、というようなことが書いてありますので、<br>
+create &amp; Continueすると・・・・<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/ami/20170926/15.png" alt="15.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/ami/20170926/16.png" alt="16.png">
+</div>
+</div>
+<div class="paragraph">
+<p>できた！！！！<br></p>
+</div>
+<div class="paragraph">
+<p>早速Googleフォームからお問い合わせしてみます。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/ami/20170926/17.png" alt="17.png">
+</div>
+</div>
+<div class="paragraph">
+<p>Freeプランは15分おきに実行されるそうなので、一旦待ちます。。。<br>
+15分後確認すると・・・<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/ami/20170926/18.png" alt="18.png">
+</div>
+</div>
+<div class="paragraph">
+<p>やったーできてる！！！！！<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">まとめ</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>プログラミングは一切必要なく、APIを叩くコードを作成するのはちょっと敷居が高い・・・<br>
+という方でも、簡単に設定することができるように感じます。<br></p>
+</div>
+<div class="paragraph">
+<p>無料プランでも、5つ連結をつくることができ、<br>
+1ヶ月に100個までタスクを発生させることができるので、個人で使う分では十分だと思います。<br></p>
+</div>
+<div class="paragraph">
+<p>有料プランにすると、タスクの実行タームが15分から5分に短縮できたり、<br>
+有料プランでしか連携できないシステムもあったりするようです。<br>
+参考：https://zapier.com/app/billing/plans<br></p>
+</div>
+<div class="paragraph">
+<p>無料プランでも十分に連携先システムがあり、特定の条件を満たしたときのみ実行する、<br>
+というような設定も細かにできるようでした。<br>
+とっても簡単で面白いので、ぜひお試しください！<br>
+おわり<br></p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2017. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
