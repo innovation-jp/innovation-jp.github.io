@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Iteratorパターンで学ぶ抽象化 - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Iteratorパターンで学ぶ抽象化">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Iteratorパターンで学ぶ抽象化">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2017/10/02/Iterator.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Iteratorパターンで学ぶ抽象化" />
+    <meta property="og:description" content="どうも、bigenです。 最近、GoFのデザインパターンについて勉強してまして、 その中でパーツ化の難しさと抽象化の考え方について感銘を受けたので、 学んだことを残しておこうかなと思います。 本記事ではIteratorパターンを例にとって、 単純なfor文で書いたケースと、Iteratorパターンで書いたケースで、 どのような場合にIteratorパターンのメリットがあるかを考察します。 その後で、何故そのようなメリットを享受できるのかまで考察し、 抽象化・共通化・一般化の思考って大事だね、っていう話にもっていきます。 なお、コードは全てPHPで書いて..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2017/10/02/Iterator.html" />
+    <meta property="article:published_time" content="2017-10-01T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2017-10-02T07:29:48.264Z" />
+    <meta property="article:tag" content="bigen" />
+    <meta property="article:tag" content="iterator" />
+    <meta property="article:tag" content="design pattern" />
+    <meta property="article:tag" content="GoF" />
+    <meta property="article:tag" content="abstraction" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Iteratorパターンで学ぶ抽象化" />
+    <meta name="twitter:description" content="どうも、bigenです。 最近、GoFのデザインパターンについて勉強してまして、 その中でパーツ化の難しさと抽象化の考え方について感銘を受けたので、 学んだことを残しておこうかなと思います。 本記事ではIteratorパターンを例にとって、 単純なfor文で書いたケースと、Iteratorパターンで書いたケースで、 どのような場合にIteratorパターンのメリットがあるかを考察します。 その後で、何故そのようなメリットを享受できるのかまで考察し、 抽象化・共通化・一般化の思考って大事だね、っていう話にもっていきます。 なお、コードは全てPHPで書いて..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2017/10/02/Iterator.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars1.githubusercontent.com/u/23183770?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "Iteratorパターンで学ぶ抽象化",
+    "url": "http://tech.innovation.co.jp/2017/10/02/Iterator.html",
+    "datePublished": "2017-10-01T15:00:00.000Z",
+    "dateModified": "2017-10-02T07:29:48.264Z",
+    "keywords": "bigen,  iterator, design pattern,  GoF,  abstraction",
+    "description": "どうも、bigenです。 最近、GoFのデザインパターンについて勉強してまして、 その中でパーツ化の難しさと抽象化の考え方について感銘を受けたので、 学んだことを残しておこうかなと思います。 本記事ではIteratorパターンを例にとって、 単純なfor文で書いたケースと、Iteratorパターンで書いたケースで、 どのような場合にIteratorパターンのメリットがあるかを考察します。 その後で、何故そのようなメリットを享受できるのかまで考察し、 抽象化・共通化・一般化の思考って大事だね、っていう話にもっていきます。 なお、コードは全てPHPで書いて..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-bigen tag-iterator tag-design-pattern tag-Go-F tag-abstraction no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="02 Oct 2017" class="post-meta__date date">02 Oct 2017</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/bigen">bigen</a>, <a href="http://tech.innovation.co.jp/tag/iterator"> iterator</a>, <a href="http://tech.innovation.co.jp/tag/design-pattern">design pattern</a>, <a href="http://tech.innovation.co.jp/tag/Go-F"> GoF</a>, <a href="http://tech.innovation.co.jp/tag/abstraction"> abstraction</a></span>
+        <span class="post-meta__author author"><img src="https://avatars1.githubusercontent.com/u/23183770?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">Iteratorパターンで学ぶ抽象化</h1>
+    </header>
+
+    <section class="post tag-bigen tag-iterator tag-design-pattern tag-Go-F tag-abstraction">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>どうも、bigenです。<br>
+<br>
+最近、GoFのデザインパターンについて勉強してまして、<br>
+その中でパーツ化の難しさと抽象化の考え方について感銘を受けたので、<br>
+学んだことを残しておこうかなと思います。<br>
+<br>
+本記事ではIteratorパターンを例にとって、<br>
+単純なfor文で書いたケースと、Iteratorパターンで書いたケースで、<br>
+どのような場合にIteratorパターンのメリットがあるかを考察します。<br>
+<br>
+その後で、何故そのようなメリットを享受できるのかまで考察し、<br>
+抽象化・共通化・一般化の思考って大事だね、っていう話にもっていきます。<br>
+<br>
+なお、コードは全てPHPで書いています。業務でよく使うので。<br>
+また、Iteratorパターンの概要の説明は各種サイトや本を参照してください。<br>
+今回は実践的にIteratorパターンがどのようなケースで威力を発揮するかを紹介するにとどめます。<br>
+参考サイト : <a href="https://qiita.com/shoheiyokoyama/items/3f42d0057d9d5a861039" class="bare">https://qiita.com/shoheiyokoyama/items/3f42d0057d9d5a861039</a><br></p>
+</div>
+<div class="paragraph">
+<p>GoFパターンの勉強にあたっては次の本を多分に参考にさせていただきました。心から感謝です。<br>
+参考書 : <a href="http://www.hyuki.com/dp/" class="bare">http://www.hyuki.com/dp/</a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__">目次</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>準備</p>
+</li>
+<li>
+<p>for文でやる</p>
+</li>
+<li>
+<p>Iteratorパターンでやる</p>
+</li>
+<li>
+<p>どんな時Iteratorは強いか？</p>
+</li>
+<li>
+<p>なぜIteratorは強いか？</p>
+</li>
+<li>
+<p>抽象化がすごい</p>
+</li>
+<li>
+<p>おわりに</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_1">1. 準備</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>まず、題材とする問題設定ですが、以下のようなプログラムを書いていきたいと思います。</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>あるところに本が３冊あります。
+本には"id"と、"タイトル"と、"著者"という属性があります。
+この時、各本の「idの一覧」「タイトルの一覧」「著者の一覧」を出力してください。</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>非常に簡単ですね。<br>
+<br>
+なお、本は以下のようなBookクラスのインスタンスとして与えられるとします。<br>
+コンストラクタで各情報を与え、get~~で取り出すだけです。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-php" data-lang="php">&lt;?php
+
+class Book
+{
+
+    private $id     = '';
+    private $title  = '';
+    private $author = '';
+
+    public function __construct($id, $title, $author)
+    {
+        $this-&gt;id     = $id;
+        $this-&gt;title  = $title;
+        $this-&gt;author = $author;
+    }
+
+    public function getId()
+    {
+        return $this-&gt;id;
+    }
+
+    public function getTitle()
+    {
+        return $this-&gt;title;
+    }
+
+    public function getAuthor()
+    {
+        return $this-&gt;author;
+    }
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_2_for">2. for文でやる</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>では、プログラムを一般的なfor文で書いてみようと思います。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-php" data-lang="php">&lt;?php
+    require 'iterator_book.php';
+
+    // 本を格納する配列
+    $bookshelf = [];
+
+    // 本のインスタンス
+    $book_1 = new Book("1", "title1", "author1");
+    $book_3 = new Book("3", "title3", "author3");
+    $book_5 = new Book("5", "title5", "author5");
+
+    // 格納
+    array_push($bookshelf, $book_1, $book_3, $book_5);
+
+
+    // IDの一覧を出力
+    for ($i=0; $i &lt; count($bookshelf); $i++) {
+        $book = $bookshelf[$i];
+        print($book-&gt;getId() . "\n");
+    }
+
+    // タイトルの一覧を出力
+    for ($i=0; $i &lt; count($bookshelf); $i++) {
+        $book = $bookshelf[$i];
+        print($book-&gt;getTitle() . "\n");
+    }
+
+    // 著者の一覧を出力
+    for ($i=0; $i &lt; count($bookshelf); $i++) {
+        $book = $bookshelf[$i];
+        print($book-&gt;getAuthor() . "\n");
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>こんな感じですね。
+出力結果は次のようになります。<br></p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>1
+3
+5
+title1
+title3
+title5
+author1
+author3
+author5</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_3_iterator">3. Iteratorパターンでやる</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>では、Iteratorパターンを使って書いてみましょう。<br>
+今回はできるだけシンプルにするため、抽象クラスや各種メソッドをかなり省略しています。<br>
+<br>
+それでもかなり長いので、さくっと流し読みしてください。</p>
+</div>
+<div class="paragraph">
+<p>本体のソース</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-php" data-lang="php">&lt;?php
+
+    require 'iterator_book_iterator.php';
+    require 'iterator_book_aggregate.php';
+    require 'iterator_book.php';
+
+    // 本を格納するオブジェクト
+    $bookshelf = new Book_Aggregate();
+
+    // 本のインスタンス
+    $book_1 = new Book("1", "title1", "author1");
+    $book_3 = new Book("3", "title3", "author3");
+    $book_5 = new Book("5", "title5", "author5");
+
+    // 格納
+    $bookshelf-&gt;addBook($book_1)
+              -&gt;addBook($book_3)
+              -&gt;addBook($book_5);
+
+
+    // イテレータを生成
+    $iterator = new Book_Iterator($bookshelf);
+    // IDを出力
+    while ($iterator-&gt;hasNext()) {
+        $book = $iterator-&gt;next();
+        print($book-&gt;getId() . "\n");
+    }
+
+    // イテレータを生成
+    $iterator = new Book_Iterator($bookshelf);
+    // 著者を出力
+    while ($iterator-&gt;hasNext()) {
+        $book = $iterator-&gt;next();
+        print($book-&gt;getTitle() . "\n");
+    }
+
+    // イテレータを生成
+    $iterator = new Book_Iterator($bookshelf);
+    // 著者を出力
+    while ($iterator-&gt;hasNext()) {
+        $book = $iterator-&gt;next();
+        print($book-&gt;getAuthor() . "\n");
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>次に、本を集めて管理するためのBook_Aggregateクラスです。本体のソースコードではインスタンスとして$bookshelfが出てきています。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-php" data-lang="php">&lt;?php
+
+class Book_Aggregate
+{
+
+    public $books = [];
+
+    public function addBook(Book $book)
+    {
+        $this-&gt;books[] = $book;
+
+        return $this;
+    }
+
+    public function getBookAt($index)
+    {
+        return $this-&gt;books[$index];
+    }
+
+    public function getBookCnt()
+    {
+        return count($this-&gt;books);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>最後に、ループの仕方を決めるためのBook_Iteratorクラスです。本体のソースコードではインスタンスとして$Iteratorが出てきています。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-php" data-lang="php">&lt;?php
+
+class Book_Iterator
+{
+
+    private $book_aggregate = null;
+    private $index = 0;
+
+    public function __construct(Book_Aggregate $book_aggregate)
+    {
+        $this-&gt;book_aggregate = $book_aggregate;
+    }
+
+    public function hasNext()
+    {
+        if ($this-&gt;index &gt;= $this-&gt;book_aggregate-&gt;getBookCnt()) {
+            return false;
+        }
+        return true;
+    }
+
+    public function next()
+    {
+        $next = $this-&gt;book_aggregate-&gt;getBookAt($this-&gt;index);
+        $this-&gt;index ++;
+        return $next;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>出力結果は、for文のときと同じものになります。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_4_iterator">4. どんな時Iteratorは強いのか？</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>さて、やっと本題という感じなんですが、 どういう場面でIteratorは強いでしょうか？<br>
+<br>
+次のような仕様変更が加わった場面を考えましょう。</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>id,タイトル,著者のそれぞれを、本棚に詰めたのとは逆順で出力するようにしてください。</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>現実にそんな仕様変更あんのかよ！って感じですが、例えば「逆順」ではなく「あいうえお順」とかなら有り得そうですね。<br>
+実装が面倒だったので逆順を題材としました。<br>
+<br>
+ Iteratorパターンでは、この修正はわりと簡単です。<br>
+ Book_Iteratorクラスに少し変更を加えればいいのです。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-php" data-lang="php">class Book_Iterator
+{
+    public function __construct(Book_Aggregate $book_aggregate)
+    {
+        $this-&gt;book_aggregate = $book_aggregate;
+        $this-&gt;index = $this-&gt;book_aggregate-&gt;getBookCnt(); // indexの初期値を変更
+    }
+    public function hasNext()
+    {
+        if ($this-&gt;index &lt; 0) { // ループの境界を変更
+            return false;
+        }
+        return true;
+    }
+
+    public function next()
+    {
+        $next = $this-&gt;book_aggregate-&gt;getBookAt($this-&gt;index);
+        $this-&gt;index --; // インクリメントの変更
+        return $next;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>一方、for文だとどうでしょう。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-php" data-lang="php">    // IDの一覧を出力
+    for ($i=count($bookshelf); $i &gt;= 0; $i--) { // ループカウンタの初期値、境界、インクリメントの変更
+        $book = $bookshelf[$i];
+        print($book-&gt;getId() . "\n");
+    }
+
+    // タイトルの一覧を出力
+    for ($i=count($bookshelf); $i &gt;= 0; $i--) {// ループカウンタの初期値、境界、インクリメントの変更
+        $book = $bookshelf[$i];
+        print($book-&gt;getTitle() . "\n");
+    }
+
+    // 著者の一覧を出力
+    for ($i=count($bookshelf); $i &gt;= 0; $i--) {// ループカウンタの初期値、境界、インクリメントの変更
+        $book = $bookshelf[$i];
+        print($book-&gt;getAuthor() . "\n");
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>そうなんです！<br>
+やってる変更自体は同じですが、なんと３箇所も直さなければなりません！<br>
+<br>
+＼なるほどー！／ ＼なるほどー！／ ＼なるほどー！／ ＼なるほどー！／<br>
+<br>
+これは大きな問題で、これぐらい簡単なコードなら苦労はありませんが、<br>
+「10000行あるコードに1~4箇所くらいfor文あった気がする〜」とか言われると死亡です。<br>
+もうメンテナンスできません。<br>
+<br>
+<br>
+ほかにも、</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>ファイルシステムのディレクトリのように、本棚も入れ子構造ができるようにしたい。</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>などと言われると死亡です。<br>
+本の集合の管理の仕方が少し複雑になるので、ループ境界である本の総数を単純にcount()では取得できなくなりました。<br>
+for文の場合、また三箇所直さなければなりません。<br>
+<br>
+その点、Iteratorパターンであれば、<br>
+Book_AggregateクラスのgetBookCnt()に手を入れるだけで大丈夫です。<br>
+<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_5_iterator">5. なぜIteratorは強いか？</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>本読んでるだけだと強さがイマイチわからなかったのですが、<br>
+実際に自分で書いてみると「なるほどーーー」ってなりました。<br>
+<br>
+しかし、「なるほどーーー」と言っているだけでは応用が効かないので、もう少し掘り下げてみました。<br>
+<br>
+ 上で見た「なるほどポイント」は何に似ているかというと、「共通化」のアレですね。<br>
+ 「ひとつ変更が加わったとき、何箇所も直さなくて済む」っていうやつ。<br>
+<br>
+でも、共通化の話は色々聞くのに、<br>
+何故Iteratorパターンに限って「なるほどレベル」が高かったのかというと、<br>
+こんな所共通化できると思っていなかったからです。<br>
+<br>
+<br>
+何十行ものコードを何箇所にもコピペする場合、<br>
+人として「共通化したい」と思うのは自然なことだと思います。<br>
+<br>
+ですが、メンテナンス性などを考える場合には、行数は実は問題ではありません。<br>
+一連のプロセスの、一部の繰り返し処理をパーツ化して切り出すことが重要です。<br>
+<br>
+ for文を良く見てみると、非常に短いコードの中に様々な処理が詰め込まれています。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-php" data-lang="php">for ($i=0; $i &lt; count($bookshelf); $i++) {}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>つまり、<br>
+・ ループカウンタの初期値は何か<br>
+・ ループの境界は何か<br>
+・ ループカウンタのインクリメントはどのように行うか<br>
+です。<br>
+<br>
+そしてこれらは、「繰り返し方」や、 「繰り返す対象の構造」に強く依存し、<br>
+要件によって変更を受けやすい処理でもあります。<br></p>
+</div>
+<div class="paragraph">
+<p>これらの依存関係に注目し、<br>
+「繰り返す対象の構造」、「繰り返し方」に依存する処理を切り出して共通化したのが、<br>
+Iteratorパターンなのです。<br>
+<br>
+コードがこんなにも短いと「共通化しよう」という発想がなかなか出てこないんですが、<br>
+偉い人はちゃんと気付けるんですね。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_6">6. 抽象化がすごい</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>共通化（パーツ化）は上手くできると非常に強力なんですが、<br>
+そのためには抽象化の能力が非常に重要だなぁと感じました。<br>
+<br>
+デザインパターンと呼ばれるものになるとめちゃくちゃ広い範囲で使いまわせる技なので、<br>
+抽象化度合いがすごいんですよね。<br>
+<br>
+for文を見ただけで、<br>
+「世の繰り返し文の主要要素は、「繰り返す対象の構造」と「繰り返し方」と「各ステップでの処理」に分けられる」<br>
+とは思いつかないですよね。<br>
+<br>
+やはり先人たちの知恵は偉大っす。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_7">7. おわりに</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>改めて自分の書いたブログを読み返してまぁまぁ長くて文字も多いし、控えめに言って引きました。<br>
+ここまでたどり着いてくれた人には感謝です。<br>
+<br>
+また余力があればデザインパターン系のこと書こうかと思っていましたが、<br>
+結構疲れたので次回は当分先になりそうです。<br>
+<br>
+ それでは。</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2017. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
