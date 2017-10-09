@@ -1,4 +1,4 @@
-= 秋の寂しさを ionic + Azure + Repl AI を利用したアプリで乗り切る
+= 秋の寂しさを Ionic + Azure + Repl AI を利用したアプリで乗り切る
 :hp-alt-title: Azure 7
 :hp-tags: syoga, log, Azure, Function App, Ionic, Cordova, Angular
 
