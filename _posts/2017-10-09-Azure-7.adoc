@@ -1,0 +1,164 @@
+= 秋の寂しさを ionic + Azure + Repl AI を利用したアプリで乗り切る
+:hp-alt-title: Azure 7
+:hp-tags: syoga, log, Azure, Function App, Ionic, Cordova, Angular
+
+お久しぶりです、SRE チームの syoga です。
+
+秋の気配が近づきめっきり寒くなってますが、皆様いかかがお過ごしでしょうか、風邪の初症状とログの出し忘れには気をつけたいものですね。
+
+話は変わりますが、最近友達が少ない事に気付きました、LINE の友達は 33人（家族含む）、インスタのフォロワーは 7人（国外の方含む）、Facebookの友達は0人、そんな寂しさを払拭するために、以前の
+http://tech.innovation.co.jp/2017/07/04/Azure-5.html/[記事]
+で作った LINE Bot とおしゃべりする日々です。
+
+ただ、LINE を通しておしゃべりするのは最近飽きてきたので、今回は AI とお話するハイブリッドアプリを作成したいと思います。
+
+#### Ionic フレームワークを利用する
+Ionic は Cordova を拡張したハイブリッドアプリ用のフレームワークで、Angular ベースの UI ライブラリです、詳細は https://ionicframework.com/[公式サイト] で確認下さい。
+
+そんな、筆者は Angular4 は触った事がなく、ハイブリッドアプリ開発も初めてです。
+
+### 環境作成
+Node.js、npm がインストールされている必要があります、`npm -g install ionic` でグローバルインストールを行います。
+
+インストールが完了したら新規プロジェクトを作成します、テンプレートが色々とありますが今回は、ブランクのプロジェクトを作成するため `ionic start プロジェクト名` を実行し、blank を選択します。
+image:syoga/aml7/azure1.png[]
+
+作成したプロジェクトのディレクトリ構造は以下のようになっています。
+image:syoga/aml7/azure2.png[]
+
+pages/home ディレクトリ配下に、アプリ実行時に表示される、html、ts、scss がまとめて作成されます。
+
+### エミュレータの実行
+以下の方法で各エミュレータを実行できます。 +
+・iOS （Xcode のインストールが必要） : + 
+`ionic cordova emulate ios` +
+
+・Andoroid（SDK のパスを環境変数へ設定する）： +
+`ionic cordova emulate andoroid` +
+
+・ブラウザ（chrome が必要）： +
+`ionic serve`
+
+*◆ 困った話 その1 ◆* +
+iOS のエミュレータを立ち上げたところ Build 後に以下エラーが発生。
+```
+Signing Identity:
+/usr/bin/codesign --force --sign - --timestamp=none /Users/***/Documents/hogehoge/platforms/ios/build/emulator/hogehoge.app
+ 
+** BUILD SUCCEEDED **
+Error: Cannot read property 'replace’ of undefined
+[ERROR] Cordova encountered an error. You may get more insight by running the Cordova command above directly.
+[ERROR] An error occurred while running cordova emulate ios (exit code 1).
+```
+色々と調べたところ、インストールされた Cordova に内包されている ios-sim モジュールのバージョンが古いということで、最新バージョンにする事で解決しました。
+
+### 早速実装
+インターフェースはもろに某 SNS を参考に以下のようにしました、メッセージ入力エリアにメッセージを入力し、送信ボタンをタップすると上の吹き出しに自分のメッセージが、下の吹き出しに Repl AI から回答されたメッセージが表示されるようにします。
+image:syoga/aml7/azure3.png[]
+
+何か四角があるな〜、と思うでしょうがこれが吹き出しです！ 吹き出しの三角は AMI さんの以前の http://tech.innovation.co.jp/2017/03/03/C-S-S-triangle.html/[記事] を参考にしました。
+
+初期表示時にも表示されているのはご愛嬌。
+
+以前の LINE Bot 実装と同じように、Repl AI の呼出し時に必要なユーザ ID を Node Redis モジュールを利用し、Azure 上の Redis に格納しようと考え、Node Redis モジュールインストール後に Redis 操作クラスを作成したのですが…
+```
+import { Injectable } from '@angular/core';
+import * as redismodule from "redis"; // Node Redis モジュールをインポート
+const client = redismodule.createClient(6379, "Azure Redis のエンドポイント URL");
+ 
+// Redis 操作クラス
+@Injectable()
+export class Redis {
+ 
+    /** Rdeis データ取得
+    * @param {string} key
+    */
+    getRedisvalue(key: string) {
+        return client.get(key);
+    }
+ 
+    /** Rdeis データ登録
+    * @param {string} key
+    * @param {string} value
+    * @return
+    */
+    setRedisvalue(key: string, value: string) {
+        return client.set(key, value);
+    }
+}
+```
+*◆ 困った話 その2 ◆* +
+作成したクラスをブランクページ作成時に自動生成された home.ts に インポートし、処理を実装したところ、特にコンパイルエラーも発生しなかたっため、ブラウザで確認したところエラー画面が表示され `net.isIP is not a function` となっていました。
+
+Ionic は webpack を利用し TS からコンパイルされた JS を 1 ファイルにまとめていますので、エラー原因特定のため 3 万行の JS ファイルを眺めていたところ、 Node Net モジュールが記載されるべき箇所が空っぽになっていました。
+
+こちらも色々調べたところ、ブラウザでは一般的な tcp の実装がないのでエミュレートができず、ブラウザで動作するモジュール、この場合は `require（'net'）` が失敗するのを防ぐため空のオブジェクトが生成された事が原因でした。
+
+Node.js 上ではもちろん動作しますが、ブラウザでのエミュレートは出来ないという事で、当初から大幅に実装内容を変更する必要がありました、なんてこったい！！
+
+### こうなったら…アイツを使うしか無い！！
+という事で Azure Function App を利用し、homt.ts の中でリクエストを投げ Function App 上で Repl AI の API を実行し、回答を取得するという実装にします。
+
+新たな関数を作成し、Function App の処理は以前の LINE Bot からほぼ流用しました、今度は行ける！！と思いきや…
+
+*◆ 困った話 その3 ◆* +
+localhost から Function App に通信する際に Same-Origin Policy に引っかかり、どんなリクエストを投げても、400 となってしまいました。
+
+ただ、Function App には CORS の設定を行える設定があるため、こちらに localhost を追加する事で無事 Function App から、レスポンスを受け取る事が出来るようになりました。
+
+### そして完成へ…
+↑についてはドラゴンクエストⅢを意識しました、home.ts の内容は下記の通りです。
+```
+import { Component } from "@angular/core";
+import { NavController } from "ionic-angular";
+import { HttpClient } from '@angular/common/http'; 
+
+@Component({
+  selector    : "page-home",
+  templateUrl : "home.html"
+})
+
+export class HomePage {
+
+  homePage = {
+      message     : "",
+      sendmessage : "",
+      recvmessage : ""
+  };
+
+  constructor(
+    public  navCtrl     : NavController,
+    private httpClient  : HttpClient) {
+  }; 
+
+  // Azure Function App エンドポイント
+  private FUNCTION_APP_URL: string = "Azure Function App のエンドポイント";
+  
+  /** 送信ボタンタップ
+   */
+  sendMessage() {
+    // 入力メッセージを表示
+    this.homePage.sendmessage = this.homePage.message;
+
+    // Repl AI から取得したメッセージを表示
+    this.httpClient.post(this.FUNCTION_APP_URL, JSON.stringify({name: this.homePage.message}))
+      .subscribe(response => {this.homePage.recvmessage=response.toString();}
+    );
+    
+    // 入力エリアをクリア
+    this.homePage.message = "";
+  }
+}
+```
+
+完成したアプリがこちらです。
+image:syoga/aml7/azure4.gif[]
+
+#### 感想
+兎にも角にも初めて尽くしだったため、各種公式ドキュメントを漁りながらどうにか作りました。
+
+メッセージの履歴も残らないので、中途半端ではありますが今後どんどん改良して行こうと思います、画像判定もアプリに実装してみるのも面白いかもしれません。
+
+また、今回エディタに Visual Studio Code を利用したのですが、個人的には GUI エディタで一番使いやすいのではないかと、感激しています！！
+
+完
