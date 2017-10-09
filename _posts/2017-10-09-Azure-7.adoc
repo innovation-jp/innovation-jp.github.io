@@ -21,10 +21,12 @@ Ionic は Cordova を拡張したハイブリッドアプリ用のフレーム�
 Node.js、npm がインストールされている必要があります、`npm -g install ionic` でグローバルインストールを行います。
 
 インストールが完了したら新規プロジェクトを作成します、テンプレートが色々とありますが今回は、ブランクのプロジェクトを作成するため `ionic start プロジェクト名` を実行し、blank を選択します。
-image:syoga/aml7/azure1.png[]
+
+image::syoga/aml7/azure1.png[]
 
 作成したプロジェクトのディレクトリ構造は以下のようになっています。
-image:syoga/aml7/azure2.png[]
+
+image::syoga/aml7/azure2.png[]
 
 pages/home ディレクトリ配下に、アプリ実行時に表示される、html、ts、scss がまとめて作成されます。
 
@@ -152,7 +154,8 @@ export class HomePage {
 ```
 
 完成したアプリがこちらです。
-image:syoga/aml7/azure4.gif[]
+
+image::syoga/aml7/azure4.gif[]
 
 #### 感想
 兎にも角にも初めて尽くしだったため、各種公式ドキュメントを漁りながらどうにか作りました。
