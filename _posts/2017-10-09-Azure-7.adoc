@@ -35,7 +35,7 @@ pages/home ディレクトリ配下に、アプリ実行時に動作する、htm
 ・iOS （Xcode のインストールが必要） : + 
 `ionic cordova emulate ios` +
 
-・Andoroid（SDK のパスを環境変数へ設定する）： +
+・Andoroid（環境変数へ Andoroid SDK パスの設定が必要）： +
 `ionic cordova emulate andoroid` +
 
 ・ブラウザ（chrome が必要）： +
