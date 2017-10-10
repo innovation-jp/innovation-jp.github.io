@@ -211,6 +211,12 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/08/26/Kotlin.html" title="link to Kotlinでメモアプリを作る〜環境づくり編〜">Kotlinでメモアプリを作る〜環境づくり編〜</a></h2>
+        <p class="excerpt">こんにちは。 新卒エンジニアのはすみんです。 今回、初！ブログを書くにあたって最初に浮かんだのは、Kotlinでした。 というのも、ぼくがエンジニアになりたいと思ったきっかけはAndroidでして、 せっかくのこの機会にKotlinでアプリを作ってみたい！と思いました。 なのでこの場を借りて、Kotlinの良さが伝わればいいなと思います。 目次です。 ・Kotlinとは ・Kotlinの特徴 ・開発環境 ・まとめ Kotlinとは Kotlinについてピンときてない人に簡単に説明すると、 Kotlinは、JetBrainsが開発したJVM上で動く静的型付けのプログラミング言語です。 http://kotlinlang.org/ JetBrains社といえば、エディタの「IntelliJ I&hellip;</p>
+        <div class="post-list__meta"><time datetime="26 Aug 2017" class="post-list__meta--date date">26 Aug 2017</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Hasumin">Hasumin</a>, <a href="http://tech.innovation.co.jp/tag/Kotlin"> Kotlin</a>, <a href="http://tech.innovation.co.jp/tag/Android"> Android</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/08/21/check-commit-message.html" title="link to コミットメッセージをチェックするスクリプト書いてみた">コミットメッセージをチェックするスクリプト書いてみた</a></h2>
         <p class="excerpt">初めまして、今年新卒でエンジニアに配属されました小畑です。 プログラミングとしては、CとかJavaとかアセンブリ言語とかを軽く勉強した程度で わりと初心者に近い人です。 そんな私が、ブログ記事・・・これは先輩のブログ記事を参考にするしかない！ そう思っていい記事ないかなと見ていたら、先輩のこんな良い記事が。 コミットメッセージミスを防いでみよう！ キャッシュについて深く反省してみる&#8230;&#8203; http://tech.innovation.co.jp/2017/07/31/to-reflect-on-the-cache.html この記事の後半、シェルスクリプトで問題を見つけたらアラートを表示する。 これだ！！！ 最近gitでcommitをする時につけるメッセージを間違えて&hellip;</p>
         <div class="post-list__meta"><time datetime="21 Aug 2017" class="post-list__meta--date date">21 Aug 2017</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Obata">Obata</a>, <a href="http://tech.innovation.co.jp/tag/Shell-Script">ShellScript</a></span></div>
@@ -262,12 +268,6 @@ var _trackingid = 'LFT-10003-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/07/28/mecab.html" title="link to 今更ながらPythonとMeCabで形態素解析してみた">今更ながらPythonとMeCabで形態素解析してみた</a></h2>
         <p class="excerpt">こんにちは、夏ですね！ 先日キャンプに行ってきたのですが、買い出しの時にしれっと餃子を入れた中村です。 今回は形態素解析からキーワードを抽出してみたお話をしたいと思います。 形態素解析とは？ 形態素解析（けいたいそかいせき、Morphological Analysis）とは、文法的な情報の注記の無い自然言語のテキストデータ（文）から、対象言語の文法や、辞書と呼ばれる単語の品詞等の情報にもとづき、形態素（Morpheme, おおまかにいえば、言語で意味を持つ最小単位）の列に分割し、それぞれの形態素の品詞等を判別する作業である。 ウィキペディア参照 https://ja.wikipedia.org/wiki/%E5%BD%A2%E6%85%8B%E7%B4%A0%E8%A7%A3%E6%9E%&hellip;</p>
         <div class="post-list__meta"><time datetime="28 Jul 2017" class="post-list__meta--date date">28 Jul 2017</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Me-Cab">MeCab</a>, <a href="http://tech.innovation.co.jp/tag/Python3">Python3</a>, <a href="http://tech.innovation.co.jp/tag/Morphological-analysis">Morphological analysis</a>, <a href="http://tech.innovation.co.jp/tag/Gyo-za">Gyo-za</a>, <a href="http://tech.innovation.co.jp/tag/Nakamura">Nakamura</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/07/24/full-text-search-by-mongodb-and-elasticsearch.html" title="link to mongo-connectorで、MongoDBのデータをElasticsearchに同期して日本語検索をしてみる">mongo-connectorで、MongoDBのデータをElasticsearchに同期して日本語検索をしてみる</a></h2>
-        <p class="excerpt">こんにちは、加藤です。 今回は、MongoDBのデータをmongo-connectorを用いてElasticsearchに同期を行い、 Elasticsearchで日本語検索してみます。 大まかな流れは下記のようになります。 MongoDB(データ追加) → mongo-connector(同期) → Elasticsearch(ここで日本語検索) 作業環境 検証環境は下記の通りです。 macOS Sierra 10.12.4 Python 2.7.13 (pip 9.0.1) Elasticsearch 5.5 MongoDB 3.4.6 mongo-connector 2.5.1 環境について MongoDB、Elasticsearchはクラウドサービスを利用、mongo-connec&hellip;</p>
-        <div class="post-list__meta"><time datetime="24 Jul 2017" class="post-list__meta--date date">24 Jul 2017</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/katok">katok</a>, <a href="http://tech.innovation.co.jp/tag/elasticsearch">elasticsearch</a>, <a href="http://tech.innovation.co.jp/tag/mongodb">mongodb</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
