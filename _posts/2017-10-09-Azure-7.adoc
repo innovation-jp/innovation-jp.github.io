@@ -1,10 +1,10 @@
-= 秋の寂しさを Ionic + Azure + Repl AI を利用したアプリで乗り切る
+= 秋の寂しさを Ionic + Azure + Repl-AI を利用したアプリで乗り切る
 :hp-alt-title: Azure 7
-:hp-tags: syoga, log, Azure, Function App, Ionic, Cordova, Angular
+:hp-tags: syoga, log, Azure, Function App, Ionic, Cordova, Angular, TypeScript, Repl-AI
 
 お久しぶりです、SRE チームの syoga です。
 
-秋の気配が近づきめっきり寒くなってますが、皆様いかかがお過ごしでしょうか、風邪の初症状とログの出し忘れには気をつけたいものですね。
+秋の気配が近づきめっきり寒くなってますが、皆様いかかがお過ごしでしょうか、風邪の初期症状とログの出し忘れには気をつけたいものですね。
 
 話は変わりますが、最近友達が少ない事に気付きました、LINE の友達は 33人（家族含む）、インスタのフォロワーは 7人（国外の方含む）、Facebookの友達は0人、そんな寂しさを払拭するために、以前の
 http://tech.innovation.co.jp/2017/07/04/Azure-5.html/[記事]
@@ -13,9 +13,9 @@ http://tech.innovation.co.jp/2017/07/04/Azure-5.html/[記事]
 ただ、LINE を通しておしゃべりするのは最近飽きてきたので、今回は AI とお話するハイブリッドアプリを作成したいと思います。
 
 #### Ionic フレームワークを利用する
-Ionic は Cordova を拡張したハイブリッドアプリ用のフレームワークで、Angular ベースの UI ライブラリです、詳細は https://ionicframework.com/[公式サイト] で確認下さい。
+Ionic は Cordova を拡張したハイブリッドアプリ用のフレームワークで、Angular ベースの UI ライブラリとなり、TypeScript を利用しコーディングします、詳細は https://ionicframework.com/[公式サイト] で確認下さい。
 
-そんな、筆者は Angular4 は触った事がなく、ハイブリッドアプリ開発も初めてです。
+そんな筆者は Angular4 は触った事がなく、ハイブリッドアプリ開発も初めてです。
 
 ### 環境作成
 Node.js、npm がインストールされている必要があります、`npm -g install ionic` でグローバルインストールを行います。
@@ -55,14 +55,14 @@ Error: Cannot read property 'replace’ of undefined
 色々と調べたところ、インストールされた Cordova に内包されている ios-sim モジュールのバージョンが古いということで、最新バージョンにする事で解決しました。
 
 ### 早速実装
-インターフェースはもろに某 SNS を参考に以下のようにしました、メッセージ入力エリアにメッセージを入力し、送信ボタンをタップすると上の吹き出しに自分のメッセージが、下の吹き出しに Repl AI から回答されたメッセージが表示されるようにします。
+インターフェースはもろに某 SNS を参考に以下のようにしました、メッセージ入力エリアにメッセージを入力し、送信ボタンをタップすると上の吹き出しに自分のメッセージが、下の吹き出しに Repl-AI から回答されたメッセージが表示されるようにします。
 image:syoga/aml7/azure3.png[]
 
-何か四角があるな〜、と思うでしょうがこれが吹き出しです！ 吹き出しの三角は AMI さんの以前の http://tech.innovation.co.jp/2017/03/03/C-S-S-triangle.html/[記事] を参考にしました。
+何か四角があるな〜、と思うでしょうがこれが吹き出しです！ 吹き出しの三角は、弊社女性エンジニア（女神）のAMIさんの http://tech.innovation.co.jp/2017/03/03/C-S-S-triangle.html/[記事] を参考にしました。
 
 初期表示時にも表示されているのはご愛嬌。
 
-以前の LINE Bot 実装と同じように、Repl AI の呼出し時に必要なユーザ ID を Node Redis モジュールを利用し、Azure 上の Redis に格納しようと考え、Node Redis モジュールインストール後に Redis 操作クラスを作成したのですが…
+以前の LINE Bot 実装と同じように、Repl-AI の呼出し時に必要なユーザ ID を Node Redis モジュールを利用し、Azure 上の Redis に格納しようと考え、Node Redis モジュールインストール後に 以下のRedis 操作クラスを作成しました。
 ```
 import { Injectable } from '@angular/core';
 import * as redismodule from "redis"; // Node Redis モジュールをインポート
@@ -90,7 +90,7 @@ export class Redis {
 }
 ```
 *◆ 困った話 その2 ◆* +
-作成したクラスをブランクページ作成時に自動生成された home.ts に インポートし、処理を実装したところ、特にコンパイルエラーも発生しなかったため、ブラウザで確認したところエラー画面が表示され `net.isIP is not a function` となっていました。
+作成したクラスをブランクページ作成時に自動生成された home.ts に インポートし、処理を実装したところ、特にコンパイルエラーも発生しなかったため、ブラウザで確認するとエラー画面が表示され `net.isIP is not a function` となっていました。
 
 Ionic は webpack を利用し TS からコンパイルされた JS を 1 ファイルにまとめていますので、エラー原因特定のため 3 万行の JS ファイルを眺めていたところ、 Node Net モジュールが記載されるべき箇所が空っぽになっていました。
 
@@ -99,7 +99,7 @@ Ionic は webpack を利用し TS からコンパイルされた JS を 1 ファ
 Node.js 上ではもちろん動作しますが、ブラウザでのエミュレートは出来ないという事で、当初から大幅に実装内容を変更する必要がありました、なんてこったい！！
 
 ### こうなったら…アイツを使うしか無い！！
-という事で Azure Function App を利用し、homt.ts の中でリクエストを投げ Function App 上で Repl AI の API を実行し、回答を取得するという実装にします。
+という事で Azure Function App を利用し、homt.ts の中でリクエストを投げ Function App 上で Repl-AI の API を実行し、回答を取得するという実装にします。
 
 新たな関数を作成し、Function App の処理は以前の LINE Bot からほぼ流用しました、今度は行ける！！と思いきや…
 
@@ -142,7 +142,7 @@ export class HomePage {
     // 入力メッセージを表示
     this.homePage.sendmessage = this.homePage.message;
 
-    // Repl AI から取得したメッセージを表示
+    // Repl-AI から取得したメッセージを表示
     this.httpClient.post(this.FUNCTION_APP_URL, JSON.stringify({name: this.homePage.message}))
       .subscribe(response => {this.homePage.recvmessage=response.toString();}
     );
