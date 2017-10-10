@@ -99,7 +99,7 @@ Ionic は webpack を利用し TS からコンパイルされた JS を 1 ファ
 Node.js 上ではもちろん動作しますが、ブラウザでのエミュレートは出来ないという事で、当初から大幅に実装内容を変更する必要がありました、なんてこったい！！
 
 ### こうなったら…アイツを使うしか無い！！
-という事で Azure Function App を利用し、home.ts の中でリクエストを投げ Function App 上で Repl-AI の API を実行し、回答を取得するという実装にします。
+という事で Azure Function App を利用し、home.ts の中でリクエストを投げ Function App 上の関数で Repl-AI の API を実行し、回答を取得するという実装にします。
 
 新たな関数を作成し、Function App の処理は以前の LINE Bot からほぼ流用しました、今度は行ける！！と思いきや…
 
