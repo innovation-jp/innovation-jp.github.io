@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>AWSのサービスを使ってLAMP環境を構築してみた - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="AWSのサービスを使ってLAMP環境を構築してみた">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="AWSのサービスを使ってLAMP環境を構築してみた">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2017/10/05/making-L-A-M-P-by-A-W-S.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="AWSのサービスを使ってLAMP環境を構築してみた" />
+    <meta property="og:description" content="こんにちは、小柳津です。 先日、 AWS 認定ソリューションアーキテクト – アソシエイト を受験して合格しました！ 今までAWSをほぼ触ったことがなかったのですが、試験を受けるにあたって触ってみることにしました。 具体的には、以下の基本的なサービスを用いて、LAMP環境を構築してみました。 VPC EC2 EBS ELB Route53 そして上記サービス利用して作成したWebアプリケーションがコチラ。 簡単なブログを作ってみました。 こちらのブログは以下のようなLAMP環境で動作しています。 Amazon Linux Nginx PHP(フレームワ..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2017/10/05/making-L-A-M-P-by-A-W-S.html" />
+    <meta property="article:published_time" content="2017-10-04T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2017-10-10T09:34:16.327Z" />
+    <meta property="article:tag" content="yaizu" />
+    <meta property="article:tag" content="AWS" />
+    <meta property="article:tag" content="LAMP" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="AWSのサービスを使ってLAMP環境を構築してみた" />
+    <meta name="twitter:description" content="こんにちは、小柳津です。 先日、 AWS 認定ソリューションアーキテクト – アソシエイト を受験して合格しました！ 今までAWSをほぼ触ったことがなかったのですが、試験を受けるにあたって触ってみることにしました。 具体的には、以下の基本的なサービスを用いて、LAMP環境を構築してみました。 VPC EC2 EBS ELB Route53 そして上記サービス利用して作成したWebアプリケーションがコチラ。 簡単なブログを作ってみました。 こちらのブログは以下のようなLAMP環境で動作しています。 Amazon Linux Nginx PHP(フレームワ..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2017/10/05/making-L-A-M-P-by-A-W-S.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars3.githubusercontent.com/u/16201452?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "AWSのサービスを使ってLAMP環境を構築してみた",
+    "url": "http://tech.innovation.co.jp/2017/10/05/making-L-A-M-P-by-A-W-S.html",
+    "datePublished": "2017-10-04T15:00:00.000Z",
+    "dateModified": "2017-10-10T09:34:16.327Z",
+    "keywords": "yaizu, AWS, LAMP",
+    "description": "こんにちは、小柳津です。 先日、 AWS 認定ソリューションアーキテクト – アソシエイト を受験して合格しました！ 今までAWSをほぼ触ったことがなかったのですが、試験を受けるにあたって触ってみることにしました。 具体的には、以下の基本的なサービスを用いて、LAMP環境を構築してみました。 VPC EC2 EBS ELB Route53 そして上記サービス利用して作成したWebアプリケーションがコチラ。 簡単なブログを作ってみました。 こちらのブログは以下のようなLAMP環境で動作しています。 Amazon Linux Nginx PHP(フレームワ..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-yaizu tag-A-W-S tag-L-A-M-P no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="05 Oct 2017" class="post-meta__date date">05 Oct 2017</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/yaizu">yaizu</a>, <a href="http://tech.innovation.co.jp/tag/A-W-S">AWS</a>, <a href="http://tech.innovation.co.jp/tag/L-A-M-P">LAMP</a></span>
+        <span class="post-meta__author author"><img src="https://avatars3.githubusercontent.com/u/16201452?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">AWSのサービスを使ってLAMP環境を構築してみた</h1>
+    </header>
+
+    <section class="post tag-yaizu tag-A-W-S tag-L-A-M-P">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんにちは、小柳津です。<br>
+先日、
+<a href="https://aws.amazon.com/jp/certification/certified-solutions-architect-associate/">AWS 認定ソリューションアーキテクト – アソシエイト</a>
+を受験して合格しました！<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/AWS_Certified_Logo_SAA_588x300_Color.png" alt="AWS Certified Logo SAA 588x300 Color.png">
+</div>
+</div>
+<div class="paragraph">
+<p>今までAWSをほぼ触ったことがなかったのですが、試験を受けるにあたって触ってみることにしました。<br>
+具体的には、以下の基本的なサービスを用いて、LAMP環境を構築してみました。<br></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>VPC</p>
+</li>
+<li>
+<p>EC2</p>
+</li>
+<li>
+<p>EBS</p>
+</li>
+<li>
+<p>ELB</p>
+</li>
+<li>
+<p>Route53</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>そして上記サービス利用して作成したWebアプリケーションがコチラ。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/aws_blog.png" alt="aws blog.png">
+</div>
+</div>
+<div class="paragraph">
+<p>簡単なブログを作ってみました。<br></p>
+</div>
+<div class="paragraph">
+<p>こちらのブログは以下のようなLAMP環境で動作しています。<br></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Amazon Linux</p>
+</li>
+<li>
+<p>Nginx</p>
+</li>
+<li>
+<p>PHP(フレームワーク: Laravel)</p>
+</li>
+<li>
+<p>MySQL</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Webアプリケーションを作成する上では以下のような順番で作成しました。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>AWS上でLAMP環境を構築</p>
+</li>
+<li>
+<p>作成していたアプリケーションのソースコードをAWS上にLAMP環境にクローンする</p>
+</li>
+<li>
+<p>ドメイン名を取得し、割り当てる</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>今回は1番をメインに話を進めていこうと思います。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">構成</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>先程のアプリケーションを実行するLAMP環境のアーキテクチャはこのように設計しました。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/aws_architecture01.png" alt="aws architecture01.png">
+</div>
+</div>
+<div class="paragraph">
+<p>このアーキテクチャのポイントは以下です。<br></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Webサーバ用のパブリックサブネットを2つ設置し、AZは分ける</p>
+</li>
+<li>
+<p>Webサーバへの通信はELBで負荷分散を行う</p>
+</li>
+<li>
+<p>パブリックサブネットにNATインスタンスを設置する</p>
+</li>
+<li>
+<p>プライベートサブネットに設置したDB用EC2にMySQLをインストールする</p>
+</li>
+<li>
+<p>DBへの通信もELBで負荷分散を行う</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>ここでツッコミポイントなのが、RDSを使わずにEC2にMySQLをインストールする点。<br>
+これの理由は試験勉強も兼ねて、NATインスタンスを使ってプライベートサブネットからインターネットへ接続を行いたかったからです。<br>
+DB用EC2をプライベートサブネットに設置し、<code>yum install</code>を使ってインターネット経由でMySQLをインストールすることを実践してNATインスタンスの役目や作成方法を覚えました。<br>
+リージョンサービスであるS3やDynamoDB、SQSなどをプライベートサブネットから使用するためには必要なNATインスタンスなので、いい勉強になりました。<br></p>
+</div>
+<div class="paragraph">
+<p>このアーキテクチャを構成するために以下のような手順で行いました。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>VPC・サブネットの作成</p>
+</li>
+<li>
+<p>EC2の設置とセキュリティグループ設定</p>
+</li>
+<li>
+<p>ELBの設置とセキュリティグループ設定</p>
+</li>
+<li>
+<p>Route53の設定</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>上記の手順で以下の画像のように行いました。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/aws_architecture02.png" alt="aws architecture02.png">
+</div>
+</div>
+<div class="paragraph">
+<p><em>※手書きで失礼します</em><br></p>
+</div>
+<div class="paragraph">
+<p>順番に説明していきます。<br></p>
+</div>
+<div class="sect2">
+<h3 id="_vpc">VPC・サブネットの作成</h3>
+<div class="paragraph">
+<p>VPCのCIDRブロックは<code>192.168.0.0/16</code>と設定しました。<br>
+そして
+そのVPCの中に4つのサブネットを作ります。<br></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>NAT用サブネット(パブリック)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>CIDRブロック: <code>192.168.0.0/24</code></p>
+</li>
+<li>
+<p>名前: <code>pub-nat-a</code></p>
+</li>
+<li>
+<p>Availability Zone: <code>ap-northeast-1a</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Webサーバ用サブネット1(パブリック)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>CIDRブロック: <code>192.168.1.0/24</code></p>
+</li>
+<li>
+<p>名前: <code>pub-web-a</code></p>
+</li>
+<li>
+<p>Availability Zone: <code>ap-northeast-1a</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Webサーバ用サブネット2(パブリック)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>CIDRブロック: <code>192.168.2.0/24</code></p>
+</li>
+<li>
+<p>名前: <code>pub-web-c</code></p>
+</li>
+<li>
+<p>Availability Zone: <code>ap-northeast-1c</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>DB用サブネット(プライベート)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>CIDRブロック: <code>192.168.12.0/24</code></p>
+</li>
+<li>
+<p>名前: <code>pri-db-c</code></p>
+</li>
+<li>
+<p>Availability Zone: <code>ap-northeast-1c</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/aws_architecture03.png" alt="aws architecture03.png">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ec2">EC2の設置とセキュリティグループ設定</h3>
+<div class="paragraph">
+<p>作成したサブネットの中にEC2を作っていきます。<br></p>
+</div>
+<div class="paragraph">
+<p><code>pub-web-a</code>と<code>pub-web-c</code>には同じインスタンスを設置するので、<code>pub-web-a</code>で設定をしたEC2からAMIを取得し、<code>pub-web-c</code>に設置していきます。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/aws_architecture04.png" alt="aws architecture04.png">
+</div>
+</div>
+<div class="paragraph">
+<p>Webサーバ用・DB用インスタンスは通常のAmazon Linuxで作成して問題ないですが、NATインスタンスの場合はある特定のAMIを指定して作成する必要があります。<br>
+NATインスタンス用のAMIがコミュニティ AMIから選べるので、そこから<code>amzn-ami-vpc-nat</code>を選択します。<br>
+また、NATインスタンスは<code>送信元/送信先の変更チェック</code>を無効にする必要があります。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/making_nat.png" alt="making nat.png">
+</div>
+</div>
+<div class="paragraph">
+<p>インスタンスを設置し終えたらルートテーブルを設定します。<br></p>
+</div>
+<div class="paragraph">
+<p>パブリックサブネットには以下のルートテーブルを設定します。</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">送信先</th>
+<th class="tableblock halign-left valign-top">ターゲット</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">192.168.0.0/16</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">local</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.0.0.0/0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IGW</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>プラベートサブネットには以下のルートテーブルを設定します。<br></p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">送信先</th>
+<th class="tableblock halign-left valign-top">ターゲット</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">192.168.0.0/16</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">local</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.0.0.0/0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NATインスタンスID</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>このようなルートテーブルを設定することで、プラベートサブネットであってもNATインスタンス経由でインターネットと通信が出来ます。<br></p>
+</div>
+<div class="paragraph">
+<p>ルートテーブルを設置し終えたら、セキュリティグループを設置します。<br>
+セキュリティグループでアウトバウンドの制限はしていないものは省略します。<br></p>
+</div>
+<div class="sect3">
+<h4 id="_web">Webサーバ用インスタンスのセキュリティグループ</h4>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">セキュリティグループ名</th>
+<th class="tableblock halign-left valign-top">トラフィックの制限</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">allow-my-office(inbound)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">社内のIPであれば全てのトラフィックを許可</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">allow-internal(inbound)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VPC(192.168.0.0/16)内であればHTTP,HTTPS,TCP(3306)の通信を許可</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_db">DB用インスタンスのセキュリティグループ</h4>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">セキュリティグループ名</th>
+<th class="tableblock halign-left valign-top">トラフィックの制限</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">allow-pub-subnet(inbound)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pub-nat-a</code>(192.168.0.0/24)からの通信であればSSHの通信を許可,</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">allow-internal-db(inbound)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VPC(192.168.0.0/16)内であればTCP(3306)の通信を許可</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_nat">NATインスタンスのセキュリティグループ</h4>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">セキュリティグループ名</th>
+<th class="tableblock halign-left valign-top">トラフィックの制限</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">allow-my-office(inbound)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">社内のIPであれば全てのトラフィックを許可</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">allow-nat(inbound)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pri-db-c</code>(192.168.12.0/24)内であればHTTP,HTTPSの通信を許可</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">allow-nat(outbound)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">外部の通信(0.0.0.0/0)をHTTP,HTTPSの通信に限定</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>このようにセキュリティグループを設定し、セキュリティレベルを高めます。<br></p>
+</div>
+<div class="paragraph">
+<p>ルートテーブルとセキュリティグループを設定したので、<code>pub-web-a</code>のWebサーバ用インスタンスにNginxとPHPをインストールし、設定を行います。<br>
+すべて設定が終わったあとインスタンスのAMIを取得して、そのAMIをもとに<code>pub-web-c</code>にインスタンスを作成します。<br>
+セキュリティグループなどは<code>pub-web-a</code>のWebサーバ用インスタンスと同様のものを設置します。<br></p>
+</div>
+<div class="paragraph">
+<p><code>pri-db-c</code>のDB用インスタンスにはMySQLをインストールし、設定を行います。<br></p>
+</div>
+<div class="paragraph">
+<p>これらの設定を行うと以下のように通信ができるようになります。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/aws_architecture05.png" alt="aws architecture05.png">
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_elb">ELBの設置とセキュリティグループ設定</h3>
+<div class="paragraph">
+<p>負荷分散を行うために、ELBを設置していきます。<br></p>
+</div>
+<div class="paragraph">
+<p>設置する場所は以下の2点です。<br></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>外部からWebサーバにアクセスがある箇所</p>
+</li>
+<li>
+<p>WebサーバからDB用インスタンスにアクセスがある箇所</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>今回DB用インスタンスは1つしか設置していないですが、今後の拡張性を考えて設置してみました。</p>
+</div>
+<div class="paragraph">
+<p>1番のELBには以下のような設定を行いました。<br>
+ELBの種類はApplication Load Balancerを選択しました。<br></p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">スキーマ</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">外部向け</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">リスナー</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTTP</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">アベイラビリティーゾーン</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pub-web-a</code>と<code>pub-web-c</code>の2つに設定</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">セキュリティグループ</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">allow-my-office(社内のIPであれば全てのトラフィックを許可)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ターゲットグループ</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTTP通信で<code>/</code>に対してヘルスチェックを行う</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>2番のELBには以下のような設定を行いました。<br>
+ELBの種類はClassic Load Balancerを選択しました。<br></p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">リスナー</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TCP(3306)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">サブネット</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pri-db-c</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">セキュリティグループ</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">allow-internal(VPC内であればHTTP,HTTPS,TCP(3306)の通信を許可)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ターゲットグループ</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TCP(3306)に対してヘルスチェックを行う</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>これで必要な設定は全て完了し、画像のようなアーキテクチャが構成出来ました。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/aws_architecture01.png" alt="aws architecture01.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/aws_architecture02.png" alt="aws architecture02.png">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_route53">Route53の設定</h3>
+<div class="paragraph">
+<p>構築したアーキテクチャ上のアプリケーションに対して、ドメイン名を割り当てます。<br></p>
+</div>
+<div class="paragraph">
+<p><code>.com</code>のドメインが意外に安く購入できました。<br></p>
+</div>
+<div class="paragraph">
+<p>Webサーバに対するアクセスを負荷分散するELB(赤い枠部分)のDNS名に対して購入したドメイン名をエイリアスAレコードとして設定します。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/aws_architecture07.png" alt="aws architecture07.png">
+</div>
+</div>
+<div class="paragraph">
+<p>できた！これで指定したドメイン名で作成したWebアプリケーションにアクセスできる!!!<br>
+完成！！<br></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">おわりに</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>いや〜サービスを公開するってハードルが高いですね&#8230;&#8203;<br></p>
+</div>
+<div class="paragraph">
+<p>公開するためにやったことが、結構たくさん。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>ローカルに開発環境を構築</p>
+</li>
+<li>
+<p>アプリケーションを作成</p>
+</li>
+<li>
+<p>アプリケーションのソースコードをリモートレポジトリに登録</p>
+</li>
+<li>
+<p>AWS上にLAMP環境を構築</p>
+</li>
+<li>
+<p>AWS上にLAMP環境にソースコードをクローン</p>
+</li>
+<li>
+<p>ドメイン名を取得し、設定</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>中々大変だった&#8230;&#8203;<br>
+でも外部に公開できるスキルがあってはじめて、エンジニアとしてのアウトプットができるようになった気がします。<br>
+これからいろいろなものをアウトプットして行きたいと思います！<br></p>
+</div>
+<div class="paragraph">
+<p>AWSを触りながら
+<a href="https://aws.amazon.com/jp/certification/certified-solutions-architect-associate/">AWS 認定ソリューションアーキテクト – アソシエイト</a>
+試験の勉強を進めるとかなり理解も深まり、実践的なケースも想像できるようになるので、オススメです！<br></p>
+</div>
+<div class="paragraph">
+<p>今回はここで失礼します。<br></p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2017. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
