@@ -28,7 +28,7 @@ image::syoga/aml7/azure1.png[]
 
 image::syoga/aml7/azure2.png[]
 
-pages/home ディレクトリ配下に、アプリ実行時に表示される、html、ts、scss がまとめて作成されます。
+pages/home ディレクトリ配下に、アプリ実行時に動作する、html、ts、scss がまとめて作成されます。
 
 ### エミュレータの実行
 以下の方法で各エミュレータを実行できます。 +
