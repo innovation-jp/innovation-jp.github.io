@@ -52,17 +52,17 @@ Error: Cannot read property 'replace’ of undefined
 [ERROR] Cordova encountered an error. You may get more insight by running the Cordova command above directly.
 [ERROR] An error occurred while running cordova emulate ios (exit code 1).
 ```
-色々と調べたところ、インストールされた Cordova に内包されている ios-sim モジュールのバージョンが古いということで、最新バージョンにする事で解決しました。
+色々と調べたところ、インストールされた Cordova に内包されている ios-sim モジュールのバージョンが古いということで、最新バージョンに（`npm install ios-sim`）する事で解決しました。
 
 ### 早速実装
 インターフェースはもろに某 SNS を参考に以下のようにしました、メッセージ入力エリアにメッセージを入力し、送信ボタンをタップすると上の吹き出しに自分のメッセージが、下の吹き出しに Repl-AI から回答されたメッセージが表示されるようにします。
 image:syoga/aml7/azure3.png[]
 
-何か四角があるな〜、と思うでしょうがこれが吹き出しです！ 吹き出しの三角は、弊社女性エンジニア AMI さんの http://tech.innovation.co.jp/2017/03/03/C-S-S-triangle.html/[記事] を参考にしました。
+何か四角があるな〜と思うでしょうが、これが吹き出しです！ 吹き出しの三角は、弊社女性エンジニア AMI さんの http://tech.innovation.co.jp/2017/03/03/C-S-S-triangle.html/[記事] を参考にしました。
 
 初期表示時にも表示されているのはご愛嬌。
 
-以前の LINE Bot 実装と同じように、Repl-AI の呼出し時に必要なユーザ ID を Node Redis モジュールを利用し、Azure 上の Redis に格納しようと考え、Node Redis モジュールインストール後に 以下のRedis 操作クラスを作成しました。
+以前の LINE Bot 実装と同じように、Repl-AI の呼出し時に必要なユーザ ID を、 Node Redis モジュールを利用し Azure Redis に格納しようと考え、Node Redis モジュールインストール後に 以下のRedis 操作クラスを作成しました。
 ```
 import { Injectable } from '@angular/core';
 import * as redismodule from "redis"; // Node Redis モジュールをインポート
@@ -92,9 +92,9 @@ export class Redis {
 *◆ 困った話 その2 ◆* +
 作成した Redis 操作クラスを、 home.ts に インポートし Redis でRepl-AI のユーザ ID 受け渡しの処理を実装したところ、特にコンパイルエラーも発生しなかったのですが、ブラウザで確認するとエラー画面が表示され `net.isIP is not a function` となっていました。
 
-Ionic は webpack を利用し TS からコンパイルされた JS を 1 ファイルにまとめていますので、エラー原因特定のため 3 万行の JS ファイルを眺めていたところ、 Node Net モジュールが記載されるべき箇所が空っぽになっていました。
+Ionic は webpack を利用し TypeScript からコンパイルされた JS を 1 ファイルにまとめていますので、エラー原因特定のため 3 万行の JS ファイルを眺めていたところ、 Node Net モジュールのクラスが記載されるべき箇所が空っぽになっていました。
 
-こちらも色々調べたところ、ブラウザでは一般的な tcp の実装がないのでエミュレートができず、ブラウザで動作するモジュール、この場合は `require（'net'）` が失敗するのを防ぐため空のオブジェクトが生成された事が原因でした。
+こちらも色々調べたところ、ブラウザでは一般的な tcp の実装がないのでエミュレートができず、ブラウザで動作するモジュール、この場合は `require（'net'）` が失敗するのを防ぐため空のオブジェクトが生成されるという事が原因でした。
 
 Node.js 上ではもちろん動作しますが、ブラウザでのエミュレートは出来ないという事で、当初から大幅に実装内容を変更する必要がありました、なんてこったい！！
 
