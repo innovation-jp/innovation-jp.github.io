@@ -12,7 +12,7 @@ http://tech.innovation.co.jp/2017/07/04/Azure-5.html/[記事]
 
 ただ、LINE を通しておしゃべりするのは最近飽きてきたので、今回は AI とお話するハイブリッドアプリを作成したいと思います。
 
-#### Ionic フレームワークを利用する
+## Ionic フレームワークを利用する
 Ionic は Cordova を拡張したハイブリッドアプリ用のフレームワークで、Angular ベースの UI ライブラリとなり、TypeScript を利用しコーディングします、詳細は https://ionicframework.com/[公式サイト] で確認下さい。
 
 そんな筆者は Angular4 は触った事がなく、ハイブリッドアプリ開発も初めてです。
