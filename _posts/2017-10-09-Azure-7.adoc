@@ -56,6 +56,7 @@ Error: Cannot read property 'replace’ of undefined
 
 ### 早速実装
 インターフェースはもろに某 SNS を参考に以下のようにしました、メッセージ入力エリアにメッセージを入力し、送信ボタンをタップすると上の吹き出しに自分のメッセージが、下の吹き出しに Repl-AI から回答されたメッセージが表示されるようにします。
+
 image:syoga/aml7/azure3.png[]
 
 何か四角があるな〜と思うでしょうが、これが吹き出しです！ 吹き出しの三角は、弊社女性エンジニア AMI さんの http://tech.innovation.co.jp/2017/03/03/C-S-S-triangle.html/[記事] を参考にしました。
