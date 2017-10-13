@@ -59,6 +59,8 @@ docker-compose.ymlをみると使えそうなコンテナがたくさんあっ�
 ```
 aiueo.confを↓のように変更
 server_name aiueo.dev;
+root /var/www/aiueo/public;
+
 
 ```
 
