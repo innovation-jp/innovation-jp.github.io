@@ -19,7 +19,7 @@
 
 目次 +
 ・Gitコマンドとは +
-・基本的なGitコマンド
+・基本的なGitコマンド +
 ・知っているとオトクなGitコマンド +
 ・その他Tips +
 ・まとめ +
@@ -27,11 +27,11 @@
 ### Gitコマンドとは +
 みなさん周知のことだと思いますが、Gitコマンドについて簡単におさらいです。 +
 Gitコマンドとは、 +
-*
+
 ---------------------------------------------------------------
-「プログラムのソースコードなどの変更履歴を記録・追跡するための分散型バージョン管理システムである」 +
+「プログラムのソースコードなどの変更履歴を記録・追跡するための分散型バージョン管理システムである」
 ---------------------------------------------------------------
-*
+
 とWikipedia先生はおっしゃっています。 +
 https://ja.wikipedia.org/wiki/Git +
 
@@ -41,14 +41,12 @@ https://ja.wikipedia.org/wiki/Git +
 強く感じていたのでしょうか。 +
 あぁ、読んでいたらやっぱりそのようでした。（諸説あります）
 
-*
 ---------------------------------------------------------------
-Linuxカーネルの開発では、巨大なソースコードの集合を扱うため、変更点の抽出やリポジトリ操作が +
-できるかぎり高速にできる必要がある。他の様々なバージョン管理システムをあたったが、満足のいく +
-ものがなかったため、Gitではこのような問題も出来る限り解決できるよう、いくつかのアイデアが導入 +
-されている（この部分は、他のバージョン管理システムにも同様の機能が導入されるようになった）。 +
+Linuxカーネルの開発では、巨大なソースコードの集合を扱うため、変更点の抽出やリポジトリ操作が
+できるかぎり高速にできる必要がある。他の様々なバージョン管理システムをあたったが、満足のいく
+ものがなかったため、Gitではこのような問題も出来る限り解決できるよう、いくつかのアイデアが導入
+されている（この部分は、他のバージョン管理システムにも同様の機能が導入されるようになった）。
 ---------------------------------------------------------------
-*
 
 2005年12月にリリースされ、そこからGitHubなどが開発されてきて、 +
 今日の開発スタイルの基盤はこの時期に確立されていったんですね。 +
@@ -66,21 +64,21 @@ image:hasumi/git/git-help-a.png[] +
 git help -a で全Gitコマンドが参照できるので、気になった人は調べてみてください。 +
 
 基本的なGitコマンドの一覧です。 +
-- git init
-- git add
-- git commit
-- git push
-- git pull
-- git reset
-- git log
-- git status
-- git diff
-- git cheackout
-- git branch
-- git clone
-- git fetch
-- git merge
-- git rm
+・git init +
+・git add +
+・git commit +
+・git push +
+・git pull +
+・git reset +
+・git log +
+・git status +
+・git diff +
+・git cheackout +
+・git branch +
+・git clone +
+・git fetch +
+・git merge +
+・git rm +
 
 これだけは少なくとも知っておきたいですね。 +
 説明は今回は省きます、他に紹介しているサイトがたくさんあるので。 +
@@ -91,10 +89,10 @@ git help -a で全Gitコマンドが参照できるので、気になった人�
 これを覚えてると、開発作業が少し捗るかも？なので、覚えておきましょう。 +
 
 紹介するコマンドの一覧です。 +
-- git worktree
-- git stash
-- git reflog
-- git cherry-pick
+・git worktree +
+・git stash +
+・git reflog +
+・git cherry-pick +
 
 #### git worktree
 まずは今回のブログのテーマのきっかけになったgit worktreeから紹介していきます。 +
@@ -107,7 +105,7 @@ git worktreeは、指定ブランチの内容を指定のディレクトリに�
 ##### 使い方
 ++++
 <pre style="font-family: Menlo, Courier">
-git worktree add [directoryName] [branchName] +
+git worktree add [directoryName] [branchName]
 </pre>
 ++++
 
@@ -115,7 +113,7 @@ git worktree add [directoryName] [branchName] +
 例えば、以下のようなコマンドを打ってみます。 +
 ++++
 <pre style="font-family: Menlo, Courier">
-git worktree add develop-worktree develop +
+git worktree add develop-worktree develop
 </pre>
 ++++
 
@@ -126,14 +124,14 @@ git worktree add develop-worktree develop +
 worktree一覧を見たいときは、 +
 ++++
 <pre style="font-family: Menlo, Courier">
-git worktree list +
+git worktree list
 </pre>
 ++++
 で確認できます。 +
 また、worktreeを削除したい場合は +
 ++++
 <pre style="font-family: Menlo, Courier">
-git worktree prune +
+git worktree prune
 </pre>
 ++++
 
@@ -156,14 +154,14 @@ git stashで大きく使うのは、一時保存と保存の反映です。 +
 一時保存は、 +
 ++++
 <pre style="font-family: Menlo, Courier">
-git stash save "リスト名、コメントなど" +
+git stash save "リスト名、コメントなど"
 </pre>
 ++++
 
 保存の反映は、 +
 ++++
 <pre style="font-family: Menlo, Courier">
-git stash pop +
+git stash pop
 </pre>
 ++++
 
@@ -171,7 +169,7 @@ git stash pop +
 また、一時保存しているリストの表示も可能です。 +
 ++++
 <pre style="font-family: Menlo, Courier">
-git stash list +
+git stash list
 </pre>
 ++++
 
@@ -180,7 +178,7 @@ git stash list +
 popするときには +
 ++++
 <pre style="font-family: Menlo, Courier">
-git stash pop stash@{0} +
+git stash pop stash@{0}
 </pre>
 ++++
 
@@ -204,34 +202,31 @@ git reflogは、HEADやブランチ先端の動きの履歴を参照すること
 調べている中で、面白いaliasに出会いました。有用な記事だったので、紹介します。 +
 aliasというか、Gitコマンドの使い方にこんなものがあるのかと勉強になりました。 +
 
-*
 ---------------------------------------------------------------
 # git log with graphical tree
 alias glogg='env LANG=en_US.utf-8 git log --graph --date-order --format="%h (%an) %s %d" --branches'
-git のレビジョンツリーを全てのローカルブランチに渡ってグラフィカルに表示するコマンドです。 git log --graph だけだと表示フォーマットが微妙でいまいちなのが git らしいと思います。
+git のレビジョンツリーを全てのローカルブランチに渡ってグラフィカルに表示するコマンドです。
+git log --graph だけだと表示フォーマットが微妙でいまいちなのが git らしいと思います。
 ---------------------------------------------------------------
-*
 
-*
 ---------------------------------------------------------------
 # git log with short statistics
 alias glog='env LANG=en_US.utf-8 git log --stat --decorate --date-order'
-さきほどと同じくのログ表示のエイリアスです。こちらは詳細にログを見たい場合に使用します。 コミットをレビューしたいときには -p オプションを足して glog -p とかすれば diff も表示してくれます。
+さきほどと同じくのログ表示のエイリアスです。こちらは詳細にログを見たい場合に使用します。
+コミットをレビューしたいときには -p オプションを足して glog -p とかすれば diff も表示してくれます。
 ---------------------------------------------------------------
-*
 
 その他にもいい感じのalias設定があるので、興味ある方は見てみてください。 +
-http://outofsearch.blogspot.jp/2013/05/git.html +
+引用元：http://outofsearch.blogspot.jp/2013/05/git.html +
 
 ### まとめ
 いかかでしたでしょうか。 +
 今回調べるにあたり、Gitコマンドの色々な使い方を知ることが出来て勉強になりました。 +
 
-普段使っているコマンドは少なかったとしても、実は有用なGitコマンドはたくさんあることを知りました。 +
+普段使っているコマンドは少なかったとしても、実は有用なGitコマンドはたくさんあるんですね。 +
 
-新しい技術や情報に触れて使ってみつつも、今回のGitのように改めて深ぼってみると知らないことは +
-たくさんあることに気づけたので、気になった知識はその機会に色々調べてみようと思います。 +
-
-次はKotlinで実際にアプリを作った記事を共有します。 +
+新しい技術や情報は日々アップデートされ続けていますが、 +
+今回のGitでの経験のように、普段使っている技術でも深く調べてみると知らないことが多いと気づけたので、 +
+気になった知識はその機会に一旦止まって色々調べていこうと思いました。 +
 
 終わり +
