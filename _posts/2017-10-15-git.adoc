@@ -217,7 +217,8 @@ alias glog='env LANG=en_US.utf-8 git log --stat --decorate --date-order'
 ---------------------------------------------------------------
 
 その他にもいい感じのalias設定があるので、興味ある方は見てみてください。 +
-引用元：http://outofsearch.blogspot.jp/2013/05/git.html +
+引用元：「検索しても出てこない何か」
+http://outofsearch.blogspot.jp/2013/05/git.html +
 
 ### まとめ
 いかかでしたでしょうか。 +
