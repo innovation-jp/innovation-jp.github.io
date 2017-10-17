@@ -1,5 +1,5 @@
-# 使えるけど実は知られていない？Gitコマンドを調べてみた
-:hp-alt-title:　使えるけど実は知られていない？Gitコマンドを調べてみた
+# 使えるけど実は知られていない？gitコマンドを調べてみた
+:hp-alt-title:　使えるけど実は知られていない？gitコマンドを調べてみた
 :hp-tags: Hasumin, git, Git, console, terminal
 
 こんにちは。 +
