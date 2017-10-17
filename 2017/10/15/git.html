@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>使えるけど実は知られていない？gitコマンドを調べてみた - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="使えるけど実は知られていない？gitコマンドを調べてみた">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="使えるけど実は知られていない？gitコマンドを調べてみた">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2017/10/15/git.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="使えるけど実は知られていない？gitコマンドを調べてみた" />
+    <meta property="og:description" content="こんにちは。 新卒エンジニアのはすみんです。 前回、初ブログということでKotlinについて書きました。 今回もKotlinでいこうと思っていたのですが、色々プライベートでバタバタしていたので、 なかなか時間が取れなかったので見送りです・・・ 今回のブログのテーマは、最近情報収集しているなかで、 「git worktree」コマンドなるものを 初めて知りました。 そのときにふと思ったのが、「Gitコマンドって普段使っているもの限られているけど、 実際どれくらいあるんだろう？」 ということでした。 ということで今回色々調べてみたので、その紹介をします。..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2017/10/15/git.html" />
+    <meta property="article:published_time" content="2017-10-14T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2017-10-17T15:04:01.138Z" />
+    <meta property="article:tag" content="Hasumin" />
+    <meta property="article:tag" content="git" />
+    <meta property="article:tag" content="Git" />
+    <meta property="article:tag" content="console" />
+    <meta property="article:tag" content="terminal" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="使えるけど実は知られていない？gitコマンドを調べてみた" />
+    <meta name="twitter:description" content="こんにちは。 新卒エンジニアのはすみんです。 前回、初ブログということでKotlinについて書きました。 今回もKotlinでいこうと思っていたのですが、色々プライベートでバタバタしていたので、 なかなか時間が取れなかったので見送りです・・・ 今回のブログのテーマは、最近情報収集しているなかで、 「git worktree」コマンドなるものを 初めて知りました。 そのときにふと思ったのが、「Gitコマンドって普段使っているもの限られているけど、 実際どれくらいあるんだろう？」 ということでした。 ということで今回色々調べてみたので、その紹介をします。..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2017/10/15/git.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "takuya hasumi",
+        "image": "https://avatars0.githubusercontent.com/u/22537034?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "使えるけど実は知られていない？gitコマンドを調べてみた",
+    "url": "http://tech.innovation.co.jp/2017/10/15/git.html",
+    "datePublished": "2017-10-14T15:00:00.000Z",
+    "dateModified": "2017-10-17T15:04:01.138Z",
+    "keywords": "Hasumin,  git,  Git,  console,  terminal",
+    "description": "こんにちは。 新卒エンジニアのはすみんです。 前回、初ブログということでKotlinについて書きました。 今回もKotlinでいこうと思っていたのですが、色々プライベートでバタバタしていたので、 なかなか時間が取れなかったので見送りです・・・ 今回のブログのテーマは、最近情報収集しているなかで、 「git worktree」コマンドなるものを 初めて知りました。 そのときにふと思ったのが、「Gitコマンドって普段使っているもの限られているけど、 実際どれくらいあるんだろう？」 ということでした。 ということで今回色々調べてみたので、その紹介をします。..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Hasumin tag-git tag-Git tag-console tag-terminal no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="15 Oct 2017" class="post-meta__date date">15 Oct 2017</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Hasumin">Hasumin</a>, <a href="http://tech.innovation.co.jp/tag/git"> git</a>, <a href="http://tech.innovation.co.jp/tag/Git"> Git</a>, <a href="http://tech.innovation.co.jp/tag/console"> console</a>, <a href="http://tech.innovation.co.jp/tag/terminal"> terminal</a></span>
+        <span class="post-meta__author author"><img src="https://avatars0.githubusercontent.com/u/22537034?v=4" alt="profile image for takuya hasumi" class="avatar post-meta__avatar" /> by takuya hasumi</span>
+      </div>
+      <h1 class="post-title">使えるけど実は知られていない？gitコマンドを調べてみた</h1>
+    </header>
+
+    <section class="post tag-Hasumin tag-git tag-Git tag-console tag-terminal">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんにちは。<br>
+新卒エンジニアのはすみんです。<br></p>
+</div>
+<div class="paragraph">
+<p>前回、初ブログということでKotlinについて書きました。<br>
+今回もKotlinでいこうと思っていたのですが、色々プライベートでバタバタしていたので、<br>
+なかなか時間が取れなかったので見送りです・・・<br></p>
+</div>
+<div class="paragraph">
+<p>今回のブログのテーマは、最近情報収集しているなかで、 「git worktree」コマンドなるものを<br>
+初めて知りました。<br>
+そのときにふと思ったのが、「Gitコマンドって普段使っているもの限られているけど、<br>
+実際どれくらいあるんだろう？」<br>
+ということでした。<br>
+ということで今回色々調べてみたので、その紹介をします。<br>
+（※あくまで筆者の経験に基づくため、一部偏りがあった際はご容赦くださいませ）<br></p>
+</div>
+<div class="paragraph">
+<p>目次<br>
+・Gitコマンドとは<br>
+・基本的なGitコマンド<br>
+・知っているとオトクなGitコマンド<br>
+・その他Tips<br>
+・まとめ<br></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_git_br">Gitコマンドとは<br></h3>
+<div class="paragraph">
+<p>みなさん周知のことだと思いますが、Gitコマンドについて簡単におさらいです。<br>
+Gitコマンドとは、<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>「プログラムのソースコードなどの変更履歴を記録・追跡するための分散型バージョン管理システムである」</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>とWikipedia先生はおっしゃっています。<br>
+<a href="https://ja.wikipedia.org/wiki/Git" class="bare">https://ja.wikipedia.org/wiki/Git</a><br></p>
+</div>
+<div class="paragraph">
+<p>なななんと、Linuxカーネルの開発者、リーナス・トーバルズによって開発された言語だったんですね。。。<br>
+筆者はかなりびっくりしています、あのLinuxを開発したにも飽き足らず、Gitコマンドも開発していたんですね。<br>
+やはり、Linuxなどの規模がものすごい大きなものになると、そういったバージョン管理システムの必要性を<br>
+強く感じていたのでしょうか。<br>
+あぁ、読んでいたらやっぱりそのようでした。（諸説あります）</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Linuxカーネルの開発では、巨大なソースコードの集合を扱うため、変更点の抽出やリポジトリ操作が
+できるかぎり高速にできる必要がある。他の様々なバージョン管理システムをあたったが、満足のいく
+ものがなかったため、Gitではこのような問題も出来る限り解決できるよう、いくつかのアイデアが導入
+されている（この部分は、他のバージョン管理システムにも同様の機能が導入されるようになった）。</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>2005年12月にリリースされ、そこからGitHubなどが開発されてきて、<br>
+今日の開発スタイルの基盤はこの時期に確立されていったんですね。<br>
+そう考えると、身近な課題を解決することが、世界基準のプロダクトになる可能性も大いにあるということです。<br>
+どうせ開発するなら、大きな夢を見て開発していきたいですね。<br></p>
+</div>
+<div class="paragraph">
+<p>さて、Gitの開発者がリーナス・トーバルズということでかなり脱線してしましたが、Gitの概要としてはこんな感じです。<br>
+では早速、Gitコマンドの紹介に入っていきましょう。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__git">基本的なGitコマンド</h3>
+<div class="paragraph">
+<p>まずは、基本的なGitコマンドの紹介です。<br>
+ちなみに、Gitコマンドは全部で156種類でした。（2017年10月現在）<br>
+<span class="image"><img src="/images/hasumi/git/git-help-a.png" alt="git-help-a.png"></span><br></p>
+</div>
+<div class="paragraph">
+<p>git help -a で全Gitコマンドが参照できるので、気になった人は調べてみてください。<br></p>
+</div>
+<div class="paragraph">
+<p>基本的なGitコマンドの一覧です。<br>
+・git init<br>
+・git add<br>
+・git commit<br>
+・git push<br>
+・git pull<br>
+・git reset<br>
+・git log<br>
+・git status<br>
+・git diff<br>
+・git cheackout<br>
+・git branch<br>
+・git clone<br>
+・git fetch<br>
+・git merge<br>
+・git rm<br></p>
+</div>
+<div class="paragraph">
+<p>これだけは少なくとも知っておきたいですね。<br>
+説明は今回は省きます、他に紹介しているサイトがたくさんあるので。<br>
+ご興味ある方はコマンド名で調べてみてください。<br></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__git_br">知っているとオトクなGitコマンド<br></h3>
+<div class="paragraph">
+<p>次に、ちょっと通？なGitコマンドについていくつか紹介していきます。<br>
+これを覚えてると、開発作業が少し捗るかも？なので、覚えておきましょう。<br></p>
+</div>
+<div class="paragraph">
+<p>紹介するコマンドの一覧です。<br>
+・git worktree<br>
+・git stash<br>
+・git reflog<br>
+・git cherry-pick<br></p>
+</div>
+<div class="sect3">
+<h4 id="_git_worktree">git worktree</h4>
+<div class="paragraph">
+<p>まずは今回のブログのテーマのきっかけになったgit worktreeから紹介していきます。<br></p>
+</div>
+<div class="sect4">
+<h5 id="__">概要</h5>
+<div class="paragraph">
+<p>git worktreeは、指定ブランチの内容を指定のディレクトリに反映してくれるコマンドです。<br>
+現在のブランチで作業しているけど、ちょっとした修正や確認のために色々したいな〜ってときに<br>
+役に立ってくれます。<br></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="___2">使い方</h5>
+<pre style="font-family: Menlo, Courier">
+git worktree add [directoryName] [branchName]
+</pre>
+<div class="paragraph">
+<p>のように使います。<br>
+例えば、以下のようなコマンドを打ってみます。<br></p>
+</div>
+<pre style="font-family: Menlo, Courier">
+git worktree add develop-worktree develop
+</pre>
+<div class="paragraph">
+<p>すると、作業ディレクトリの直下に、developブランチの内容を反映したディレクトリが作成されます。<br>
+これが概要で言っていたちょっと色々したいときに便利と言っていた所以です。<br>
+処理が終わったらそのディレクトリを削除してしまえばいいので、手軽に実験できます。<br></p>
+</div>
+<div class="paragraph">
+<p>worktree一覧を見たいときは、<br></p>
+</div>
+<pre style="font-family: Menlo, Courier">
+git worktree list
+</pre>
+<div class="paragraph">
+<p>で確認できます。<br>
+また、worktreeを削除したい場合は<br></p>
+</div>
+<pre style="font-family: Menlo, Courier">
+git worktree prune
+</pre>
+<div class="paragraph">
+<p>で出来るので簡単です。<br></p>
+</div>
+<div class="paragraph">
+<p>worktreeを使いこなして色々遊んでみましょう！<br></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_git_stash">git stash</h4>
+<div class="paragraph">
+<p>最近良く使うgit stashです。<br></p>
+</div>
+<div class="sect4">
+<h5 id="___3">概要</h5>
+<div class="paragraph">
+<p>git stashは、現在のブランチ状態をコミットせずに一時保存できる優れものくんです。<br>
+概念的にはworktreeと似ていますが、複数のブランチを抱えるときに力を発揮してくれます。<br>
+例えば、複数の開発や修正を抱えているときやメンバーのコードレビューをしなきゃいけないとき、<br>
+ありますよね？<br>
+そんなときに現在の状態を保存してくれるのは役に立ちますな〜！<br></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="___4">使い方</h5>
+<div class="paragraph">
+<p>git stashで大きく使うのは、一時保存と保存の反映です。<br>
+一時保存は、<br></p>
+</div>
+<pre style="font-family: Menlo, Courier">
+git stash save "リスト名、コメントなど"
+</pre>
+<div class="paragraph">
+<p>保存の反映は、<br></p>
+</div>
+<pre style="font-family: Menlo, Courier">
+git stash pop
+</pre>
+<div class="paragraph">
+<p>です。<br>
+また、一時保存しているリストの表示も可能です。<br></p>
+</div>
+<pre style="font-family: Menlo, Courier">
+git stash list
+</pre>
+<div class="paragraph">
+<p>コメントも残すことも出来るので、うっかり作業内容をど忘れしないよう備忘録をつけることも可能です。<br>
+複数saveしたときには、stash@{0}:のように番号が割り振られます。<br>
+popするときには<br></p>
+</div>
+<pre style="font-family: Menlo, Courier">
+git stash pop stash@{0}
+</pre>
+<div class="paragraph">
+<p>のようにすることで反映できます。<br></p>
+</div>
+<div class="paragraph">
+<p>git stashを使いこなしてマルチタスクをさくさくこなしましょう！<br></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_git_reflog">git reflog</h4>
+<div class="paragraph">
+<p>git reflogは、HEADやブランチ先端の動きの履歴を参照することが出来ます。<br>
+ちなみに、git log -gで同じような動作をします。<br>
+過去の自分や他者が、どういった動きをしているのかが参照できるため、<br>
+間違ってコミットしてしまった場合などにgit resetする際に便利です。<br></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_git_cherry_pick">git cherry-pick</h4>
+<div class="paragraph">
+<p>特定のコミットのみ反映することが出来るコマンドです。<br>
+他ブランチの内容を、該当ブランチに適用したい場合などに使ってみるといいかもしれません。<br></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__tips">その他Tips</h3>
+<div class="paragraph">
+<p>ターミナルを使っていると、aliasでコマンド入力を楽にしたいエンジニアは多いはず。<br>
+ちなみに、Gitコマンドにおいても、.gitconfigに設定をすることで適用することができます。<br>
+調べている中で、面白いaliasに出会いました。有用な記事だったので、紹介します。<br>
+aliasというか、Gitコマンドの使い方にこんなものがあるのかと勉強になりました。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre># git log with graphical tree
+alias glogg='env LANG=en_US.utf-8 git log --graph --date-order --format="%h (%an) %s %d" --branches'
+git のレビジョンツリーを全てのローカルブランチに渡ってグラフィカルに表示するコマンドです。
+git log --graph だけだと表示フォーマットが微妙でいまいちなのが git らしいと思います。</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre># git log with short statistics
+alias glog='env LANG=en_US.utf-8 git log --stat --decorate --date-order'
+さきほどと同じくのログ表示のエイリアスです。こちらは詳細にログを見たい場合に使用します。
+コミットをレビューしたいときには -p オプションを足して glog -p とかすれば diff も表示してくれます。</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>その他にもいい感じのalias設定があるので、興味ある方は見てみてください。<br>
+引用元：http://outofsearch.blogspot.jp/2013/05/git.html<br></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___5">まとめ</h3>
+<div class="paragraph">
+<p>いかかでしたでしょうか。<br>
+今回調べるにあたり、Gitコマンドの色々な使い方を知ることが出来て勉強になりました。<br></p>
+</div>
+<div class="paragraph">
+<p>普段使っているコマンドは少なかったとしても、実は有用なGitコマンドはたくさんあるんですね。<br></p>
+</div>
+<div class="paragraph">
+<p>新しい技術や情報は日々アップデートされ続けていますが、<br>
+今回のGitでの経験のように、普段使っている技術でも深く調べてみると知らないことが多いと気づけたので、<br>
+気になった知識はその機会に一旦止まって色々調べていこうと思いました。<br></p>
+</div>
+<div class="paragraph">
+<p>終わり<br></p>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2017. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
