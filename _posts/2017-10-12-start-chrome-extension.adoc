@@ -1,6 +1,6 @@
 = 【テンプレで作る】環境構築から、Chrome拡張機能を作るまで
 :hp-alt-title: start-chrome-extension
-:hp-tags: Obata, chrome-extension, glup
+:hp-tags: Obata, chrome-extension, Gulp
 
 新人2回目のブログです。小畑です +
 
@@ -18,8 +18,8 @@ Chromeで読み込ませるまでやっていきましょう！ +
 やったこととしては以下の通りです。 +
 コマンドをぽいっと書く感じなので待つだけです！
 
-. homebrew, nodebrew, Node.jsのインストール
-. generator-chrome-extensionとglupのインストール
+. Homebrew, nodebrew, Node.jsのインストール
+. generator-chrome-extensionとGulpのインストール
 . テンプレート生成！
 . コンパイル(使える状態に)しよう！
 . Chromeに読み込ませる！
@@ -35,9 +35,9 @@ https://qiita.com/akakuro43/items/600e7e4695588ab2958d +
 コマンドコピペしていくだけので、難しくないですよ！ +
 
 
-### 2.gulpとgenerator-chrome-extensionのインストール
+### 2.Gulpとgenerator-chrome-extensionのインストール
 
-作ったものをコンパイル（使える状態にする）するためにgulpをインストール。 +
+作ったものをコンパイル（使える状態にする）するためにGulpをインストール。 +
 そして本命のgenerator-chrome-extensionもインストールしましょう！
 
 ```
@@ -96,7 +96,7 @@ image::obata/googleExTry/Allo.png[]
 みなさんもとりあえずやってみましょ！ +
 おもちゃが増えますよ！ +
 
-調べていると、node.jsだったり、homebrewをインストール済みの方の記事が +
+調べていると、Node.jsだったり、Homebrewをインストール済みの方の記事が +
 多かったのでまとめてみました。 +
 ちなみにこの記事のためにいろいろアンインストールするところから始めたので +
 記事自体には手間がかかりました・・・ +
