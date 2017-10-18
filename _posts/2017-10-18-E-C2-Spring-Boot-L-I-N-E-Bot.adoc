@@ -7,13 +7,13 @@
 
 最近、秋らしくなり寒くなってきましたが、 皆さまは如何お過ごしでしょうか。
 
-さて、今回お題は、前回ギブアップしたLINE@のボイスデータの音声解析リベンジ編です。
+さて、今回お題は、前回ギブアップしたLINE@のボイスデータを音声解析するリベンジ編です。
 
 前回のブログ +
 http://tech.innovation.co.jp/2017/09/01/E-C2-Spring-Boot-L-I-N-E-Bot.html
  
 
-結論から申し上げますとリベンジ成功です！
+結論から申し上げますと、中ハマりでリベンジ成功です！
 
 まずは、実行結果の確認から。
 
@@ -26,13 +26,13 @@ image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/m
 
 解析されてます！ +
 
-次に、弊社KTNさんにご協力して頂き、ダンディボイスをゲットします。
+次に、弊社KTNさんにご協力して頂き、ダンディボイス？をゲットします。
 
 「しょがさんといえば」でチャレンジ！！ +
 
 image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/syogasan.png[]
 
-解析してますが、イマイチですねー
+解析してますが、50点ですねー
 
 次！！
 
@@ -40,14 +40,14 @@ image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/m
 
 image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/pancake.png[]
 
-イマイチかなー
+こちらも50点かなー
 
 取り敢えず、ボイスデータ送信(Line) -> ボイスデータ取得 → Google Speech APIで音声認識 -> 結果解析 -> メッセージ送信(Line)という一連のフローは完成しました。
 
 では、前回はどこがイケてなかったのでしょうか？？
 
 ===== 【問題①】音声データの形式が悪かった +
-Lineから取得するボイスデータはmp4a形式なのですが、Google Speech APIで解析できるデータ形式とは異なっていました。そのため、ffmpegを使用してボイスデータの音声形式をmp4a形式からflac形式へ変換しました。（赤字部分）
+Lineから取得するボイスデータはmp4a形式なのですが、Google Speech APIで解析できるデータ形式とは異なっていました。そのため、ffmpegを使用してボイスデータの音声形式をmp4a形式からflac形式へ変換することにします。ffmpegは動画や音声を再生、変換などができるフリーソフトです。
 ++++
 <pre style="font-family: Menlo, Courier">
 $ffmpeg -i voice_1908.aac send.flac
@@ -110,8 +110,9 @@ Google Speech API仕様には、「base64でエンコーディングした音声
 
 うーん。
 
-詰まってきたのでプログラム変えてみました。
-URLConnectionで作成したコネクションに対して、DataOutputStreamクラスを使用して読み込んだファイルデータを設定して送信してみます。
+実質、APIには音声データしか送ってないよなー
+
+まず、URLConnectionとDataOutputStreamに変更。Google Speech APIとのコネクションに読み込んだファイルデータを直接流して送信してみます。
 
 できた！！
 
@@ -221,6 +222,6 @@ private List<String> googleSpeech(String fileName) {
 ++++
 
 ===== 感想
-音声データ（圧縮形式）は得意な領域ではないので、これが絡んだ問題にはハマりました。今回、解決はしましたが、圧縮形式についてはイマイチ興味が湧きません。ハマって得た知識は少なくても、新しい引き出しができたのは収穫です。
+音声データ（圧縮形式）は得意な領域ではないので、これが絡んだ問題にはハマりました。今回、解決はしましたが、圧縮形式についてはイマイチ興味が湧きません。ハマって得た知識は少なかったのですが、新しい引き出しができたのは収穫です。
 
 おわり
