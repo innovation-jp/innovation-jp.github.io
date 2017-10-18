@@ -3,35 +3,48 @@
 :hp-tags: NewTsukamoto, EC2, SpringBoot, Java8
 
 こんにちは。
-エンジニアのNew塚本です。 +
+エンジニアのNew塚本です。
+
 最近、秋らしくなり寒くなってきましたが、 皆さまは如何お過ごしでしょうか。
 
-さて、今回のお題は前回ギブアップした、Google Speech APIを使用した、 +
-LINE@のボイスデータの音声解析のリベンジ編です。
+さて、今回お題は、前回ギブアップしたLINE@のボイスデータの音声解析リベンジ編です。
 
 前回のブログ +
 http://tech.innovation.co.jp/2017/09/01/E-C2-Spring-Boot-L-I-N-E-Bot.html
  
 
-結論からですが、リベンジ成功しました！ +
+結論から申し上げますとリベンジ成功です！
 
-===== 実行結果 +
+まずは、実行結果の確認から。
+
+===== 実行結果 
 
 
-
-
-
+Lineで「バナナ」とお話して送信してみます！
 
 image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/banana.png[]
 
+解析されてます！ +
+
+次に、弊社KTNさんにご協力して頂き、ダンディボイスをゲットします。
+
+「しょがさんといえば」でチャレンジ！！ +
+
 image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/syogasan.png[]
 
+解析してますが、イマイチですねー
+
+次！！
+
+「パンケーキ食いたいっす」でチャレンジ！！
 
 image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/pancake.png[]
 
+イマイチかなー
 
+取り敢えず、ボイスデータ送信(Line) -> ボイスデータ取得 → Google Speech APIで音声認識 -> 結果解析 -> メッセージ送信(Line)という一連のフローは完成しました。
 
-image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/googleApi.png[]
+では、前回はどこがイケてなかったのでしょうか？？
 
 
 ===== 【問題①】音声データの形式が悪かった +
