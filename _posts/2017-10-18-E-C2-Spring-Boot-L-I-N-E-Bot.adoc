@@ -165,27 +165,24 @@ private List<String> googleSpeech(String fileName) {
   URL url; 
 
   try {
-    url = new URL(urlBuff.toString());
+    // Lineボイスデータ(aac形式)をflac形式に変換
+    <text style="color:red">Path filePath = Paths.get("/tmp/" + fileName + ".flac");
+    String cmd = "ffmpeg -i /tmp/" + fileName + ".aac" + " /tmp/" + fileName + ".flac";
+    Runtime runtime = Runtime.getRuntime();
+    Process process = runtime.exec(cmd);
+    process.waitFor();</text>
+    // GoogleCloudSpeechApiからの返却値を取得
+    <text style="color:red">url = new URL(urlBuff.toString());
     URLConnection urlConnection = url.openConnection(); 
     HttpsURLConnection httpConnection = (HttpsURLConnection) urlConnection; 
     httpConnection.setRequestMethod("POST"); 
     httpConnection.setRequestProperty("Content-Type", "audio/x-flac; rate=16000"); 
     httpConnection.setDoOutput(true); 
     DataOutputStream outStream = new DataOutputStream(httpConnection.getOutputStream());
-
-    // Lineボイスデータ(aac形式)をflac形式に変換
-    Path filePath = Paths.get("/tmp/" + fileName + ".flac");
-    String cmd = "ffmpeg -i /tmp/" + fileName + ".aac" + " /tmp/" + fileName + ".flac";
-    Runtime runtime = Runtime.getRuntime();
-    Process process = runtime.exec(cmd);
-    process.waitFor();
-
-    // GoogleCloudSpeechApiへボイスデータ送信 
     outStream.write(Files.readAllBytes(filePath)); 
     outStream.flush(); 
     outStream.close();
-
-    // GoogleCloudSpeechApiからの返却値を取得
+</text>
     BufferedReader in = new BufferedReader(new InputStreamReader(httpConnection.getInputStream())); 
     String inputLine; 
 
