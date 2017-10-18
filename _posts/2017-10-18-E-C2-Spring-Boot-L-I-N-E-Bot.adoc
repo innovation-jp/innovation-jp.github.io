@@ -1,13 +1,217 @@
-# EC2 + SpringBoot でLINE@のBotアプリを作る　その１
+# EC2 + SpringBoot でLINE@のBotアプリを作る　その２
 :hp-alt-title:　EC2 + SpringBoot でLINE@のBotアプリを作る　その2
 :hp-tags: NewTsukamoto, EC2, SpringBoot, Java8
 
 こんにちは。
 エンジニアのNew塚本です。 +
-最近、秋らしくなり寒くなってきましたが、 +
-皆さまは如何お過ごしでしょうか。
+最近、秋らしくなり寒くなってきましたが、 皆さまは如何お過ごしでしょうか。
 
-さて、今回のお題は前回ギブアップした、Google Speech APIAを使用した、 +
+さて、今回のお題は前回ギブアップした、Google Speech APIを使用した、 +
 LINE@のボイスデータの音声解析のリベンジ編です。
 
-aaaaa
+前回のブログ +
+http://tech.innovation.co.jp/2017/09/01/E-C2-Spring-Boot-L-I-N-E-Bot.html
+ 
+
+結論からですが、リベンジ成功しました！ +
+
+===== 実行結果 +
+
+
+
+
+
+
+
+
+
+
+
+
+
+===== 【問題①】音声データの形式が悪かった +
+Lineから取得するボイスデータはmp4a形式なのですが、Google Speech APIで解析できるデータ形式とは異なっていました。 +
+
+→ ffmpegを使用してボイスデータの音声形式を変換しました。mp4a形式からflac形式へ変換されてます。（赤字部分）
+
+++++
+<pre style="font-family: Menlo, Courier">
+$ffmpeg -i voice_1908.aac send.flac
+  ffmpeg version 3.3.4 Copyright (c) 2000-2017 the FFmpeg developers
+  Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'voice_1908.aac':
+    Metadata:
+      major_brand     : mp42
+      minor_version   : 0
+      compatible_brands: isommp42
+      creation_time   : 2017-09-22T13:22:16.000000Z
+      com.android.version: 6.0.1
+    Duration: 00:00:02.88, start: 0.000000, bitrate: 78 kb/s
+      <text style="color:red">Stream #0:0(eng): Audio: aac (LC) (mp4a / 0x6134706D), 16000 Hz, mono, fltp, 16 kb/s# (default)</text>
+      Metadata:
+        creation_time   : 2017-09-22T13:22:16.000000Z
+        handler_name    : SoundHandle
+  Stream mapping:
+    Stream #0:0 -> #0:0 (aac (native) -> flac (native))
+  Press [q] to stop, [?] for help
+  [flac @ 0x7f9c0e801800] encoding as 24 bits-per-sample
+  Output #0, flac, to 'send.flac':
+    Metadata:
+      major_brand     : mp42
+      minor_version   : 0
+      compatible_brands: isommp42
+      com.android.version: 6.0.1
+      encoder         : Lavf57.71.100
+      <text style="color:red">Stream #0:0(eng): Audio: flac, 16000 Hz, mono, s32 (24 bit), 128 kb/s (default)</text>
+      Metadata:
+        creation_time   : 2017-09-22T13:22:16.000000Z
+        handler_name    : SoundHandle
+        encoder         : Lavc57.89.100 flac
+  size=103kB time=00:00:02.88 bitrate= 293.3kbits/s speed= 269x    
+  video:0kB audio:95kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: 8.625886%
+</pre>
+++++
+
+flac形式に変換にした音声データを使ってAPIを実行すると、解析結果が返ってきました。
+++++
+<pre style="font-family: Menlo, Courier">
+curl -X POST --data-binary @'./send.flac' --header 'Content-Type: audio/x-flac; rate=16000;' 'https://www.google.com/speech-api/v2/recognize?output=json&lang=ja-JP&key=登録されているAPIキー' 
+{"result":[]}
+{"result":[{"alternative":[{"transcript":"さきちゃん お店に行ってください","confidence":0.99787414},{"transcript":"さきちゃん お店に入ってください"},{"transcript":"さきちゃんを見せに来てください"},{"transcript":"さきちゃんを見せに行ってください"},{"transcript":"さきちゃん お店に来てください"}],"final":true}],"result_index":0}
+</pre> 
+++++
+
+一歩前進。
+
+===== 【問題②】Google Speech APIとの通信方法 +
+次に、前回のプログラムを少し変え、flac形式に変更した音声データを読み込み実行させてみましが、 + 
+解析データは返ってきませんでした。 + 
+
+後はプログラムの問題ですが、ここからハマりました・・・。 + 
+
+Google Speech API仕様には、base64でエンコーディングした音声データをcontentに設定して送れるとありますが、全く解析されません。他の設定パラメータを変更して試してみるとエラーが返却されたりするので、通信はできていますが、どこかおかしいようです。 + 
+
+プログラムで音声データを読み込む時に壊してるか？と疑ってみます。
+読み込んだ音声データ（byte配列）をもう一度ファイルに保存して、音声ファイルを実行してみます。 +
+
+問題ありません。
+
+うーん。
+
+詰まってきたので、実装変えてみました。
+URLConnectionで作成したコネクションに対して、DataOutputStreamクラスを使用して読み込んだファイルデータを設定して送信してみます。
+
+できた！！
+
+ということで、変更したプログラムをのせておきます。
+
+===== 改修したプログラム①  +
+Lineからボイスデータを取得し、一時ディレクトリに保存するメソッド。
+++++
+<pre style="font-family: Menlo, Courier">
+private String getContents(String msgId) {
+
+  String fileName = null;
+  CloseableHttpClient httpClient = HttpClients.createDefault();
+  String targetUrl = appConfig.getContentsUrl().replace("{messageId}", msgId);			
+  HttpGet request = new HttpGet(targetUrl);
+  request.addHeader("Authorization", "Bearer {%s}".replace("%s", appConfig.getChannelAccessToken()));
+  CloseableHttpResponse response = null;
+
+  try {
+    // LineGWからボイスデータを取得する
+    response = httpClient.execute(request);
+    HttpEntity entity = response.getEntity();
+
+    fileName = RandomStringUtils.randomAlphabetic(10);
+    // 英数字10桁の乱数をファイル名にしてボイスデータを/tmpに出力
+    String filePath = "/tmp/" + fileName + ".aac";
+    Files.write(Paths.get(filePath), EntityUtils.toByteArray(entity));				
+
+    httpClient.close();
+    EntityUtils.consume(entity);
+
+  } catch (Exception ex) {
+    ex.printStackTrace();
+  }
+  return fileName;
+}
+</pre>
+++++
+
+===== 改修したプログラム② +
+音声データをffmpegでflac形式に変換、音声解析API実行し返却値を解析するメソッド。
+++++
+<pre style="font-family: Menlo, Courier">
+private List<String> googleSpeech(String fileName) {
+
+  StringBuilder urlBuff = new StringBuilder();
+  urlBuff.append(appConfig.getGoogleCloudSpeechApi());
+  urlBuff.append(appConfig.getGoogleApiKey());
+
+  List<String> speechList = null;
+  URL url; 
+
+  try {
+    url = new URL(urlBuff.toString());
+    URLConnection urlConnection = url.openConnection(); 
+    HttpsURLConnection httpConnection = (HttpsURLConnection) urlConnection; 
+    httpConnection.setRequestMethod("POST"); 
+    httpConnection.setRequestProperty("Content-Type", "audio/x-flac; rate=16000"); 
+    httpConnection.setDoOutput(true); 
+    DataOutputStream outStream = new DataOutputStream(httpConnection.getOutputStream());
+
+    // Lineボイスデータ(aac形式)をflac形式に変換
+    Path filePath = Paths.get("/tmp/" + fileName + ".flac");
+    String cmd = "ffmpeg -i /tmp/" + fileName + ".aac" + " /tmp/" + fileName + ".flac";
+    Runtime runtime = Runtime.getRuntime();
+    Process process = runtime.exec(cmd);
+    process.waitFor();
+
+    // GoogleCloudSpeechApiへボイスデータ送信 
+    outStream.write(Files.readAllBytes(filePath)); 
+    outStream.flush(); 
+    outStream.close();
+
+    // GoogleCloudSpeechApiからの返却値を取得
+    BufferedReader in = new BufferedReader(new InputStreamReader(httpConnection.getInputStream())); 
+    String inputLine; 
+
+    speechList = new ArrayList<String>();
+
+    // 音声解析データの変換
+    while ((inputLine = in.readLine()) != null) { 
+
+      // 返却されたjsonの中に解析結果がなければスルー
+      if (!inputLine.contains("alternative")) {
+      continue;
+      }
+
+      // jsonデータのデシリアライズ
+      RecieveData receivedata = new ObjectMapper().readValue(inputLine, RecieveData.class);
+      for (Result result : receivedata.getResult()) {
+        int limit = 1;
+        for (Alternative msg : result.getAlternative()) {
+          // 解析されたテキストデータを取得
+          speechList.add(msg.getTranscript());
+          limit++;
+          // 1回にLineへ送信するメッセージの最大値
+          if (5 < limit) {
+          break;
+          }
+        }
+      }
+    }
+    in.close();
+  } catch (Exception e) { 
+  e.printStackTrace(); 
+  }
+  return speechList;
+}
+</pre>
+++++
+
+===== 感想
+
+諦めなくてよかった。 +
+
+おわり
