@@ -1,0 +1,11 @@
+# EC2 + SpringBoot でLINE@のBotアプリを作る　その１
+:hp-alt-title:　EC2 + SpringBoot でLINE@のBotアプリを作る　その2
+:hp-tags: NewTsukamoto, EC2, SpringBoot, Java8
+
+こんにちは。
+エンジニアのNew塚本です。 +
+最近、秋らしくなり寒くなってきましたが、 +
+皆さまは如何お過ごしでしょうか。
+
+さて、今回のお題は前回ギブアップした、Google Speech APIAを使用した、 +
+LINE@のボイスデータの音声解析のリベンジ編です。
