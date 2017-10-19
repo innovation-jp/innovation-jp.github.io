@@ -14,18 +14,57 @@
 Pepperに教えてもらうまでもなく、一瞬で会議室がわかるようになったので、不要になりました！ +
 ある意味よかったです！ +
 
-ということで、今回はライトですが、意外と日本語でのピッタリの情報が見つからなかったので、
+== 序章
+
+ということで、今回はライトですが、意外と日本語でのピッタリの情報が見つからなかったので、 +
 MacでTableau Desktopを直接Treasure Data(のPresto)につないであれこれする手順をしたためておこうと思います。
 
+== Treasure DataのAPIキーを用意する
 
+公式には、 +
+https://docs.treasuredata.com/articles/get-apikey +
+こちらをご覧ください。
 
-== 感動と成長！
-== 感動と成長！
-== 感動と成長！
-== 感動と成長！
-== 感動と成長！
+読まなくても、ふつーにTreasure DataのWeb Consoleで簡単にAPIキーを発行できます。
+
+2つのキーが発行されますが、そのうち、 +
+MASTER API KEY +
+の方を使います。
+
+== MacのTableau用Prestoドライバをインストールする
+
+Tableauのドライバページ +
+https://www.tableau.com/ja-jp/support/drivers +
+から「データソース」に「Presto」を選んでダウンロード。
+
+その中から、 +
+Simba Presto 1.1.pkg +
+をダブルクリックしてインストールします。
+
+== Tableau Desktopでデータソースを設定する
+
+Tableau Desktopを起動し、接続=>サーバーへ=>Prestoを選択
+
+ダイアログに以下を入力して、サインインする
+
+サーバー(V): https://api-presto.treasuredata.com
+ポート(R): 443
+カタログ: td-presto
+認証: ユーザー名
+ユーザー名(U): 上記で取得したMASTER API KEY
+SSLが必須(L)のチェックボックスをオン
+
+== 分析する！
+
+ここまでくれば、すでに接続できているので、あとはいい感じに分析してください！
+
+== おしまい
+
+Treasure Dataから、データーマートやDWHなどへ行ってから、Tableauとかで分析してたりするかと思いますが、 +
+ちょっとしたものとかだったり、そもそも持っていけない場合などは、Treasure DataのPrestoでやっちゃうのが
+お手軽で良かったり良くなかったりしますよね！ +
+ね！
+
+ライトですが、今回はこれで失礼いたします！
 
 image::/images/yagasaki/innocoin1/ic15.png[ic15]
-
-
-からがんばってインストールするか、 https://www.google.co.jp/search?q=geth+インストール[gethインストール] で検索していただければ、簡単にインストールできますのでいい感じにインストールしてください。 +
