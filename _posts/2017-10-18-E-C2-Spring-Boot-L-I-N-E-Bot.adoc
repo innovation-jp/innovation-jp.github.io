@@ -47,7 +47,7 @@ image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/m
 では、前回はどこがイケてなかったのでしょうか？？
 
 ===== 【問題①】音声データの形式が悪かった +
-Lineから取得するボイスデータはmp4a形式ですが、Google Speech APIが解析できる音声データ形式とは異なっていました。そのため、ffmpegを使用して音声データ形式を、mp4a形式からflac形式に変換することにします。ffmpegは動画や音声を、再生や変換などができるフリーソフトです。
+Lineから取得するボイスデータはmp4a形式ですが、Google Speech APIが解析できる音声データ形式とは異なっていました。そのため、ffmpegを使用して音声データ形式を、mp4a形式からflac形式に変換することにします。ffmpegは動画や音声の再生や変換ができるフリーソフトです。
 ++++
 <pre style="font-family: Menlo, Courier">
 $ffmpeg -i voice_1908.aac send.flac
@@ -110,11 +110,11 @@ Google Speech API仕様には、「base64でエンコーディングした音声
 
 うーん。
 
-実質、APIには音声データしか送ってないよなー
+実質、APIには音声データしか送ってないし・・・
 
-まず、URLConnectionとDataOutputStreamに変更。Google Speech APIとのコネクションに読み込んだファイルデータを直接流して送信してみます。
+使用するクラスをURLConnectionとDataOutputStreamに変更し、Google Speech APIとのコネクションに読み込んだファイルのbyte配列を設定して送信する様に変更してみます。
 
-できた！！
+・・・できた。
 
 音声データの送り方？腑に落ちませんが成功です。
 
