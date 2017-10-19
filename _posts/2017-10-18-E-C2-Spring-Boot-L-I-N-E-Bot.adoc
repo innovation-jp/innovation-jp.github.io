@@ -7,7 +7,7 @@
 
 最近、秋らしくなり寒くなってきましたが、 皆さまは如何お過ごしでしょうか。
 
-さて、今回お題は、前回ギブアップしたLINE@のボイスデータを音声解析するリベンジ編です。
+さて、今回のお題は、前回ギブアップした「LINE@のボイスデータを音声解析してみる」のリベンジ編です。
 
 前回のブログ +
 http://tech.innovation.co.jp/2017/09/01/E-C2-Spring-Boot-L-I-N-E-Bot.html
@@ -15,7 +15,7 @@ http://tech.innovation.co.jp/2017/09/01/E-C2-Spring-Boot-L-I-N-E-Bot.html
 
 結論から申し上げますと、中ハマりでリベンジ成功です！
 
-まずは、実行結果の確認から。
+まずは、実行結果の確認からどうぞ。
 
 ===== 実行結果 
 
@@ -26,13 +26,13 @@ image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/m
 
 解析されてます！ +
 
-次に、弊社KTNさんに協力してもらい、ダンディボイス？をゲットします。
+他の人の音声ではどうなるか？　弊社KTNさんのダンディボイス？をゲットしました。
 
 「しょがさんといえば」でチャレンジ！！ +
 
 image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/syogasan.png[]
 
-解析してますが、50点ですねー
+解析されてますが、50点ですねー
 
 次！！
 
@@ -47,7 +47,7 @@ image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/m
 では、前回はどこがイケてなかったのでしょうか？？
 
 ===== 【問題①】音声データの形式が悪かった +
-Lineから取得するボイスデータはmp4a形式なのですが、Google Speech APIで解析できるデータ形式とは異なっていました。そのため、ffmpegを使用してボイスデータの音声形式をmp4a形式からflac形式へ変換することにします。ffmpegは動画や音声を再生、変換などができるフリーソフトです。
+Lineから取得するボイスデータはmp4a形式ですが、Google Speech APIが解析できる音声データ形式とは異なっていました。そのため、ffmpegを使用して音声データ形式を、mp4a形式からflac形式に変換することにします。ffmpegは動画や音声を、再生や変換などができるフリーソフトです。
 ++++
 <pre style="font-family: Menlo, Courier">
 $ffmpeg -i voice_1908.aac send.flac
@@ -97,11 +97,11 @@ curl -X POST --data-binary @'./send.flac' --header 'Content-Type: audio/x-flac; 
 ちょっと前進。
 
 ===== 【問題②】Google Speech APIとの通信方法 +
-次に、前回のプログラムを少し変え、flac形式に変更した音声データを読み込み実行してみますが、解析データは返ってきません。 + 
+次に、前回のプログラムを少し変え、flac形式に変換した音声データを読み込み実行してみますが、解析されません。 + 
 
-後はプログラムの問題ですが、ここからハマりました・・・。 + 
+まだ問題がありますね。今回は、ここからハマりました・・・ + 
 
-Google Speech API仕様には、「base64でエンコーディングした音声データをcontentに設定して送る」とありますが解析できません。他の設定パラメータを変更して試してみると、エラーが返却されたりするので、通信はできていますが、どこかおかしいようです。 + 
+Google Speech API仕様には、「base64でエンコーディングした音声データをcontentに設定して送る」とありますが解析されません。他の設定パラメータを変更して試してみるとエラーとなるため、設定値は問題なさそうです。 + 
 
 音声データを読み込む時に壊してるか？と疑ってみます。
 読み込んだ音声データ（byte配列）をもう一度ファイルに保存して、音声ファイルを実行してみます。 +
