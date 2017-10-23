@@ -20,7 +20,7 @@ http://tech.innovation.co.jp/2017/09/01/E-C2-Spring-Boot-L-I-N-E-Bot.html
 ===== 実行結果 
 
 
-Lineで「バナナ」とお話して送信してみます！
+LINEで「バナナ」とお話して送信してみます！
 
 image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/banana.png[]
 
@@ -42,12 +42,12 @@ image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/m
 
 こちらも50点かなー
 
-取り敢えず、ボイスデータ送信(Line) -> ボイスデータ取得 → Google Speech APIで音声認識 -> 結果解析 -> メッセージ送信(Line)という一連のフローは完成しました。
+取り敢えず、ボイスデータ送信(LINE) -> ボイスデータ取得 → Google Speech APIで音声認識 -> 結果解析 -> メッセージ送信(LINE)という一連のフローは完成しました。
 
 では、前回はどこがイケてなかったのでしょうか？？
 
 ===== 【問題①】音声データの形式が悪かった +
-Lineから取得するボイスデータはmp4a形式ですが、Google Speech APIが解析できる音声データ形式とは異なっていました。そのため、ffmpegを使用して音声データ形式を、mp4a形式からflac形式に変換することにします。ffmpegは動画や音声の再生や変換ができるフリーソフトです。
+LINEから取得するボイスデータはmp4a形式ですが、Google Speech APIが解析できる音声データ形式とは異なっていました。そのため、ffmpegを使用して音声データ形式を、mp4a形式からflac形式に変換することにします。ffmpegは動画や音声の再生や変換ができるフリーソフトです。
 ++++
 <pre style="font-family: Menlo, Courier">
 $ffmpeg -i voice_1908.aac send.flac
@@ -90,7 +90,7 @@ flac形式に変換にした音声データを使ってAPIを実行すると、�
 <pre style="font-family: Menlo, Courier">
 curl -X POST --data-binary @'./send.flac' --header 'Content-Type: audio/x-flac; rate=16000;' 'https://www.google.com/speech-api/v2/recognize?output=json&lang=ja-JP&key=登録されているAPIキー' 
 {"result":[]}
-{"result":[{"alternative":[{"transcript":"さきちゃん お店に行ってください","confidence":0.99787414},{"transcript":"さきちゃん お店に入ってください"},{"transcript":"さきちゃんを見せに来てください"},{"transcript":"さきちゃんを見せに行ってください"},{"transcript":"さきちゃん お店に来てください"}],"final":true}],"result_index":0}
+{"result":[{"alternative":[{"transcript":"おはようございます","confidence":0.99787414}],"final":true}],"result_index":0}
 </pre> 
 ++++
 
@@ -119,7 +119,7 @@ Google Speech API仕様には、「base64でエンコーディングした音声
 音声データの送り方？腑に落ちませんが成功です。
 
 ===== 改修したプログラム①  +
-Lineからボイスデータを取得し、一時ディレクトリに保存するメソッド。
+LINEからボイスデータを取得し、一時ディレクトリに保存するメソッド。
 ++++
 <pre style="font-family: Menlo, Courier">
 private String getContents(String msgId) {
@@ -132,7 +132,7 @@ private String getContents(String msgId) {
   CloseableHttpResponse response = null;
 
   try {
-    // LineGWからボイスデータを取得する
+    // LINEGWからボイスデータを取得する
     response = httpClient.execute(request);
     HttpEntity entity = response.getEntity();
 
@@ -166,7 +166,7 @@ private List<String> googleSpeech(String fileName) {
   URL url; 
 
   try {
-    // Lineボイスデータ(aac形式)をflac形式に変換
+    // LINEボイスデータ(aac形式)をflac形式に変換
     <text style="color:red">Path filePath = Paths.get("/tmp/" + fileName + ".flac");
     String cmd = "ffmpeg -i /tmp/" + fileName + ".aac" + " /tmp/" + fileName + ".flac";
     Runtime runtime = Runtime.getRuntime();
@@ -205,7 +205,7 @@ private List<String> googleSpeech(String fileName) {
           // 解析されたテキストデータを取得
           speechList.add(msg.getTranscript());
           limit++;
-          // 1回にLineへ送信するメッセージの最大値
+          // 1回にLINEへ送信するメッセージの最大値
           if (5 < limit) {
           break;
           }
