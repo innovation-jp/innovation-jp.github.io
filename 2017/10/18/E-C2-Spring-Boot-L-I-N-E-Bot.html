@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>EC2 + SpringBoot でLINE@のBotアプリを作る　その２ - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="EC2 + SpringBoot でLINE@のBotアプリを作る　その２">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="EC2 + SpringBoot でLINE@のBotアプリを作る　その２">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2017/10/18/E-C2-Spring-Boot-L-I-N-E-Bot.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="EC2 + SpringBoot でLINE@のBotアプリを作る　その２" />
+    <meta property="og:description" content="こんにちは。 エンジニアのNew塚本です。 最近、秋らしくなり寒くなってきましたが、 皆さまは如何お過ごしでしょうか。 さて、今回のお題は、前回ギブアップした「LINE@のボイスデータを音声解析してみる」のリベンジ編です。 前回のブログ http://tech.innovation.co.jp/2017/09/01/E-C2-Spring-Boot-L-I-N-E-Bot.html 結論から申し上げますと、中ハマりでリベンジ成功です！ まずは、実行結果の確認からどうぞ。 実行結果 LINEで「バナナ」とお話して送信してみます！ 解析されてます！ 他の人..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2017/10/18/E-C2-Spring-Boot-L-I-N-E-Bot.html" />
+    <meta property="article:published_time" content="2017-10-17T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2017-10-23T02:30:50.856Z" />
+    <meta property="article:tag" content="NewTsukamoto" />
+    <meta property="article:tag" content="EC2" />
+    <meta property="article:tag" content="SpringBoot" />
+    <meta property="article:tag" content="Java8" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="EC2 + SpringBoot でLINE@のBotアプリを作る　その２" />
+    <meta name="twitter:description" content="こんにちは。 エンジニアのNew塚本です。 最近、秋らしくなり寒くなってきましたが、 皆さまは如何お過ごしでしょうか。 さて、今回のお題は、前回ギブアップした「LINE@のボイスデータを音声解析してみる」のリベンジ編です。 前回のブログ http://tech.innovation.co.jp/2017/09/01/E-C2-Spring-Boot-L-I-N-E-Bot.html 結論から申し上げますと、中ハマりでリベンジ成功です！ まずは、実行結果の確認からどうぞ。 実行結果 LINEで「バナナ」とお話して送信してみます！ 解析されてます！ 他の人..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2017/10/18/E-C2-Spring-Boot-L-I-N-E-Bot.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars2.githubusercontent.com/u/29852256?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "EC2 + SpringBoot でLINE@のBotアプリを作る　その２",
+    "url": "http://tech.innovation.co.jp/2017/10/18/E-C2-Spring-Boot-L-I-N-E-Bot.html",
+    "datePublished": "2017-10-17T15:00:00.000Z",
+    "dateModified": "2017-10-23T02:30:50.856Z",
+    "keywords": "NewTsukamoto,  EC2,  SpringBoot,  Java8",
+    "description": "こんにちは。 エンジニアのNew塚本です。 最近、秋らしくなり寒くなってきましたが、 皆さまは如何お過ごしでしょうか。 さて、今回のお題は、前回ギブアップした「LINE@のボイスデータを音声解析してみる」のリベンジ編です。 前回のブログ http://tech.innovation.co.jp/2017/09/01/E-C2-Spring-Boot-L-I-N-E-Bot.html 結論から申し上げますと、中ハマりでリベンジ成功です！ まずは、実行結果の確認からどうぞ。 実行結果 LINEで「バナナ」とお話して送信してみます！ 解析されてます！ 他の人..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-New-Tsukamoto tag-E-C2 tag-Spring-Boot tag-Java8 no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="18 Oct 2017" class="post-meta__date date">18 Oct 2017</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/New-Tsukamoto">NewTsukamoto</a>, <a href="http://tech.innovation.co.jp/tag/E-C2"> EC2</a>, <a href="http://tech.innovation.co.jp/tag/Spring-Boot"> SpringBoot</a>, <a href="http://tech.innovation.co.jp/tag/Java8"> Java8</a></span>
+        <span class="post-meta__author author"><img src="https://avatars2.githubusercontent.com/u/29852256?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">EC2 + SpringBoot でLINE@のBotアプリを作る　その２</h1>
+    </header>
+
+    <section class="post tag-New-Tsukamoto tag-E-C2 tag-Spring-Boot tag-Java8">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんにちは。
+エンジニアのNew塚本です。</p>
+</div>
+<div class="paragraph">
+<p>最近、秋らしくなり寒くなってきましたが、 皆さまは如何お過ごしでしょうか。</p>
+</div>
+<div class="paragraph">
+<p>さて、今回のお題は、前回ギブアップした「LINE@のボイスデータを音声解析してみる」のリベンジ編です。</p>
+</div>
+<div class="paragraph">
+<p>前回のブログ<br>
+<a href="http://tech.innovation.co.jp/2017/09/01/E-C2-Spring-Boot-L-I-N-E-Bot.html" class="bare">http://tech.innovation.co.jp/2017/09/01/E-C2-Spring-Boot-L-I-N-E-Bot.html</a></p>
+</div>
+<div class="paragraph">
+<p>結論から申し上げますと、中ハマりでリベンジ成功です！</p>
+</div>
+<div class="paragraph">
+<p>まずは、実行結果の確認からどうぞ。</p>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="__">実行結果</h5>
+<div class="paragraph">
+<p>LINEで「バナナ」とお話して送信してみます！</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/banana.png" alt="banana.png">
+</div>
+</div>
+<div class="paragraph">
+<p>解析されてます！<br></p>
+</div>
+<div class="paragraph">
+<p>他の人の音声ではどうなるか？　弊社KTNさんのダンディボイス？をゲットしました。</p>
+</div>
+<div class="paragraph">
+<p>「しょがさんといえば」でチャレンジ！！<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/syogasan.png" alt="syogasan.png">
+</div>
+</div>
+<div class="paragraph">
+<p>解析されてますが、50点ですねー</p>
+</div>
+<div class="paragraph">
+<p>次！！</p>
+</div>
+<div class="paragraph">
+<p>「パンケーキ食いたいっす」でチャレンジ！！</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/pancake.png" alt="pancake.png">
+</div>
+</div>
+<div class="paragraph">
+<p>こちらも50点かなー</p>
+</div>
+<div class="paragraph">
+<p>取り敢えず、ボイスデータ送信(LINE) &#8594; ボイスデータ取得 → Google Speech APIで音声認識 &#8594; 結果解析 &#8594; メッセージ送信(LINE)という一連のフローは完成しました。</p>
+</div>
+<div class="paragraph">
+<p>では、前回はどこがイケてなかったのでしょうか？？</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="__br">【問題①】音声データの形式が悪かった<br></h5>
+<div class="paragraph">
+<p>LINEから取得するボイスデータはmp4a形式ですが、Google Speech APIが解析できる音声データ形式とは異なっていました。そのため、ffmpegを使用して音声データ形式を、mp4a形式からflac形式に変換することにします。ffmpegは動画や音声の再生や変換ができるフリーソフトです。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+$ffmpeg -i voice_1908.aac send.flac
+  ffmpeg version 3.3.4 Copyright (c) 2000-2017 the FFmpeg developers
+  Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'voice_1908.aac':
+    Metadata:
+      major_brand     : mp42
+      minor_version   : 0
+      compatible_brands: isommp42
+      creation_time   : 2017-09-22T13:22:16.000000Z
+      com.android.version: 6.0.1
+    Duration: 00:00:02.88, start: 0.000000, bitrate: 78 kb/s
+      <text style="color:red">Stream #0:0(eng): Audio: aac (LC) (mp4a / 0x6134706D), 16000 Hz, mono, fltp, 16 kb/s# (default)</text>
+      Metadata:
+        creation_time   : 2017-09-22T13:22:16.000000Z
+        handler_name    : SoundHandle
+  Stream mapping:
+    Stream #0:0 -> #0:0 (aac (native) -> flac (native))
+  Press [q] to stop, [?] for help
+  [flac @ 0x7f9c0e801800] encoding as 24 bits-per-sample
+  Output #0, flac, to 'send.flac':
+    Metadata:
+      major_brand     : mp42
+      minor_version   : 0
+      compatible_brands: isommp42
+      com.android.version: 6.0.1
+      encoder         : Lavf57.71.100
+      <text style="color:red">Stream #0:0(eng): Audio: flac, 16000 Hz, mono, s32 (24 bit), 128 kb/s (default)</text>
+      Metadata:
+        creation_time   : 2017-09-22T13:22:16.000000Z
+        handler_name    : SoundHandle
+        encoder         : Lavc57.89.100 flac
+  size=103kB time=00:00:02.88 bitrate= 293.3kbits/s speed= 269x
+  video:0kB audio:95kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: 8.625886%
+</pre>
+<div class="paragraph">
+<p>flac形式に変換にした音声データを使ってAPIを実行すると、解析結果が返ってきました。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+curl -X POST --data-binary @'./send.flac' --header 'Content-Type: audio/x-flac; rate=16000;' 'https://www.google.com/speech-api/v2/recognize?output=json&lang=ja-JP&key=登録されているAPIキー'
+{"result":[]}
+{"result":[{"alternative":[{"transcript":"おはようございます","confidence":0.99787414}],"final":true}],"result_index":0}
+</pre>
+<div class="paragraph">
+<p>ちょっと前進。</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="__google_speech_api_br">【問題②】Google Speech APIとの通信方法<br></h5>
+<div class="paragraph">
+<p>次に、前回のプログラムを少し変え、flac形式に変換した音声データを読み込み実行してみますが、解析されません。<br></p>
+</div>
+<div class="paragraph">
+<p>まだ問題がありますね。今回は、ここからハマりました・・・<br></p>
+</div>
+<div class="paragraph">
+<p>Google Speech API仕様には、「base64でエンコーディングした音声データをcontentに設定して送る」とありますが解析されません。他の設定パラメータを変更して試してみるとエラーとなるため、設定値は問題なさそうです。<br></p>
+</div>
+<div class="paragraph">
+<p>音声データを読み込む時に壊してるか？と疑ってみます。
+読み込んだ音声データ（byte配列）をもう一度ファイルに保存して、音声ファイルを実行してみます。<br></p>
+</div>
+<div class="paragraph">
+<p>問題ありません。</p>
+</div>
+<div class="paragraph">
+<p>うーん。</p>
+</div>
+<div class="paragraph">
+<p>実質、APIには音声データしか送ってないし・・・</p>
+</div>
+<div class="paragraph">
+<p>使用するクラスをURLConnectionとDataOutputStreamに変更し、Google Speech APIとのコネクションに読み込んだファイルのbyte配列を設定して送信する様に変更してみます。</p>
+</div>
+<div class="paragraph">
+<p>・・・できた。</p>
+</div>
+<div class="paragraph">
+<p>音声データの送り方？腑に落ちませんが成功です。</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="__br_2">改修したプログラム① <br></h5>
+<div class="paragraph">
+<p>LINEからボイスデータを取得し、一時ディレクトリに保存するメソッド。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+private String getContents(String msgId) {
+
+  String fileName = null;
+  CloseableHttpClient httpClient = HttpClients.createDefault();
+  String targetUrl = appConfig.getContentsUrl().replace("{messageId}", msgId);
+  HttpGet request = new HttpGet(targetUrl);
+  request.addHeader("Authorization", "Bearer {%s}".replace("%s", appConfig.getChannelAccessToken()));
+  CloseableHttpResponse response = null;
+
+  try {
+    // LINEGWからボイスデータを取得する
+    response = httpClient.execute(request);
+    HttpEntity entity = response.getEntity();
+
+    fileName = RandomStringUtils.randomAlphabetic(10);
+    // 英数字10桁の乱数をファイル名にしてボイスデータを/tmpに出力
+    String filePath = "/tmp/" + fileName + ".aac";
+    Files.write(Paths.get(filePath), EntityUtils.toByteArray(entity));
+
+    httpClient.close();
+    EntityUtils.consume(entity);
+
+  } catch (Exception ex) {
+    ex.printStackTrace();
+  }
+  return fileName;
+}
+</pre>
+</div>
+<div class="sect4">
+<h5 id="__br_3">改修したプログラム②<br></h5>
+<div class="paragraph">
+<p>音声データをffmpegでflac形式に変換、音声解析API実行し返却値を解析するメソッド。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+private List<String> googleSpeech(String fileName) {
+
+  StringBuilder urlBuff = new StringBuilder();
+  urlBuff.append(appConfig.getGoogleCloudSpeechApi());
+  urlBuff.append(appConfig.getGoogleApiKey());
+
+  List<String> speechList = null;
+  URL url;
+
+  try {
+    // LINEボイスデータ(aac形式)をflac形式に変換
+    <text style="color:red">Path filePath = Paths.get("/tmp/" + fileName + ".flac");
+    String cmd = "ffmpeg -i /tmp/" + fileName + ".aac" + " /tmp/" + fileName + ".flac";
+    Runtime runtime = Runtime.getRuntime();
+    Process process = runtime.exec(cmd);
+    process.waitFor();</text>
+    // GoogleCloudSpeechApiからの返却値を取得
+    <text style="color:red">url = new URL(urlBuff.toString());
+    URLConnection urlConnection = url.openConnection();
+    HttpsURLConnection httpConnection = (HttpsURLConnection) urlConnection;
+    httpConnection.setRequestMethod("POST");
+    httpConnection.setRequestProperty("Content-Type", "audio/x-flac; rate=16000");
+    httpConnection.setDoOutput(true);
+    DataOutputStream outStream = new DataOutputStream(httpConnection.getOutputStream());
+    outStream.write(Files.readAllBytes(filePath));
+    outStream.flush();
+    outStream.close();
+</text>
+    BufferedReader in = new BufferedReader(new InputStreamReader(httpConnection.getInputStream()));
+    String inputLine;
+
+    speechList = new ArrayList<String>();
+
+    // 音声解析データの変換
+    while ((inputLine = in.readLine()) != null) {
+
+      // 返却されたjsonの中に解析結果がなければスルー
+      if (!inputLine.contains("alternative")) {
+      continue;
+      }
+
+      // jsonデータのデシリアライズ
+      RecieveData receivedata = new ObjectMapper().readValue(inputLine, RecieveData.class);
+      for (Result result : receivedata.getResult()) {
+        int limit = 1;
+        for (Alternative msg : result.getAlternative()) {
+          // 解析されたテキストデータを取得
+          speechList.add(msg.getTranscript());
+          limit++;
+          // 1回にLINEへ送信するメッセージの最大値
+          if (5 < limit) {
+          break;
+          }
+        }
+      }
+    }
+    in.close();
+  } catch (Exception e) {
+  e.printStackTrace();
+  }
+  return speechList;
+}
+</pre>
+</div>
+<div class="sect4">
+<h5 id="___2">感想</h5>
+<div class="paragraph">
+<p>音声データ（圧縮形式）は得意な領域ではないので、これが絡んだ問題にハマりました。今回、解決はしましたが、圧縮形式についてはイマイチ興味が湧きません。ハマって得た知識は少なかったのですが、新しい引き出しができたのは収穫です。</p>
+</div>
+<div class="paragraph">
+<p>おわり</p>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2017. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
