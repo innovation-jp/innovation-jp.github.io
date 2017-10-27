@@ -14,8 +14,6 @@ Nginxのモジュールで画像のリサイズ処理を行うことが出来る
 
 * minioに「main」バケットを作成し、下記の画像を「image.png」という名前で保存
 
-ここに画像
-
 * http://localhost/image.png　にアクセスするとminioにアップした「image.png」をそのまま表示され、  +
   http://localhost/image.png/small　にアクセスすると「ngx_small_light」モジュールによってリサイズされた画像が表示される
 
@@ -307,6 +305,16 @@ http://localhost:9000/
 * 「image.png」という名前のファイルをアップ
 
 を行います。
+今回は、下記の画像を使いました。
+http://www.irasutoya.com/2015/05/blog-post_321.html
+
+[画像1]
+
+[画像2]
+
+[画像3]
+
+
 
 
 ### 検証
@@ -317,10 +325,15 @@ http://localhost:9000/
 
 http://localhost/image.ping
 
+[画像4]
+
 
 次に、下記のURLにアクセスすると、縦横共に100pxにリサイズされ、jpeg形式になった画像が表示されます。
 
 http://localhost/image.png/small
+
+
+[画像5]
 
 
 ## まとめ
