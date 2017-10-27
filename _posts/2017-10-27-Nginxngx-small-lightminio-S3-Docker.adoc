@@ -3,8 +3,9 @@
 :hp-tags: KatoK,Docker,Nginx,minio,ngx_small_light
 
 
-Webサービスを作っていると、ユーザーがアップした画像からサムネイル画像を作ることがよくありますが、
-Nginxのモジュールで画像のリサイズ処理を行うことが出来る「ngx_small_light」が便利そうだったので試してみました。
+Webサービスを作っていると、ユーザーがアップした画像からサムネイル画像を作ることがよくありますが、  +
+Webアプリケーション側での画像リサイズは少々手間がかかります。  +
+そんな中、画像のリサイズが出来るNginxのモジュールの「ngx_small_light」が便利そうだったので試してみました。
 
 
 
@@ -12,8 +13,7 @@ Nginxのモジュールで画像のリサイズ処理を行うことが出来る
 
 目標、下記のとおりです。
 
-* minioに「main」バケットを作成し、下記の画像を「image.png」という名前で保存
-
+* minio(S3互換)に「main」バケットを作成し、「image.png」という名前で画像を用意
 * http://localhost/image.png　にアクセスするとminioにアップした「image.png」をそのまま表示され、  +
   http://localhost/image.png/small　にアクセスすると「ngx_small_light」モジュールによってリサイズされた画像が表示される
 
@@ -31,7 +31,7 @@ Nginxのモジュールで画像のリサイズ処理を行うことが出来る
 
 ### /docker-compose.yml
 
-Nginxとminioが含まれる下記docker-compose.ymlファイルの内容で環境を作ります。  +
+Nginxとminioが含まれる下記のdocker-compose.ymlファイルの内容で環境を作ります。  +
 nginxのイメージは、次項で説明するDockerファイルを使っています。
 
 
@@ -57,7 +57,7 @@ services:
 ### /Dockerfile
 
 ngx_small_lightモジュール込みのdockerイメージが見つからなかったため、下記のようなDockerfileを用意しました。  +
-Docker Hubの下記イメージの、alpineのDockerfileを参考にしました。   +
+下記のDocker Hubのイメージの、alpineのDockerfileを参考にしました。   +
 https://hub.docker.com/_/nginx/
 
 
@@ -278,7 +278,7 @@ server {
   上記の設定例では、80番ポートで受け取ったリクエストをさらにNginx9003番ポートに転送しています。 +
   proxy_passを変数で指定する場合、このようにしないと上手く動きませんでした。 +
   まわりくどい設定のため、もう少し良いやり方がありそうです。 +
-  よいやり方を模索中です。(Nginx Pluｓ等であれば、もっと簡潔に書けるようです)
+  よいやり方を模索中です。(Nginx Pluｓ等であれば、簡潔に書けるようです)
   
   
   
@@ -294,7 +294,7 @@ docker-compose up
 
 ### 画像をminioにアップする
 
-下記URLにアクセスし、にアクセスし、「access_key / secret_key」でログインします。　 +
+下記URLにアクセスし「access_key / secret_key」でログインします。　 +
 http://localhost:9000/  
 
 
