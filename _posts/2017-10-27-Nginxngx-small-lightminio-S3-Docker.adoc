@@ -1,4 +1,4 @@
-= Nginxのngx_small_lightモジュールでがminio(S3互換)にある画像をリサイズしてみる(Docker編)
+= Nginxのngx_small_lightモジュールでminio(S3互換)にある画像をリサイズしてみる(Docker編)
 :published_at: 2017-10-27
 :hp-tags: KatoK,Docker,Nginx,minio,ngx_small_light
 
