@@ -304,16 +304,20 @@ http://localhost:9000/
 * mainバケットに読み取り権限を付与
 * 「image.png」という名前のファイルをアップ
 
-を行います。
-今回は、下記の画像を使いました。
+を行います。 
+
+今回は、下記の画像を使いました。 +
 http://www.irasutoya.com/2015/05/blog-post_321.html
 
-[画像1]
+image::/images/kato/10/01.png[]
 
-[画像2]
 
-[画像3]
+image::/images/kato/10/02.png[]
+image.pngをmainバケットに追加
 
+
+image::/images/kato/10/03.png[]
+mainバケットに読み取り権限を付与
 
 
 
@@ -325,7 +329,7 @@ http://www.irasutoya.com/2015/05/blog-post_321.html
 
 http://localhost/image.ping
 
-[画像4]
+image::/images/kato/10/04.png[]
 
 
 次に、下記のURLにアクセスすると、縦横共に100pxにリサイズされ、jpeg形式になった画像が表示されます。
@@ -333,38 +337,13 @@ http://localhost/image.ping
 http://localhost/image.png/small
 
 
-[画像5]
+image::/images/kato/10/05.png[]
 
 
 ## まとめ
 
-ngx_small_lightモジュールを使うと、手軽に画像のリサイズや圧縮ができることが分かりました。
-Webサーバー部分で画像のリサイズを行うので、負荷が気になりますが、とても便利に使えるモジュールでした。
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ngx_small_lightモジュールを使うと、手軽に画像のリサイズや圧縮ができることが分かりました。 +
+Webサーバーで画像のリサイズを行うので、負荷が気になりますが、とても便利に使えるモジュールということがわかりました。
 
 
 
