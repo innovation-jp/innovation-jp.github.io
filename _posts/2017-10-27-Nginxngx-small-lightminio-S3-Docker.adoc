@@ -41,7 +41,7 @@ services:
   nginx:
     build: ./
     ports:
-      - '80:80'
+      - 80:80
  
   minio:
     image: minio/minio
@@ -50,7 +50,7 @@ services:
       MINIO_SECRET_KEY: secret_key
     command: server /minio
     ports:
-      - 9000:9000/tcp
+      - 9000:9000
 ```
 
 
