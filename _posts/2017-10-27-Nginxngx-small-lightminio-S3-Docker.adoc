@@ -286,7 +286,7 @@ server {
 
 
 ### 起動
-docker-compose.ymlがあるファイルで環境を立ち上げます。
+docker-compose.ymlがあるディレクトリに移動し、下記コマンドで環境を立ち上げます。
 
 ```
 docker-compose up
