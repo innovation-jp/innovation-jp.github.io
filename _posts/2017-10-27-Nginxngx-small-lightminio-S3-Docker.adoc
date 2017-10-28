@@ -294,7 +294,7 @@ docker-compose up
 
 ### 画像をminioにアップする
 
-下記URLにアクセスし「access_key / secret_key」でログインします。　 +
+環境起動後、下記URLにアクセスし「access_key / secret_key」でログインします。　 +
 http://localhost:9000/  
 
 
