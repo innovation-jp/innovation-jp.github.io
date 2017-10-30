@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Nginxのngx_small_lightモジュールでminio(S3互換)にある画像をリサイズしてみる(Docker編) - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Nginxのngx_small_lightモジュールでminio(S3互換)にある画像をリサイズしてみる(Docker編)">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Nginxのngx_small_lightモジュールでminio(S3互換)にある画像をリサイズしてみる(Docker編)">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2017/10/27/Nginxngx-small-lightminio-S3-Docker.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Nginxのngx_small_lightモジュールでminio(S3互換)にある画像をリサイズしてみる(Docker編)" />
+    <meta property="og:description" content="Webサービスを作っていると、ユーザーがアップした画像からサムネイル画像を作ることがよくありますが、  Webアプリケーション側での画像リサイズは少々手間がかかります。  そんな中、画像のリサイズが出来るNginxのモジュールの「ngx_small_light」が便利そうだったので試してみました。 目標 目標、下記のとおりです。 minio(S3互換)に「main」バケットを作成し、「image.png」という名前で画像を用意 http://localhost/image.png　にアクセスするとminioにアップした「image.png」をそのまま表..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2017/10/27/Nginxngx-small-lightminio-S3-Docker.html" />
+    <meta property="article:published_time" content="2017-10-26T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2017-10-30T09:21:09.626Z" />
+    <meta property="article:tag" content="KatoK" />
+    <meta property="article:tag" content="Docker" />
+    <meta property="article:tag" content="Nginx" />
+    <meta property="article:tag" content="minio" />
+    <meta property="article:tag" content="ngx_small_light" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Nginxのngx_small_lightモジュールでminio(S3互換)にある画像をリサイズしてみる(Docker編)" />
+    <meta name="twitter:description" content="Webサービスを作っていると、ユーザーがアップした画像からサムネイル画像を作ることがよくありますが、  Webアプリケーション側での画像リサイズは少々手間がかかります。  そんな中、画像のリサイズが出来るNginxのモジュールの「ngx_small_light」が便利そうだったので試してみました。 目標 目標、下記のとおりです。 minio(S3互換)に「main」バケットを作成し、「image.png」という名前で画像を用意 http://localhost/image.png　にアクセスするとminioにアップした「image.png」をそのまま表..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2017/10/27/Nginxngx-small-lightminio-S3-Docker.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "katoK",
+        "image": "https://avatars0.githubusercontent.com/u/70055?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "Nginxのngx_small_lightモジュールでminio(S3互換)にある画像をリサイズしてみる(Docker編)",
+    "url": "http://tech.innovation.co.jp/2017/10/27/Nginxngx-small-lightminio-S3-Docker.html",
+    "datePublished": "2017-10-26T15:00:00.000Z",
+    "dateModified": "2017-10-30T09:21:09.626Z",
+    "keywords": "KatoK, Docker, Nginx, minio, ngx_small_light",
+    "description": "Webサービスを作っていると、ユーザーがアップした画像からサムネイル画像を作ることがよくありますが、  Webアプリケーション側での画像リサイズは少々手間がかかります。  そんな中、画像のリサイズが出来るNginxのモジュールの「ngx_small_light」が便利そうだったので試してみました。 目標 目標、下記のとおりです。 minio(S3互換)に「main」バケットを作成し、「image.png」という名前で画像を用意 http://localhost/image.png　にアクセスするとminioにアップした「image.png」をそのまま表..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Kato-K tag-Docker tag-Nginx tag-minio tag-ngx-small-light no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="27 Oct 2017" class="post-meta__date date">27 Oct 2017</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Kato-K">KatoK</a>, <a href="http://tech.innovation.co.jp/tag/Docker">Docker</a>, <a href="http://tech.innovation.co.jp/tag/Nginx">Nginx</a>, <a href="http://tech.innovation.co.jp/tag/minio">minio</a>, <a href="http://tech.innovation.co.jp/tag/ngx-small-light">ngx_small_light</a></span>
+        <span class="post-meta__author author"><img src="https://avatars0.githubusercontent.com/u/70055?v=4" alt="profile image for katoK" class="avatar post-meta__avatar" /> by katoK</span>
+      </div>
+      <h1 class="post-title">Nginxのngx_small_lightモジュールでminio(S3互換)にある画像をリサイズしてみる(Docker編)</h1>
+    </header>
+
+    <section class="post tag-Kato-K tag-Docker tag-Nginx tag-minio tag-ngx-small-light">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Webサービスを作っていると、ユーザーがアップした画像からサムネイル画像を作ることがよくありますが、 <br>
+Webアプリケーション側での画像リサイズは少々手間がかかります。 <br>
+そんな中、画像のリサイズが出来るNginxのモジュールの「ngx_small_light」が便利そうだったので試してみました。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">目標</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>目標、下記のとおりです。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>minio(S3互換)に「main」バケットを作成し、「image.png」という名前で画像を用意</p>
+</li>
+<li>
+<p><a href="http://localhost/image.png" class="bare">http://localhost/image.png</a>　にアクセスするとminioにアップした「image.png」をそのまま表示され、 <br>
+<a href="http://localhost/image.png/small" class="bare">http://localhost/image.png/small</a>　にアクセスすると「ngx_small_light」モジュールによってリサイズされた画像が表示される</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">環境</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>検証環境は、下記のとおりです。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>macOS High Sierra バージョン10.13</p>
+</li>
+<li>
+<p>Docker for mac Version 17.09.0-ce-mac35 (19611)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">検証環境の構築</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="__docker_compose_yml">/docker-compose.yml</h3>
+<div class="paragraph">
+<p>Nginxとminioが含まれる下記のdocker-compose.ymlファイルの内容で環境を作ります。 <br>
+nginxのイメージは、次項で説明するDockerファイルを使っています。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>version: '3'
+services:
+  nginx:
+    build: ./
+    ports:
+      - 80:80
+
+  minio:
+    image: minio/minio
+    environment:
+      MINIO_ACCESS_KEY: access_key
+      MINIO_SECRET_KEY: secret_key
+    command: server /minio
+    ports:
+      - 9000:9000</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__dockerfile">/Dockerfile</h3>
+<div class="paragraph">
+<p>ngx_small_lightモジュール込みのdockerイメージが見つからなかったため、下記のようなDockerfileを用意しました。 <br>
+下記のDocker Hubのイメージの、alpineのDockerfileを参考にしました。  <br>
+<a href="https://hub.docker.com/_/nginx/" class="bare">https://hub.docker.com/_/nginx/</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>FROM alpine:3.5
+
+ENV NGINX_VERSION 1.12.0
+ENV NGX_SMALL_LIGHT_VERSION 0.9.2
+
+RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
+    &amp;&amp; CONFIG="\
+        --prefix=/etc/nginx \
+        --sbin-path=/usr/sbin/nginx \
+        --modules-path=/usr/lib/nginx/modules \
+        --conf-path=/etc/nginx/nginx.conf \
+        --error-log-path=/var/log/nginx/error.log \
+        --http-log-path=/var/log/nginx/access.log \
+        --pid-path=/var/run/nginx.pid \
+        --lock-path=/var/run/nginx.lock \
+        --http-client-body-temp-path=/var/cache/nginx/client_temp \
+        --http-proxy-temp-path=/var/cache/nginx/proxy_temp \
+        --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp \
+        --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp \
+        --http-scgi-temp-path=/var/cache/nginx/scgi_temp \
+        --user=nginx \
+        --group=nginx \
+        --with-threads \
+        --with-http_ssl_module \
+        --with-http_v2_module \
+        --add-module=/usr/src/ngx_small_light-$NGX_SMALL_LIGHT_VERSION \
+    " \
+    &amp;&amp; addgroup -S nginx \
+    &amp;&amp; adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \
+    &amp;&amp; apk add --no-cache \
+        curl \
+        bash \
+    &amp;&amp; apk add --no-cache --virtual .build-deps \
+        build-base \
+        gcc \
+        libc-dev \
+        make \
+        pcre-dev \
+        zlib-dev \
+        linux-headers \
+        curl \
+        gnupg \
+        imagemagick-dev \
+        perl \
+        git \
+        autoconf \
+        cyrus-sasl-dev \
+        openssl-dev \
+    &amp;&amp; curl -fSL https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz -o nginx.tar.gz \
+    &amp;&amp; curl -fSL https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz.asc -o nginx.tar.gz.asc \
+    &amp;&amp; export GNUPGHOME="$(mktemp -d)" \
+    &amp;&amp; found=''; \
+    for server in \
+        ha.pool.sks-keyservers.net \
+        hkp://keyserver.ubuntu.com:80 \
+        hkp://p80.pool.sks-keyservers.net:80 \
+        pgp.mit.edu \
+    ; do \
+        echo "Fetching GPG key $GPG_KEYS from $server"; \
+        gpg --keyserver "$server" --keyserver-options timeout=10 --recv-keys "$GPG_KEYS" &amp;&amp; found=yes &amp;&amp; break; \
+    done; \
+    test -z "$found" &amp;&amp; echo &gt;&amp;2 "error: failed to fetch GPG key $GPG_KEYS" &amp;&amp; exit 1; \
+    gpg --batch --verify nginx.tar.gz.asc nginx.tar.gz \
+    &amp;&amp; rm -r "$GNUPGHOME" nginx.tar.gz.asc \
+    &amp;&amp; mkdir -p /usr/src \
+    &amp;&amp; tar -zxC /usr/src -f nginx.tar.gz \
+    &amp;&amp; rm nginx.tar.gz \
+    &amp;&amp; curl -fSL https://github.com/cubicdaiya/ngx_small_light/archive/v$NGX_SMALL_LIGHT_VERSION.tar.gz -o ngx-small-light.tar.gz \
+    &amp;&amp; tar -zxC /usr/src -f ngx-small-light.tar.gz \
+    &amp;&amp; rm ngx-small-light.tar.gz \
+    &amp;&amp; cd /usr/src/ngx_small_light-$NGX_SMALL_LIGHT_VERSION \
+    &amp;&amp; ./setup \
+    &amp;&amp; cd /usr/src/nginx-$NGINX_VERSION \
+    &amp;&amp; ./configure $CONFIG \
+    &amp;&amp; make -j$(getconf _NPROCESSORS_ONLN) \
+    &amp;&amp; make install \
+    &amp;&amp; ln -s ../../usr/lib/nginx/modules /etc/nginx/modules \
+    &amp;&amp; strip /usr/sbin/nginx* \
+    &amp;&amp; rm -rf /usr/src/nginx-$NGINX_VERSION \
+    &amp;&amp; rm -rf /usr/src/ngx_small_light-$NGX_SMALL_LIGHT_VERSION \
+    &amp;&amp; apk add --no-cache --virtual .gettext gettext \
+    &amp;&amp; mv /usr/bin/envsubst /tmp/ \
+    &amp;&amp; runDeps="$( \
+        scanelf --needed --nobanner /usr/sbin/nginx /usr/lib/nginx/modules/*.so /tmp/envsubst \
+            | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
+            | sort -u \
+            | xargs -r apk info --installed \
+            | sort -u \
+    )" \
+    &amp;&amp; apk add --no-cache --virtual .nginx-rundeps $runDeps \
+    &amp;&amp; apk del .build-deps \
+    &amp;&amp; apk del .gettext \
+    &amp;&amp; mv /tmp/envsubst /usr/local/bin/ \
+    &amp;&amp; ln -sf /dev/stdout /var/log/nginx/access.log \
+    &amp;&amp; ln -sf /dev/stderr /var/log/nginx/error.log
+
+RUN rm -rf /var/cache/apk/*
+
+#nginx tmp dir
+RUN mkdir -p /tmp/nginx \
+ &amp;&amp; chown nginx /tmp/nginx
+
+#nignx 設定ファイル
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY minio.conf /etc/nginx/conf.d/minio.conf
+
+CMD ["nginx"]</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__nginx_conf">/nginx.conf</h3>
+<div class="paragraph">
+<p>DockerfileでCOPYしているnginx.confは、下記のようにしました。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>daemon            off;
+pid               /var/run/nginx.pid;
+worker_processes  auto;
+error_log         /var/log/nginx/error.log warn;
+
+events {
+    worker_connections  4096;
+}
+
+http {
+    sendfile     on;
+    include      /etc/nginx/mime.types;
+    include      /etc/nginx/fastcgi.conf;
+    default_type application/octet-stream;
+    tcp_nopush   on;
+    tcp_nodelay  on;
+
+    client_body_temp_path /tmp/nginx/body 1 2;
+    fastcgi_temp_path     /tmp/nginx/fastcgi_temp 1 2;
+
+    keepalive_timeout 65;
+    types_hash_max_size 2048;
+    server_tokens off;
+    server_names_hash_bucket_size 64;
+    client_max_body_size 100m;
+
+    gzip on;
+    gzip_disable "msie6";
+
+    include /etc/nginx/conf.d/*.conf;
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__minio_conf">/minio.conf</h3>
+<div class="paragraph">
+<p>DockerfileでCOPYしているminio.confは、下記のようにしました。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>server {
+    listen      80;
+    sendfile    off;
+
+    disable_symlinks     off;
+    charset              utf-8;
+    index                index.html;
+
+    location ~ /(.+)/(small|thumb) {
+        set $pattern $2;
+        proxy_pass http://127.0.0.1:9003/small_light(p=$pattern)/main/$1;
+    }
+
+    location / {
+       proxy_pass http://127.0.0.1:9003/main$request_uri;
+    }
+}
+
+server {
+    listen      9003;
+    server_name localhost;
+    sendfile    off;
+    resolver 127.0.0.11 valid=5s;
+
+    small_light on;
+    small_light_buffer 1m;
+    small_light_pattern_define small dw=100,dh=100,of=jpg;
+
+    location ^~ /main/ {
+
+        set $upstream "minio:9000";
+
+        proxy_buffering  off;
+        proxy_set_header Host $http_host;
+        proxy_pass       http://$upstream;
+    }
+
+    location ~ small_light[^/]*/(.+)$ {
+        set     $file $1;
+        rewrite ^ /$file last;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>このminio.confでは、いくつかポイントがあります。 <br></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>dockerで使う場合、proxy_passの値を変数で指定 <br>
+proxy_passを固定値にすると、nginxは起動時に名前解決をして、以後その情報を使います。 <br>
+また、起動時に名前解決が出来ない場合、エラーとなるため、起動できません。<br>
+この状態を回避するため、このproxy_passを変数で指定し、resolverの設定をしておきます。<br>
+このようにすることで、docker環境のように、常に名前解決時の情報が変わる可能性があるような環境でも対応できるようになります。<br>
+参考：http://d.hatena.ne.jp/hirose31/20131112/1384251646</p>
+</li>
+<li>
+<p>リクエストをさらにリサイズ用URLに流す <br>
+上記の設定例では、80番ポートで受け取ったリクエストをさらにNginx9003番ポートに転送しています。<br>
+proxy_passを変数で指定する場合、このようにしないと上手く動きませんでした。<br>
+まわりくどい設定のため、もう少し良いやり方がありそうです。<br>
+よいやり方を模索中です。(Nginx Plus等であれば、簡潔に書けるようです)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___4">検証</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="___5">起動</h3>
+<div class="paragraph">
+<p>docker-compose.ymlがあるディレクトリに移動し、下記コマンドで環境を立ち上げます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>docker-compose up</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__minio">画像をminioにアップする</h3>
+<div class="paragraph">
+<p>環境起動後、下記URLにアクセスし「access_key / secret_key」でログインします。　<br>
+<a href="http://localhost:9000/" class="bare">http://localhost:9000/</a></p>
+</div>
+<div class="paragraph">
+<p>その後、</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>mainバケットの作成</p>
+</li>
+<li>
+<p>mainバケットに読み取り権限を付与</p>
+</li>
+<li>
+<p>「image.png」という名前のファイルをアップ</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>を行います。</p>
+</div>
+<div class="paragraph">
+<p>今回は、下記の画像を使いました。<br>
+<a href="http://www.irasutoya.com/2015/05/blog-post_321.html" class="bare">http://www.irasutoya.com/2015/05/blog-post_321.html</a></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kato/10/01.png" alt="01.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kato/10/02.png" alt="02.png">
+</div>
+</div>
+<div class="paragraph">
+<p>image.pngをmainバケットに追加</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kato/10/03.png" alt="03.png">
+</div>
+</div>
+<div class="paragraph">
+<p>mainバケットに読み取り権限を付与</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___6">検証</h3>
+<div class="sect3">
+<h4 id="___7">オリジナル画像の表示</h4>
+<div class="paragraph">
+<p>下記URLにアクセスすると、minioにアップした画像がそのまま出力されます。</p>
+</div>
+<div class="paragraph">
+<p><a href="http://localhost/image.ping" class="bare">http://localhost/image.ping</a></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kato/10/04.png" alt="04.png">
+</div>
+</div>
+<div class="paragraph">
+<p>次に、下記のURLにアクセスすると、縦横共に100pxにリサイズされ、jpeg形式になった画像が表示されます。</p>
+</div>
+<div class="paragraph">
+<p><a href="http://localhost/image.png/small" class="bare">http://localhost/image.png/small</a></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kato/10/05.png" alt="05.png">
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___8">まとめ</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ngx_small_lightモジュールを使うと、手軽に画像のリサイズや圧縮ができることが分かりました。<br>
+Webサーバーで画像のリサイズを行うので、負荷が気になりますが、とても便利に使えるモジュールということがわかりました。</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2017. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
