@@ -1,6 +1,7 @@
 = レッツスクラムレトロスペクティブ
 :published_at: 2017-10-28
 :hp-tags: ozasa,scrum,retrospective
+:hp-alt-title: Let'sScrumRetrospective
 
 ## スクラムレトロスペクティブとは
 
