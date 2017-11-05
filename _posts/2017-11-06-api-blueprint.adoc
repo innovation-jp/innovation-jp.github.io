@@ -1,0 +1,136 @@
+# API Blueprintを使ってドキュメント作成&テストしてみる
+:hp-alt-title: api_blueprint
+:hp-tags: API Blueprint,Aglio,Dredd,Nakamura
+
+最近花粉症かもしれない中村です。 +
+あと冬は嫌い（しんどい）です。
+
+さて今回は「API Blueprint」を使ってAPIドキュメント作成し、さらにテストをするお話です。
+
+
+### API Blueprintとは？
+
+- APIの仕様を表現した言語
+- Markdownで記述可能
+- API作成に必要なドキュメント作成・モック作成・テストができる
+
+Markdownで記述できるので、Gitで管理しやすくてとてもいいです。 +
+また周辺ツールがとても充実しており、作成したドキュメントをHtml化することでとても見やすい仕様書を作成できます。 +
+そしてテストを行うこともできるため、ドキュメントと作成したAPIに齟齬がないかのチェックも容易にできます。
+
+それでは早速やってみましょう。
+
+
+### 今回必要なツール
+
+API Blueprint自体は特別なツールは必要ありませんが、以下の2点でツールのインストールが必要です。
+
+- Aglio ⇒ Html化
+- Dredd ⇒ テスト
+
+それぞれnpmを使用してインストールしていきます。
+
+```
+npm install -g aglio
+npm install -g dredd
+```
+
+※node.jsがインストールされている必要があります
+
+
+### API Blueprintを書いてみる
+
+今回はサンプルデータとして使えそうな「都道府県データ」があったので、そちらを取得するAPIを作成することにしてみます。
+
+- APIリクエストURLは http://xxxxx.xx/api/get_prefecture
+- methodはGET
+- ステータス、データ件数、データを返す
+- JSON形式で返す
+- 並び順と取得件数をパラメータで変更可能
+
+箇条書きで書いても良くわからないですね。。。 +
+こちらをAPI Blueprintで記述すると、以下のようになります。
+
+get_prefecture.apib
+```
+FORMAT: 1A
+HOST: http://xxxxx.xx
+
+# テスト用APIドキュメント
+
+## 都道府県データ取得 [/api/get_prefecture{?sort,limit}]
+
+都道府県データを取得するAPI
+
+### 都道府県データ取得 [GET]
+
++ Parameters
+    + sort: `asc` (string, required) - 並び順[asc or desc]
+    + limit: 10 (number, optional) - 取得件数
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + status: success (string, required) - APIステータス
+        + data_count: 3 (number, required) - 取得件数
+        + data (array, required, fixed-type)
+            + (object)
+                + id: 1 (number, required) - 都道府県id
+                + name: 北海道 (string, required) - 都道府県名
+```
+
+エンジニアならこちらの方が理解しやすいかもしれませんね。 +
+パラメータ変数名や型なども記述されているので、開発で困ることも無さそうです。
+
+※詳細な記述方法は公式のドキュメントを是非参考にしてみてください +
+https://apiblueprint.org/documentation/
+
+
+### Aglioを使ってHtml化してみる
+
+とはいえ、正直複雑な仕様になってくるともう少し見やすいと嬉しいですよね。 +
+先ほどインストールしたAglioを使ってHtml化してみましょう。
+
+```
+aglio -i get_prefecture.apib -o get_prefecture.html
+```
+
+上記コマンドを実行すると、以下のようなHtmlが生成されます。
+
+
+image::/images/nakamura/api_blueprint/1.png[]
+
+
+打ち合わせなどにも使いやすくてとてもいいです！ +
+ちなみにAPI Blueprintの記述が間違っている場合には、Htmlを生成する際にエラーが返ってくるので修正しましょう。
+
+
+### Dreddを使ってテストしてみる
+
+さて、APIが作成完了したらドキュメント通りに作成できているかをチェックしてみましょう。
+
+```
+dredd get_prefecture.apib http://xxxxx.xx
+```
+
+■正常時
+
+image::/images/nakamura/api_blueprint/2.png[]
+
+
+■エラー時
+
+image::/images/nakamura/api_blueprint/3.png[]
+
+
+いい感じです〜 +
+あくまでもドキュメント通りの仕様になっているかのチェック程度ですが！
+
+
+### 感想
+
+Markdownで記述できる = Gitで管理し易い、見やすい、テストできるのでAPI作成時には積極的に使って行こうと思います。 +
+API周りは特にフロントサイドとサーバーサイドに別れて開発することが多いので、こういったドキュメントはやっぱり必要ですね。
+
+Dreddを使ったテストはhookなども用意されているので、もっと踏み込んだテストも可能かも。もう少し色々試してみようと思います。
+
+こちらからは以上です！
