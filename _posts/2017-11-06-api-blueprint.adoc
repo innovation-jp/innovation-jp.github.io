@@ -1,6 +1,6 @@
 # API Blueprintを使ってドキュメント作成&テストしてみる
 :hp-alt-title: api_blueprint
-:hp-tags: API Blueprint,Aglio,Dredd,Nakamura
+:hp-tags: API Blueprint,aglio,Dredd,Nakamura
 
 最近花粉症かもしれない中村です。 +
 あと冬は嫌い（しんどい）です。
@@ -15,7 +15,7 @@
 - API作成に必要なドキュメント作成・モック作成・テストができる
 
 Markdownで記述できるので、Gitで管理しやすくてとてもいいです。 +
-また周辺ツールがとても充実しており、作成したドキュメントをHtml化することでとても見やすい仕様書を作成できます。 +
+また周辺ツールがとても充実しており、作成したドキュメントをHTML化することでとても見やすい仕様書を作成できます。 +
 そしてテストを行うこともできるため、ドキュメントと作成したAPIに齟齬がないかのチェックも容易にできます。
 
 それでは早速やってみましょう。
@@ -25,7 +25,7 @@ Markdownで記述できるので、Gitで管理しやすくてとてもいいで
 
 API Blueprint自体は特別なツールは必要ありませんが、以下の2点でツールのインストールが必要です。
 
-- Aglio ⇒ Html化
+- aglio ⇒ HTML化
 - Dredd ⇒ テスト
 
 それぞれnpmを使用してインストールしていきます。
@@ -85,23 +85,23 @@ HOST: http://xxxxx.xx
 https://apiblueprint.org/documentation/
 
 
-### Aglioを使ってHtml化してみる
+### aglioを使ってHTML化してみる
 
 とはいえ、正直複雑な仕様になってくるともう少し見やすいと嬉しいですよね。 +
-先ほどインストールしたAglioを使ってHtml化してみましょう。
+先ほどインストールしたaglioを使ってHTML化してみましょう。
 
 ```
 aglio -i get_prefecture.apib -o get_prefecture.html
 ```
 
-上記コマンドを実行すると、以下のようなHtmlが生成されます。
+上記コマンドを実行すると、以下のようなHTMLファイルが生成されます。
 
 
 image::/images/nakamura/api_blueprint/1.png[]
 
 
 打ち合わせなどにも使いやすくてとてもいいです！ +
-ちなみにAPI Blueprintの記述が間違っている場合には、Htmlを生成する際にエラーが返ってくるので修正しましょう。
+ちなみにAPI Blueprintの記述が間違っている場合には、HTMLを生成する際にエラーが返ってくるので修正しましょう。
 
 
 ### Dreddを使ってテストしてみる
