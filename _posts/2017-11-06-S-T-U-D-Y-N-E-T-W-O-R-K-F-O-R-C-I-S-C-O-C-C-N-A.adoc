@@ -127,6 +127,9 @@ Destination filename [c2960l-universalk9-mz.152-5c.E.bin]?
 
 ## GNS3でIOSを使ってみる
 
+image::/images/kotani/20171105/11.png[]
+
+
 ということで使えませんでした。 +
 
 GNS3のページを確認してみると機種の指定があるようでした。 +
