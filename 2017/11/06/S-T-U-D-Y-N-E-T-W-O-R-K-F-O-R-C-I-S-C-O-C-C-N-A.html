@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>macのGNS3でNETWORK(CISCO CCNA)のお勉強？ - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="macのGNS3でNETWORK(CISCO CCNA)のお勉強？">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="macのGNS3でNETWORK(CISCO CCNA)のお勉強？">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2017/11/06/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="macのGNS3でNETWORK(CISCO CCNA)のお勉強？" />
+    <meta property="og:description" content="KTNです。 私が書いた記事の中ではネットワークの記事のほうが見に来てくれる人が多いようなので、 どうせならネットワークの記事を書こうかと ですが、今会社で使えそうなネットワーク機器は CISCOの 　L2（C2960-24TS-S） 　Router（C1812J） の2台しかありませんでした これではたいしたことが出来ないので何か方法が無いか探したら、 仮想環境でネットワーク遊びを出来るGNS3というソフトウェアがあったので、 インストールしてちょっと使ってみたいと思います GNS3のインストール まず以下のサイトからダウンロードします https:..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2017/11/06/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A.html" />
+    <meta property="article:published_time" content="2017-11-05T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2017-11-06T23:57:32.548Z" />
+    <meta property="article:tag" content="Network" />
+    <meta property="article:tag" content="mac" />
+    <meta property="article:tag" content="GNS3" />
+    <meta property="article:tag" content="CISCO" />
+    <meta property="article:tag" content="CCNA" />
+    <meta property="article:tag" content="KTN" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="macのGNS3でNETWORK(CISCO CCNA)のお勉強？" />
+    <meta name="twitter:description" content="KTNです。 私が書いた記事の中ではネットワークの記事のほうが見に来てくれる人が多いようなので、 どうせならネットワークの記事を書こうかと ですが、今会社で使えそうなネットワーク機器は CISCOの 　L2（C2960-24TS-S） 　Router（C1812J） の2台しかありませんでした これではたいしたことが出来ないので何か方法が無いか探したら、 仮想環境でネットワーク遊びを出来るGNS3というソフトウェアがあったので、 インストールしてちょっと使ってみたいと思います GNS3のインストール まず以下のサイトからダウンロードします https:..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2017/11/06/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars0.githubusercontent.com/u/24905783?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "macのGNS3でNETWORK(CISCO CCNA)のお勉強？",
+    "url": "http://tech.innovation.co.jp/2017/11/06/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A.html",
+    "datePublished": "2017-11-05T15:00:00.000Z",
+    "dateModified": "2017-11-06T23:57:32.548Z",
+    "keywords": "Network,  mac,  GNS3,  CISCO,  CCNA,  KTN",
+    "description": "KTNです。 私が書いた記事の中ではネットワークの記事のほうが見に来てくれる人が多いようなので、 どうせならネットワークの記事を書こうかと ですが、今会社で使えそうなネットワーク機器は CISCOの 　L2（C2960-24TS-S） 　Router（C1812J） の2台しかありませんでした これではたいしたことが出来ないので何か方法が無いか探したら、 仮想環境でネットワーク遊びを出来るGNS3というソフトウェアがあったので、 インストールしてちょっと使ってみたいと思います GNS3のインストール まず以下のサイトからダウンロードします https:..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Network tag-mac tag-G-N-S3 tag-C-I-S-C-O tag-C-C-N-A tag-K-T-N no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="06 Nov 2017" class="post-meta__date date">06 Nov 2017</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Network">Network</a>, <a href="http://tech.innovation.co.jp/tag/mac"> mac</a>, <a href="http://tech.innovation.co.jp/tag/G-N-S3"> GNS3</a>, <a href="http://tech.innovation.co.jp/tag/C-I-S-C-O"> CISCO</a>, <a href="http://tech.innovation.co.jp/tag/C-C-N-A"> CCNA</a>, <a href="http://tech.innovation.co.jp/tag/K-T-N"> KTN</a></span>
+        <span class="post-meta__author author"><img src="https://avatars0.githubusercontent.com/u/24905783?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">macのGNS3でNETWORK(CISCO CCNA)のお勉強？</h1>
+    </header>
+
+    <section class="post tag-Network tag-mac tag-G-N-S3 tag-C-I-S-C-O tag-C-C-N-A tag-K-T-N">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>KTNです。<br>
+私が書いた記事の中ではネットワークの記事のほうが見に来てくれる人が多いようなので、<br>
+どうせならネットワークの記事を書こうかと<br>
+ですが、今会社で使えそうなネットワーク機器は<br>
+CISCOの<br>
+　L2（C2960-24TS-S）<br>
+　Router（C1812J）<br>
+の2台しかありませんでした<br></p>
+</div>
+<div class="paragraph">
+<p>これではたいしたことが出来ないので何か方法が無いか探したら、<br>
+仮想環境でネットワーク遊びを出来るGNS3というソフトウェアがあったので、<br>
+インストールしてちょっと使ってみたいと思います<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_gns3">GNS3のインストール</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>まず以下のサイトからダウンロードします<br>
+<a href="https://github.com/GNS3/gns3-gui/releases/tag/v2.0.3" class="bare">https://github.com/GNS3/gns3-gui/releases/tag/v2.0.3</a><br>
+　GNS3-2.0.3.dmg<br>
+　GNS3.VM.VirtualBox.2.0.3.zip<br></p>
+</div>
+<div class="paragraph">
+<p>GNS3-2.0.3.dmgをダブルクリックして、<br>
+Applicationsにドラッグしてインストール<br></p>
+</div>
+<div class="paragraph">
+<p>GNS3.VM.VirtualBox.2.0.3.zipはダブルクリックして解凍後、<br>
+VirtualBoxで仮想アプライアンスのインポートをしておきます<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ios">IOSの取得</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>環境は出来たので、ルータを動かしていきたいと思います<br>
+CISCOルータのOSとなるIOSを実機から取ります<br>
+手順はこれだけ<br>
+　・macでTFTPサーバを起動する<br>
+　・CISCO実機からcopyコマンドでTFTPサーバにファイル転送<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_mac_tftp">macでTFTPサーバを起動する</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>macは標準でtftpサーバが内蔵されているので、<br>
+以下のコマンドを発行するだけです<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>sudo launchctl load -w /System/Library/LaunchDaemons/tftp.plist</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>以下のコマンドで動作していることを確認できます</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>sudo lsof -i:69
+
+COMMAND PID USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+launchd   1 root   26u  IPv6 0x95bed3755598347b      0t0  UDP *:tftp
+launchd   1 root   29u  IPv4 0x95bed37555983223      0t0  UDP *:tftp
+launchd   1 root   36u  IPv6 0x95bed3755598347b      0t0  UDP *:tftp
+launchd   1 root   37u  IPv4 0x95bed37555983223      0t0  UDP *:tftp</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>これでTFTPサーバの起動はOKです。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cisco_copy_tftp">CISCO実機からcopyコマンドでTFTPサーバにファイル転送</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>C2960Jを起動し、SSHなどでログインします。<br>
+フラッシュメモリの中身は以下のコマンドで確認します。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>#show flash:
+
+Directory of flash:/
+
+  782  -rwx         437   Nov 3 2017 01:57:11 +00:00  info.ver
+  781  -rwx         437   Nov 3 2017 01:57:11 +00:00  info
+  777  -rwx        3096  Sep 27 2017 14:15:43 +00:00  multiple-fs
+  264  -rwx        3829  Sep 27 2017 14:15:43 +00:00  private-config.text
+  263  -rwx        3059  Sep 27 2017 14:15:42 +00:00  config.text
+  516  drwx        2048   Nov 3 2017 01:56:31 +00:00  c2960l-universalk9-mz.152-5c.E
+  637  drwx        2048   Jun 4 2022 21:32:40 +00:00  dc_profile_dir
+  258  -rwx         156  Mar 31 2017 10:48:52 +00:00  express_setup.debug
+  769  -rwx         856   Apr 3 2017 10:38:58 +00:00  vlan.dat
+    2  drwx        2048   Mar 1 1993 00:00:02 +00:00  lost+found
+
+244711424 bytes total (219285504 bytes free)```</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>c2960l-universalk9-mz.152-5c.Eディレクトリの中にありそうなので、<br>
+ディレクトリを移動します</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>#cd c2960l-universalk9-mz.152-5c.E
+#show flash:
+
+Directory of flash:/c2960l-universalk9-mz.152-5c.E/
+
+  518  -rwx         437   Jun 4 2022 21:30:09 +00:00  info
+  520  drwx        2048   Jun 4 2022 21:31:21 +00:00  html
+  635  -rwx    13475840   Jun 4 2022 21:31:26 +00:00  c2960l-universalk9-mz.152-5c.E.bin
+
+244711424 bytes total (219285504 bytes free)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>copyコマンドを使ってTFTPサーバにファイルをコピーします</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>#copy c2960l-universalk9-mz.152-5c.E.bin tftp://192.168.2.11/
+
+Address or name of remote host [192.168.2.11]?
+Destination filename [c2960l-universalk9-mz.152-5c.E.bin]?
+%Error opening tftp://192.168.2.11/c2960l-universalk9-mz.152-5c.E.bin (No such file or directory)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>ファイルが無いというエラーになったので、
+TFTPサーバにファイルを作成し書き込み権限も付与しておきます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ cd /private/tftpboot/
+$ sudo touch c2960l-universalk9-mz.152-5c.E.bin
+$ sudo chmod 666 c2960l-universalk9-mz.152-5c.E.bin
+$ ls -l
+
+total 0
+-rw-rw-rw-  1 root  wheel  0 11  6 13:36 c2960l-universalk9-mz.152-5c.E.bin</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>再度、copyコマンドを使ってTFTPサーバにファイルをコピーします</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>#copy c2960l-universalk9-mz.152-5c.E.bin tftp://192.168.2.11/
+Address or name of remote host [192.168.2.11]?
+Destination filename [c2960l-universalk9-mz.152-5c.E.bin]?
+!!.!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+13475840 bytes copied in 92.750 secs (145292 bytes/sec)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>これでIOSを取得することが出来ました！</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_gns3_ios">GNS3でIOSを使ってみる</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>GNS3を起動します<br>
+プロジェクト名を聞かれるので、適当に入力して 「OK」 を押して、<br>
+メニューバーから 「GNS3」 - 「Preferences&#8230;&#8203;」 を選択します</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20171105/11.png" alt="11.png">
+</div>
+</div>
+<div class="paragraph">
+<p>「Dynamips」 - 「IOS routers」を選択します<br>
+ここで、GNS3内で使用するルータを登録します<br>
+「New」を選択します</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20171105/12.png" alt="12.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20171105/13.png" alt="13.png">
+</div>
+</div>
+<div class="paragraph">
+<p>IOSイメージの選択画面になるので、<br>
+先程吸い出したIOSを指定します</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20171105/14.png" alt="14.png">
+</div>
+</div>
+<div class="paragraph">
+<p>IOSのイメージが正しくないというエラーになりました。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20171105/15.png" alt="15.png">
+</div>
+</div>
+<div class="paragraph">
+<p>ということで使えませんでした。<br></p>
+</div>
+<div class="paragraph">
+<p>GNS3のページを確認してみると機種の指定があるようでした。<br>
+<a href="http://docs.gns3.com/1-kBrTplBltp9P3P-AigoMzlDO-ISyL1h3bYpOl5Q8mQ/" class="bare">http://docs.gns3.com/1-kBrTplBltp9P3P-AigoMzlDO-ISyL1h3bYpOl5Q8mQ/</a><br>
+で、手持ちの機種で対応しているものが無かったので、<br>
+しょうがなく安いのをネットで購入しました。<br>
+上記と同様の手順でIOSを取得、設定します。<br></p>
+</div>
+<div class="paragraph">
+<p>それから図のように設定しました<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20171105/21.png" alt="21.png">
+</div>
+</div>
+<div class="paragraph">
+<p>各VPCにIPアドレスを設定します<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>■PC1
+VPCS&gt; ip 10.1.1.1 255.255.255.0 10.1.1.254</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>■PC2
+VPCS&gt;　ip 10.1.2.1 255.255.255.0 10.1.2.254</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>ルータに各VPCのセグメントのIPを持たせて、<br>
+ルーティングしてくれるようにします</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>■R1
+　R1(config)#interface fastEthernet 0/0
+　R1(config-if)#ip address 10.1.1.254 255.255.255.0
+　R1(config-if)#no shutdown
+　R1(config-if)#exit
+
+　R1(config)#interface fastEthernet 0/1
+　R1(config-if)#ip address 10.1.2.254 255.255.255.0
+　R1(config-if)#no shutdown
+　R1(config-if)#exit</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>PC1→PC2にpingをしてみます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>VPCS&gt; ping 10.1.2.1
+84 bytes from 10.1.2.1 icmp_seq=1 ttl=63 time=26.623 ms
+84 bytes from 10.1.2.1 icmp_seq=2 ttl=63 time=22.095 ms
+84 bytes from 10.1.2.1 icmp_seq=3 ttl=63 time=25.433 ms
+84 bytes from 10.1.2.1 icmp_seq=4 ttl=63 time=18.305 ms
+84 bytes from 10.1.2.1 icmp_seq=5 ttl=63 time=18.959 ms</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>VPCS&gt; trace 10.1.2.1
+trace to 10.1.2.1, 8 hops max, press Ctrl+C to stop
+ 1   10.1.1.254   11.325 ms  11.464 ms  10.392 ms
+ 2   *10.1.2.1   33.965 ms (ICMP type:3, code:3, Destination port unreachable)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>ちゃんとルーティングされていることが確認できたので、<br>
+今日はココらへんで終わりにしたいと思います。<br></p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2017. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
