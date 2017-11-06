@@ -1,0 +1,180 @@
+# macのGNS3でNETWORK(CISCO CCNA)のお勉強？
+:published_at: 2017-11-06
+:hp-alt-title: STUDY NETWORK FOR CISCO CCNA
+:hp-tags: Network, mac, GNS3, CISCO, CCNA, KTN
+
+KTNです。 +
+私が書いた記事の中ではネットワーク関連のほうが見に来てくれる人が多いようなので、 +
+どうせならネットワークの記事を書こうと思いました +
+ですが、今会社で使えそうなネットワーク機器は +
+CISCOの +
+　L2（C2960-24TS-S） +
+　Router（C1812J） + 
+の2台しかありませんでした +
+
+これではたいしたことが出来ないので何か方法が無いか探したら、 +
+仮想環境でネットワーク遊びを出来るGNS3というソフトウェアがあったので、 +
+インストールしてちょっと使ってみたいと思います +
+
+## GNS3のインストール
+
+まず以下のサイトからダウンロードします +
+https://github.com/GNS3/gns3-gui/releases/tag/v2.0.3 +
+
+GNS3-2.0.3.dmg +
+GNS3.VM.VirtualBox.2.0.3.zip +
+
+GNS3-2.0.3.dmgをダブルクリックして、 +
+Applicationsにドラッグしてインストール +
+
+GNS3.VM.VirtualBox.2.0.3.zipをダブルクリックして解凍しておきます +
+
+## IOSの取得
+
+環境は出来たので、ルータを動かしていきたいと思います +
+CISCOルータのOSとなるIOSを実機から取ります +
+手順はこれだけ +
+　・macでTFTPサーバを起動する +
+　・CISCO実機からcopyコマンドでTFTPサーバにファイル転送 +
+
+## macでTFTPサーバを起動する
+
+macは標準でtftpサーバが内蔵されているので、 +
+以下のコマンドを発行するだけです +
+```
+sudo launchctl load -w /System/Library/LaunchDaemons/tftp.plist
+```
+
+以下のコマンドで動作していることを確認できます
+```
+sudo lsof -i:69
+
+COMMAND PID USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+launchd   1 root   26u  IPv6 0x95bed3755598347b      0t0  UDP *:tftp
+launchd   1 root   29u  IPv4 0x95bed37555983223      0t0  UDP *:tftp
+launchd   1 root   36u  IPv6 0x95bed3755598347b      0t0  UDP *:tftp
+launchd   1 root   37u  IPv4 0x95bed37555983223      0t0  UDP *:tftp
+```
+
+これでTFTPサーバの起動はOKです。
+
+## CISCO実機からcopyコマンドでTFTPサーバにファイル転送
+
+C2960Jを起動し、SSHなどでログインします。 +
+フラッシュメモリの中身は以下のコマンドで確認します。 +
+```
+#show flash:
+
+Directory of flash:/
+
+  782  -rwx         437   Nov 3 2017 01:57:11 +00:00  info.ver
+  781  -rwx         437   Nov 3 2017 01:57:11 +00:00  info
+  777  -rwx        3096  Sep 27 2017 14:15:43 +00:00  multiple-fs
+  264  -rwx        3829  Sep 27 2017 14:15:43 +00:00  private-config.text
+  263  -rwx        3059  Sep 27 2017 14:15:42 +00:00  config.text
+  516  drwx        2048   Nov 3 2017 01:56:31 +00:00  c2960l-universalk9-mz.152-5c.E
+  637  drwx        2048   Jun 4 2022 21:32:40 +00:00  dc_profile_dir
+  258  -rwx         156  Mar 31 2017 10:48:52 +00:00  express_setup.debug
+  769  -rwx         856   Apr 3 2017 10:38:58 +00:00  vlan.dat
+    2  drwx        2048   Mar 1 1993 00:00:02 +00:00  lost+found
+
+244711424 bytes total (219285504 bytes free)```
+
+
+```
+c2960l-universalk9-mz.152-5c.Eディレクトリの中にありそうなので、 +
+ディレクトリを移動します
+```
+#cd c2960l-universalk9-mz.152-5c.E
+#show flash:
+
+Directory of flash:/c2960l-universalk9-mz.152-5c.E/
+
+  518  -rwx         437   Jun 4 2022 21:30:09 +00:00  info
+  520  drwx        2048   Jun 4 2022 21:31:21 +00:00  html
+  635  -rwx    13475840   Jun 4 2022 21:31:26 +00:00  c2960l-universalk9-mz.152-5c.E.bin
+
+244711424 bytes total (219285504 bytes free)
+```
+copyコマンドを使ってTFTPサーバにファイルをコピーします
+```
+#copy c2960l-universalk9-mz.152-5c.E.bin tftp://192.168.2.11/
+
+Address or name of remote host [192.168.2.11]?
+Destination filename [c2960l-universalk9-mz.152-5c.E.bin]?
+%Error opening tftp://192.168.2.11/c2960l-universalk9-mz.152-5c.E.bin (No such file or directory)
+```
+ファイルが無いというエラーになったので、
+TFTPサーバにファイルを作成し書き込み権限も付与しておきます。
+```
+$ cd /private/tftpboot/
+$ sudo touch c2960l-universalk9-mz.152-5c.E.bin
+$ sudo chmod 666 c2960l-universalk9-mz.152-5c.E.bin
+$ ls -l
+
+total 0
+-rw-rw-rw-  1 root  wheel  0 11  6 13:36 c2960l-universalk9-mz.152-5c.E.bin
+```
+再度、copyコマンドを使ってTFTPサーバにファイルをコピーします
+```
+#copy c2960l-universalk9-mz.152-5c.E.bin tftp://192.168.2.11/
+Address or name of remote host [192.168.2.11]?
+Destination filename [c2960l-universalk9-mz.152-5c.E.bin]?
+!!.!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+13475840 bytes copied in 92.750 secs (145292 bytes/sec)
+```
+これでIOSを取得することが出来ました！
+
+## GNS3でIOSを使ってみる
+
+ということで使えませんでした。 +
+
+GNS3のページを確認してみると機種の指定があるようでした。 +
+http://docs.gns3.com/1-kBrTplBltp9P3P-AigoMzlDO-ISyL1h3bYpOl5Q8mQ/ +
+手持ちの機種で対応しているものが無かったので安いのをネットで購入しました。 +
+上記と同様の手順でIOSを取得します。 +
+
+以下のように設定しました +
+
+```
+■PC1
+　ip 10.1.1.1 255.255.255.0 10.1.1.254
+```
+
+```
+■PC2
+　ip 10.1.2.1 255.255.255.0 10.1.2.254
+```
+
+```
+■R1
+　R1(config)#interface fastEthernet 0/0
+　R1(config-if)#ip address 10.1.1.254 255.255.255.0
+　R1(config-if)#no shutdown 
+　R1(config-if)#exit
+
+　R1(config)#interface fastEthernet 0/1
+　R1(config-if)#ip address 10.1.2.254 255.255.255.0
+　R1(config-if)#no shutdown 
+　R1(config-if)#exit
+```
+PC1→PC2にpingをしてみます。
+
+```
+VPCS> ping 10.1.2.1
+84 bytes from 10.1.2.1 icmp_seq=1 ttl=63 time=26.623 ms
+84 bytes from 10.1.2.1 icmp_seq=2 ttl=63 time=22.095 ms
+84 bytes from 10.1.2.1 icmp_seq=3 ttl=63 time=25.433 ms
+84 bytes from 10.1.2.1 icmp_seq=4 ttl=63 time=18.305 ms
+84 bytes from 10.1.2.1 icmp_seq=5 ttl=63 time=18.959 ms
+```
+
+```
+VPCS> trace 10.1.2.1
+trace to 10.1.2.1, 8 hops max, press Ctrl+C to stop
+ 1   10.1.1.254   11.325 ms  11.464 ms  10.392 ms
+ 2   *10.1.2.1   33.965 ms (ICMP type:3, code:3, Destination port unreachable)
+```
+
+ちゃんとルーティングされていることが確認できたので、 +
+今日はココらへんで終わりにしたいと思います。 +
