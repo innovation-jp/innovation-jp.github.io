@@ -210,6 +210,12 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/11/06/api-blueprint.html" title="link to API Blueprintを使ってドキュメント作成&amp;テストしてみる">API Blueprintを使ってドキュメント作成&amp;テストしてみる</a></h2>
+        <p class="excerpt">最近花粉症かもしれない中村です。 あと冬は嫌い（しんどい）です。 さて今回は「API Blueprint」を使ってAPIドキュメント作成し、さらにテストをするお話です。 API Blueprintとは？ APIの仕様を表現した言語 Markdownで記述可能 API作成に必要なドキュメント作成・モック作成・テストができる Markdownで記述できるので、Gitで管理しやすくてとてもいいです。 また周辺ツールがとても充実しており、作成したドキュメントをHTML化することでとても見やすい仕様書を作成できます。 そしてテストを行うこともできるため、ドキュメントと作成したAPIに齟齬がないかのチェックも容易にできます。 それでは早速やってみましょう。 今回必要なツール API Blueprint&hellip;</p>
+        <div class="post-list__meta"><time datetime="06 Nov 2017" class="post-list__meta--date date">06 Nov 2017</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/A-P-I-Blueprint">API Blueprint</a>, <a href="http://tech.innovation.co.jp/tag/aglio">aglio</a>, <a href="http://tech.innovation.co.jp/tag/Dredd">Dredd</a>, <a href="http://tech.innovation.co.jp/tag/Nakamura">Nakamura</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/10/28/Lets-Scrum-Retrospective.html" title="link to レッツスクラムレトロスペクティブ">レッツスクラムレトロスペクティブ</a></h2>
         <p class="excerpt">スクラムレトロスペクティブとは https://www.scrumguides.org/docs/scrumguide/v2016/2016-Scrum-Guide-Japanese.pdf 詳細はスクラムガイドを参照していただければと思います。 所謂振り返り活動になるのですが、 個人的に好きなのは以下の表現です。 次のスプリントが効果的で楽しいものになるよう この視点は私がスクラムマスターをやっていた際、かなり意識をしておりました。  やはり出てきた改善策がそれを行ってワクワクできなければ、継続には繋がらないものです。 そしてそういうワクワク感は閉じきった会議室などではなかなか想像できなくなってしまうので、 どこかしら解放されたスペースで、コーヒーとお菓子を持って行うのが個人的にはオスス&hellip;</p>
         <div class="post-list__meta"><time datetime="28 Oct 2017" class="post-list__meta--date date">28 Oct 2017</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/ozasa">ozasa</a>, <a href="http://tech.innovation.co.jp/tag/scrum">scrum</a>, <a href="http://tech.innovation.co.jp/tag/retrospective">retrospective</a></span></div>
@@ -261,12 +267,6 @@ var _trackingid = 'LFT-10003-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/10/05/making-L-A-M-P-by-A-W-S.html" title="link to AWSのサービスを使ってLAMP環境を構築してみた">AWSのサービスを使ってLAMP環境を構築してみた</a></h2>
         <p class="excerpt">こんにちは、小柳津です。 先日、 AWS 認定ソリューションアーキテクト – アソシエイト を受験して合格しました！ 今までAWSをほぼ触ったことがなかったのですが、試験を受けるにあたって触ってみることにしました。 具体的には、以下の基本的なサービスを用いて、LAMP環境を構築してみました。 VPC EC2 EBS ELB Route53 そして上記サービス利用して作成したWebアプリケーションがコチラ。 簡単なブログを作ってみました。 こちらのブログは以下のようなLAMP環境で動作しています。 Amazon Linux Nginx PHP(フレームワーク: Laravel) MySQL Webアプリケーションを作成する上では以下のような順番で作成しました。 AWS上でLAMP環境を構築&hellip;</p>
         <div class="post-list__meta"><time datetime="05 Oct 2017" class="post-list__meta--date date">05 Oct 2017</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/yaizu">yaizu</a>, <a href="http://tech.innovation.co.jp/tag/A-W-S">AWS</a>, <a href="http://tech.innovation.co.jp/tag/L-A-M-P">LAMP</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/10/02/Iterator.html" title="link to Iteratorパターンで学ぶ抽象化">Iteratorパターンで学ぶ抽象化</a></h2>
-        <p class="excerpt">どうも、bigenです。 最近、GoFのデザインパターンについて勉強してまして、 その中でパーツ化の難しさと抽象化の考え方について感銘を受けたので、 学んだことを残しておこうかなと思います。 本記事ではIteratorパターンを例にとって、 単純なfor文で書いたケースと、Iteratorパターンで書いたケースで、 どのような場合にIteratorパターンのメリットがあるかを考察します。 その後で、何故そのようなメリットを享受できるのかまで考察し、 抽象化・共通化・一般化の思考って大事だね、っていう話にもっていきます。 なお、コードは全てPHPで書いています。業務でよく使うので。 また、Iteratorパターンの概要の説明は各種サイトや本を参照してください。 今回は実践的にIterator&hellip;</p>
-        <div class="post-list__meta"><time datetime="02 Oct 2017" class="post-list__meta--date date">02 Oct 2017</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/bigen">bigen</a>, <a href="http://tech.innovation.co.jp/tag/iterator"> iterator</a>, <a href="http://tech.innovation.co.jp/tag/design-pattern">design pattern</a>, <a href="http://tech.innovation.co.jp/tag/Go-F"> GoF</a>, <a href="http://tech.innovation.co.jp/tag/abstraction"> abstraction</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
