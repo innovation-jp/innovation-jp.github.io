@@ -20,14 +20,13 @@ CISCOの +
 
 まず以下のサイトからダウンロードします +
 https://github.com/GNS3/gns3-gui/releases/tag/v2.0.3 +
-
-GNS3-2.0.3.dmg +
-GNS3.VM.VirtualBox.2.0.3.zip +
+　GNS3-2.0.3.dmg +
+　GNS3.VM.VirtualBox.2.0.3.zip +
 
 GNS3-2.0.3.dmgをダブルクリックして、 +
 Applicationsにドラッグしてインストール +
 
-GNS3.VM.VirtualBox.2.0.3.zipをダブルクリックして解凍しておきます +
+GNS3.VM.VirtualBox.2.0.3.zipはダブルクリックして解凍しておきます +
 
 ## IOSの取得
 
@@ -127,17 +126,42 @@ Destination filename [c2960l-universalk9-mz.152-5c.E.bin]?
 
 ## GNS3でIOSを使ってみる
 
+GNS3を起動します +
+プロジェクト名を聞かれるので、適当に入力して 「OK」 を押して、 +
+メニューバーから 「GNS3」 - 「Preferences...」 を選択します
+
 image::/images/kotani/20171105/11.png[]
+
+「Dynamips」 - 「IOS routers」を選択します +
+ここで、GNS3内で使用するルータを登録します +
+「New」を選択します
+
+image::/images/kotani/20171105/12.png[]
+
+image::/images/kotani/20171105/13.png[]
+
+IOSイメージの選択画面になるので、 +
+先程吸い出したIOSを指定します
+
+image::/images/kotani/20171105/14.png[]
+
+IOSのイメージが正しくないというエラーになりました。
+
+image::/images/kotani/20171105/15.png[]
 
 
 ということで使えませんでした。 +
 
 GNS3のページを確認してみると機種の指定があるようでした。 +
 http://docs.gns3.com/1-kBrTplBltp9P3P-AigoMzlDO-ISyL1h3bYpOl5Q8mQ/ +
-手持ちの機種で対応しているものが無かったので安いのをネットで購入しました。 +
+で、手持ちの機種で対応しているものが無かったので、 +
+しょうがなく安いのをネットで購入しました。 +
 上記と同様の手順でIOSを取得します。 +
 
 以下のように設定しました +
+
+image::/images/kotani/20171105/21.png[]
+
 
 ```
 ■PC1
