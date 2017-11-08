@@ -54,5 +54,11 @@ services:
 
 ```
 
+そして  `docker-compose up`
+
+
+
+`localhost:8080`にアクセス。
+
 
 
