@@ -57,6 +57,10 @@ services:
 そして  `docker-compose up`
 
 
+`docker container ls` で実行中のコンテナを確認。
+
+
+
 
 `localhost:8080`にアクセス。
 
