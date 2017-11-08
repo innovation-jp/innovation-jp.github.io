@@ -1,0 +1,58 @@
+# Docker上でMauticを動かしたお話。
+:hp-alt-title: api_blueprint
+:hp-tags: Mautic,Docker,kohe
+
+こへです。 +
+
+そろそろ紅葉を見に行きたくなる季節になり +
+Docker上でMauticを動かしたい気分になってきましたのでやってみました。
+
+そして、いずれかはMauticのcontributorに・・・
+
+### Mauticとは？
+
+
+*オープンソースのマーティングオートメーションツールです。*
+
+
+
+### 今回必要なツール
+
+・Docker (↓のリンクからDLしておいてください。)
+
+https://store.docker.com/editions/community/docker-ce-desktop-mac
+
+
+### 早速やっていこう！
+
+Dockerfileをゴリゴリ書いていこうと思ったのですが、Docker HubにすでにMauticのイメージが落ちていました。
+
+https://hub.docker.com/r/mautic/mautic/
+
+
+なのでこいつが簡単に使えるようにdocker-compose.ymlファイルを作っていく。
+
+
+```
+version: '3'
+services:
+  mautic:
+    image: mautic/mautic:latest
+    ports:
+      - 8080:80
+    environment:
+      MAUTIC_DB_HOST: mauticdb       
+      MAUTIC_DB_USER: root          
+      MAUTIC_DB_PASSWORD: example 
+      MAUTIC_DB_NAME: mauticdb       
+
+
+  mauticdb:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+
+```
+
+
+
