@@ -1,6 +1,6 @@
 # ワンクリックで総務に発注できる便利ボタンを作った
-:hp-alt-title:create_button
-:published_at: 2017-11-12
+:hp-alt-title:create-button
+:published_at:2017-11-12
 :hp-tags: AMI, GoogleAppsScript, GAS, slackBot
 
 
