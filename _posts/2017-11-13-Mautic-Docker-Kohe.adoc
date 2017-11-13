@@ -1,6 +1,7 @@
 # Docker上でMauticを動かしたお話。
-:hp-alt-title: api_blueprint
+:hp-alt-title: Mautic_Docker_Kohe
 :hp-tags: Mautic,Docker,kohe
+:published_at: 2017-11-13
 
 こへです。 +
 
