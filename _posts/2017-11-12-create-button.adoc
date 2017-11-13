@@ -1,7 +1,7 @@
 # ワンクリックで総務に発注できる便利ボタンを作った
-:hp-alt-title:create-button
-:published_at:2017-11-12
+:hp-alt-title: create-button
 :hp-tags: AMI, GoogleAppsScript, GAS, slackBot
+:published_at: 2017-11-12
 
 
 亜美です。情シスにミッション変更となり、早４ヶ月強となりました。 +
