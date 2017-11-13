@@ -14,6 +14,7 @@ Docker上でMauticを動かしたい気分になってきましたのでやっ�
 
 *オープンソースのマーティングオートメーションツールです。*
 
+https://www.ossnews.jp/oss_info/Mautic　　より引用
 
 
 ### 今回必要なツール
