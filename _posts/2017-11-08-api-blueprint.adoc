@@ -98,6 +98,6 @@ image::/images/kohe/mautic_7.png[]
 ただ、contributorになるために、ローカルに入ってるMauticのソースを反映させたかったのですが、
 なかなかうまくできなくて断念。
 
-次はDockerファイルも自分で作り、volumeが上手くいくようにしようと思います。
+次はDockerファイルも自分で作り、マウント（volume）が上手くいくようにしようと思います。
 
 おわり
