@@ -1,0 +1,316 @@
+# macのGNS3でNETWORK(CISCO CCNA)のお勉強？(VPN)
+:published_at: 2017-11-21
+:hp-alt-title: STUDY NETWORK FOR CISCO CCNA(VPN)
+:hp-tags: Network, GNS3, CISCO, CCNA, KTN, VPN
+
+KTNです。 +
+それでは前回作ったGNS3の環境を使って、 +
+本題となるCCNAの勉強をしていきたいと思います +
+
+# CCNAについて
+
+対象とする試験はこちらです +
+「200-125J CCNA Routing and Switching」 +
+https://www.cisco.com/c/ja_jp/training-events/training-certifications/exams/current-list/200-125-ccna.html#~Topics +
+これからネットワークを勉強してみよう！ +
+という人には丁度よい試験かなと思っています。 +
+
+勉強時間の目安ですが、 +
+実際に計ったわけではないのでざっくりで40時間〜ぐらいかと思います +
+（ちなみに、ネットワークスペシャリストは200時間〜ぐらい） +
+実機を触ったことがある人であれば、 +
+試験対策本を読んで、CCNAイーグルの問題をやっておけばきっと受かります。 +
+触ったことない人はPing-tの模擬試験をやっておけば間違いないですね。 +
+
+それでは、今回は2拠点間のVPNをやりたいと思います。 +
+
+# VPNについて
+
+構成は以下の通りです +
+
+本社のPCと支社のPCで通信できるようにしていきたいと思います。 +
+
+仮想インターネット設定 +
+まずは仮想インターネット設定をして、 +
+グローバルIP的なのを割り振ったルータ同士で通信出来るようにしたいと思います。 +
+軽くグローバルIPについて説明しておきます。 +
+
+IPアドレスには2種類ありまして、 +
+グローバルIPと、プライベートIPがあります。 +
+
+グローバルIP： +
+　電話番号のようなもの +
+　インターネットに接続する際に利用されるIPアドレス +
+　同じグローバルIPが、重複して存在することはありません +
+　必ず一台に対して一つのIPが割り振られています +
+
+プライベートIP： +
+　内線番号のようなもの +
+　自宅内や会社内などで通信する際に必要となるIPアドレス +
+　申請等は不要で勝手に機器に設定しても良い +
+　プライベートIP用のIP範囲は以下のとおり +
+　　10.0.0.0 – 10.255.255.255 +
+　　172.16.0.0 – 172.31.255.255 +
+　　192.168.0.0 – 192.168.255.255 +
+
+# 設定してみる
+
+それではルータに設定していきます
+```
+R1#configure terminal
+R1(config)#interface fastEthernet 0/0
+R1(config-if)#ip address 8.8.8.1 255.255.255.0
+R1(config-if)#exit
+R1(config-if)#no shutdown 
+R1(config)#interface fastEthernet 0/1
+R1(config-if)#ip address 9.9.9.1 255.255.255.0
+R1(config-if)#no shutdown 
+R1(config-if)#exit
+R1(config)#exit
+
+R2#configure terminal
+R2(config)#interface fastEthernet 0/1
+R2(config-if)#ip address 8.8.8.8 255.255.255.0
+R2(config-if)#no shutdown 
+R2(config-if)#exit
+R2(config)#ip route 0.0.0.0 0.0.0.0 8.8.8.1
+R2(config)#exit
+
+R3#configure terminal
+R3(config)#interface fastEthernet 0/1
+R3(config-if)#ip address 9.9.9.9 255.255.255.0
+R3(config-if)#no shutdown 
+R3(config-if)#exit
+R3(config)#ip route 0.0.0.0 0.0.0.0 9.9.9.1
+R3(config)#exit
+```
+
+R2からR3に通信できるようになったか確認してみます
+```
+R2#ping 9.9.9.9
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 9.9.9.9, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 24/25/32 ms
+```
+通信できてますね！
+上記の見方ですが、
+Sending 5, 100-byte ICMP Echos to 9.9.9.9, timeout is 2 seconds:
+→5回送ります 100バイトのICMPを宛先9.9.9.9に 2秒応答無かったら諦めるよ
+
+!!!!!
+→5回成功したよ
+　失敗すると. が出ます
+　例）5回失敗すると ..... となります
+
+Success rate is 100 percent (5/5)
+→100%通信に成功したよ（5回成功 / 5回送信中)
+
+round-trip min/avg/max = 24/25/32 ms
+→5回の通信にかかった時間 最小:24ミリ秒 平均:25ミリ秒 最大:32ミリ秒
+　日本〜中国に通信しているぐらいの時間がかかってますね
+　GNS3の処理に相当時間がかかっていると思われます
+
+ローカル側の設定
+```
+R2#configure terminal
+R2(config)#interface fastEthernet 0/0
+R2(config-if)#ip address 192.168.1.1 255.255.255.0
+R2(config-if)#no shutdown 
+R2(config-if)#exit
+R2(config)#exit
+
+R3#configure terminal
+R3(config)#interface fastEthernet 0/0
+R3(config-if)#ip address 192.168.11.1 255.255.255.0
+R3(config-if)#no shutdown 
+R3(config-if)#exit
+R3(config)#exit
+
+VPC1> ip 192.168.1.11 255.255.255.0 192.168.1.1
+Checking for duplicate address...
+PC1 : 192.168.1.11 255.255.255.0 gateway 192.168.1.1
+
+VPC2> ip 192.168.11.11 255.255.255.0 192.168.11.1
+Checking for duplicate address...
+PC1 : 192.168.11.11 255.255.255.0 gateway 192.168.11.1
+```
+
+軽く動作確認してみます
+
+
+```
+VPC1> ping 192.168.1.1
+
+84 bytes from 192.168.1.1 icmp_seq=1 ttl=255 time=12.068 ms
+84 bytes from 192.168.1.1 icmp_seq=2 ttl=255 time=13.728 ms
+84 bytes from 192.168.1.1 icmp_seq=3 ttl=255 time=13.461 ms
+84 bytes from 192.168.1.1 icmp_seq=4 ttl=255 time=11.309 ms
+84 bytes from 192.168.1.1 icmp_seq=5 ttl=255 time=9.626 ms
+
+VPC1> ping 8.8.8.8
+
+84 bytes from 8.8.8.8 icmp_seq=1 ttl=255 time=12.822 ms
+84 bytes from 8.8.8.8 icmp_seq=2 ttl=255 time=4.605 ms
+84 bytes from 8.8.8.8 icmp_seq=3 ttl=255 time=5.718 ms
+84 bytes from 8.8.8.8 icmp_seq=4 ttl=255 time=12.576 ms
+84 bytes from 8.8.8.8 icmp_seq=5 ttl=255 time=12.489 ms
+
+VPC1> ping 9.9.9.9
+
+9.9.9.9 icmp_seq=1 timeout
+9.9.9.9 icmp_seq=2 timeout
+9.9.9.9 icmp_seq=3 timeout
+9.9.9.9 icmp_seq=4 timeout
+9.9.9.9 icmp_seq=5 timeout
+
+VPC1> trace 9.9.9.9
+trace to 9.9.9.9, 8 hops max, press Ctrl+C to stop
+ 1   192.168.1.1   11.256 ms  10.250 ms  11.448 ms
+ 2     *  *  *
+ 3     *  *  *
+ 4     *  *  *
+ 5     *  *  *
+ 6     *  *  *
+ 7     *  *  *
+ 8     *  *  *
+```
+
+PC1からR1のグローバルIPまでは通信できましたが、
+PC1からR2のグローバルIPには通信が出来ませんでした
+R2は192.168.1.0/24のネットワークなんて知らないので、
+仮想インターネットのR1にパケットを投げます
+R1が192.168.1.0/24（プライベートIP）はルーティング出来ないので、
+破棄されていると思います。
+
+VPNを作成してみる
+
+VPNですが、先程の構成図
+
+
+R2とR3の間に仮想のLANケーブルを繋いだようにするイメージのものです。
+VPNは以下の手順で確立されます。
+　フェーズ1：
+　　ISAKMP SA
+　　通信経路の確立
+　フェーズ2：
+　　IPSec SA
+　　暗号方式の確立
+
+それでは設定してみます。
+
+まずフェーズ1の設定
+R2とR3でほぼ同じ設定になります
+ISAKMPをどんなルールでやつかをお互いに決めるのと、
+通信相手のグローバルIPを設定します
+access-list 100 で設定しているのは、
+どのような通信に対してこのVPNを利用するかの設定になります
+4つ並んでるIPの意味は 送信元IP 送信元マスク 宛先IP 宛先マスク です
+
+```
+R2#configure terminal
+R2(config)#access-list 100 permit ip 192.168.1.0 0.0.0.255 192.168.11.0 0.0.0.255
+R2(config)#crypto isakmp policy 1
+R2(config-isakmp)#authentication pre-share 
+R2(config-isakmp)#encryption 3des 
+R2(config-isakmp)#group 1
+R2(config-isakmp)#hash sha
+R2(config-isakmp)#lifetime 86400
+R2(config-isakmp)#exit
+R2(config)#crypto isakmp key 0 innovation address 9.9.9.9
+R2(config)#exit
+
+R3#configure terminal
+R3(config)#access-list 100 permit ip 192.168.11.0 0.0.0.255 192.168.1.0 0.0.0.255
+R3(config)#crypto isakmp policy 1
+R3(config-isakmp)#authentication pre-share 
+R3(config-isakmp)#encryption 3des 
+R3(config-isakmp)#group 1
+R3(config-isakmp)#hash sha
+R3(config-isakmp)#lifetime 86400
+R3(config-isakmp)#exit
+R3(config)#crypto isakmp key 0 innovation address 8.8.8.8
+R3(config)#exit
+```
+
+では続いてフェーズ2の設定
+```
+R2#configure terminal
+R2(config)#crypto ipsec transform-set ts-innovation esp-3des esp-sha-hmac 
+R2(cfg-crypto-trans)#mode tunnel 
+R2(cfg-crypto-trans)#exit
+R2(config)#crypto map map-innovation 1 ipsec-isakmp 
+R2(config-crypto-map)#match address 100
+R2(config-crypto-map)#set peer 9.9.9.9
+R2(config-crypto-map)#set transform-set ts-innovation
+R2(config-crypto-map)#set security-association lifetime seconds 3600
+R2(config-crypto-map)#exit
+R2(config)#interface fastEthernet 0/1
+R2(config-if)#crypto map map-innovation
+R2(config-if)#exit
+R2(config)#exit
+
+R3#configure terminal
+R3(config)#crypto ipsec transform-set ts-innovation esp-3des esp-sha-hmac 
+R3(cfg-crypto-trans)#mode tunnel 
+R3(cfg-crypto-trans)#exit
+R3(config)#crypto map map-innovation 1 ipsec-isakmp 
+R3(config-crypto-map)#match address 100
+R3(config-crypto-map)#set peer 8.8.8.8
+R3(config-crypto-map)#set transform-set ts-innovation
+R3(config-crypto-map)#set security-association lifetime seconds 3600
+R3(config-crypto-map)#exit
+R3(config)#interface fastEthernet 0/1
+R3(config-if)#crypto map map-innovation
+R3(config-if)#exit
+R3(config)#exit
+```
+
+設定が出来たので動作確認していきます
+現状のVPN状態を見てみます
+
+```
+R2#show crypto session  
+Crypto session current status
+
+Interface: FastEthernet0/1
+Session status: DOWN-NEGOTIATING
+Peer: 9.9.9.9 port 500 
+  IKE SA: local 8.8.8.8/500 remote 9.9.9.9/500 Inactive 
+  IPSEC FLOW: permit ip 192.168.1.0/255.255.255.0 192.168.11.0/255.255.255.0 
+        Active SAs: 0, origin: crypto map
+```
+
+VPN通信が必要となった時に接続が確立されるので、
+PC1からPC2にpingしてみます
+
+```
+VPCS> ping 192.168.11.11
+
+192.168.11.11 icmp_seq=1 timeout
+192.168.11.11 icmp_seq=2 timeout
+84 bytes from 192.168.11.11 icmp_seq=3 ttl=62 time=56.705 ms
+84 bytes from 192.168.11.11 icmp_seq=4 ttl=62 time=47.485 ms
+84 bytes from 192.168.11.11 icmp_seq=5 ttl=62 time=56.481 ms
+```
+
+接続確立までに2回タイムアウトしましたが、接続されました
+VPNの状態を見てみます
+
+```
+R2#show crypto session 
+Crypto session current status
+
+Interface: FastEthernet0/1
+Session status: UP-ACTIVE     
+Peer: 9.9.9.9 port 500 
+  IKE SA: local 8.8.8.8/500 remote 9.9.9.9/500 Active 
+  IPSEC FLOW: permit ip 192.168.1.0/255.255.255.0 192.168.11.0/255.255.255.0 
+        Active SAs: 2, origin: crypto map
+```
+
+
+
+
+
