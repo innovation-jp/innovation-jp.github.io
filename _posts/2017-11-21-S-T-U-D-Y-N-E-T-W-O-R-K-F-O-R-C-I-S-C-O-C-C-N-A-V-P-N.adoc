@@ -30,7 +30,9 @@ CISCOでNATやVPNの設定をしたことがある人であれば、 +
 
 image::/images/kotani/20171120/1.png[]
 
-本社のPC1と支店のPC2で通信できるようにしていきたいと思います +
+実際の用途としてはデータセンタとのVPNを作成して、 +
+各拠点からデータセンタのファイルサーバなどを利用するということが結構ありそうですが、 +
+今回は本社のPC1と支店のPC2で通信できるようにすることをゴールにします +
 
 仮想インターネット設定 +
 まずは仮想インターネット設定をして、 +
@@ -55,13 +57,15 @@ IPアドレスには2種類ありまして、 +
 　　172.16.0.0 – 172.31.255.255 +
 　　192.168.0.0 – 192.168.255.255 +
 
-R1をインターネットとして設定しますので、 +
+R1を仮想インターネットとして設定しますので、 +
 グローバルIPのみをルーティングするように設定していきます +
 
-# 前準備
+# 仮想インターネットの設定
 
 それでは仮想インターネットの設定をしていきます +
 R2とR3にグローバルIPとして使うIPを設定して、デフォルトルートをR1にしています +
+R1にはグローバルIPをルーティングするように設定していきますが、 +
+8.8.8.8も9.9.9.9も両方R1に直接設定するので、ルーティングテーブルを書く必要はありません +
 
 
 ```
@@ -109,8 +113,8 @@ Sending 5, 100-byte ICMP Echos to 9.9.9.9, timeout is 2 seconds: +
 
 !!!!! +
 →5回成功したよ +
-　失敗すると. が出ます +
-　例）5回失敗すると ..... となります +
+　失敗すると . もしくは U が出ます +
+　例）5回失敗すると ..... 　もしくは UUUUU のようになります +
 
 Success rate is 100 percent (5/5) +
 →100%通信に成功したよ（5回成功 / 5回送信中) +
@@ -120,7 +124,11 @@ round-trip min/avg/max = 24/25/32 ms +
 　日本〜中国に通信しているぐらいの時間がかかってますね +
 　GNS3の処理に相当時間がかかっていると思われます +
 
-ローカル側の設定
+# ローカル側の設定
+
+ルータのローカル側のIPを設定して、
+PCのデフォルトゲートウェイをルータのローカル側のIPにしています
+
 ```
 R2#configure terminal
 R2(config)#interface fastEthernet 0/0
@@ -183,18 +191,40 @@ trace to 9.9.9.9, 8 hops max, press Ctrl+C to stop
  6     *  *  *
  7     *  *  *
  8     *  *  *
+ 
+VPC1> ping 192.168.11.1
+
+192.168.11.1 icmp_seq=1 timeout
+192.168.11.1 icmp_seq=2 timeout
+192.168.11.1 icmp_seq=3 timeout
+192.168.11.1 icmp_seq=4 timeout
+192.168.11.1 icmp_seq=5 timeout
+
+VPC1> trace 192.168.11.1
+trace to 192.168.11.1, 8 hops max, press Ctrl+C to stop
+ 1   192.168.1.1   12.307 ms  10.305 ms  10.360 ms
+ 2     *  *  *
+ 3     *  *  *
+ 4     *  *  *
+ 5     *  *  *
+ 6     *  *  *
+ 7     *  *  *
+ 8     *  *  *
+
+ 
 ```
 
 PC1からR1のグローバルIPまでは通信できましたが、 +
-PC1からR2のグローバルIPには通信が出来ませんでした +
-R2は192.168.1.0/24のネットワークなんて知らないので、 +
-仮想インターネットのR1にパケットを投げます +
-R1が192.168.1.0/24（プライベートIP）はルーティング出来ないので、 +
-破棄されていると思います +
+PC1からR2のグローバルIPやローカルIPには通信が出来ませんでした +
+R2は192.168.1.0/24のネットワークなんて知らないので、デフォルトルートのR1にパケットを投げます +
+R1も192.168.1.0/24（プライベートIP）は知らないので破棄されるという流れです +
 
-# VPNを作成してみる
+# VPNの設定
 
 VPNですが、先程の構成図 +
+
+image::/images/kotani/20171120/1.png[]
+
 
 R2とR3の間に仮想のLANケーブルを繋いだようにするイメージのものです +
 VPNは以下の手順で確立されます +
@@ -209,15 +239,11 @@ VPNは以下の手順で確立されます +
 
 まずフェーズ1の設定 +
 R2とR3でほぼ同じ設定になります +
-ISAKMPをどんなルールでやつかをお互いに決めるのと、 +
+ISAKMPをどんなルールでやりとりするかをお互いに決めるのと、 +
 通信相手のグローバルIPを設定します +
-access-list 100 で設定しているのは、 +
-どのような通信に対してこのVPNを利用するかの設定になります +
-4つ並んでるIPの意味は 送信元IP 送信元マスク 宛先IP 宛先マスク です +
 
 ```
 R2#configure terminal
-R2(config)#access-list 100 permit ip 192.168.1.0 0.0.0.255 192.168.11.0 0.0.0.255
 R2(config)#crypto isakmp policy 1
 R2(config-isakmp)#authentication pre-share 
 R2(config-isakmp)#encryption 3des 
@@ -229,7 +255,6 @@ R2(config)#crypto isakmp key 0 innovation address 9.9.9.9
 R2(config)#exit
 
 R3#configure terminal
-R3(config)#access-list 100 permit ip 192.168.11.0 0.0.0.255 192.168.1.0 0.0.0.255
 R3(config)#crypto isakmp policy 1
 R3(config-isakmp)#authentication pre-share 
 R3(config-isakmp)#encryption 3des 
@@ -241,9 +266,22 @@ R3(config)#crypto isakmp key 0 innovation address 8.8.8.8
 R3(config)#exit
 ```
 
-では続いてフェーズ2の設定
+では続いてフェーズ2の設定 +
+access-list 100 で設定しているのは、 +
+どのような通信に対してこのVPNを利用するかの設定になります +
+4つ並んでるIPの意味は +
+　送信元IP +
+　送信元ワイルドカードマスク +
+　宛先IP +
+　宛先ワイルドカードマスク です +
+
+access-list 100 permit ip 192.168.1.0 0.0.0.255 192.168.11.0 0.0.0.255 +
+→この場合は、192.168.1.0/24 から 192.168.11.0/24 への通信が対象となります 
+
+
 ```
 R2#configure terminal
+R2(config)#access-list 100 permit ip 192.168.1.0 0.0.0.255 192.168.11.0 0.0.0.255
 R2(config)#crypto ipsec transform-set ts-innovation esp-3des esp-sha-hmac 
 R2(cfg-crypto-trans)#mode tunnel 
 R2(cfg-crypto-trans)#exit
@@ -259,6 +297,7 @@ R2(config-if)#exit
 R2(config)#exit
 
 R3#configure terminal
+R3(config)#access-list 100 permit ip 192.168.11.0 0.0.0.255 192.168.1.0 0.0.0.255
 R3(config)#crypto ipsec transform-set ts-innovation esp-3des esp-sha-hmac 
 R3(cfg-crypto-trans)#mode tunnel 
 R3(cfg-crypto-trans)#exit
@@ -273,6 +312,8 @@ R3(config-if)#crypto map map-innovation
 R3(config-if)#exit
 R3(config)#exit
 ```
+
+# VPNの動作確認
 
 設定が出来たので動作確認していきます +
 現状のVPN状態を見てみます +
@@ -290,19 +331,27 @@ Peer: 9.9.9.9 port 500
 ```
 
 VPN通信が必要となった時に接続が確立されるので、 +
-PC1からPC2にpingしてみます +
+PC1とPC2でpingしてみます +
 
 ```
-VPCS> ping 192.168.11.11
+VPC1> ping 192.168.11.11
 
 192.168.11.11 icmp_seq=1 timeout
 192.168.11.11 icmp_seq=2 timeout
 84 bytes from 192.168.11.11 icmp_seq=3 ttl=62 time=56.705 ms
 84 bytes from 192.168.11.11 icmp_seq=4 ttl=62 time=47.485 ms
 84 bytes from 192.168.11.11 icmp_seq=5 ttl=62 time=56.481 ms
+
+VPC2> ping 192.168.1.11
+
+84 bytes from 192.168.1.11 icmp_seq=1 ttl=62 time=70.668 ms
+84 bytes from 192.168.1.11 icmp_seq=2 ttl=62 time=40.257 ms
+84 bytes from 192.168.1.11 icmp_seq=3 ttl=62 time=43.000 ms
+84 bytes from 192.168.1.11 icmp_seq=4 ttl=62 time=42.805 ms
+84 bytes from 192.168.1.11 icmp_seq=5 ttl=62 time=59.787 ms
 ```
 
-接続確立までに2回タイムアウトしましたが、接続されました +
+接続確立までに2回タイムアウトしましたが、VPN接続が確立されました +
 VPNの状態を見てみます +
 
 ```
@@ -315,6 +364,17 @@ Peer: 9.9.9.9 port 500
   IKE SA: local 8.8.8.8/500 remote 9.9.9.9/500 Active 
   IPSEC FLOW: permit ip 192.168.1.0/255.255.255.0 192.168.11.0/255.255.255.0 
         Active SAs: 2, origin: crypto map
+
+R3#show crypto session 
+Crypto session current status
+
+Interface: FastEthernet0/1
+Session status: UP-ACTIVE     
+Peer: 8.8.8.8 port 500 
+  IKE SA: local 9.9.9.9/500 remote 8.8.8.8/500 Active 
+  IPSEC FLOW: permit ip 192.168.11.0/255.255.255.0 192.168.1.0/255.255.255.0 
+        Active SAs: 2, origin: crypto map
+
 ```
 
 ちゃんとVPN接続が確立されていることが確認できたので、 +
