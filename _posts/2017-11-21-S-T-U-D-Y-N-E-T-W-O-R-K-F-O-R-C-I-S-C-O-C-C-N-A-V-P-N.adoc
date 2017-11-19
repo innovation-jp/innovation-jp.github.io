@@ -20,7 +20,8 @@ https://www.cisco.com/c/ja_jp/training-events/training-certifications/exams/curr
 （ちなみに、情報処理技術者試験のネットワークスペシャリスト試験は200時間〜ぐらい） +
 CISCOでNATやVPNの設定をしたことがある人であれば、 +
 試験対策本を読んで、CCNAイーグルの問題をやっておけばきっと受かります、きっと +
-触ったことない人はPing-tの問題をいっぱい解けばとりあえず受かるかも +
+触ったことない人はPing-tの問題をいっぱい解けばとりあえず受かるかもですが、 +
+実機を触るのが一番ですね！GNS3があれば色々出来るので是非触ってみましょう！ +
 
 それでは、今回はVPNをやっていきたいと思います +
 
@@ -124,10 +125,10 @@ round-trip min/avg/max = 24/25/32 ms +
 　日本〜中国に通信しているぐらいの時間がかかってますね +
 　GNS3の処理に相当時間がかかっていると思われます +
 
-# ローカル側の設定
+# 各拠点内の設定
 
-ルータのローカル側のIPを設定して、
-PCのデフォルトゲートウェイをルータのローカル側のIPにしています
+ルータの内側のIPを設定して、
+PCのデフォルトゲートウェイをルータの内側のIPにしています
 
 ```
 R2#configure terminal
@@ -215,7 +216,7 @@ trace to 192.168.11.1, 8 hops max, press Ctrl+C to stop
 ```
 
 PC1からR1のグローバルIPまでは通信できましたが、 +
-PC1からR2のグローバルIPやローカルIPには通信が出来ませんでした +
+PC1からR2のグローバルIPやプライベートIPには通信が出来ませんでした +
 R2は192.168.1.0/24のネットワークなんて知らないので、デフォルトルートのR1にパケットを投げます +
 R1も192.168.1.0/24（プライベートIP）は知らないので破棄されるという流れです +
 
@@ -269,11 +270,11 @@ R3(config)#exit
 では続いてフェーズ2の設定 +
 access-list 100 で設定しているのは、 +
 どのような通信に対してこのVPNを利用するかの設定になります +
-4つ並んでるIPの意味は +
-　送信元IP +
-　送信元ワイルドカードマスク +
-　宛先IP +
-　宛先ワイルドカードマスク です +
+4つ並んでる数字の意味は +
+　192.168.1.0：送信元IP +
+　0.0.0.255：送信元ワイルドカードマスク +
+　192.168.11.0：宛先IP +
+　0.0.0.255：宛先ワイルドカードマスク です +
 
 access-list 100 permit ip 192.168.1.0 0.0.0.255 192.168.11.0 0.0.0.255 +
 →この場合は、192.168.1.0/24 から 192.168.11.0/24 への通信が対象となります 
@@ -323,12 +324,23 @@ R2#show crypto session
 Crypto session current status
 
 Interface: FastEthernet0/1
-Session status: DOWN-NEGOTIATING
+Session status: DOWN
 Peer: 9.9.9.9 port 500 
-  IKE SA: local 8.8.8.8/500 remote 9.9.9.9/500 Inactive 
   IPSEC FLOW: permit ip 192.168.1.0/255.255.255.0 192.168.11.0/255.255.255.0 
         Active SAs: 0, origin: crypto map
+
+R3#show crypto session 
+Crypto session current status
+
+Interface: FastEthernet0/1
+Session status: DOWN
+Peer: 8.8.8.8 port 500 
+  IPSEC FLOW: permit ip 192.168.11.0/255.255.255.0 192.168.1.0/255.255.255.0 
+        Active SAs: 0, origin: crypto map
 ```
+
+Session status: DOWN +
+→DOWNなのでまだVPN接続は確立されていません
 
 VPN通信が必要となった時に接続が確立されるので、 +
 PC1とPC2でpingしてみます +
@@ -351,7 +363,7 @@ VPC2> ping 192.168.1.11
 84 bytes from 192.168.1.11 icmp_seq=5 ttl=62 time=59.787 ms
 ```
 
-接続確立までに2回タイムアウトしましたが、VPN接続が確立されました +
+接続確立までに2回タイムアウトしましたが、VPN接続が確立され通信が出来たようです +
 VPNの状態を見てみます +
 
 ```
@@ -376,6 +388,9 @@ Peer: 8.8.8.8 port 500
         Active SAs: 2, origin: crypto map
 
 ```
+
+Session status: UP-ACTIVE + 
+→UP-ACTIVEになっていれば通信できている状態です
 
 ちゃんとVPN接続が確立されていることが確認できたので、 +
 今日はココらへんで終わりにしたいと思います +
