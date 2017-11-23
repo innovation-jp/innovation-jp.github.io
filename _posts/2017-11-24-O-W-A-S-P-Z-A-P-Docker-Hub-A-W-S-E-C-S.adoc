@@ -2,18 +2,61 @@
 :published_at: 2017-11-24
 :hp-tags: Shirota, OWASP ZAP, ECS
 
-# 前提
+## 前提
 * OWASP ZAPとはOSSのセキュリティ診断ツール
 * ECSとはAWSのDockerコンテナー管理サービス
 
-# 概要
+## 概要
 OWASP ZAPの公式Dockerイメージを使うことにより環境構築工数を削減できました。
 
-* ECSクラスタを作成
-* OWASP ZAPの公式Docker Hubページを確認
-* ECSにDocker Hubイメージからコンテナーを作成
-* OWASP ZAPにブラウザからアクセス
+* ECSクラスターを作成
+* OWASP ZAP公式Docker Hubイメージからコンテナーを作成
+* ブラウザでアクセス
 * セキュリティ診断を行う
 * レポート出力
 
-# ECSクラスタを作成
+## ECSクラスターを作成
+
+AWSコンソールにログインしてECSに移動してクラスターを作成します。
+
+image:shirota/20171124/owaspzap_on_ecs01.png[]
+
+* Create Clusterをクリック
+
+image:shirota/20171124/owaspzap_on_ecs02.png[]
+
+* Cluster nameに任意の名称を入力（※今回は owaspzap とした）
+* EC2 Instance type（※コンテナーのベースになるEC2インスタンスのタイプ）は t2.medium を選択
+* Key pair を設定（※後でSSHログインしたい為）
+* VPC, Subnets, Security group は適宜設定（※作業環境から以下が許可されていれば問題無い）
+** SSH接続
+** 8080ポートへのHTTPアクセス
+
+* Createをクリック
+
+これでクラスターが作成されます。
+
+## OWASP ZAP公式Docker Hubイメージからコンテナーを作成
+
+image:shirota/20171124/owaspzap_on_ecs04.png[]
+image:shirota/20171124/owaspzap_on_ecs05.png[]
+image:shirota/20171124/owaspzap_on_ecs06.png[]
+image:shirota/20171124/owaspzap_on_ecs07.png[]
+image:shirota/20171124/owaspzap_on_ecs08.png[]
+image:shirota/20171124/owaspzap_on_ecs09.png[]
+image:shirota/20171124/owaspzap_on_ecs10.png[]
+image:shirota/20171124/owaspzap_on_ecs11.png[]
+image:shirota/20171124/owaspzap_on_ecs12.png[]
+image:shirota/20171124/owaspzap_on_ecs13.png[]
+image:shirota/20171124/owaspzap_on_ecs14.png[]
+image:shirota/20171124/owaspzap_on_ecs15.png[]
+image:shirota/20171124/owaspzap_on_ecs16.png[]
+image:shirota/20171124/owaspzap_on_ecs17.png[]
+image:shirota/20171124/owaspzap_on_ecs18.png[]
+image:shirota/20171124/owaspzap_on_ecs19.png[]
+image:shirota/20171124/owaspzap_on_ecs20.png[]
+image:shirota/20171124/owaspzap_on_ecs21.png[]
+
+
+
+
