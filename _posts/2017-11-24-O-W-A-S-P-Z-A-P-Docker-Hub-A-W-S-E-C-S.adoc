@@ -1,0 +1,19 @@
+# OWASP ZAP 公式 Docker Hub イメージで AWS ECS にセキュリティ診断環境を作ってみた
+:published_at: 2017-11-24
+:hp-tags: Shirota, OWASP ZAP, ECS
+
+# 前提
+* OWASP ZAPとはOSSのセキュリティ診断ツール
+* ECSとはAWSのDockerコンテナー管理サービス
+
+# 概要
+OWASP ZAPの公式Dockerイメージを使うことにより環境構築工数を削減できました。
+
+* ECSクラスタを作成
+* OWASP ZAPの公式Docker Hubページを確認
+* ECSにDocker Hubイメージからコンテナーを作成
+* OWASP ZAPにブラウザからアクセス
+* セキュリティ診断を行う
+* レポート出力
+
+# ECSクラスタを作成
