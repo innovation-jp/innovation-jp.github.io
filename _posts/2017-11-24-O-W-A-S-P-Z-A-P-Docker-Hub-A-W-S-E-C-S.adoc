@@ -1,23 +1,23 @@
-# OWASP ZAP 公式 Docker Hub イメージで AWS ECS にセキュリティ診断環境を作ってみた
+# OWASP ZAP 公式 Docker Hub イメージで AWS ECS にセキュリティ診断環境を構築
 :published_at: 2017-11-24
-:hp-tags: Shirota, OWASP ZAP, ECS
+:hp-tags: Shirota, OWASP ZAP, Docker Hub, ECS
 
 ## 前提
 * OWASP ZAPとはOSSのセキュリティ診断ツール
-* ECSとはAWSのDockerコンテナー管理サービス
+* AWS ECSとはDockerコンテナー管理サービス
 
 ## 概要
-OWASP ZAPの公式Dockerイメージを使うことにより環境構築工数を削減できました。
+OWASP ZAPの公式Docker Hub イメージを使うことにより環境構築工数を削減できました。
 
 * ECSクラスターを作成
 * OWASP ZAP公式Docker Hubイメージからコンテナーを作成
 * ブラウザでアクセス
 * セキュリティ診断を行う
-* レポート出力
+* レポート出力を保存
 
 ## ECSクラスターを作成
 
-AWSコンソールにログインしてECSに移動してクラスターを作成します。
+AWSコンソールにログインし、ECSに移動してクラスターを作成します。
 
 image:shirota/20171124/owaspzap_on_ecs01.png[]
 
@@ -70,7 +70,7 @@ image:shirota/20171124/owaspzap_on_ecs07.png[]
 
 image:shirota/20171124/owaspzap_on_ecs08.png[]
 
-Taskが出来上がりました。このTaskを使用してコンテナーを立ち上げます。
+Taskが出来上がりました。このTaskを使用して実際にコンテナーを立ち上げます。
 
 image:shirota/20171124/owaspzap_on_ecs09.png[]
 
@@ -82,7 +82,8 @@ image:shirota/20171124/owaspzap_on_ecs10.png[]
 
 image:shirota/20171124/owaspzap_on_ecs11.png[]
 
-* owaspzap:1 を選択（※Taskを変更した場合は適宜ここで指定する）
+* Task Definitionにて適切なバージョンの Task を選択
+
 * Run Task をクリック
 
 image:shirota/20171124/owaspzap_on_ecs12.png[]
@@ -93,7 +94,7 @@ image:shirota/20171124/owaspzap_on_ecs13.png[]
 
 * RUNNING を確認
 
-これで OWASP ZAP のコンテナーが作成されました。
+これで OWASP ZAP のコンテナーが作成・起動されました。
 
 ## ブラウザでアクセス
 
@@ -122,7 +123,7 @@ image:shirota/20171124/owaspzap_on_ecs18.png[]
 
 しばらくすると左下フレームに結果が表示されます。
 
-## レポート出力
+## レポート出力を保存
 
 image:shirota/20171124/owaspzap_on_ecs19.png[]
 
@@ -132,9 +133,10 @@ image:shirota/20171124/owaspzap_on_ecs20.png[]
 
 * 任意のファイル名で save
 
-SSH で 接続するなどしてレポートを取得してください。
+* SSH接続してコンテナー内を確認
 
-----
+++++
+<pre style="font-family: Menlo, Courier">
 ▶ ssh -i ~/.ssh/shirox.pem ec2-user@54.174.90.132
 
    __|  __|  __|
@@ -154,7 +156,8 @@ bbbdce7ef186        owasp/zap2docker-stable          "zap-webswing.sh"   26 minu
 
 zap@bbbdce7ef186:/zap$ ll /home/zap/zap.html
 -rw-r--r-- 1 zap zap 15622 Nov 23 13:18 /home/zap/zap.html
-----
+</pre>
+++++
 
 以下のようなレポートが出力されているはずです。
 
@@ -162,21 +165,32 @@ image:shirota/20171124/owaspzap_on_ecs21.png[]
 
 ## 所感
 
-OWASP ZAPの環境の作成を自分で行った際、 +
+以前、OWASP ZAPの環境の作成を自分で行った際、 +
 使用されている各ミドルウェアのバージョンの相性に悩まされまして、 +
-今回OWASP ZAP公式のDocker Hubイメージを使用し、 +
-構築の工数を削減することができました。
+今回OWASP ZAP公式のDocker Hubイメージを使用して、 +
+大幅に構築の工数を削減することができたかと思います。
 
 また、AWS ECSを使用し、複雑なコマンド操作無しに構築することができました。
 
-つい3年くらい前まではDockerなど知らず、 +
+つい3年くらい前まではDockerはまだ一般的でなかったかと思いますが、 +
 Docker Hubのようなものまで現れて、 +
-こんなに簡単に環境構築できるなんて想像できませんでした。 +
+こんなに簡単に環境構築できるなんて想像が付きませんでした。 +
 最近yumコマンドを打つことも、 +
-ChefのレシピやAnsibleのプレイブックを書くことも +
-減ってきたように思います。
+ChefのレシピやAnsibleのプレイブックを書くことも減ってきたように思います。
 
 今後何かやりたい時は、 +
 まず真っ先にDocker Hubにイメージがあるか探してみたいと思います。
+
+OWASP ZAPに関しては今回構築したGUI版以外にも +
+コマンドライン版などもあり、 +
+OSSのセキュリティ診断ツールの中では +
+デファクトスタンダートと呼べるくらい有名かと思います。 +
+以下に参考URLを貼っておこうと思います。
+
+OWASP ZAP WebSwing（※GUI版） +
+https://github.com/zaproxy/zaproxy/wiki/WebSwing
+
+OWASP　ZAP 公式Docker Hubページ +
+https://hub.docker.com/r/owasp/zap2docker-stable/
 
 こちらからは以上です。
