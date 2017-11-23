@@ -38,25 +38,145 @@ image:shirota/20171124/owaspzap_on_ecs02.png[]
 
 ## OWASP ZAP公式Docker Hubイメージからコンテナーを作成
 
-image:shirota/20171124/owaspzap_on_ecs04.png[]
-image:shirota/20171124/owaspzap_on_ecs05.png[]
-image:shirota/20171124/owaspzap_on_ecs06.png[]
 image:shirota/20171124/owaspzap_on_ecs07.png[]
+
+ECS > Task Definitions にて、
+
+* Task Definition Nameに任意の名称を入力（※今回は owaspzap とした）
+* Task Role は None を選択
+* Add container をクリック
+
+image:shirota/20171124/owaspzap_on_ecs04.png[]
+
+* Container name に任意の名称を入力（※今回は owaspzap とした）
+* Image に owasp/zap2docker-stable と入力
+* Memory Limits は Soft limit を選択して 3072 を入力（※インスタンスタイプによって適宜変更可）
+
+image:shirota/20171124/owaspzap_on_ecs05.png[]
+
+* Port mappings は 以下を設定する
+** 8080 -> 8080
+** 8090 -> 8090
+
+image:shirota/20171124/owaspzap_on_ecs06.png[]
+
+* CPU units は 1024 を入力（※インスタンスタイプによって適宜変更可）
+* Command に zap-webswing.sh を入力
+* Add をクリック
+
+image:shirota/20171124/owaspzap_on_ecs07.png[]
+
+* Create をクリック
+
 image:shirota/20171124/owaspzap_on_ecs08.png[]
+
+Taskが出来上がりました。このTaskを使用してコンテナーを立ち上げます。
+
 image:shirota/20171124/owaspzap_on_ecs09.png[]
+
+* Clusters に移動して、owaspzap > をクリック
+
 image:shirota/20171124/owaspzap_on_ecs10.png[]
+
+* Tasks タブをクリックし、Run new Task をクリック
+
 image:shirota/20171124/owaspzap_on_ecs11.png[]
+
+* owaspzap:1 を選択（※Taskを変更した場合は適宜ここで指定する）
+* Run Task をクリック
+
 image:shirota/20171124/owaspzap_on_ecs12.png[]
+
+* Taskが登録され、コンテナーが起動中であることを確認
+
 image:shirota/20171124/owaspzap_on_ecs13.png[]
+
+* RUNNING を確認
+
+これで OWASP ZAP のコンテナーが作成されました。
+
+## ブラウザでアクセス
+
 image:shirota/20171124/owaspzap_on_ecs14.png[]
+
+* EC2 > ECSインスタンスを選択して、IPアドレスを調べる
+
 image:shirota/20171124/owaspzap_on_ecs15.png[]
+
+* http://<IPアドレス>:8080/?anonym=true&app=ZAP にアクセス
+* 規約に同意する場合は Accept する
+
 image:shirota/20171124/owaspzap_on_ecs16.png[]
+
+* 適宜選択してStartをクリック
+
+これで準備が整いました。
+
+## セキュリティ診断を行う
+
 image:shirota/20171124/owaspzap_on_ecs17.png[]
+
+* 任意のURLを指定して Attack
+
 image:shirota/20171124/owaspzap_on_ecs18.png[]
+
+しばらくすると左下フレームに結果が表示されます。
+
+## レポート出力
+
 image:shirota/20171124/owaspzap_on_ecs19.png[]
+
+* Report の Generate HTML Report... を選択
+
 image:shirota/20171124/owaspzap_on_ecs20.png[]
+
+* 任意のファイル名で save
+
+SSH で 接続するなどしてレポートを取得してください。
+
+----
+▶ ssh -i ~/.ssh/shirox.pem ec2-user@54.174.90.132
+
+   __|  __|  __|
+   _|  (   \__ \   Amazon ECS-Optimized Amazon Linux AMI 2017.09.a
+ ____|\___|____/
+
+For documentation visit, http://aws.amazon.com/documentation/ecs
+3 package(s) needed for security, out of 10 available
+Run "sudo yum update" to apply all updates.
+
+[ec2-user@ip-172-31-28-105 ~]$ docker ps
+CONTAINER ID        IMAGE                            COMMAND             CREATED             STATUS              PORTS                                            NAMES
+bbbdce7ef186        owasp/zap2docker-stable          "zap-webswing.sh"   26 minutes ago      Up 26 minutes       0.0.0.0:8080->8080/tcp, 0.0.0.0:8090->8090/tcp   ecs-owaspzap-1-owaspzap-e4c2aa97a0dfaf8b4700
+347be605347e        amazon/amazon-ecs-agent:latest   "/agent"            41 minutes ago      Up 41 minutes                                                        ecs-agent
+
+[ec2-user@ip-172-31-28-105 ~]$ docker exec -it bbbdce7ef186 bash
+
+zap@bbbdce7ef186:/zap$ ll /home/zap/zap.html
+-rw-r--r-- 1 zap zap 15622 Nov 23 13:18 /home/zap/zap.html
+----
+
+以下のようなレポートが出力されているはずです。
+
 image:shirota/20171124/owaspzap_on_ecs21.png[]
 
+## 所感
 
+OWASP ZAPの環境の作成を自分で行った際、 +
+使用されている各ミドルウェアのバージョンの相性に悩まされまして、 +
+今回OWASP ZAP公式のDocker Hubイメージを使用し、 +
+構築の工数を削減することができました。
 
+また、AWS ECSを使用し、複雑なコマンド操作無しに構築することができました。
 
+つい3年くらい前まではDockerなど知らず、 +
+Docker Hubのようなものまで現れて、 +
+こんなに簡単に環境構築できるなんて想像できませんでした。 +
+最近yumコマンドを打つことも、 +
+ChefのレシピやAnsibleのプレイブックを書くことも +
+減ってきたように思います。
+
+今後何かやりたい時は、 +
+まず真っ先にDocker Hubにイメージがあるか探してみたいと思います。
+
+こちらからは以上です。
