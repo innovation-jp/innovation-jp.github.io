@@ -1,4 +1,4 @@
-= 執筆中 Azure Container Service（AKS）で私の人生というコンテナもオーケストレーションしてもらいたい話
+= Azure Container Service（AKS）で人生というコンテナもオーケストレーションしてもらいたい話
 :hp-alt-title: Azure 8
 :hp-tags: syoga, log, Azure, container, Kubernetes, Docker
 
