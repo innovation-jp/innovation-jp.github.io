@@ -1,6 +1,6 @@
 = 執筆中 Azure Container Service（AKS）で私の人生というコンテナもオーケストレーションしてもらいたい話
 :hp-alt-title: Azure 8
-:hp-tags: syoga, log, Azure, container, kubernetes, Docker
+:hp-tags: syoga, log, Azure, container, Kubernetes, Docker
 
 お久しぶりです、年のせいか風邪がなかなか完治しない自分に若干引き気味な SRE チームの syoga です。
 
@@ -20,6 +20,10 @@
 
 ### AKS
 今回 Kubernetes に焦点を絞ったサービスに変わったため AKS という略称になりました、Kubernetes の共同制作者の一人 Brendan Burns 氏が現在 Azure のコンテナ関連サービスのトップとなり、バリバリサービスの拡充が進んでいると、先日の Microsoft Connect(); 2017 でもお話がありました。
+
+AKS を作成すれば master ノード、cluster ノードの環境設定は不要ですぐに Kubernetes での運用が始められます、素敵。
+
+※ GCP の GKE と同等の機能です。
 
 ## 事前準備
 ・Azure CLI +
@@ -69,13 +73,13 @@ $ az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/サブ�
 
 OK ボタンを押せば AKS の作成は完了です。
 
-## kubernetes クラスタへデプロイ
+## Kubernetes クラスタへデプロイ
 今回利用する Docker コンテナイメージを保持しておくため Azure Container Registory（以下ACR）に AKStestblog というリポジトリを作成しておきました。
 
 ### ACR へコンテナイメージを Push
 ここからは CLI で作業します、まずは `az acr login --name AKStestblog` でACRにログインします。
 
-利用するイメージは Microsoft がサンプルで提供している投票システムとなり、Redis のコンテナと Python で作成された Web アプリケーションのコンテナ、 2 つのコンテナで動作しています。
+利用するイメージは Microsoft がサンプルで提供している投票システムとなり、`azure-vote-back`という Redis のコンテナと、`azure-vote-front` という Python のコンテナから構成されています。
 
 上記イメージにタグを付与し、ACR に Push します。 +
 ```
@@ -98,37 +102,54 @@ aks-agentpool-42554519-0   Ready     agent     17h       v1.8.1
 aks-agentpool-42554519-1   Ready     agent     17h       v1.8.1
 aks-agentpool-42554519-2   Ready     agent     17h       v1.8.1
 ```
-AKS 作成時に設定した通り3 ノード立ち上がっています。
+AKS 作成時に設定した通り 3 ノード立ち上がっています、AGE 17h となっている理由は謎です。
 
 ### マニフェストファイル更新
-Kubernetes はデプロイ時にマニフェストファイル
+Kubernetes はデプロイ時にマニフェストファイルという yml ファイルを読み込みます、その中に Docker コンテナイメージが格納されているリポジトリのパスを記載する必要がありますので、イメージを格納している ACR のパスを記載します。
 
-アプリケーションをデプロイする
-INV-454:docker s290$ kubectl create -f azure-vote-all-in-one-redis.yml
+### アプリケーションをデプロイする
+以下のコマンドでマニフェストファイルを指定しデプロイします。
+```
+$ kubectl create -f azure-vote-all-in-one-redis.yml
 deployment "azure-vote-back" created
 service "azure-vote-back" created
 deployment "azure-vote-front" created
 service "azure-vote-front" created
+```
 
-作成の中確認
-kubectl get service azure-vote-front --watch
+マニフェストファイルの中に作成する Pod（コンテナ）の初期値を記載しておくのですが、今回は 1 つのみ立ち上がるよう指定しています、デプロイの状況は以下のコマンドで確認できます。
 
+```
+$ kubectl get service azure-vote-front
 NAME               TYPE           CLUSTER-IP   EXTERNAL-IP   PORT(S)        AGE
-azure-vote-front   LoadBalancer   10.0.76.67   <pending>     80:32233/TCP   37s
+azure-vote-front   LoadBalancer   XX.X.XX.XX   <pending>     80:32233/TCP   37s
+```
+EXTERNAL-IP が `pending` となっており IP が払出されていない状態ですのでしばし待ちます…
 
+```
 kubectl get service azure-vote-front
 NAME               TYPE           CLUSTER-IP   EXTERNAL-IP      PORT(S)        AGE
-azure-vote-front   LoadBalancer   10.0.76.67   52.170.117.231   80:32233/TCP   7m
+azure-vote-front   LoadBalancer   XX.X.XX.XX   XX.XX.XX.XX   80:32233/TCP   7m
+```
 
-すけーるするぞ
-kubectl get pod -o wide
+EXTERNAL-IP が表示されたら、デプロイ完了です。
+
+### スケールするぞ
+まずは現在ノードが 3 つありますが、どこで Pod が動作しているかを確認してみます。
+```
+$ kubectl get pod -o wide
 NAME                               READY     STATUS    RESTARTS   AGE       IP           NODE
-azure-vote-back-7556ff9578-7pxp9   1/1       Running   0          14m       10.244.0.4   aks-agentpool-42554519-2
-azure-vote-front-f4759f4b7-l4vgc   1/1       Running   0          14m       10.244.1.4   aks-agentpool-42554519-1
+azure-vote-back-7556ff9578-7pxp9   1/1       Running   0          14m       XX.XXX.X.X   aks-agentpool-42554519-2
+azure-vote-front-f4759f4b7-l4vgc   1/1       Running   0          14m       XX.XXX.X.X   aks-agentpool-42554519-1
+```
 
-kubectl scale --replicas=8 deployment/azure-vote-front
+NAME と NODE を確認すると、`azure-vote-back` は `aks-agentpool-42554519-2` で、`azure-vote-front` は `aks-agentpool-42554519-1` で動作している事が分かります。
 
-get pod -o wide
+では、azure-vote-front をガッツリ増やしてみたいと思います、`kubectl scale --replicas=8 deployment/azure-vote-front` とコマンドを実行するだけでコンテナ数が 8 個にスケールアウトされます。
+
+うーん、簡単ですね！ では確認してみます。
+```
+$ get pod -o wide
 NAME                               READY     STATUS              RESTARTS   AGE       IP           NODE
 azure-vote-back-7556ff9578-7pxp9   1/1       Running             0          19m       10.244.0.4   aks-agentpool-42554519-2
 azure-vote-front-f4759f4b7-55p24   0/1       ContainerCreating   0          6s        <none>       aks-agentpool-42554519-2
@@ -139,18 +160,26 @@ azure-vote-front-f4759f4b7-ms9pz   0/1       ContainerCreating   0          6s  
 azure-vote-front-f4759f4b7-rvb8l   1/1       Running             0          6s        10.244.1.5   aks-agentpool-42554519-1
 azure-vote-front-f4759f4b7-tczrj   0/1       ContainerCreating   0          6s        <none>       aks-agentpool-42554519-0
 azure-vote-front-f4759f4b7-vclzg   0/1       ContainerCreating   0          6s        <none>       aks-agentpool-42554519-2
+```
+増えた！ですが STATUS は ContainerCreating ですので、しばし待ちます…
 
-INV-454:docker s290$ kubectl get pod -o wide
+```
+$ kubectl get pod -o wide
 NAME                               READY     STATUS    RESTARTS   AGE       IP           NODE
-azure-vote-back-7556ff9578-7pxp9   1/1       Running   0          20m       10.244.0.4   aks-agentpool-42554519-2
-azure-vote-front-f4759f4b7-55p24   1/1       Running   0          1m        10.244.0.6   aks-agentpool-42554519-2
-azure-vote-front-f4759f4b7-8dvcw   1/1       Running   0          1m        10.244.0.5   aks-agentpool-42554519-2
-azure-vote-front-f4759f4b7-l4vgc   1/1       Running   0          20m       10.244.1.4   aks-agentpool-42554519-1
-azure-vote-front-f4759f4b7-mbvsv   1/1       Running   0          1m        10.244.2.5   aks-agentpool-42554519-0
-azure-vote-front-f4759f4b7-ms9pz   1/1       Running   0          1m        10.244.2.4   aks-agentpool-42554519-0
-azure-vote-front-f4759f4b7-rvb8l   1/1       Running   0          1m        10.244.1.5   aks-agentpool-42554519-1
-azure-vote-front-f4759f4b7-tczrj   1/1       Running   0          1m        10.244.2.6   aks-agentpool-42554519-0
-azure-vote-front-f4759f4b7-vclzg   1/1       Running   0          1m        10.244.0.7   aks-agentpool-42554519-2
+azure-vote-back-7556ff9578-7pxp9   1/1       Running   0          20m       XX.XXX.X.X   aks-agentpool-42554519-2
+azure-vote-front-f4759f4b7-55p24   1/1       Running   0          1m        XX.XXX.X.X   aks-agentpool-42554519-2
+azure-vote-front-f4759f4b7-8dvcw   1/1       Running   0          1m        XX.XXX.X.X   aks-agentpool-42554519-2
+azure-vote-front-f4759f4b7-l4vgc   1/1       Running   0          20m       XX.XXX.X.X   aks-agentpool-42554519-1
+azure-vote-front-f4759f4b7-mbvsv   1/1       Running   0          1m        XX.XXX.X.X   aks-agentpool-42554519-0
+azure-vote-front-f4759f4b7-ms9pz   1/1       Running   0          1m        XX.XXX.X.X   aks-agentpool-42554519-0
+azure-vote-front-f4759f4b7-rvb8l   1/1       Running   0          1m        XX.XXX.X.X   aks-agentpool-42554519-1
+azure-vote-front-f4759f4b7-tczrj   1/1       Running   0          1m        XX.XXX.X.X   aks-agentpool-42554519-0
+azure-vote-front-f4759f4b7-vclzg   1/1       Running   0          1m        XX.XXX.X.X   aks-agentpool-42554519-2
+```
+各ノードで Pod が起動している事が分かりますね。
+
+## Kubernetes ダッシュボードも見てみる
+
 
 #### 感想
 お気軽に Kubernetes 環境へデプロイができるという点は素敵なのではないでしょうか
