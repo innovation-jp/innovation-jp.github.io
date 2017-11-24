@@ -124,7 +124,7 @@ $ kubectl get service azure-vote-front
 NAME               TYPE           CLUSTER-IP   EXTERNAL-IP   PORT(S)        AGE
 azure-vote-front   LoadBalancer   XX.X.XX.XX   <pending>     80:32233/TCP   37s
 ```
-EXTERNAL-IP が `pending` となっており IP が払出されていない状態ですのでしばし待ちます…
+EXTERNAL-IP が `pending` となっており IP が払出されていない状態ですのでしばし待ちます…そして確認！
 
 ```
 kubectl get service azure-vote-front
@@ -161,7 +161,7 @@ azure-vote-front-f4759f4b7-rvb8l   1/1       Running             0          6s  
 azure-vote-front-f4759f4b7-tczrj   0/1       ContainerCreating   0          6s        <none>       aks-agentpool-42554519-0
 azure-vote-front-f4759f4b7-vclzg   0/1       ContainerCreating   0          6s        <none>       aks-agentpool-42554519-2
 ```
-増えた！ですが STATUS は ContainerCreating ですので、しばし待ちます…
+増えた！ですが STATUS は ContainerCreating ですので、しばし待ちます…そして確認！リターンズ！
 
 ```
 $ kubectl get pod -o wide
