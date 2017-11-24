@@ -14,6 +14,7 @@ OWASP ZAPの公式Docker Hub イメージを使うことにより環境構築工
 * ブラウザでアクセス
 * セキュリティ診断を行う
 * レポート出力を保存
+* （おまけ）コンテナーのメモリとディスク容量の拡張に関して
 
 ## ECSクラスターを作成
 
@@ -162,6 +163,51 @@ zap@bbbdce7ef186:/zap$ ll /home/zap/zap.html
 以下のようなレポートが出力されているはずです。
 
 image:shirota/20171124/owaspzap_on_ecs21.png[]
+
+## （おまけ）コンテナーディスク容量の拡張に関して
+
+大規模サイトの診断を行う際、 +
+コンテナーのメモリとディスク容量が足りなくなることがありましたので、 +
+増設方法をメモしておこうと思います。 +
+
+
+ # SSHでベースEC2にログインします
+ ssh -i ~/.ssh/key.pem ec2-user@xxx.xxx.xxx.xxx
+
+ # OWASP ZAPコンテナーIDを調べます
+ docker ps
+ # コンテナーにログインします
+ docker exec -it <OWASP ZAPコンテナーのID> bash
+
+ # sedコマンドでOWASP ZAP起動スクリプト内の使用メモリ部分を変更（128MB -> 10240MB）
+ sed -i s/128M/10240M/g zap-webswing.sh
+ # Javaプロセスのpidを調べる
+　ps aux | grep java
+　# 一旦killします
+ kill -HUP <pid>
+
+Javaプロセスをkillするとコンテナーが一旦終了します。
+
+ # コンテナーのディスク容量を増やす設定をしておく
+ sudo vi /etc/sysconfig/docker
+ # OPTIONS環境変数に以下を追加します
+ --storage-opt dm.basesize=50G
+
+ # Dockerを再起動させます
+ service docker stop
+ service docker start
+
+ # 停止したECSエージェントコンテナーとOWASP ZAPコンテナーを起動させます
+ docker ps -a
+ docker start <ECSエージェントコンテナーのID>
+ docker start <OWASP ZAPコンテナーのID>
+
+ # メモリ・ディスクの確認をするためコンテナーにログイン
+　docker exec -it　<ECSエージェントコンテナーのID> bash
+ # メモリ割り当てが増えていることを確認
+ ps aux | grep java
+ # ディスク容量が増えていることを確認
+ df -h 
 
 ## 所感
 
