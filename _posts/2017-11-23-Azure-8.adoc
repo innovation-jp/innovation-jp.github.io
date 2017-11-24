@@ -11,6 +11,8 @@
 
 この悔しさを10月に Preview 版がリリースされた Azure Container Service - AKS（以下AKS）へぶつけてみようと思います。
 
+*Kubernetes の詳細については Google 先生に確認下さい。*
+
 ## Azure Container Service とは？
 ### ACS
 以前の Azure Container Service は DC/OS、Docker Swarm、Kubernetes 等の
@@ -19,11 +21,9 @@
 その時の略称は ACS でしたが…
 
 ### AKS
-今回 Kubernetes に焦点を絞ったサービスに変わったため AKS という略称になりました、Kubernetes の共同制作者の一人 Brendan Burns 氏が現在 Azure のコンテナ関連サービスのトップとなり、バリバリサービスの拡充が進んでいると、先日の Microsoft Connect(); 2017 でもお話がありました。
+今回 Kubernetes に焦点を絞ったサービスに変わったため AKS という略称になりました、Kubernetes の共同制作者の一人 Brendan Burns 氏が現在 Azure のコンテナ関連サービスのトップとなり、バリバリとサービスの拡充を進めていると、先日の Microsoft Connect(); 2017 でもお話がありました。
 
-AKS を作成すれば master ノード、cluster ノードの環境設定は不要ですぐに Kubernetes での運用が始められます、素敵。
-
-※ GCP の GKE と同等の機能です。
+AKS を作成すれば master ノード、minion ノードの環境設定は不要ですぐに Kubernetes での運用が始められます、素敵。
 
 ## 事前準備
 ・Azure CLI +
@@ -87,6 +87,9 @@ docker tag azure-vote-front xxxxxxxx.azurecr.io/azure-vote-front:akstest
 docker push xxxxxxxx.azurecr.io/azure-vote-front:akstest
 ```
 
+ポータルのリポジトリを確認してみます。
+画像4
+
 ### そしてデプロイ！！
 忘れちゃいけない！ kubectl CLI のインストールが必要ですので Azure CLI 経由でインストールするため `az aks install-cli` を実行します。 +
 ※ Azure Cloud Shell を利用する場合は気にしないで大丈夫です
@@ -102,7 +105,7 @@ aks-agentpool-42554519-0   Ready     agent     17h       v1.8.1
 aks-agentpool-42554519-1   Ready     agent     17h       v1.8.1
 aks-agentpool-42554519-2   Ready     agent     17h       v1.8.1
 ```
-AKS 作成時に設定した通り 3 ノード立ち上がっています、AGE 17h となっている理由は謎です。
+AKS 作成時に設定した通り 3 ノード立ち上がっています、AGE 17h となっているのは AKS を前日作成したためです。
 
 ### マニフェストファイル更新
 Kubernetes はデプロイ時にマニフェストファイルという yml ファイルを読み込みます、その中に Docker コンテナイメージが格納されているリポジトリのパスを記載する必要がありますので、イメージを格納している ACR のパスを記載します。
@@ -132,7 +135,11 @@ NAME               TYPE           CLUSTER-IP   EXTERNAL-IP      PORT(S)        A
 azure-vote-front   LoadBalancer   XX.X.XX.XX   XX.XX.XX.XX   80:32233/TCP   7m
 ```
 
-EXTERNAL-IP が表示されたら、デプロイ完了です。
+EXTERNAL-IP が表示されたらデプロイ完了ですので、 表示された IP アドレスへブラウザでアクセスしてみます。
+画像5
+
+
+表示されました、投票した結果 Cat 2、Dog 3 なっていますがこれは我が家のペットの数と偶然一致します！！
 
 ### スケールするぞ
 まずは現在ノードが 3 つありますが、どこで Pod が動作しているかを確認してみます。
@@ -180,7 +187,7 @@ azure-vote-front-f4759f4b7-vclzg   1/1       Running   0          1m        XX.X
 
 
 #### 感想
-お気軽に Kubernetes 運用環境が作成できるのはとても良いですね、死活監視や自動再起動等の運用面で必要と思われる処理は Kubernetes に一通り実装されていますし、これからはどんどん弊社でも Container を利用した本番運用を進めていきたいです。
+お気軽に Kubernetes 運用環境が作成できるのはとても良いですね、死活監視やコンテナの自動再起動、LBやリソースに合わせたオートスケール等の運用面で必要と思われる処理は Kubernetes に一通り実装されていますので、これからは弊社でもどんどん Kubernetes を利用した本番運用を進めていきたいです。
 
 余談ですが Kubernetes の読み方は日本でも海外でも色々あるようですが、「くーばねてぃす」で弊社エンジニアには浸透させていきたいと思っております。
 
