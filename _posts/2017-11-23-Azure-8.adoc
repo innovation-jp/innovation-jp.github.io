@@ -1,6 +1,6 @@
 = Azure Container Service（AKS）で人生というコンテナもオーケストレーションしてもらいたい話
 :hp-alt-title: Azure 8
-:hp-tags: syoga, log, Azure, container, Kubernetes, Docker
+:hp-tags: syoga, log, Azure, Container, Kubernetes, Docker
 
 お久しぶりです、年のせいか風邪がなかなか完治しない自分に若干引き気味な SRE チームの syoga です。
 
