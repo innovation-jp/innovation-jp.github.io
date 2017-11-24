@@ -59,17 +59,16 @@ $ az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/サブ�
 
 *・基本情報* +
 クラスターの名称やリソースグループを入力します、今回は akstest という名称にしました。 +
-画像1
+image:syoga/aml8/1.png[]
 
 *・コンフィグ* +
 先程のサービスプリンシパルの情報や、SSH の情報、クラスターのノード数等を入力していきます、今回はノード数を 3 つにします、先程メモメモした `appId` と `password` はここで利用します。
-
-画像2
+image:syoga/aml8/2.png[]
 
 *・リソースプロバイダの登録検証* +
 入力した基本情報、コンフィグ設定でリソースが登録できれば OK ボタンが有効化されます。
+image:syoga/aml8/3.png[]
 
-画像3
 
 OK ボタンを押せば AKS の作成は完了です。
 
@@ -88,7 +87,9 @@ docker push xxxxxxxx.azurecr.io/azure-vote-front:akstest
 ```
 
 ポータルのリポジトリを確認してみます。
-画像4
+image:syoga/aml8/4.png[]
+
+ちゃんと登録されていますね。
 
 ### そしてデプロイ！！
 忘れちゃいけない！ kubectl CLI のインストールが必要ですので Azure CLI 経由でインストールするため `az aks install-cli` を実行します。 +
@@ -136,7 +137,7 @@ azure-vote-front   LoadBalancer   XX.X.XX.XX   XX.XX.XX.XX   80:32233/TCP   7m
 ```
 
 EXTERNAL-IP が表示されたらデプロイ完了ですので、 表示された IP アドレスへブラウザでアクセスしてみます。
-画像5
+image:syoga/aml8/5.png[]
 
 
 表示されました、投票した結果 Cat 2、Dog 3 なっていますがこれは我が家のペットの数と偶然一致します！！
