@@ -121,7 +121,7 @@ deployment "azure-vote-front" created
 service "azure-vote-front" created
 ```
 
-マニフェストファイルの中に作成する Pod（コンテナ）の初期値を記載しておくのですが、今回は 1 つのみ立ち上がるよう指定しています、デプロイの状況は以下のコマンドで確認できます。
+マニフェストファイルの中に作成する Pod（グループ化されたコンテナイメージ）の初期値を記載しておくのですが、今回は 1 つのみ立ち上がるよう指定しています、デプロイの状況は以下のコマンドで確認できます。
 
 ```
 $ kubectl get service azure-vote-front
