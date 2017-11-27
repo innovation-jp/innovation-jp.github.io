@@ -172,7 +172,7 @@ image:shirota/20171124/owaspzap_on_ecs21.png[]
 
 ### メモリ増設
 
-# SSHでベースEC2にログインします
+ # SSHでベースEC2にログインします
  ssh -i ~/.ssh/key.pem ec2-user@xxx.xxx.xxx.xxx
 
  # OWASP ZAPコンテナーIDを調べます
@@ -199,36 +199,37 @@ Javaプロセスをkillするとコンテナーが一旦終了します。
 
 ### ディスク増設
 
-ECSはEC2のオートスケーリング機能を利用しているので、
-そのオートスケーリング機能の launch configuration を変更します。
+ECSはEC2のオートスケーリング機能を利用しているので、 +
+そのオートスケーリング機能の Launch Configuration を変更します。
 
-AWSコンソール > EC2 > Launch Configurations
+ AWSコンソール > EC2 > Launch Configurations
 
-と遷移し、EC2ContainerService-xxxxxx-EcsInstanceLc-XXXXXXXX というような、
-今回作成された launch configuration を選択し、 Copy launch configuration をクリックして
-新しい launch configuration を作成します。
+と遷移し、 +
+EC2ContainerService-xxxxxx-EcsInstanceLc-XXXXXXXX というような、 +
+今回作成された Launch Configuration を選択し、 +
+Copy launch configuration をクリックして、新しい Launch Configuration を作成します。
 
-Launch configuration details > Edit details > Advanced Details > User data
+ Launch configuration details > Edit details > Advanced Details > User data
 
-と遷移し、起動時にDockerコンテナーのディスクを増やすオプションを追記するように指定します。
+と遷移し、  +
+起動時にDockerコンテナーのディスクを増やすオプションを追記するように指定します。
 
  echo 'OPTIONS="${OPTIONS} --storage-opt dm.basesize=500G"' >> /etc/sysconfig/docker
  /etc/init.d/docker restart
 
 また、
 
-Storage > Edit storage
+ Storage > Edit storage
 
-Volume Type: EBS の 	Size を希望の容量に指定します。
+Volume Type: EBS の 	Size を希望の容量に指定します。 +
+Launch Configuration を作成したら、
 
-launch configuration を作成したら、
+ AWSコンソール > EC2 > Auto Scaling Groups > EC2ContainerService-xxxxxx-EcsInstanceLc-XXXXXXXX > Edit
 
-AWSコンソール > EC2 > Auto Scaling Groups > EC2ContainerService-xxxxxx-EcsInstanceLc-XXXXXXXX > Edit
-
-Launch Configuration　を作成したものに変更して、
-DesiredとMaxの台数を現在の2倍の数値としてスケールアウトさせ、
-スケールアウト後もとの数値に戻すなどして、
-新しい Launch Configuration でインスタンスを作り直します。
+Launch Configuration を作成したものに変更して、 +
+DesiredとMaxの台数に現在の2倍の数値を入力するなどして一旦スケールアウトさせ、 +
+スケールアウト後、元の数値に戻すなどして、 +
+新しい Launch Configuration でインスタンスを作り直します。 +
 
 これでディスク容量を増やすことが出来ます。
 
