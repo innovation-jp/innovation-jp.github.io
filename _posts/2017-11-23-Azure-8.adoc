@@ -159,13 +159,13 @@ NAME と NODE を確認すると、`azure-vote-back` は `aks-agentpool-42554519
 ```
 $ get pod -o wide
 NAME                               READY     STATUS              RESTARTS   AGE       IP           NODE
-azure-vote-back-7556ff9578-7pxp9   1/1       Running             0          19m       10.244.0.4   aks-agentpool-42554519-2
+azure-vote-back-7556ff9578-7pxp9   1/1       Running             0          19m       XX.XXX.X.X   aks-agentpool-42554519-2
 azure-vote-front-f4759f4b7-55p24   0/1       ContainerCreating   0          6s        <none>       aks-agentpool-42554519-2
 azure-vote-front-f4759f4b7-8dvcw   0/1       ContainerCreating   0          6s        <none>       aks-agentpool-42554519-2
-azure-vote-front-f4759f4b7-l4vgc   1/1       Running             0          19m       10.244.1.4   aks-agentpool-42554519-1
+azure-vote-front-f4759f4b7-l4vgc   1/1       Running             0          19m       XX.XXX.X.X   aks-agentpool-42554519-1
 azure-vote-front-f4759f4b7-mbvsv   0/1       ContainerCreating   0          6s        <none>       aks-agentpool-42554519-0
 azure-vote-front-f4759f4b7-ms9pz   0/1       ContainerCreating   0          6s        <none>       aks-agentpool-42554519-0
-azure-vote-front-f4759f4b7-rvb8l   1/1       Running             0          6s        10.244.1.5   aks-agentpool-42554519-1
+azure-vote-front-f4759f4b7-rvb8l   1/1       Running             0          6s        XX.XXX.X.X   aks-agentpool-42554519-1
 azure-vote-front-f4759f4b7-tczrj   0/1       ContainerCreating   0          6s        <none>       aks-agentpool-42554519-0
 azure-vote-front-f4759f4b7-vclzg   0/1       ContainerCreating   0          6s        <none>       aks-agentpool-42554519-2
 ```
