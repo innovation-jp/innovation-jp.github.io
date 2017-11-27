@@ -170,8 +170,9 @@ image:shirota/20171124/owaspzap_on_ecs21.png[]
 コンテナーのメモリとディスク容量が足りなくなることがありましたので、 +
 増設方法をメモしておこうと思います。 +
 
+### メモリ増設
 
- # SSHでベースEC2にログインします
+# SSHでベースEC2にログインします
  ssh -i ~/.ssh/key.pem ec2-user@xxx.xxx.xxx.xxx
 
  # OWASP ZAPコンテナーIDを調べます
@@ -188,26 +189,48 @@ image:shirota/20171124/owaspzap_on_ecs21.png[]
 
 Javaプロセスをkillするとコンテナーが一旦終了します。
 
- # コンテナーのディスク容量を増やす設定をしておく
- sudo vi /etc/sysconfig/docker
- # OPTIONS環境変数に以下を追加します
- --storage-opt dm.basesize=50G
-
- # Dockerを再起動させます
- service docker stop
- service docker start
-
- # 停止したECSエージェントコンテナーとOWASP ZAPコンテナーを起動させます
- docker ps -a
- docker start <ECSエージェントコンテナーのID>
+ # 停止されたOWASP ZAPコンテナーを起動させます
  docker start <OWASP ZAPコンテナーのID>
 
  # メモリ・ディスクの確認をするためコンテナーにログイン
 　docker exec -it　<ECSエージェントコンテナーのID> bash
  # メモリ割り当てが増えていることを確認
  ps aux | grep java
- # ディスク容量が増えていることを確認
- df -h 
+
+### ディスク増設
+
+ECSはEC2のオートスケーリング機能を利用しているので、
+そのオートスケーリング機能の launch configuration を変更します。
+
+AWSコンソール > EC2 > Launch Configurations
+
+と遷移し、EC2ContainerService-xxxxxx-EcsInstanceLc-XXXXXXXX というような、
+今回作成された launch configuration を選択し、 Copy launch configuration をクリックして
+新しい launch configuration を作成します。
+
+Launch configuration details > Edit details > Advanced Details > User data
+
+と遷移し、起動時にDockerコンテナーのディスクを増やすオプションを追記するように指定します。
+
+ echo 'OPTIONS="${OPTIONS} --storage-opt dm.basesize=500G"' >> /etc/sysconfig/docker
+ /etc/init.d/docker restart
+
+また、
+
+Storage > Edit storage
+
+Volume Type: EBS の 	Size を希望の容量に指定します。
+
+launch configuration を作成したら、
+
+AWSコンソール > EC2 > Auto Scaling Groups > EC2ContainerService-xxxxxx-EcsInstanceLc-XXXXXXXX > Edit
+
+Launch Configuration　を作成したものに変更して、
+DesiredとMaxの台数を現在の2倍の数値としてスケールアウトさせ、
+スケールアウト後もとの数値に戻すなどして、
+新しい Launch Configuration でインスタンスを作り直します。
+
+これでディスク容量を増やすことが出来ます。
 
 ## 所感
 
