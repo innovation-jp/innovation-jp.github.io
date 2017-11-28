@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>OWASP ZAP 公式 Docker Hub イメージで AWS ECS にセキュリティ診断環境を構築 - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="OWASP ZAP 公式 Docker Hub イメージで AWS ECS にセキュリティ診断環境を構築">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OWASP ZAP 公式 Docker Hub イメージで AWS ECS にセキュリティ診断環境を構築">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2017/11/28/O-W-A-S-P-Z-A-P-Docker-Hub-A-W-S-E-C-S.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="OWASP ZAP 公式 Docker Hub イメージで AWS ECS にセキュリティ診断環境を構築" />
+    <meta property="og:description" content="前提 OWASP ZAPとはOSSのセキュリティ診断ツール AWS ECSとはDockerコンテナー管理サービス 概要 OWASP ZAPの公式Docker Hub イメージを使うことにより環境構築工数を削減できました。 ECSクラスターを作成 OWASP ZAP公式Docker Hubイメージからコンテナーを作成 ブラウザでアクセス セキュリティ診断を行う レポート出力を保存 （おまけ）コンテナーのメモリとディスク容量の拡張に関して ECSクラスターを作成 AWSコンソールにログインし、ECSに移動してクラスターを作成します。 Create Clus..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2017/11/28/O-W-A-S-P-Z-A-P-Docker-Hub-A-W-S-E-C-S.html" />
+    <meta property="article:published_time" content="2017-11-27T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2017-11-28T00:21:38.409Z" />
+    <meta property="article:tag" content="Shirota" />
+    <meta property="article:tag" content="OWASP ZAP" />
+    <meta property="article:tag" content="Docker Hub" />
+    <meta property="article:tag" content="ECS" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="OWASP ZAP 公式 Docker Hub イメージで AWS ECS にセキュリティ診断環境を構築" />
+    <meta name="twitter:description" content="前提 OWASP ZAPとはOSSのセキュリティ診断ツール AWS ECSとはDockerコンテナー管理サービス 概要 OWASP ZAPの公式Docker Hub イメージを使うことにより環境構築工数を削減できました。 ECSクラスターを作成 OWASP ZAP公式Docker Hubイメージからコンテナーを作成 ブラウザでアクセス セキュリティ診断を行う レポート出力を保存 （おまけ）コンテナーのメモリとディスク容量の拡張に関して ECSクラスターを作成 AWSコンソールにログインし、ECSに移動してクラスターを作成します。 Create Clus..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2017/11/28/O-W-A-S-P-Z-A-P-Docker-Hub-A-W-S-E-C-S.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "Junichi Shirota",
+        "image": "https://avatars2.githubusercontent.com/u/26893225?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "OWASP ZAP 公式 Docker Hub イメージで AWS ECS にセキュリティ診断環境を構築",
+    "url": "http://tech.innovation.co.jp/2017/11/28/O-W-A-S-P-Z-A-P-Docker-Hub-A-W-S-E-C-S.html",
+    "datePublished": "2017-11-27T15:00:00.000Z",
+    "dateModified": "2017-11-28T00:21:38.409Z",
+    "keywords": "Shirota,  OWASP ZAP,  Docker Hub,  ECS",
+    "description": "前提 OWASP ZAPとはOSSのセキュリティ診断ツール AWS ECSとはDockerコンテナー管理サービス 概要 OWASP ZAPの公式Docker Hub イメージを使うことにより環境構築工数を削減できました。 ECSクラスターを作成 OWASP ZAP公式Docker Hubイメージからコンテナーを作成 ブラウザでアクセス セキュリティ診断を行う レポート出力を保存 （おまけ）コンテナーのメモリとディスク容量の拡張に関して ECSクラスターを作成 AWSコンソールにログインし、ECSに移動してクラスターを作成します。 Create Clus..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Shirota tag-O-W-A-S-P-Z-A-P tag-Docker-Hub tag-E-C-S no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="28 Nov 2017" class="post-meta__date date">28 Nov 2017</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Shirota">Shirota</a>, <a href="http://tech.innovation.co.jp/tag/O-W-A-S-P-Z-A-P"> OWASP ZAP</a>, <a href="http://tech.innovation.co.jp/tag/Docker-Hub"> Docker Hub</a>, <a href="http://tech.innovation.co.jp/tag/E-C-S"> ECS</a></span>
+        <span class="post-meta__author author"><img src="https://avatars2.githubusercontent.com/u/26893225?v=4" alt="profile image for Junichi Shirota" class="avatar post-meta__avatar" /> by Junichi Shirota</span>
+      </div>
+      <h1 class="post-title">OWASP ZAP 公式 Docker Hub イメージで AWS ECS にセキュリティ診断環境を構築</h1>
+    </header>
+
+    <section class="post tag-Shirota tag-O-W-A-S-P-Z-A-P tag-Docker-Hub tag-E-C-S">
+      <div class="sect1">
+<h2 id="__">前提</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>OWASP ZAPとはOSSのセキュリティ診断ツール</p>
+</li>
+<li>
+<p>AWS ECSとはDockerコンテナー管理サービス</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">概要</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>OWASP ZAPの公式Docker Hub イメージを使うことにより環境構築工数を削減できました。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>ECSクラスターを作成</p>
+</li>
+<li>
+<p>OWASP ZAP公式Docker Hubイメージからコンテナーを作成</p>
+</li>
+<li>
+<p>ブラウザでアクセス</p>
+</li>
+<li>
+<p>セキュリティ診断を行う</p>
+</li>
+<li>
+<p>レポート出力を保存</p>
+</li>
+<li>
+<p>（おまけ）コンテナーのメモリとディスク容量の拡張に関して</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ecs">ECSクラスターを作成</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>AWSコンソールにログインし、ECSに移動してクラスターを作成します。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/shirota/20171124/owaspzap_on_ecs01.png" alt="owaspzap_on_ecs01.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Create Clusterをクリック</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/shirota/20171124/owaspzap_on_ecs02.png" alt="owaspzap_on_ecs02.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Cluster nameに任意の名称を入力（※今回は owaspzap とした）</p>
+</li>
+<li>
+<p>EC2 Instance type（※コンテナーのベースになるEC2インスタンスのタイプ）は t2.medium を選択</p>
+</li>
+<li>
+<p>Key pair を設定（※後でSSHログインしたい為）</p>
+</li>
+<li>
+<p>VPC, Subnets, Security group は適宜設定（※作業環境から以下が許可されていれば問題無い）</p>
+<div class="ulist">
+<ul>
+<li>
+<p>SSH接続</p>
+</li>
+<li>
+<p>8080ポートへのHTTPアクセス</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Createをクリック</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>これでクラスターが作成されます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_owasp_zap_docker_hub">OWASP ZAP公式Docker Hubイメージからコンテナーを作成</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image"><img src="/images/shirota/20171124/owaspzap_on_ecs07.png" alt="owaspzap_on_ecs07.png"></span></p>
+</div>
+<div class="paragraph">
+<p>ECS &gt; Task Definitions にて、</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Task Definition Nameに任意の名称を入力（※今回は owaspzap とした）</p>
+</li>
+<li>
+<p>Task Role は None を選択</p>
+</li>
+<li>
+<p>Add container をクリック</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/shirota/20171124/owaspzap_on_ecs04.png" alt="owaspzap_on_ecs04.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Container name に任意の名称を入力（※今回は owaspzap とした）</p>
+</li>
+<li>
+<p>Image に owasp/zap2docker-stable と入力</p>
+</li>
+<li>
+<p>Memory Limits は Soft limit を選択して 3072 を入力（※インスタンスタイプによって適宜変更可）</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/shirota/20171124/owaspzap_on_ecs05.png" alt="owaspzap_on_ecs05.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Port mappings は 以下を設定する</p>
+<div class="ulist">
+<ul>
+<li>
+<p>8080 &#8594; 8080</p>
+</li>
+<li>
+<p>8090 &#8594; 8090</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/shirota/20171124/owaspzap_on_ecs06.png" alt="owaspzap_on_ecs06.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>CPU units は 1024 を入力（※インスタンスタイプによって適宜変更可）</p>
+</li>
+<li>
+<p>Command に zap-webswing.sh を入力</p>
+</li>
+<li>
+<p>Add をクリック</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/shirota/20171124/owaspzap_on_ecs07.png" alt="owaspzap_on_ecs07.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Create をクリック</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/shirota/20171124/owaspzap_on_ecs08.png" alt="owaspzap_on_ecs08.png"></span></p>
+</div>
+<div class="paragraph">
+<p>Taskが出来上がりました。このTaskを使用して実際にコンテナーを立ち上げます。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/shirota/20171124/owaspzap_on_ecs09.png" alt="owaspzap_on_ecs09.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Clusters に移動して、owaspzap &gt; をクリック</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/shirota/20171124/owaspzap_on_ecs10.png" alt="owaspzap_on_ecs10.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Tasks タブをクリックし、Run new Task をクリック</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/shirota/20171124/owaspzap_on_ecs11.png" alt="owaspzap_on_ecs11.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Task Definitionにて適切なバージョンの Task を選択</p>
+</li>
+<li>
+<p>Run Task をクリック</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/shirota/20171124/owaspzap_on_ecs12.png" alt="owaspzap_on_ecs12.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Taskが登録され、コンテナーが起動中であることを確認</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/shirota/20171124/owaspzap_on_ecs13.png" alt="owaspzap_on_ecs13.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>RUNNING を確認</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>これで OWASP ZAP のコンテナーが作成・起動されました。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">ブラウザでアクセス</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image"><img src="/images/shirota/20171124/owaspzap_on_ecs14.png" alt="owaspzap_on_ecs14.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>EC2 &gt; ECSインスタンスを選択して、IPアドレスを調べる</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/shirota/20171124/owaspzap_on_ecs15.png" alt="owaspzap_on_ecs15.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://&lt;IPアドレス&gt;:8080/?anonym=true&amp;app=ZAP" class="bare">http://&lt;IPアドレス&gt;:8080/?anonym=true&amp;app=ZAP</a> にアクセス</p>
+</li>
+<li>
+<p>規約に同意する場合は Accept する</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/shirota/20171124/owaspzap_on_ecs16.png" alt="owaspzap_on_ecs16.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>適宜選択してStartをクリック</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>これで準備が整いました。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___4">セキュリティ診断を行う</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image"><img src="/images/shirota/20171124/owaspzap_on_ecs17.png" alt="owaspzap_on_ecs17.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>任意のURLを指定して Attack</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/shirota/20171124/owaspzap_on_ecs18.png" alt="owaspzap_on_ecs18.png"></span></p>
+</div>
+<div class="paragraph">
+<p>しばらくすると左下フレームに結果が表示されます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___5">レポート出力を保存</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image"><img src="/images/shirota/20171124/owaspzap_on_ecs19.png" alt="owaspzap_on_ecs19.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Report の Generate HTML Report&#8230;&#8203; を選択</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/shirota/20171124/owaspzap_on_ecs20.png" alt="owaspzap_on_ecs20.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>任意のファイル名で save</p>
+</li>
+<li>
+<p>SSH接続してコンテナー内を確認</p>
+</li>
+</ul>
+</div>
+<pre style="font-family: Menlo, Courier">
+▶ ssh -i ~/.ssh/shirox.pem ec2-user@54.174.90.132
+
+   __|  __|  __|
+   _|  (   \__ \   Amazon ECS-Optimized Amazon Linux AMI 2017.09.a
+ ____|\___|____/
+
+For documentation visit, http://aws.amazon.com/documentation/ecs
+3 package(s) needed for security, out of 10 available
+Run "sudo yum update" to apply all updates.
+
+[ec2-user@ip-172-31-28-105 ~]$ docker ps
+CONTAINER ID        IMAGE                            COMMAND             CREATED             STATUS              PORTS                                            NAMES
+bbbdce7ef186        owasp/zap2docker-stable          "zap-webswing.sh"   26 minutes ago      Up 26 minutes       0.0.0.0:8080->8080/tcp, 0.0.0.0:8090->8090/tcp   ecs-owaspzap-1-owaspzap-e4c2aa97a0dfaf8b4700
+347be605347e        amazon/amazon-ecs-agent:latest   "/agent"            41 minutes ago      Up 41 minutes                                                        ecs-agent
+
+[ec2-user@ip-172-31-28-105 ~]$ docker exec -it bbbdce7ef186 bash
+
+zap@bbbdce7ef186:/zap$ ll /home/zap/zap.html
+-rw-r--r-- 1 zap zap 15622 Nov 23 13:18 /home/zap/zap.html
+</pre>
+<div class="paragraph">
+<p>以下のようなレポートが出力されているはずです。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/shirota/20171124/owaspzap_on_ecs21.png" alt="owaspzap_on_ecs21.png"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___6">（おまけ）コンテナーのメモリとディスク容量の拡張に関して</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>大規模サイトの診断を行う際、<br>
+コンテナーのメモリとディスク容量が足りなくなることがありましたので、<br>
+増設方法をメモしておこうと思います。<br></p>
+</div>
+<div class="sect2">
+<h3 id="___7">メモリ増設</h3>
+<div class="literalblock">
+<div class="content">
+<pre># SSHでベースEC2にログインします
+ssh -i ~/.ssh/key.pem ec2-user@xxx.xxx.xxx.xxx</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre># OWASP ZAPコンテナーIDを調べます
+docker ps
+# コンテナーにログインします
+docker exec -it &lt;OWASP ZAPコンテナーのID&gt; bash</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre># sedコマンドでOWASP ZAP起動スクリプト内の使用メモリ部分を変更（128MB -&gt; 10240MB）
+sed -i s/128M/10240M/g zap-webswing.sh
+# Javaプロセスのpidを調べる
+ps aux | grep java
+# 一旦killします
+kill -HUP &lt;pid&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Javaプロセスをkillするとコンテナーが一旦終了します。</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre># 停止されたOWASP ZAPコンテナーを起動させます
+docker start &lt;OWASP ZAPコンテナーのID&gt;</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre># メモリ・ディスクの確認をするためコンテナーにログイン
+docker exec -it　&lt;ECSエージェントコンテナーのID&gt; bash
+# メモリ割り当てが増えていることを確認
+ps aux | grep java</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___8">ディスク増設</h3>
+<div class="paragraph">
+<p>ECSはEC2のオートスケーリング機能を利用しているので、<br>
+そのオートスケーリング機能の Launch Configuration を変更します。</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>AWSコンソール &gt; EC2 &gt; Launch Configurations</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>と遷移し、<br>
+EC2ContainerService-xxxxxx-EcsInstanceLc-XXXXXXXX というような、<br>
+今回作成された Launch Configuration を選択し、<br>
+Copy launch configuration をクリックして、新しい Launch Configuration を作成します。</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>Launch configuration details &gt; Edit details &gt; Advanced Details &gt; User data</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>と遷移し、 <br>
+起動時にDockerコンテナーのディスクを増やすオプションを追記するように指定します。</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>echo 'OPTIONS="${OPTIONS} --storage-opt dm.basesize=500G"' &gt;&gt; /etc/sysconfig/docker
+/etc/init.d/docker restart</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>また、</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>Storage &gt; Edit storage</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Volume Type: EBS の 	Size を希望の容量に指定します。<br>
+Launch Configuration を作成したら、</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>AWSコンソール &gt; EC2 &gt; Auto Scaling Groups &gt; EC2ContainerService-xxxxxx-EcsInstanceLc-XXXXXXXX &gt; Edit</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Launch Configuration を作成したものに変更して、<br>
+DesiredとMaxの台数に現在の2倍の数値を入力するなどして一旦スケールアウトさせ、<br>
+スケールアウト後、元の数値に戻すなどして、<br>
+新しい Launch Configuration でインスタンスを作り直します。<br></p>
+</div>
+<div class="paragraph">
+<p>これでディスク容量を増やすことが出来ます。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___9">所感</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>以前、OWASP ZAPの環境の作成を自分で行った際、<br>
+使用されている各ミドルウェアのバージョンの相性に悩まされまして、<br>
+今回OWASP ZAP公式のDocker Hubイメージを使用して、<br>
+大幅に構築の工数を削減することができたかと思います。</p>
+</div>
+<div class="paragraph">
+<p>また、AWS ECSを使用し、複雑なコマンド操作無しに構築することができました。</p>
+</div>
+<div class="paragraph">
+<p>つい3年くらい前まではDockerはまだ一般的でなかったかと思いますが、<br>
+Docker Hubのようなものまで現れて、<br>
+こんなに簡単に環境構築できるなんて想像が付きませんでした。<br>
+最近yumコマンドを打つことも、<br>
+ChefのレシピやAnsibleのプレイブックを書くことも減ってきたように思います。</p>
+</div>
+<div class="paragraph">
+<p>今後何かやりたい時は、<br>
+まず真っ先にDocker Hubにイメージがあるか探してみたいと思います。</p>
+</div>
+<div class="paragraph">
+<p>OWASP ZAPに関しては今回構築したGUI版以外にも<br>
+コマンドライン版などもあり、<br>
+OSSのセキュリティ診断ツールの中では<br>
+デファクトスタンダートと呼べるくらい有名かと思います。<br>
+以下に参考URLを貼っておこうと思います。</p>
+</div>
+<div class="paragraph">
+<p>OWASP ZAP WebSwing（※GUI版）<br>
+<a href="https://github.com/zaproxy/zaproxy/wiki/WebSwing" class="bare">https://github.com/zaproxy/zaproxy/wiki/WebSwing</a></p>
+</div>
+<div class="paragraph">
+<p>OWASP　ZAP 公式Docker Hubページ<br>
+<a href="https://hub.docker.com/r/owasp/zap2docker-stable/" class="bare">https://hub.docker.com/r/owasp/zap2docker-stable/</a></p>
+</div>
+<div class="paragraph">
+<p>こちらからは以上です。</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2017. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
