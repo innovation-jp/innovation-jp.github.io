@@ -105,12 +105,16 @@ gitリポジトリを初期化するか(今回git使わない) +
 
 そして左のアクティブバーを右クリック。デバッグを表示させましょう。
 
+image:obata/VSCodeExTry/VScode_bar.png[]
+
 で、デバッグのアイコンから緑の再生ボタンをクリックしたら、 +
 新規にVisual Stuio Codeのウィンドウが開きます。 +
 ここでもうテストが出来ます！
 
 初期時にあるのが、Hello Worldなので、 +
 command + shift + pで出てきた枠に`>Hello World`と打ち込めばOK!
+
+image:obata/VSCodeExTry/VScode_debug.png[]
 
 こんな感じに作っていきます！ +
 テストは出来るようになったので、あとはファイルをいじるだけですね！
