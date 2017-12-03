@@ -1,0 +1,122 @@
+= テンプレで作る、Visual Studio Codeの拡張機能
+:hp-alt-title: Visual_studio_code_extension
+:hp-tags: obata, VisualStudioCode, 拡張機能
+
+再び回ってきました、新人エンジニアの小畑です。
+
+最近周りではエディタ戦争が水面下で行われてい・・・るわけではありませんが、 +
+IDEも含め、Vimいいぞ、IntelliJいいぞと周りにいろいろおすすめされながら、 +
+乗り換えに揺れている今日このごろ。
+
+ただ、なんだかんだ言って、Visual Studio Codeに慣れてしまうと、  
+使いやすくて離れられないんですよね。
+
+そんな私を支えてくれているのが、拡張機能。
+
+いつか作ってみたいと思ってるので、その取っ掛かりに作り方調べてみました。
+
+
+## Visual Studio Codeとは
+そもそものVisual Studio Codeとは。
+
+Microsoftさんが出しているエディタです。
+
+MacやLinux、もちろんWindows版もあって、お値段無料。
+
+家での開発でも会社の開発でも、無料で使えるから便利ってことで使ってます。
+
+## 拡張機能とは
+コードに余計な半角スペースがあった時に色を変えてくれたり、  + 
+コードの予測変換出してくれたり。
+
+何かと環境を便利にしてくれるものです。
+
+## 作り方
+実は始めるだけならちょー簡単。
+
+前回のchrome拡張機能作るのと一緒です。 +
+npmでインストールして、実行。
+
+環境構築で詰まった方は、前回を参照。
+
+【テンプレで作る】環境構築から、Chrome拡張機能を作るまで  +
+http://tech.innovation.co.jp/2017/10/12/start-chrome-extension.html
+
+
+### 1.雛形ジェネレーターを取ってくる
+```
+npm install -g yo
+npm install -g generator-code
+```
+拡張機能でも似たことしましたね。
+
+### 2.雛形作る
+```
+yo code
+```
+
+すると・・・
+
+```
+INV-391:try$ yo code
+
+     _-----_     ╭──────────────────────────╮
+    |       |    │   Welcome to the Visual  │
+    |--(o)--|    │   Studio Code Extension  │
+   `---------´   │        generator!        │
+    ( _´U`_ )    ╰──────────────────────────╯
+    /___A___\   /
+     |  ~  |
+   __'.___.'__
+ ´   `  |° ´ Y `
+
+? What type of extension do you want to create? (Use arrow keys)
+❯ New Extension (TypeScript)
+  New Extension (JavaScript)
+  New Color Theme
+  New Language Support
+  New Code Snippets
+  New Extension Pack```
+```
+なんか出てきたー！
+
+ってことで、設定していきます。
+
+### 3.雛形設定
+```
+What type of extension do you want to create? New Extension (JavaScript)
+? What's the name of your extension? testJS
+? What's the identifier of your extension? testjs
+? What's the description of your extension? description haha
+? What's your publisher name (more info: https://code.visualstudio.com/docs/tools/vscecli#_publishing-extensions)? obata
+? Initialize a git repository? No
+```
+拡張機能の名前 +
+拡張機能の識別子(そのままEnterで大丈夫) +
+拡張機能の説明 +
+作成者の名前 +
+gitリポジトリを初期化するか(今回git使わない) +
+
+って感じで最小のものを作成！
+
+### 4. Hello World表示
+作ったものをテストするなら、 +
+まずVisual Studio Code上でファイルを開きます。
+
+そして左のアクティブバーを右クリック。デバッグを表示させましょう。
+
+で、デバッグのアイコンから緑の再生ボタンをクリックしたら、 +
+新規にVisual Stuio Codeのウィンドウが開きます。 +
+ここでもうテストが出来ます！
+
+初期時にあるのが、Hello Worldなので、 +
+command + shift + pで出てきた枠に`>Hello World`と打ち込めばOK!
+
+こんな感じに作っていきます！ +
+テストは出来るようになったので、あとはファイルをいじるだけですね！
+
+### 感想
+環境作りで力尽きました。簡単なんだけどね。 +
+次は時間のある時に、じっくりいじりたいところ。 +
+そしてVisual Studio	Code使いを増やすという密かな野望を持って、この記事終わりにします。 +
+ありがとうございました！ +
