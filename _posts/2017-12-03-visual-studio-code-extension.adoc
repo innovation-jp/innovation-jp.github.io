@@ -32,7 +32,7 @@ MacやLinux、もちろんWindows版もあって、お値段無料。 +
 ## 作り方
 実は始めるだけなら凄く簡単。
 
-前回のchrome拡張機能作るものと一緒です。 +
+前回のChrome拡張機能作るものと一緒です。 +
 npmでインストールして、実行。
 
 環境構築で詰まった方は、前回を参照。
@@ -46,7 +46,7 @@ http://tech.innovation.co.jp/2017/10/12/start-chrome-extension.html
 npm install -g yo
 npm install -g generator-code
 ```
-chrome拡張機能でも似たことしましたね。
+Chrome拡張機能でも似たことしましたね。
 
 ### 2.雛形作る
 ```
@@ -121,5 +121,5 @@ image:obata/VScodeExTry/VScode_debug.png[]
 ### 感想
 環境作りで力尽きました。 +
 次は時間のある時に、じっくりいじりたいです。 +
-そしてVisual Studio Code使いを増やすという密かな野望を持って、この記事終わりにします。 +
+そしてVisual Studio Code使いを増やすという密かな野望を持って、この記事を終わりにします。 +
 ありがとうございました！ +
