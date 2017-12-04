@@ -17,12 +17,10 @@ IDEも含め、Vimいいぞ、IntelliJいいぞと周りにいろいろおすす
 
 
 ## Visual Studio Codeとは
-そもそものVisual Studio Codeとは。
-
+そもそものVisual Studio Codeとは。 +
 Microsoft様が出しているエディタです。
 
-MacやLinux、もちろんWindows版もあって、お値段無料。
-
+MacやLinux、もちろんWindows版もあって、お値段無料。 +
 家での開発でも会社の開発でも、無料で使えるから便利ってことで使っています。
 
 ## 拡張機能とは
@@ -48,7 +46,7 @@ http://tech.innovation.co.jp/2017/10/12/start-chrome-extension.html
 npm install -g yo
 npm install -g generator-code
 ```
-拡張機能でも似たことしましたね。
+chrome拡張機能でも似たことしましたね。
 
 ### 2.雛形作る
 ```
@@ -76,7 +74,7 @@ INV-391:try$ yo code
   New Color Theme
   New Language Support
   New Code Snippets
-  New Extension Pack```
+  New Extension Pack
 ```
 なんか出てきたー！
 
@@ -91,6 +89,7 @@ What type of extension do you want to create? New Extension (JavaScript)
 ? What's your publisher name (more info: https://code.visualstudio.com/docs/tools/vscecli#_publishing-extensions)? obata
 ? Initialize a git repository? No
 ```
+拡張機能の種類 +
 拡張機能の名前 +
 拡張機能の識別子(そのままEnterで大丈夫) +
 拡張機能の説明 +
@@ -105,7 +104,7 @@ gitリポジトリを初期化するか(今回git使わない) +
 
 そして左のアクティブバーを右クリック。デバッグを表示させましょう。
 
-image:obata/VSCodeExTry/VScode_bar.png[]
+image:obata/VScodeExTry/VScode_bar.png[]
 
 で、デバッグのアイコンから緑の再生ボタンをクリックしたら、 +
 新規にVisual Studio Codeのウィンドウが開きます。 +
@@ -114,7 +113,7 @@ image:obata/VSCodeExTry/VScode_bar.png[]
 初期時にあるのが、Hello Worldなので、 +
 command + shift + pで出てきた枠に`>Hello World`と打ち込めばOK!
 
-image:obata/VSCodeExTry/VScode_debug.png[]
+image:obata/VScodeExTry/VScode_debug.png[]
 
 こんな感じに作っていきます！ +
 テストは出来るようになったので、あとはファイルをいじるだけですね！
