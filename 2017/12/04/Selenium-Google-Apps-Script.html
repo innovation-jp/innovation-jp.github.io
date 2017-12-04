@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>SeleniumとGoogle Apps Scriptの連携〜実行導入編〜 - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="SeleniumとGoogle Apps Scriptの連携〜実行導入編〜">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="SeleniumとGoogle Apps Scriptの連携〜実行導入編〜">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2017/12/04/Selenium-Google-Apps-Script.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="SeleniumとGoogle Apps Scriptの連携〜実行導入編〜" />
+    <meta property="og:description" content="こんにちは。 新卒エンジニアのはすみんです。 今回のブログのテーマは「Selenium」です。 ブラウザを自動で入力してくれる→ユーザテストに便利、なので以前から気になっていた技術のひとつでした。 しかしなかなか活かせる機会がなく、触ったことはありませんでした。 ところが最近社内の同期と会話をしているときに、これはSeleniumを活かせるのでは？と思える事象に遭遇しました。 彼はマーケターなのですが、メディアを作る際にフォームを入力するそうで、 ひとつひとつ手打ちでしかも量が多いらしくかなり面倒とのこと。 これはSeleniumを使って自動でフォーム..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2017/12/04/Selenium-Google-Apps-Script.html" />
+    <meta property="article:published_time" content="2017-12-03T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2017-12-04T10:17:16.092Z" />
+    <meta property="article:tag" content="Hasumin" />
+    <meta property="article:tag" content="Seated" />
+    <meta property="article:tag" content="Google Apps Script" />
+    <meta property="article:tag" content="Ruby" />
+    <meta property="article:tag" content="GAS" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="SeleniumとGoogle Apps Scriptの連携〜実行導入編〜" />
+    <meta name="twitter:description" content="こんにちは。 新卒エンジニアのはすみんです。 今回のブログのテーマは「Selenium」です。 ブラウザを自動で入力してくれる→ユーザテストに便利、なので以前から気になっていた技術のひとつでした。 しかしなかなか活かせる機会がなく、触ったことはありませんでした。 ところが最近社内の同期と会話をしているときに、これはSeleniumを活かせるのでは？と思える事象に遭遇しました。 彼はマーケターなのですが、メディアを作る際にフォームを入力するそうで、 ひとつひとつ手打ちでしかも量が多いらしくかなり面倒とのこと。 これはSeleniumを使って自動でフォーム..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2017/12/04/Selenium-Google-Apps-Script.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "takuya hasumi",
+        "image": "https://avatars0.githubusercontent.com/u/22537034?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "SeleniumとGoogle Apps Scriptの連携〜実行導入編〜",
+    "url": "http://tech.innovation.co.jp/2017/12/04/Selenium-Google-Apps-Script.html",
+    "datePublished": "2017-12-03T15:00:00.000Z",
+    "dateModified": "2017-12-04T10:17:16.092Z",
+    "keywords": "Hasumin,  Seated,  Google Apps Script,  Ruby,  GAS",
+    "description": "こんにちは。 新卒エンジニアのはすみんです。 今回のブログのテーマは「Selenium」です。 ブラウザを自動で入力してくれる→ユーザテストに便利、なので以前から気になっていた技術のひとつでした。 しかしなかなか活かせる機会がなく、触ったことはありませんでした。 ところが最近社内の同期と会話をしているときに、これはSeleniumを活かせるのでは？と思える事象に遭遇しました。 彼はマーケターなのですが、メディアを作る際にフォームを入力するそうで、 ひとつひとつ手打ちでしかも量が多いらしくかなり面倒とのこと。 これはSeleniumを使って自動でフォーム..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Hasumin tag-Seated tag-Google-Apps-Script tag-Ruby tag-G-A-S no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="04 Dec 2017" class="post-meta__date date">04 Dec 2017</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Hasumin">Hasumin</a>, <a href="http://tech.innovation.co.jp/tag/Seated"> Seated</a>, <a href="http://tech.innovation.co.jp/tag/Google-Apps-Script"> Google Apps Script</a>, <a href="http://tech.innovation.co.jp/tag/Ruby"> Ruby</a>, <a href="http://tech.innovation.co.jp/tag/G-A-S"> GAS</a></span>
+        <span class="post-meta__author author"><img src="https://avatars0.githubusercontent.com/u/22537034?v=4" alt="profile image for takuya hasumi" class="avatar post-meta__avatar" /> by takuya hasumi</span>
+      </div>
+      <h1 class="post-title">SeleniumとGoogle Apps Scriptの連携〜実行導入編〜</h1>
+    </header>
+
+    <section class="post tag-Hasumin tag-Seated tag-Google-Apps-Script tag-Ruby tag-G-A-S">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんにちは。<br>
+新卒エンジニアのはすみんです。<br></p>
+</div>
+<div class="paragraph">
+<p>今回のブログのテーマは「Selenium」です。<br>
+ブラウザを自動で入力してくれる→ユーザテストに便利、なので以前から気になっていた技術のひとつでした。<br>
+しかしなかなか活かせる機会がなく、触ったことはありませんでした。<br>
+ところが最近社内の同期と会話をしているときに、これはSeleniumを活かせるのでは？と思える事象に遭遇しました。<br>
+彼はマーケターなのですが、メディアを作る際にフォームを入力するそうで、<br>
+ひとつひとつ手打ちでしかも量が多いらしくかなり面倒とのこと。<br>
+これはSeleniumを使って自動でフォームを作ることができれば、なかなかのハックだよね、と思いやってみました。<br>
+（ここだけの話、Chromeの拡張機能で事足りるらしく、それは別途作ることになりました…）<br></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__">作ったもの</h3>
+<div class="paragraph">
+<p><span class="image"><img src="/images/hasumi/selenium/selenium-exec-gas.gif" alt="selenium-exec-gas.gif"></span></p>
+</div>
+<div class="paragraph">
+<p>Seleniumをどんなものかを知るにあたって動いているものを見たほうが早いので、GIF画像を載せます。<br>
+Seleniumを使って、<br>
+1.　ブラウザの起動<br>
+2.　メールアドレスの入力<br>
+3.　パスワードの入力<br>
+4.　Google Apps Script(以降GAS)の実行<br>
+5.　背景色をつける<br>
+を自動的に実行しています。<br></p>
+</div>
+<div class="paragraph">
+<p>僕はSeleniumを初めて見たときに、感動しました。<br>
+「ブラウザでの入力が自動で出来るの！？」<br>
+ブラウザの動きはユーザがやるものだという凝り固まった概念があったので、Seleniumないしプログラミングって本当にすごいなと、久しぶりに鳥肌が立ちました。<br>
+今更Seleniumかよ、って思う人もいるかと思いますが、プログラミングを初めた頃の感動に似たものがあり、<br>
+こういった感動を大事にしてプログラミングを楽しんでいきたいなと再確認することが出来ました。<br>
+ちょっとエモくなってしまいましたが、そこはご愛嬌でお願いいたします…。<br></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_selenium_br">Seleniumって？<br></h3>
+<div class="paragraph">
+<p>Seleniumについて簡単に説明しておくと、<br>
+Seleniumとは、ブラウザを使ってWebアプリケーションを自動でテストするオープンソースのソフトウェアです。<br></p>
+</div>
+<div class="paragraph">
+<p>Webアプリケーションを開発する際は、単体テストや結合テストといったソフトウェアの品質を担保するためにテストが欠かせません。<br></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/hasumi/selenium/test-v.png" alt="test-v.png"></span>
+※引用元：https://qiita.com/Koki_jp/items/23f8ca5ee99b5c076976</p>
+</div>
+<div class="paragraph">
+<p>上の図にはありませんが、テストの一種に「ユーザテスト」があります。<br>
+ユーザテストは、実際にWebアプリケーションを使うユーザが製品に不満を覚えないか、使用する上で不都合がないかをチェックするためのテストです。<br>
+ユーザテストの詳細は調べればたくさん出てくるので省きますが、<br>
+Webアプリケーションの品質を担保するためにユーザテストは欠かせないことの1つといっていいでしょう。<br></p>
+</div>
+<div class="paragraph">
+<p>ユーザテストは基本的にはブラウザを用いて行ないますが、いちいちブラウザでチェックするのは大変な面も多いです。<br>
+そこで考えられたのが、ブラウザでの動きを自動的に行えないかという観点でした。<br>
+ブラウザでの動きを自動的に行うツールはいくつかあり、Seleniumはそのうちのひとつです。<br></p>
+</div>
+<div class="paragraph">
+<p>メルカリさんもSeleniumを使ってテストを行っている面もあるようです。<br>
+<a href="http://tech.mercari.com/entry/2017/10/31/122018" class="bare">http://tech.mercari.com/entry/2017/10/31/122018</a><br></p>
+</div>
+<div class="paragraph">
+<p>プログラマであれば、「自動」というワードにぐっとくるひとは多いでしょうし、煩雑な作業をツールで便利にしてくれるのはわくわくしますね。<br>
+是非Seleniumを使ってテストや作業を楽しいものにしてみましょう！<br></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___2">実行環境、コードなど+</h3>
+<div class="paragraph">
+<p>以下のサイトを参考に、Seleniumが動くための環境を用意しました。<br>
+コードはRubyで書いてます。<br></p>
+</div>
+<div class="paragraph">
+<p>参考サイト：<br>
+<a href="https://qiita.com/edo_m18/items/ba7d8a95818e9c0552d9" class="bare">https://qiita.com/edo_m18/items/ba7d8a95818e9c0552d9</a><br>
+<a href="https://qiita.com/tomerun/items/9cb81d7a98150ff22f53" class="bare">https://qiita.com/tomerun/items/9cb81d7a98150ff22f53</a><br></p>
+</div>
+<div class="paragraph">
+<p>以下コードです。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>require "selenium-webdriver"
+
+# Firefox用のドライバを使う
+driver = Selenium::WebDriver.for :firefox
+
+# スプレッドシートにアクセス
+driver.navigate.to "https://docs.google.com/spreadsheets/d/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+puts "指定のURL入力完了"
+sleep 3
+
+# ログインメールアドレスの入力し、次へをクリック
+input_mail_address = driver.find_element(:id, 'identifierId')
+input_mail_address.send_keys "mailaddress@xxx.com"
+driver.find_element(:id, 'identifierNext').click
+puts "メールアドレス入力完了"
+
+sleep 3
+
+# パスワードの入力
+input_password = driver.find_element(:id, 'password')
+input_password.send_keys "password"
+driver.find_element(:id, 'passwordNext').click
+puts "パスワード入力完了"
+
+sleep 10
+
+# 起爆用のボタンをクリックして実行
+driver.find_element(:class_name, "waffle-borderless-embedded-object-container").click
+puts "GAS実行完了"
+
+# 表示されたページのタイトルをコンソールに出力
+puts driver.title</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>やってることは単純で、<br>
+1.　指定したURLにアクセスする<br>
+2.　メールアドレスを入力<br>
+3.　パスワードを入力<br>
+4.　スプレッドシートにアクセス後、ボタンをクリックする<br>
+5.　設定したスクリプトの実行（セルの背景を変える）<br>
+です。<br></p>
+</div>
+<div class="paragraph">
+<p>途中のsleepというメソッドはRubyのメソッドで、次のアクションまで指定された秒数待機しています。<br></p>
+</div>
+<div class="paragraph">
+<p>ちなみに、Seleniumのチートシートを使うと便利です。<br>
+やりたいことがほぼほぼ載ってます。<br>
+<a href="http://morizyun.github.io/web/selenium-cheat-sheet.html#JSのダイアログの操作" class="bare">http://morizyun.github.io/web/selenium-cheat-sheet.html#JSのダイアログの操作</a><br></p>
+</div>
+<div class="paragraph">
+<p>さて、GASの実行までできたので、取得したセルを連想配列に入れて…<br>
+と想定していましたがハマりました。<br>
+悲しいですが、時間切れのため次回再チャレンジします…<br></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___3">まとめ</h3>
+<div class="paragraph">
+<p>今回、Seleniumを使ってGASを起動するところまでは行きましたが、そこからハマってしまい、<br>
+タイムアップとなってしまいました…<br></p>
+</div>
+<div class="paragraph">
+<p>次こそGASを使ってスプレッドシート内の任意の文字列を取得し、それをもとに別サイトに飛んで入力作業を自動的にやってみたいと思います。<br></p>
+</div>
+<div class="paragraph">
+<p>それにしてもやはりプログラミングの力を借りて面倒な作業を便利にしたり、人を助けられるのはいいですね。<br>
+プログラミングという行為自体も楽しいですが、それが他人の役に立てばやりがいはより一層大きいと思います。<br>
+自分の技術で人を助けられたら本望だなと、今回のSeleniumを通じて確認できました。<br></p>
+</div>
+<div class="paragraph">
+<p>みなさんもSeleniumを使って自動化の素晴らしさを実感してみてくださいね！<br></p>
+</div>
+<div class="paragraph">
+<p>終</p>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2017. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
