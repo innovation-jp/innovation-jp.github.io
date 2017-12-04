@@ -1,0 +1,195 @@
+= Azure Container Service（AKS）で人生というコンテナもオーケストレーションしてもらいたい話
+:hp-alt-title: Azure 8
+:hp-tags: syoga, log, Azure, Container, Kubernetes, Docker
+
+お久しぶりです、年のせいか風邪がなかなか完治しない自分に若干引き気味な SRE チームの syoga です。
+
+今年も後少しで終わってしまいますが、皆様やり残した事はありますか？
+
+私は Microsoft 社の新型ゲームハード Xbox One X を買いそびれてしまい悶々としております。
+日本で売れる訳ないとたかをくくっていたのですが、まさかの転売屋需要により予約が出来ず今にいたっております。
+
+この悔しさを10月に Preview 版がリリースされた Azure Container Service - AKS（以下AKS）へぶつけてみようと思います。
+
+*Kubernetes の詳細については Google 先生に確認下さい。*
+
+## Azure Container Service とは？
+### ACS
+以前の Azure Container Service は DC/OS、Docker Swarm、Kubernetes 等の
+複数のコンテナオーケストレーションツールが利用できる運用環境に、コンテナを簡単にデプロイできる機能です。
+
+その時の略称は ACS でしたが…
+
+### AKS
+今回 Kubernetes に焦点を絞ったサービスに変わったため AKS という略称になりました、Kubernetes の共同制作者の一人 Brendan Burns 氏が現在 Azure のコンテナ関連サービスのトップとなり、バリバリとサービスの拡充を進めていると、先日の Microsoft Connect(); 2017 でもお話がありました。
+
+AKS を作成すれば master ノード、minion ノードの環境設定は不要ですぐに Kubernetes での運用が始められます、素敵。
+
+## 事前準備
+・Azure CLI +
+ローカルにインストールした Azure CLI で作業しますが、バージョン 2.0.20 以降でないと aks コマンドが利用できませんのでバージョンをご確認下さい。 +
+※ Azure Cloud Shell を利用する場合は気にしないで大丈夫です。
+
+・ログイン +
+`az login`コマンドで Azure にログインをしておきます。
+
+## 早速やってみる
+### リソースグループ作成
+Azure ポータルからでも作成できますが、なんとなく CLI を利用し作成してみます、リージョンを eastus としているのは、AKS が日本リージョンでは提供されていないためです。 +
+`az group create --name AKSResourceGroup --location eastus` +
+
+### サービスプリンシパル作成
+AKS を利用するにはサブスクリプションに紐づく資格情報ではなく、Azure Active Directory のサービスプリンシパルというセキュリティ ID が必要となりますので、以下の通り発行していきます。
+
+```
+$ az account set --subscription "サブスクリプション ID"`
+$ az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/サブスクリプション ID"
+{
+  "appId": "**********************************",
+  "displayName": "azure-cli-2017-11-22-09-39-33",
+  "name": "http://azure-cli-2017-11-22-09-39-33",
+  "password": "**********************************",
+  "tenant": "**********************************"
+}
+```
+利用するのは `appId` と `password` なのでメモメモします。
+
+### AKS 作成
+ポータルから AKS を作成します、新規リソースの追加を選び AKS と検索すればすぐに表示されますので、AKS のアイコンを選択してもろもろの情報を入力していきます。
+
+*・基本情報* +
+クラスターの名称やリソースグループを入力します、今回は akstest という名称にしました。 +
+image:syoga/aml8/1.png[]
+
+*・コンフィグ* +
+先程のサービスプリンシパルの情報や、SSH の情報、クラスターのノード数等を入力していきます、今回はノード数を 3 つにします、先程メモメモした `appId` と `password` はここで利用します。
+image:syoga/aml8/2.png[]
+
+*・リソースプロバイダの登録検証* +
+入力した基本情報、コンフィグ設定でリソースが登録できれば OK ボタンが有効化されます。
+image:syoga/aml8/3.png[]
+
+
+OK ボタンを押せば AKS の作成は完了です。
+
+## Kubernetes クラスタへデプロイ
+今回利用する Docker コンテナイメージを保持しておくため Azure Container Registory（以下ACR）に AKStestblog というリポジトリを作成しておきました。
+
+### ACR へコンテナイメージを Push
+ここからは CLI で作業します、まずは `az acr login --name AKStestblog` でACRにログインします。
+
+利用するイメージは Microsoft がサンプルで提供している投票システムとなり、`azure-vote-back`という Redis のコンテナと、`azure-vote-front` という Python のコンテナから構成されています。
+
+上記イメージにタグを付与し、ACR に Push します。 +
+```
+docker tag azure-vote-front xxxxxxxx.azurecr.io/azure-vote-front:akstest
+docker push xxxxxxxx.azurecr.io/azure-vote-front:akstest
+```
+
+ポータルのリポジトリを確認してみます。
+image:syoga/aml8/4.png[]
+
+ちゃんと登録されていますね。
+
+### そしてデプロイ！！
+忘れちゃいけない！ kubectl CLI のインストールが必要ですので Azure CLI 経由でインストールするため `az aks install-cli` を実行します。 +
+※ Azure Cloud Shell を利用する場合は気にしないで大丈夫です
+
+以下コマンドで作成した AKS へ接続します。 +
+`az aks get-credentials --resource-group=AKSResourceGroup --name=akstest`
+
+ここからは kubectl CLI を使っていきます、まずはノードを確認します。
+```
+$ kubectl get nodes
+NAME                       STATUS    ROLES     AGE       VERSION
+aks-agentpool-42554519-0   Ready     agent     17h       v1.8.1
+aks-agentpool-42554519-1   Ready     agent     17h       v1.8.1
+aks-agentpool-42554519-2   Ready     agent     17h       v1.8.1
+```
+AKS 作成時に設定した通り 3 ノード立ち上がっています、AGE 17h となっているのは AKS を前日作成したためです。
+
+### マニフェストファイル更新
+Kubernetes はデプロイ時にマニフェストファイルという yml ファイルを読み込みます、その中に Docker コンテナイメージが格納されているリポジトリのパスを記載する必要がありますので、イメージを格納している ACR のパスを記載します。
+
+### アプリケーションをデプロイする
+以下のコマンドでマニフェストファイルを指定しデプロイします。
+```
+$ kubectl create -f azure-vote-all-in-one-redis.yml
+deployment "azure-vote-back" created
+service "azure-vote-back" created
+deployment "azure-vote-front" created
+service "azure-vote-front" created
+```
+
+マニフェストファイルの中に作成する Pod（グループ化されたコンテナイメージ）の初期値を記載しておくのですが、今回は 1 つのみ立ち上がるよう指定しています、デプロイの状況は以下のコマンドで確認できます。
+
+```
+$ kubectl get service azure-vote-front
+NAME               TYPE           CLUSTER-IP   EXTERNAL-IP   PORT(S)        AGE
+azure-vote-front   LoadBalancer   XX.X.XX.XX   <pending>     80:32233/TCP   37s
+```
+EXTERNAL-IP が `pending` となっており IP が払出されていない状態ですのでしばし待ちます…そして確認！
+
+```
+kubectl get service azure-vote-front
+NAME               TYPE           CLUSTER-IP   EXTERNAL-IP      PORT(S)        AGE
+azure-vote-front   LoadBalancer   XX.X.XX.XX   XX.XX.XX.XX   80:32233/TCP   7m
+```
+
+EXTERNAL-IP が表示されたらデプロイ完了ですので、 表示された IP アドレスへブラウザでアクセスしてみます。
+image:syoga/aml8/5.png[]
+
+
+表示されました、投票した結果 Cat 2、Dog 3 なっていますがこれは我が家のペットの数と偶然一致します！！
+
+### スケールするぞ
+まずは現在ノードが 3 つありますが、どこで Pod が動作しているかを確認してみます。
+```
+$ kubectl get pod -o wide
+NAME                               READY     STATUS    RESTARTS   AGE       IP           NODE
+azure-vote-back-7556ff9578-7pxp9   1/1       Running   0          14m       XX.XXX.X.X   aks-agentpool-42554519-2
+azure-vote-front-f4759f4b7-l4vgc   1/1       Running   0          14m       XX.XXX.X.X   aks-agentpool-42554519-1
+```
+
+NAME と NODE を確認すると、`azure-vote-back` は `aks-agentpool-42554519-2` で、`azure-vote-front` は `aks-agentpool-42554519-1` で動作している事が分かります。
+
+では、azure-vote-front をガッツリ増やしてみたいと思います、`kubectl scale --replicas=8 deployment/azure-vote-front` とコマンドを実行するだけでコンテナ数が 8 個にスケールアウトされます。
+
+うーん、簡単ですね！ では確認してみます。
+```
+$ get pod -o wide
+NAME                               READY     STATUS              RESTARTS   AGE       IP           NODE
+azure-vote-back-7556ff9578-7pxp9   1/1       Running             0          19m       XX.XXX.X.X   aks-agentpool-42554519-2
+azure-vote-front-f4759f4b7-55p24   0/1       ContainerCreating   0          6s        <none>       aks-agentpool-42554519-2
+azure-vote-front-f4759f4b7-8dvcw   0/1       ContainerCreating   0          6s        <none>       aks-agentpool-42554519-2
+azure-vote-front-f4759f4b7-l4vgc   1/1       Running             0          19m       XX.XXX.X.X   aks-agentpool-42554519-1
+azure-vote-front-f4759f4b7-mbvsv   0/1       ContainerCreating   0          6s        <none>       aks-agentpool-42554519-0
+azure-vote-front-f4759f4b7-ms9pz   0/1       ContainerCreating   0          6s        <none>       aks-agentpool-42554519-0
+azure-vote-front-f4759f4b7-rvb8l   1/1       Running             0          6s        XX.XXX.X.X   aks-agentpool-42554519-1
+azure-vote-front-f4759f4b7-tczrj   0/1       ContainerCreating   0          6s        <none>       aks-agentpool-42554519-0
+azure-vote-front-f4759f4b7-vclzg   0/1       ContainerCreating   0          6s        <none>       aks-agentpool-42554519-2
+```
+増えた！ですが STATUS は ContainerCreating ですので、しばし待ちます…そして確認！リターンズ！
+
+```
+$ kubectl get pod -o wide
+NAME                               READY     STATUS    RESTARTS   AGE       IP           NODE
+azure-vote-back-7556ff9578-7pxp9   1/1       Running   0          20m       XX.XXX.X.X   aks-agentpool-42554519-2
+azure-vote-front-f4759f4b7-55p24   1/1       Running   0          1m        XX.XXX.X.X   aks-agentpool-42554519-2
+azure-vote-front-f4759f4b7-8dvcw   1/1       Running   0          1m        XX.XXX.X.X   aks-agentpool-42554519-2
+azure-vote-front-f4759f4b7-l4vgc   1/1       Running   0          20m       XX.XXX.X.X   aks-agentpool-42554519-1
+azure-vote-front-f4759f4b7-mbvsv   1/1       Running   0          1m        XX.XXX.X.X   aks-agentpool-42554519-0
+azure-vote-front-f4759f4b7-ms9pz   1/1       Running   0          1m        XX.XXX.X.X   aks-agentpool-42554519-0
+azure-vote-front-f4759f4b7-rvb8l   1/1       Running   0          1m        XX.XXX.X.X   aks-agentpool-42554519-1
+azure-vote-front-f4759f4b7-tczrj   1/1       Running   0          1m        XX.XXX.X.X   aks-agentpool-42554519-0
+azure-vote-front-f4759f4b7-vclzg   1/1       Running   0          1m        XX.XXX.X.X   aks-agentpool-42554519-2
+```
+各ノードで Pod が起動している事が分かりますね。
+
+
+#### 感想
+お気軽に Kubernetes 運用環境が作成できるのはとても良いですね、死活監視やコンテナの自動起動、LBやリソースに合わせたオートスケール等の運用面で必要と思われる処理は Kubernetes に一通り実装されていますので、これからは弊社でもどんどん Kubernetes を利用した本番運用を進めていきたいです。
+
+余談ですが Kubernetes の読み方は日本でも海外でも色々あるようですが、「くーばねてぃす」で弊社エンジニアには浸透させていきたいと思っております。
+
+完

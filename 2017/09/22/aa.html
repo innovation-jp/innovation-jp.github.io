@@ -55,7 +55,7 @@ var _trackingid = 'LFT-10003-1';
     <meta property="og:description" content="皆様こんばんは。こへです。 そろそろ寒くなって来ており、 Laradockを使ってDockerでLaravelの環境構築をし、Google Cloud Platform(以下GCP)にimageをおきたい 時期が来ましたので、やってみました。 ※まずDockerが入ってない人は https://docs.docker.com/docker-for-mac/install/#download-docker-for-mac からdownload。私はStable の方をdownloadしました。 Laradock編 巷の噂でLaravelの環境構築はLar..." />
     <meta property="og:url" content="http://tech.innovation.co.jp/2017/09/22/aa.html" />
     <meta property="article:published_time" content="2017-09-21T15:00:00.000Z" />
-    <meta property="article:modified_time" content="2017-09-25T11:19:19.440Z" />
+    <meta property="article:modified_time" content="2017-10-13T04:15:08.415Z" />
     <meta property="article:tag" content="kohe" />
     <meta property="article:tag" content="Docker" />
     <meta property="article:tag" content="Laradock" />
@@ -82,7 +82,7 @@ var _trackingid = 'LFT-10003-1';
     "headline": "Laradockを使ってDockerでLaravelの環境構築をし、Container Registryを使いGCPにイメージをおいたお話。",
     "url": "http://tech.innovation.co.jp/2017/09/22/aa.html",
     "datePublished": "2017-09-21T15:00:00.000Z",
-    "dateModified": "2017-09-25T11:19:19.440Z",
+    "dateModified": "2017-10-13T04:15:08.415Z",
     "keywords": "kohe, Docker, Laradock, GCP, Container Registry",
     "description": "皆様こんばんは。こへです。 そろそろ寒くなって来ており、 Laradockを使ってDockerでLaravelの環境構築をし、Google Cloud Platform(以下GCP)にimageをおきたい 時期が来ましたので、やってみました。 ※まずDockerが入ってない人は https://docs.docker.com/docker-for-mac/install/#download-docker-for-mac からdownload。私はStable の方をdownloadしました。 Laradock編 巷の噂でLaravelの環境構築はLar..."
 }
@@ -321,7 +321,8 @@ MYSQL_ROOT_PASSWORD=root</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code>aiueo.confを↓のように変更
-server_name aiueo.dev;</code></pre>
+server_name aiueo.dev;
+root /var/www/aiueo/public;</code></pre>
 </div>
 </div>
 <div class="paragraph">

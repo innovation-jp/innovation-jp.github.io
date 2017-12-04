@@ -12,7 +12,7 @@ http://tech.innovation.co.jp/2017/07/04/Azure-5.html/[記事]
 
 ただ、LINE を通しておしゃべりするのは最近飽きてきたので、今回は AI とお話するハイブリッドアプリを作成したいと思います。
 
-#### Ionic フレームワークを利用する
+## Ionic フレームワークを利用する
 Ionic は Cordova を拡張したハイブリッドアプリ用のフレームワークで、Angular ベースの UI ライブラリとなり、TypeScript を利用しコーディングします、詳細は https://ionicframework.com/[公式サイト] で確認下さい。
 
 そんな筆者は Angular4 は触った事がなく、ハイブリッドアプリ開発も初めてです。
@@ -56,6 +56,7 @@ Error: Cannot read property 'replace’ of undefined
 
 ### 早速実装
 インターフェースはもろに某 SNS を参考に以下のようにしました、メッセージ入力エリアにメッセージを入力し、送信ボタンをタップすると上の吹き出しに自分のメッセージが、下の吹き出しに Repl-AI から回答されたメッセージが表示されるようにします。
+
 image:syoga/aml7/azure3.png[]
 
 何か四角があるな〜と思うでしょうが、これが吹き出しです！ 吹き出しの三角は、弊社女性エンジニア AMI さんの http://tech.innovation.co.jp/2017/03/03/C-S-S-triangle.html/[記事] を参考にしました。

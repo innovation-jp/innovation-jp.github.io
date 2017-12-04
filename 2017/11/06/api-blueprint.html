@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>API Blueprintを使ってドキュメント作成&amp;テストしてみる - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="API Blueprintを使ってドキュメント作成&amp;テストしてみる">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="API Blueprintを使ってドキュメント作成&amp;テストしてみる">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2017/11/06/api-blueprint.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="API Blueprintを使ってドキュメント作成&amp;テストしてみる" />
+    <meta property="og:description" content="最近花粉症かもしれない中村です。 あと冬は嫌い（しんどい）です。 さて今回は「API Blueprint」を使ってAPIドキュメント作成し、さらにテストをするお話です。 API Blueprintとは？ APIの仕様を表現した言語 Markdownで記述可能 API作成に必要なドキュメント作成・モック作成・テストができる Markdownで記述できるので、Gitで管理しやすくてとてもいいです。 また周辺ツールがとても充実しており、作成したドキュメントをHTML化することでとても見やすい仕様書を作成できます。 そしてテストを行うこともできるため、ドキュメ..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2017/11/06/api-blueprint.html" />
+    <meta property="article:published_time" content="2017-11-05T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2017-11-06T09:48:13.509Z" />
+    <meta property="article:tag" content="API Blueprint" />
+    <meta property="article:tag" content="aglio" />
+    <meta property="article:tag" content="Dredd" />
+    <meta property="article:tag" content="Nakamura" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="API Blueprintを使ってドキュメント作成&amp;テストしてみる" />
+    <meta name="twitter:description" content="最近花粉症かもしれない中村です。 あと冬は嫌い（しんどい）です。 さて今回は「API Blueprint」を使ってAPIドキュメント作成し、さらにテストをするお話です。 API Blueprintとは？ APIの仕様を表現した言語 Markdownで記述可能 API作成に必要なドキュメント作成・モック作成・テストができる Markdownで記述できるので、Gitで管理しやすくてとてもいいです。 また周辺ツールがとても充実しており、作成したドキュメントをHTML化することでとても見やすい仕様書を作成できます。 そしてテストを行うこともできるため、ドキュメ..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2017/11/06/api-blueprint.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "m_nakamura",
+        "image": "https://avatars1.githubusercontent.com/u/7381448?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "API Blueprintを使ってドキュメント作成&amp;テストしてみる",
+    "url": "http://tech.innovation.co.jp/2017/11/06/api-blueprint.html",
+    "datePublished": "2017-11-05T15:00:00.000Z",
+    "dateModified": "2017-11-06T09:48:13.509Z",
+    "keywords": "API Blueprint, aglio, Dredd, Nakamura",
+    "description": "最近花粉症かもしれない中村です。 あと冬は嫌い（しんどい）です。 さて今回は「API Blueprint」を使ってAPIドキュメント作成し、さらにテストをするお話です。 API Blueprintとは？ APIの仕様を表現した言語 Markdownで記述可能 API作成に必要なドキュメント作成・モック作成・テストができる Markdownで記述できるので、Gitで管理しやすくてとてもいいです。 また周辺ツールがとても充実しており、作成したドキュメントをHTML化することでとても見やすい仕様書を作成できます。 そしてテストを行うこともできるため、ドキュメ..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-A-P-I-Blueprint tag-aglio tag-Dredd tag-Nakamura no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="06 Nov 2017" class="post-meta__date date">06 Nov 2017</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/A-P-I-Blueprint">API Blueprint</a>, <a href="http://tech.innovation.co.jp/tag/aglio">aglio</a>, <a href="http://tech.innovation.co.jp/tag/Dredd">Dredd</a>, <a href="http://tech.innovation.co.jp/tag/Nakamura">Nakamura</a></span>
+        <span class="post-meta__author author"><img src="https://avatars1.githubusercontent.com/u/7381448?v=4" alt="profile image for m_nakamura" class="avatar post-meta__avatar" /> by m_nakamura</span>
+      </div>
+      <h1 class="post-title">API Blueprintを使ってドキュメント作成&amp;テストしてみる</h1>
+    </header>
+
+    <section class="post tag-A-P-I-Blueprint tag-aglio tag-Dredd tag-Nakamura">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>最近花粉症かもしれない中村です。<br>
+あと冬は嫌い（しんどい）です。</p>
+</div>
+<div class="paragraph">
+<p>さて今回は「API Blueprint」を使ってAPIドキュメント作成し、さらにテストをするお話です。</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_api_blueprint">API Blueprintとは？</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>APIの仕様を表現した言語</p>
+</li>
+<li>
+<p>Markdownで記述可能</p>
+</li>
+<li>
+<p>API作成に必要なドキュメント作成・モック作成・テストができる</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Markdownで記述できるので、Gitで管理しやすくてとてもいいです。<br>
+また周辺ツールがとても充実しており、作成したドキュメントをHTML化することでとても見やすい仕様書を作成できます。<br>
+そしてテストを行うこともできるため、ドキュメントと作成したAPIに齟齬がないかのチェックも容易にできます。</p>
+</div>
+<div class="paragraph">
+<p>それでは早速やってみましょう。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__">今回必要なツール</h3>
+<div class="paragraph">
+<p>API Blueprint自体は特別なツールは必要ありませんが、以下の2点でツールのインストールが必要です。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>aglio ⇒ HTML化</p>
+</li>
+<li>
+<p>Dredd ⇒ テスト</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>それぞれnpmを使用してインストールしていきます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>npm install -g aglio
+npm install -g dredd</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>※node.jsがインストールされている必要があります</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_api_blueprint_2">API Blueprintを書いてみる</h3>
+<div class="paragraph">
+<p>今回はサンプルデータとして使えそうな「都道府県データ」があったので、そちらを取得するAPIを作成することにしてみます。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>APIリクエストURLは <a href="http://xxxxx.xx/api/get_prefecture" class="bare">http://xxxxx.xx/api/get_prefecture</a></p>
+</li>
+<li>
+<p>methodはGET</p>
+</li>
+<li>
+<p>ステータス、データ件数、データを返す</p>
+</li>
+<li>
+<p>JSON形式で返す</p>
+</li>
+<li>
+<p>並び順と取得件数をパラメータで変更可能</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>箇条書きで書いても良くわからないですね。。。<br>
+こちらをAPI Blueprintで記述すると、以下のようになります。</p>
+</div>
+<div class="paragraph">
+<p>get_prefecture.apib</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>FORMAT: 1A
+HOST: http://xxxxx.xx
+
+# テスト用APIドキュメント
+
+## 都道府県データ取得 [/api/get_prefecture{?sort,limit}]
+
+都道府県データを取得するAPI
+
+### 都道府県データ取得 [GET]
+
++ Parameters
+    + sort: `asc` (string, required) - 並び順[asc or desc]
+    + limit: 10 (number, optional) - 取得件数
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + status: success (string, required) - APIステータス
+        + data_count: 3 (number, required) - 取得件数
+        + data (array, required, fixed-type)
+            + (object)
+                + id: 1 (number, required) - 都道府県id
+                + name: 北海道 (string, required) - 都道府県名</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>エンジニアならこちらの方が理解しやすいかもしれませんね。<br>
+パラメータ変数名や型なども記述されているので、開発で困ることも無さそうです。</p>
+</div>
+<div class="paragraph">
+<p>※詳細な記述方法は公式のドキュメントを是非参考にしてみてください<br>
+<a href="https://apiblueprint.org/documentation/" class="bare">https://apiblueprint.org/documentation/</a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_aglio_html">aglioを使ってHTML化してみる</h3>
+<div class="paragraph">
+<p>とはいえ、正直複雑な仕様になってくるともう少し見やすいと嬉しいですよね。<br>
+先ほどインストールしたaglioを使ってHTML化してみましょう。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>aglio -i get_prefecture.apib -o get_prefecture.html</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>上記コマンドを実行すると、以下のようなHTMLファイルが生成されます。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/nakamura/api_blueprint/1.png" alt="1.png">
+</div>
+</div>
+<div class="paragraph">
+<p>打ち合わせなどにも使いやすくてとてもいいです！<br>
+ちなみにAPI Blueprintの記述が間違っている場合には、HTMLを生成する際にエラーが返ってくるので修正しましょう。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dredd">Dreddを使ってテストしてみる</h3>
+<div class="paragraph">
+<p>さて、APIが作成完了したらドキュメント通りに作成できているかをチェックしてみましょう。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>dredd get_prefecture.apib http://xxxxx.xx</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>■正常時</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/nakamura/api_blueprint/2.png" alt="2.png">
+</div>
+</div>
+<div class="paragraph">
+<p>■エラー時</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/nakamura/api_blueprint/3.png" alt="3.png">
+</div>
+</div>
+<div class="paragraph">
+<p>いい感じです〜<br>
+あくまでもドキュメント通りの仕様になっているかのチェック程度ですが！</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___2">感想</h3>
+<div class="paragraph">
+<p>Markdownで記述できる = Gitで管理し易い、見やすい、テストできるのでAPI作成時には積極的に使って行こうと思います。<br>
+API周りは特にフロントサイドとサーバーサイドに別れて開発することが多いので、こういったドキュメントはやっぱり必要ですね。</p>
+</div>
+<div class="paragraph">
+<p>Dreddを使ったテストはhookなども用意されているので、もっと踏み込んだテストも可能かも。もう少し色々試してみようと思います。</p>
+</div>
+<div class="paragraph">
+<p>こちらからは以上です！</p>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2017. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>

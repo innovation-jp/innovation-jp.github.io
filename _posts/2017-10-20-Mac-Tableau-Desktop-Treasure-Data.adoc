@@ -1,0 +1,76 @@
+= MacでTableau Desktopを直接Treasure Dataにつないで分析をする！
+:published_at: 2017-10-20
+:hp-tags: Yagasaki,TreasureData,Tableau,BI,Presto
+
+こんにちは！ +
+いや〜寒くなってきましたね！ +
+矢ヶ崎です。
+
+前のブログで、
+
+* Pepperに「会議室どこ？」と聞くと、次の会議の会議室を教えてくれる
+
+をやろうと思ってると書いたのですが、なんと！当社はスケジューラをGoogleカレンダーに移行したら、 +
+Pepperに教えてもらうまでもなく、一瞬で会議室がわかるようになったので、不要になりました！ +
+ある意味よかったです！ +
+
+== 序章
+
+ということで、今回はライトですが、意外と日本語でのピッタリの情報が見つからなかったので、 +
+MacでTableau Desktopを直接Treasure Data(のPresto)につないであれこれする手順をしたためておこうと思います。
+
+== Treasure DataのAPIキーを用意する
+
+公式には、 +
+https://docs.treasuredata.com/articles/get-apikey +
+こちらをご覧ください。
+
+読まなくても、ふつーにTreasure DataのWeb Consoleで簡単にAPIキーを発行できます。
+
+2つのキーが発行されますが、そのうち、 +
+MASTER API KEY +
+の方を使います。
+
+== MacのTableau用Prestoドライバをインストールする
+
+Tableauのドライバページ +
+https://www.tableau.com/ja-jp/support/drivers +
+から「データソース」に「Presto」を選んでダウンロード。
+
+その中から、 +
+Simba Presto 1.1.pkg +
+をダブルクリックしてインストールします。
+
+image::/images/yagasaki/td/td1.png[td1]
+
+== Tableau Desktopでデータソースを設定する
+
+Tableau Desktopを起動し、接続=>サーバーへ=>Prestoを選択
+
+image::/images/yagasaki/td/td3.png[td3]
+
+ダイアログに以下を入力して、サインインする
+
+* サーバー(V): https://api-presto.treasuredata.com
+* ポート\(R): 443
+* カタログ: td-presto
+* 認証: ユーザー名
+* ユーザー名(U): 上記で取得したMASTER API KEY
+* SSLが必須(L)のチェックボックスをオン
+
+image::/images/yagasaki/td/td2.png[td2]
+
+== 分析する！
+
+ここまでくれば、すでに接続できているので、あとはいい感じに分析してください！
+
+image::/images/yagasaki/td/td5.png[td5]
+
+== おしまい
+
+Treasure Dataから、データーマートやDWHなどへ行ってから、Tableauとかで分析してたりするかと思いますが、 +
+ちょっとしたものとかだったり、そもそも持っていけない場合などは、Treasure DataのPrestoでやっちゃうのが
+お手軽で良かったり良くなかったりしますよね！ +
+ね！
+
+ライトですが、今回はこれで失礼いたします！

@@ -1,0 +1,351 @@
+= Nginxのngx_small_lightモジュールでminio(S3互換)にある画像をリサイズしてみる(Docker編)
+:published_at: 2017-10-27
+:hp-tags: KatoK,Docker,Nginx,minio,ngx_small_light
+
+
+Webサービスを作っていると、ユーザーがアップした画像からサムネイル画像を作ることがよくありますが、  +
+Webアプリケーション側での画像リサイズは少々手間がかかります。  +
+そんな中、画像のリサイズが出来るNginxのモジュールの「ngx_small_light」が便利そうだったので試してみました。
+
+
+
+## 目標
+
+目標、下記のとおりです。
+
+* minio(S3互換)に「main」バケットを作成し、「image.png」という名前で画像を用意
+* http://localhost/image.png　にアクセスするとminioにアップした「image.png」をそのまま表示され、  +
+  http://localhost/image.png/small　にアクセスすると「ngx_small_light」モジュールによってリサイズされた画像が表示される
+
+
+
+## 環境
+
+検証環境は、下記のとおりです。
+
+* macOS High Sierra バージョン10.13
+* Docker for mac Version 17.09.0-ce-mac35 (19611)
+
+
+## 検証環境の構築
+
+### /docker-compose.yml
+
+Nginxとminioが含まれる下記のdocker-compose.ymlファイルの内容で環境を作ります。  +
+nginxのイメージは、次項で説明するDockerファイルを使っています。
+
+
+```
+version: '3'
+services:
+  nginx:
+    build: ./
+    ports:
+      - 80:80
+ 
+  minio:
+    image: minio/minio
+    environment:
+      MINIO_ACCESS_KEY: access_key
+      MINIO_SECRET_KEY: secret_key
+    command: server /minio
+    ports:
+      - 9000:9000
+```
+
+
+### /Dockerfile
+
+ngx_small_lightモジュール込みのdockerイメージが見つからなかったため、下記のようなDockerfileを用意しました。  +
+下記のDocker Hubのイメージの、alpineのDockerfileを参考にしました。   +
+https://hub.docker.com/_/nginx/
+
+
+```
+FROM alpine:3.5
+ 
+ENV NGINX_VERSION 1.12.0
+ENV NGX_SMALL_LIGHT_VERSION 0.9.2
+ 
+RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
+    && CONFIG="\
+        --prefix=/etc/nginx \
+        --sbin-path=/usr/sbin/nginx \
+        --modules-path=/usr/lib/nginx/modules \
+        --conf-path=/etc/nginx/nginx.conf \
+        --error-log-path=/var/log/nginx/error.log \
+        --http-log-path=/var/log/nginx/access.log \
+        --pid-path=/var/run/nginx.pid \
+        --lock-path=/var/run/nginx.lock \
+        --http-client-body-temp-path=/var/cache/nginx/client_temp \
+        --http-proxy-temp-path=/var/cache/nginx/proxy_temp \
+        --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp \
+        --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp \
+        --http-scgi-temp-path=/var/cache/nginx/scgi_temp \
+        --user=nginx \
+        --group=nginx \
+        --with-threads \
+        --with-http_ssl_module \
+        --with-http_v2_module \
+        --add-module=/usr/src/ngx_small_light-$NGX_SMALL_LIGHT_VERSION \
+    " \
+    && addgroup -S nginx \
+    && adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \
+    && apk add --no-cache \
+        curl \
+        bash \
+    && apk add --no-cache --virtual .build-deps \
+        build-base \
+        gcc \
+        libc-dev \
+        make \
+        pcre-dev \
+        zlib-dev \
+        linux-headers \
+        curl \
+        gnupg \
+        imagemagick-dev \
+        perl \
+        git \
+        autoconf \
+        cyrus-sasl-dev \
+        openssl-dev \
+    && curl -fSL https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz -o nginx.tar.gz \
+    && curl -fSL https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz.asc -o nginx.tar.gz.asc \
+    && export GNUPGHOME="$(mktemp -d)" \
+    && found=''; \
+    for server in \
+        ha.pool.sks-keyservers.net \
+        hkp://keyserver.ubuntu.com:80 \
+        hkp://p80.pool.sks-keyservers.net:80 \
+        pgp.mit.edu \
+    ; do \
+        echo "Fetching GPG key $GPG_KEYS from $server"; \
+        gpg --keyserver "$server" --keyserver-options timeout=10 --recv-keys "$GPG_KEYS" && found=yes && break; \
+    done; \
+    test -z "$found" && echo >&2 "error: failed to fetch GPG key $GPG_KEYS" && exit 1; \
+    gpg --batch --verify nginx.tar.gz.asc nginx.tar.gz \
+    && rm -r "$GNUPGHOME" nginx.tar.gz.asc \
+    && mkdir -p /usr/src \
+    && tar -zxC /usr/src -f nginx.tar.gz \
+    && rm nginx.tar.gz \
+    && curl -fSL https://github.com/cubicdaiya/ngx_small_light/archive/v$NGX_SMALL_LIGHT_VERSION.tar.gz -o ngx-small-light.tar.gz \
+    && tar -zxC /usr/src -f ngx-small-light.tar.gz \
+    && rm ngx-small-light.tar.gz \
+    && cd /usr/src/ngx_small_light-$NGX_SMALL_LIGHT_VERSION \
+    && ./setup \
+    && cd /usr/src/nginx-$NGINX_VERSION \
+    && ./configure $CONFIG \
+    && make -j$(getconf _NPROCESSORS_ONLN) \
+    && make install \
+    && ln -s ../../usr/lib/nginx/modules /etc/nginx/modules \
+    && strip /usr/sbin/nginx* \
+    && rm -rf /usr/src/nginx-$NGINX_VERSION \
+    && rm -rf /usr/src/ngx_small_light-$NGX_SMALL_LIGHT_VERSION \
+    && apk add --no-cache --virtual .gettext gettext \
+    && mv /usr/bin/envsubst /tmp/ \
+    && runDeps="$( \
+        scanelf --needed --nobanner /usr/sbin/nginx /usr/lib/nginx/modules/*.so /tmp/envsubst \
+            | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
+            | sort -u \
+            | xargs -r apk info --installed \
+            | sort -u \
+    )" \
+    && apk add --no-cache --virtual .nginx-rundeps $runDeps \
+    && apk del .build-deps \
+    && apk del .gettext \
+    && mv /tmp/envsubst /usr/local/bin/ \
+    && ln -sf /dev/stdout /var/log/nginx/access.log \
+    && ln -sf /dev/stderr /var/log/nginx/error.log
+ 
+RUN rm -rf /var/cache/apk/*
+ 
+#nginx tmp dir
+RUN mkdir -p /tmp/nginx \
+ && chown nginx /tmp/nginx
+ 
+#nignx 設定ファイル
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY minio.conf /etc/nginx/conf.d/minio.conf
+ 
+CMD ["nginx"]
+
+
+```
+
+
+### /nginx.conf
+
+DockerfileでCOPYしているnginx.confは、下記のようにしました。
+
+
+```
+daemon            off;
+pid               /var/run/nginx.pid;
+worker_processes  auto;
+error_log         /var/log/nginx/error.log warn;
+ 
+events {
+    worker_connections  4096;
+}
+ 
+http {
+    sendfile     on;
+    include      /etc/nginx/mime.types;
+    include      /etc/nginx/fastcgi.conf;
+    default_type application/octet-stream;
+    tcp_nopush   on;
+    tcp_nodelay  on;
+ 
+    client_body_temp_path /tmp/nginx/body 1 2;
+    fastcgi_temp_path     /tmp/nginx/fastcgi_temp 1 2;
+ 
+    keepalive_timeout 65;
+    types_hash_max_size 2048;
+    server_tokens off;
+    server_names_hash_bucket_size 64;
+    client_max_body_size 100m;
+ 
+    gzip on;
+    gzip_disable "msie6";
+ 
+    include /etc/nginx/conf.d/*.conf;
+}
+```
+
+
+
+### /minio.conf
+
+DockerfileでCOPYしているminio.confは、下記のようにしました。
+
+
+```
+server {
+    listen      80;
+    sendfile    off;
+ 
+    disable_symlinks     off;
+    charset              utf-8;
+    index                index.html;
+ 
+    location ~ /(.+)/(small|thumb) {
+        set $pattern $2;
+        proxy_pass http://127.0.0.1:9003/small_light(p=$pattern)/main/$1;
+    }
+ 
+    location / {
+       proxy_pass http://127.0.0.1:9003/main$request_uri;
+    }
+}
+ 
+server {
+    listen      9003;
+    server_name localhost;
+    sendfile    off;
+    resolver 127.0.0.11 valid=5s;
+ 
+    small_light on;
+    small_light_buffer 1m;
+    small_light_pattern_define small dw=100,dh=100,of=jpg;
+ 
+    location ^~ /main/ {
+ 
+        set $upstream "minio:9000";
+ 
+        proxy_buffering  off;
+        proxy_set_header Host $http_host;
+        proxy_pass       http://$upstream;
+    }
+ 
+    location ~ small_light[^/]*/(.+)$ {
+        set     $file $1;
+        rewrite ^ /$file last;
+    }
+}
+```
+
+このminio.confでは、いくつかポイントがあります。  +
+
+* dockerで使う場合、proxy_passの値を変数で指定  +
+  proxy_passを固定値にすると、nginxは起動時に名前解決をして、以後その情報を使います。  +
+  また、起動時に名前解決が出来ない場合、エラーとなるため、起動できません。 +
+  この状態を回避するため、このproxy_passを変数で指定し、resolverの設定をしておきます。 +
+  このようにすることで、docker環境のように、常に名前解決時の情報が変わる可能性があるような環境でも対応できるようになります。 +
+  参考：http://d.hatena.ne.jp/hirose31/20131112/1384251646
+  
+* リクエストをさらにリサイズ用URLに流す  +
+  上記の設定例では、80番ポートで受け取ったリクエストをさらにNginx9003番ポートに転送しています。 +
+  proxy_passを変数で指定する場合、このようにしないと上手く動きませんでした。 +
+  まわりくどい設定のため、もう少し良いやり方がありそうです。 +
+  よいやり方を模索中です。(Nginx Plus等であれば、簡潔に書けるようです)
+  
+  
+  
+## 検証
+
+
+### 起動
+docker-compose.ymlがあるディレクトリに移動し、下記コマンドで環境を立ち上げます。
+
+```
+docker-compose up
+```
+
+### 画像をminioにアップする
+
+環境起動後、下記URLにアクセスし「access_key / secret_key」でログインします。　 +
+http://localhost:9000/  
+
+
+その後、
+
+* mainバケットの作成
+* mainバケットに読み取り権限を付与
+* 「image.png」という名前のファイルをアップ
+
+を行います。 
+
+今回は、下記の画像を使いました。 +
+http://www.irasutoya.com/2015/05/blog-post_321.html
+
+image::/images/kato/10/01.png[]
+
+
+image::/images/kato/10/02.png[]
+image.pngをmainバケットに追加
+
+
+image::/images/kato/10/03.png[]
+mainバケットに読み取り権限を付与
+
+
+
+### 検証
+
+#### オリジナル画像の表示
+
+下記URLにアクセスすると、minioにアップした画像がそのまま出力されます。
+
+http://localhost/image.ping
+
+image::/images/kato/10/04.png[]
+
+
+次に、下記のURLにアクセスすると、縦横共に100pxにリサイズされ、jpeg形式になった画像が表示されます。
+
+http://localhost/image.png/small
+
+
+image::/images/kato/10/05.png[]
+
+
+## まとめ
+
+ngx_small_lightモジュールを使うと、手軽に画像のリサイズや圧縮ができることが分かりました。 +
+Webサーバーで画像のリサイズを行うので、負荷が気になりますが、とても便利に使えるモジュールということがわかりました。
+
+
+
+
+

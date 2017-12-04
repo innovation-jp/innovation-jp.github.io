@@ -1,0 +1,126 @@
+= 【テンプレで作る】環境構築から、Chrome拡張機能を作るまで
+:hp-alt-title: start-chrome-extension
+:hp-tags: Obata, chrome-extension, Gulp
+
+新人2回目のブログです。小畑です +
+
+GoogleChromeの拡張機能って便利ですよね。 +
+最近聞いたLTによると、テンプレがあるからすぐに出来るらしいです。 +
+よっしゃやってみるかと色々しらべながらやると・・・ +
+
+うん。インストールに躓いた|||orz +
+ということで、いろんなインストールから、 +
+Chromeで読み込ませるまでやっていきましょう！ +
+
+
+## 何をした？
+
+やったこととしては以下の通りです。 +
+コマンドをぽいっと書く感じなので待つだけです！
+
+. Homebrew, nodebrew, Node.jsのインストール
+. generator-chrome-extensionとGulpのインストール
+. テンプレート生成！
+. コンパイル(使える状態に)しよう！
+. Chromeに読み込ませる！
+
+
+### 1.Homebrew, nodebrew, Node.jsのインストール
+
+いろいろインストールするために、インストールする段階。 +
+ここの記事が凄く参考になりました。というか、詳しすぎて私から言うことないです。 +
+https://qiita.com/akakuro43/items/600e7e4695588ab2958d +
+
+順を追って、npmを使える段階にまで行きましょう。 +
+コマンドコピペしていくだけので、難しくないですよ！ +
+
+
+### 2.Gulpとgenerator-chrome-extensionのインストール
+
+作ったものをコンパイル（使える状態にする）するためにGulpをインストール。 +
+そして本命のgenerator-chrome-extensionもインストールしましょう！
+
+```
+npm install -g yo bower gulp
+npm install -g yo generator-chrome-extension
+```
+
+### 3.テンプレート作成！
+
+作りたいディレクトリに移動して +
+さっきインストールしたchrome-extensionを実行！
+
+```
+cd ~/Desktop/study/try/googleExTry/
+yo chrome-extension
+```
+
+image::obata/googleExTry/extension.png[]
+
+たくさん質問流れてきますが、一箇所以外基本エンターでもOK! +
+今回は、 +
+Would you like to use UI Action? +
+をBrowser Actionにしてみましょう！ +
+
+
+### 4.コンパイルしよう！
+
+早速読み込ませたいところですが、 +
+一度使える状態にしましょう！ +
+
+```
+gulp build
+```
+
+image::obata/googleExTry/build.png[]
+
+これでいろいろコマンドが出たらOK! +
+
+
+### 5.Chromeに読み込ませる！
+
+
+. chrome://extensions/にアクセスか、  +
+右上のメニューボタン＞その他のツール>拡張機能
+. 右上のデベロッパーモードをチェック
+. パッケージ化されていない拡張機能を読み込むをクリック
+. 作ったディレクトリのappを選ぶ
+
+
+image::obata/googleExTry/Allo.png[]
+
+追加できてる！！！！ +
+
+## 感想
+本当にサクッと環境整えられました！ +
+みなさんもとりあえずやってみましょ！ +
+おもちゃが増えますよ！ +
+
+調べていると、Node.jsだったり、Homebrewをインストール済みの方の記事が +
+多かったのでまとめてみました。 +
+ちなみにこの記事のためにいろいろアンインストールするところから始めたので +
+記事自体には手間がかかりました・・・ +
+
+本当の初心者向け記事って結構難しいのでは・・・？
+
+## おまけ 実際にいじる
+今現在、クリックするとAlloとか書いてるので、そこを変えてみます。 +
+app/popup.html
+はシンプルなhtmlファイルなので、そこを書き換え。
+
+```
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <h1>初出力！</h1> <!-- ここを書き換え -->
+    <script src="scripts/popup.js"></script>
+  </body>
+</html>
+```
+
+image::obata/googleExTry/output.png[]
+
+出力の文字が変わったー！

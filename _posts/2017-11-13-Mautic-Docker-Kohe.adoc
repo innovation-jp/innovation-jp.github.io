@@ -1,0 +1,105 @@
+# Docker上でMauticを動かしたお話。
+:hp-alt-title: Mautic_Docker_Kohe
+:hp-tags: Mautic,Docker,kohe
+:published_at: 2017-11-13
+
+こへです。 +
+
+そろそろ紅葉を見に行きたくなる季節になり +
+Docker上でMauticを動かしたい気分になってきましたのでやってみました。
+
+そして、いずれかはMauticのcontributorに・・・
+
+### Mauticとは？
+
+
+*オープンソースのマーティングオートメーションツールです。*
+
+https://www.ossnews.jp/oss_info/Mautic　　より引用
+
+
+### 今回必要なツール
+
+・Docker (↓のリンクからDLしておいてください。)
+
+https://store.docker.com/editions/community/docker-ce-desktop-mac
+
+
+### 早速やっていこう！
+
+Dockerfileをゴリゴリ書いていこうと思ったのですが、Docker HubにすでにMauticのイメージが落ちていました。
+
+https://hub.docker.com/r/mautic/mautic/
+
+
+なのでこいつが簡単に使えるようにdocker-compose.ymlファイルを作っていく。
+
+
+```
+version: '3'
+services:
+  mautic:
+    image: mautic/mautic:latest
+    ports:
+      - 8080:80
+    environment:
+      MAUTIC_DB_HOST: mauticdb       
+      MAUTIC_DB_USER: root          
+      MAUTIC_DB_PASSWORD: example 
+      MAUTIC_DB_NAME: mauticdb       
+
+
+  mauticdb:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+
+```
+
+そして  `docker-compose up`
+
+image::/images/kohe/mautic_1.png[]
+
+
+`docker container ls` で実行中のコンテナを確認。
+
+image::/images/kohe/mautic_8.png[]
+うんうん、ちゃんと起動してる。
+
+
+`localhost:8080`にアクセス。
+
+image::/images/kohe/mautic_2.png[]
+
+この画面が出ればとりあえず成功！
+
+
+そして `Next Step` をクリック
+
+image::/images/kohe/mautic_3.png[]
+
+`docker-compose.yml`に書いた情報を入力していく…
+
+image::/images/kohe/mautic_4.png[]
+
+ここらあたりは適当に入力
+
+image::/images/kohe/mautic_5.png[]
+
+
+そして・・・
+
+image::/images/kohe/mautic_6.png[]
+
+
+image::/images/kohe/mautic_7.png[]
+
+動いた！！ +
+これでローカルでMauticをさわれまくれますね。
+
+ただ、contributorになるために、ローカルに入ってるMauticのソースを反映させたかったのですが、
+なかなかうまくできなくて断念。
+
+次はDockerファイルも自分で作り、マウント（volume）が上手くいくようにしようと思います。
+
+おわり

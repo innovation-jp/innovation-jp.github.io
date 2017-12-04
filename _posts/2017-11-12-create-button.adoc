@@ -1,0 +1,202 @@
+# ワンクリックで総務に発注できる便利ボタンを作った
+:hp-alt-title: create-button
+:hp-tags: AMI, GoogleAppsScript, GAS, slackBot
+:published_at: 2017-11-12
+
+
+亜美です。情シスにミッション変更となり、早４ヶ月強となりました。 +
+コーディングをすることが少なくなり、少し寂しい気持ちもあります・・・。 +
+そんな寂しい気分を払拭するため、忙しい業務の合間に「ご褒美タスク」を挟んで息抜きをしています。 +
+　※ +
+　業務改善のGASや、Salesforceのカスタムボタン（ボタン押したらJSが動くみたいなやつ）の改善など、 +
+　私の中の好きな業務を「ご褒美タスク」と呼んでいます +
+
+
+今日はそのご褒美タスクに関するブログを書きます +
+
+
+# ワンクリックで総務に社内発注できる便利なボタンを作りたい
+## ■概要
+GoogleAppsScript（GAS）で作成。 +
+スプレッドシート内のオブジェクトをクリックすると、総務宛に発注依頼のSlackが飛ぶ +
+スプレッドシートに発注履歴が記録される +
+
+## ■背景
+会社の後輩のよっぴー（社内美化担当）が、掃除用品（コロコロとか）を総務宛にメールで発注をしていることを知った。 +
+某ボタンが思い浮かび、社内定期発注用のボタンが作れそうと思った。 +
+また、社内コミュニケーションをSlackに移行したばかりで、依頼関係もSlackに移行できるいい機会と思い +
+「Slackで依頼を通知できるボタン」の作成を思い立った。 +
+
+
+## ■完成品
+
+ボタンをクリックすると・・・ +
+
+image::ami/20171112/1.png[]
+
+
+Slackに通知が！ +
+
+image::ami/20171112/2.png[]
+
+別のシートには発注履歴も記録されます +
+
+image::ami/20171112/3.png[]
+
+
+## ■コードと詳細
+
+ボタンごとのfunction +
+```
+//コロコロ発注ボタン
+function korokoro() {
+  //商品名
+  var itemName = 'コロコロのスペアテープ4個入り';
+  //商品URL
+  var itemUrl  = '{商品のURLを記載}';
+  //発注数
+  var itemNum = 1;
+  //その他記載情報
+  var otherInfo = '商品IDは「００００００１」です';
+  
+  order(itemName,itemUrl,itemNum,otherInfo);
+}
+
+//ボタンを増やす場合はこの下に貼り付ける
+
+
+```
+
+裏側 +
+
+```
+/**
+ 発注する
+**/
+function order(itemName, url, num, other) {
+  try {
+    //ユーザー名を取得
+    var userName = getUser();
+
+    //ユーザへメッセージを出す
+    var check = Browser.msgBox('発注担当「' + userName + 'さん依頼ありがとう！' + itemName + 'を総務に発注していいですか？」');
+
+    //Slackへ通知
+    if ('ok' == check){
+      postMessage('@jsys 総務情シスチームのみなさん、' + userName + 'さんから発注依頼だよ！\
+        \n■商品名：' + itemName +'\
+        \n■個数：' + num + '個\
+        \n■URL：' + url + '\
+        \n■その他：' + other);
+
+      //発注履歴に記録
+      orderLog(itemName)
+      
+      //発注者へ通知
+      Browser.msgBox('発注担当「発注完了したよ！\n内容はSlackの#group_jsysで確認してね！」');
+    }
+  } catch (e) {
+    //エラーの場合のメッセージ
+    Browser.msgBox('発注担当「ごめんなさい、エラー出て無理でした。。。」'+ e);
+    Logger.log(e);
+  }
+}
+
+
+/**
+ ボタンを押した人の名前を取得する
+**/
+function getUser() {
+  var mailAddress =  Session.getActiveUser().getEmail();//実行者のアドレスを取得する
+  var userData = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('ユーザーリスト').getDataRange().getValues();//ユーザーリストの値を取得する
+  var atmarkPosition = mailAddress.search('@');//メールアドレスの@の位置
+  
+  //実行者のアドレスから名前を探す
+  for (var key in userData) {
+    if (userData[key][0] == mailAddress) {
+      return userData[key][1];
+    }
+  }
+  //一覧に記入が無い場合は@よりも前の部分を実行者名とする
+  return mailAddress.substring(0,atmarkPosition);  
+}
+
+
+/**
+ 発注履歴を記録する
+**/
+function orderLog(item){  
+  var logSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('発注履歴');
+  var date = new Date();//今日の日付
+  var lastRow = logSheet.getLastRow();//発注履歴シートの最終行を取得
+  var userID = Session.getActiveUser().getEmail();//ユーザーIDを取得
+  var userName = getUser();//ユーザー名取得
+  
+  //記録
+  logSheet.getRange(lastRow+1, 1).setValue(date);
+  logSheet.getRange(lastRow+1, 2).setValue(item);
+  logSheet.getRange(lastRow+1, 3).setValue(userName);
+  logSheet.getRange(lastRow+1, 4).setValue(userID);
+}
+
+
+/**
+ Slackへ通知
+**/
+function postMessage(message) {
+  var token     = "{Slackのトークンを記載}";
+  var channelId = '{通知先チャンネルのチャンネルID}';
+  //「いらすとや」さんの画像をアイコン画像として利用しています。
+  var iconUrl   = "https://1.bp.blogspot.com/-ebTTPgBe2sQ/WdyDf7mwlAI/AAAAAAABHdE/LoUPY_8BMbAKv8q2w5pGfSDvECyw5u70gCLcBGAs/s180-c/job_kaikeishi_woman.png";
+  var　botName  = "発注依頼担当";
+  var slackApp  = SlackApp.create(token);  //slackAppインスタンスを取得
+
+  //メッセージを送信する
+  slackApp.postMessage(channelId, message,
+  {
+    username : botName,
+    icon_url : iconUrl
+  });
+}
+```
+
+
+まず誰が発注したのかを判定する必要があるため、スクリプト実行者のメールアドレスを取得できるようにしました +
+→`Session.getActiveUser().getEmail()`
+
+
+Slackへの通知に関しては、以下サイトを参考にGASのライブラリを使用しました +
+https://qiita.com/soundTricker/items/43267609a870fc9c7453 +
+※これを使うと1メンション内に改行を入れられるようになる！！ +
+※「ライブラリって、よそからいい機能を持ってくる便利なやつ」くらいの知識の私でも +
+　使うことができるわかりやすい記事でした +
+
+また、スプレッドシート内に画像や図形を置き「︙」 ＞ スクリプトを割り当て　から +
+通知を呼び出すボタンのScriptを割り当てます。（今回だと`korokoro`） +
+
+
+## ■こだわりポイント
+
+社内で他にも定期発注の需要があるかもと思い、ボタンを追加する手順をシートに追加しました。 +
+もっと簡単にできるといいんですが、思いつかなかったので、いい方法がある方アドバイスください！！ +
+
+image::ami/20171112/4.png[]
+
+
+あと弊社のあだ名文化を大切にするため、 +
+あだ名を登録できるシートも準備（登録がなかったらメールアドレスの前半が使われる） +
+
+image::ami/20171112/5.png[]
+
+## ■まとめ
+よっぴー（社内美化担当）曰く、4月〜10月で4〜5回発注してるとのことでした。 +
+使ってもらえたら嬉しいですが、あのボタンどこにあったっけ？と、探すほうが +
+時間かかるみたいになる可能性もあるな〜と思ってます。 +
+発注履歴シートから、商品ごとの発注頻度を割り出して、ボタン側からよっぴー達に +
+「そろそろ発注したら？」のPUSHをしてみるのも面白いかもと思いました。 +
+あと、発注用のURLも変わる可能性があるので、そのへんもメンテナンスしやすくしたい・・・ +
+という思いもあります。 +
+これからも日々ご褒美タスクを着手していきたいと思います！ +
+
+おわり +
+

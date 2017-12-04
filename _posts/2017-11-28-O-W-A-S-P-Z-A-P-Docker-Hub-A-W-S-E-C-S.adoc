@@ -1,0 +1,266 @@
+# OWASP ZAP 公式 Docker Hub イメージで AWS ECS にセキュリティ診断環境を構築
+:published_at: 2017-11-28
+:hp-tags: Shirota, OWASP ZAP, Docker Hub, ECS
+
+## 前提
+* OWASP ZAPとはOSSのセキュリティ診断ツール
+* AWS ECSとはDockerコンテナー管理サービス
+
+## 概要
+OWASP ZAPの公式Docker Hub イメージを使うことにより環境構築工数を削減できました。
+
+* ECSクラスターを作成
+* OWASP ZAP公式Docker Hubイメージからコンテナーを作成
+* ブラウザでアクセス
+* セキュリティ診断を行う
+* レポート出力を保存
+* （おまけ）コンテナーのメモリとディスク容量の拡張に関して
+
+## ECSクラスターを作成
+
+AWSコンソールにログインし、ECSに移動してクラスターを作成します。
+
+image:shirota/20171124/owaspzap_on_ecs01.png[]
+
+* Create Clusterをクリック
+
+image:shirota/20171124/owaspzap_on_ecs02.png[]
+
+* Cluster nameに任意の名称を入力（※今回は owaspzap とした）
+* EC2 Instance type（※コンテナーのベースになるEC2インスタンスのタイプ）は t2.medium を選択
+* Key pair を設定（※後でSSHログインしたい為）
+* VPC, Subnets, Security group は適宜設定（※作業環境から以下が許可されていれば問題無い）
+** SSH接続
+** 8080ポートへのHTTPアクセス
+
+* Createをクリック
+
+これでクラスターが作成されます。
+
+## OWASP ZAP公式Docker Hubイメージからコンテナーを作成
+
+image:shirota/20171124/owaspzap_on_ecs07.png[]
+
+ECS > Task Definitions にて、
+
+* Task Definition Nameに任意の名称を入力（※今回は owaspzap とした）
+* Task Role は None を選択
+* Add container をクリック
+
+image:shirota/20171124/owaspzap_on_ecs04.png[]
+
+* Container name に任意の名称を入力（※今回は owaspzap とした）
+* Image に owasp/zap2docker-stable と入力
+* Memory Limits は Soft limit を選択して 3072 を入力（※インスタンスタイプによって適宜変更可）
+
+image:shirota/20171124/owaspzap_on_ecs05.png[]
+
+* Port mappings は 以下を設定する
+** 8080 -> 8080
+** 8090 -> 8090
+
+image:shirota/20171124/owaspzap_on_ecs06.png[]
+
+* CPU units は 1024 を入力（※インスタンスタイプによって適宜変更可）
+* Command に zap-webswing.sh を入力
+* Add をクリック
+
+image:shirota/20171124/owaspzap_on_ecs07.png[]
+
+* Create をクリック
+
+image:shirota/20171124/owaspzap_on_ecs08.png[]
+
+Taskが出来上がりました。このTaskを使用して実際にコンテナーを立ち上げます。
+
+image:shirota/20171124/owaspzap_on_ecs09.png[]
+
+* Clusters に移動して、owaspzap > をクリック
+
+image:shirota/20171124/owaspzap_on_ecs10.png[]
+
+* Tasks タブをクリックし、Run new Task をクリック
+
+image:shirota/20171124/owaspzap_on_ecs11.png[]
+
+* Task Definitionにて適切なバージョンの Task を選択
+
+* Run Task をクリック
+
+image:shirota/20171124/owaspzap_on_ecs12.png[]
+
+* Taskが登録され、コンテナーが起動中であることを確認
+
+image:shirota/20171124/owaspzap_on_ecs13.png[]
+
+* RUNNING を確認
+
+これで OWASP ZAP のコンテナーが作成・起動されました。
+
+## ブラウザでアクセス
+
+image:shirota/20171124/owaspzap_on_ecs14.png[]
+
+* EC2 > ECSインスタンスを選択して、IPアドレスを調べる
+
+image:shirota/20171124/owaspzap_on_ecs15.png[]
+
+* http://<IPアドレス>:8080/?anonym=true&app=ZAP にアクセス
+* 規約に同意する場合は Accept する
+
+image:shirota/20171124/owaspzap_on_ecs16.png[]
+
+* 適宜選択してStartをクリック
+
+これで準備が整いました。
+
+## セキュリティ診断を行う
+
+image:shirota/20171124/owaspzap_on_ecs17.png[]
+
+* 任意のURLを指定して Attack
+
+image:shirota/20171124/owaspzap_on_ecs18.png[]
+
+しばらくすると左下フレームに結果が表示されます。
+
+## レポート出力を保存
+
+image:shirota/20171124/owaspzap_on_ecs19.png[]
+
+* Report の Generate HTML Report... を選択
+
+image:shirota/20171124/owaspzap_on_ecs20.png[]
+
+* 任意のファイル名で save
+
+* SSH接続してコンテナー内を確認
+
+++++
+<pre style="font-family: Menlo, Courier">
+▶ ssh -i ~/.ssh/shirox.pem ec2-user@54.174.90.132
+
+   __|  __|  __|
+   _|  (   \__ \   Amazon ECS-Optimized Amazon Linux AMI 2017.09.a
+ ____|\___|____/
+
+For documentation visit, http://aws.amazon.com/documentation/ecs
+3 package(s) needed for security, out of 10 available
+Run "sudo yum update" to apply all updates.
+
+[ec2-user@ip-172-31-28-105 ~]$ docker ps
+CONTAINER ID        IMAGE                            COMMAND             CREATED             STATUS              PORTS                                            NAMES
+bbbdce7ef186        owasp/zap2docker-stable          "zap-webswing.sh"   26 minutes ago      Up 26 minutes       0.0.0.0:8080->8080/tcp, 0.0.0.0:8090->8090/tcp   ecs-owaspzap-1-owaspzap-e4c2aa97a0dfaf8b4700
+347be605347e        amazon/amazon-ecs-agent:latest   "/agent"            41 minutes ago      Up 41 minutes                                                        ecs-agent
+
+[ec2-user@ip-172-31-28-105 ~]$ docker exec -it bbbdce7ef186 bash
+
+zap@bbbdce7ef186:/zap$ ll /home/zap/zap.html
+-rw-r--r-- 1 zap zap 15622 Nov 23 13:18 /home/zap/zap.html
+</pre>
+++++
+
+以下のようなレポートが出力されているはずです。
+
+image:shirota/20171124/owaspzap_on_ecs21.png[]
+
+## （おまけ）コンテナーのメモリとディスク容量の拡張に関して
+
+大規模サイトの診断を行う際、 +
+コンテナーのメモリとディスク容量が足りなくなることがありましたので、 +
+増設方法をメモしておこうと思います。 +
+
+### メモリ増設
+
+ # SSHでベースEC2にログインします
+ ssh -i ~/.ssh/key.pem ec2-user@xxx.xxx.xxx.xxx
+
+ # OWASP ZAPコンテナーIDを調べます
+ docker ps
+ # コンテナーにログインします
+ docker exec -it <OWASP ZAPコンテナーのID> bash
+
+ # sedコマンドでOWASP ZAP起動スクリプト内の使用メモリ部分を変更（128MB -> 10240MB）
+ sed -i s/128M/10240M/g zap-webswing.sh
+ # Javaプロセスのpidを調べる
+　ps aux | grep java
+　# 一旦killします
+ kill -HUP <pid>
+
+Javaプロセスをkillするとコンテナーが一旦終了します。
+
+ # 停止されたOWASP ZAPコンテナーを起動させます
+ docker start <OWASP ZAPコンテナーのID>
+
+ # メモリ・ディスクの確認をするためコンテナーにログイン
+　docker exec -it　<ECSエージェントコンテナーのID> bash
+ # メモリ割り当てが増えていることを確認
+ ps aux | grep java
+
+### ディスク増設
+
+ECSはEC2のオートスケーリング機能を利用しているので、 +
+そのオートスケーリング機能の Launch Configuration を変更します。
+
+ AWSコンソール > EC2 > Launch Configurations
+
+と遷移し、 +
+EC2ContainerService-xxxxxx-EcsInstanceLc-XXXXXXXX というような、 +
+今回作成された Launch Configuration を選択し、 +
+Copy launch configuration をクリックして、新しい Launch Configuration を作成します。
+
+ Launch configuration details > Edit details > Advanced Details > User data
+
+と遷移し、  +
+起動時にDockerコンテナーのディスクを増やすオプションを追記するように指定します。
+
+ echo 'OPTIONS="${OPTIONS} --storage-opt dm.basesize=500G"' >> /etc/sysconfig/docker
+ /etc/init.d/docker restart
+
+また、
+
+ Storage > Edit storage
+
+Volume Type: EBS の 	Size を希望の容量に指定します。 +
+Launch Configuration を作成したら、
+
+ AWSコンソール > EC2 > Auto Scaling Groups > EC2ContainerService-xxxxxx-EcsInstanceLc-XXXXXXXX > Edit
+
+Launch Configuration を作成したものに変更して、 +
+DesiredとMaxの台数に現在の2倍の数値を入力するなどして一旦スケールアウトさせ、 +
+スケールアウト後、元の数値に戻すなどして、 +
+新しい Launch Configuration でインスタンスを作り直します。 +
+
+これでディスク容量を増やすことが出来ます。
+
+## 所感
+
+以前、OWASP ZAPの環境の作成を自分で行った際、 +
+使用されている各ミドルウェアのバージョンの相性に悩まされまして、 +
+今回OWASP ZAP公式のDocker Hubイメージを使用して、 +
+大幅に構築の工数を削減することができたかと思います。
+
+また、AWS ECSを使用し、複雑なコマンド操作無しに構築することができました。
+
+つい3年くらい前まではDockerはまだ一般的でなかったかと思いますが、 +
+Docker Hubのようなものまで現れて、 +
+こんなに簡単に環境構築できるなんて想像が付きませんでした。 +
+最近yumコマンドを打つことも、 +
+ChefのレシピやAnsibleのプレイブックを書くことも減ってきたように思います。
+
+今後何かやりたい時は、 +
+まず真っ先にDocker Hubにイメージがあるか探してみたいと思います。
+
+OWASP ZAPに関しては今回構築したGUI版以外にも +
+コマンドライン版などもあり、 +
+OSSのセキュリティ診断ツールの中では +
+デファクトスタンダートと呼べるくらい有名かと思います。 +
+以下に参考URLを貼っておこうと思います。
+
+OWASP ZAP WebSwing（※GUI版） +
+https://github.com/zaproxy/zaproxy/wiki/WebSwing
+
+OWASP　ZAP 公式Docker Hubページ +
+https://hub.docker.com/r/owasp/zap2docker-stable/
+
+こちらからは以上です。
