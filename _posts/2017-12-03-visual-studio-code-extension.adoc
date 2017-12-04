@@ -1,6 +1,6 @@
 = テンプレで作る、Visual Studio Codeの拡張機能
 :hp-alt-title: visual_studio_code_extension
-:hp-tags: obata, VisualStudioCode, 拡張機能
+:hp-tags: obata, VisualStudioCode
 
 再び回ってきました、新人エンジニアの小畑です。
 
