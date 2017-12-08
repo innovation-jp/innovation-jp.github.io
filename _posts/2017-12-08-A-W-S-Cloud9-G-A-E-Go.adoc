@@ -59,7 +59,7 @@ EC2のコンソールを見てみると、ちゃんとCloud9用のインスタ�
 ![EC2の画面](画像のURL)
 
 
-=== GoでHelloなんたら
+=== Goのバージョン確認
 
 では、Goのコードをちょろっと書いてみましょう。 +
 AWS Cloud9では、デフォルトで最初からGoがサポートされている状態になってたので、 +
@@ -71,26 +71,184 @@ AWS Cloud9では、デフォルトで最初からGoがサポートされてい�
 
 === ついでにコラボってみる
 
-コラボレーション機能的なのもついているので、 +
+その前に寄り道して、コラボレーション機能的なものをさわってみます。 +
 ペアプロ、モブプロ的なことをするのにも、とってもしやすそうです！ +
 AWS Cloud9では、IAMユーザを作成し、Cloud9の操作権限を付与してあげれば、 +
 IDEの右上の「Share」ボタンから簡単にコラボレーションが始められます！
 
 こんな感じで、おのおの同時編集や、お互いに編集した箇所がわかりやすく表示されます。 +
 koheくん、協力ありがとう！
-![GoのVersion](画像のURL)
+![コラボ](画像のURL)
 
-詳細は、安定のクラスメソッドブログがおすすめ！
+詳細は、安定のクラスメソッドさんブログがおすすめ！
 https://dev.classmethod.jp/cloud/aws/aws-reinvent-cloud9-develop/
 
 
+=== GoでHelloなんたら
 
+AWS Cloud9のデフォルトでは、内部的にGOPATHが、 +
+AWS Cloud9のenvironmentディレクトに設定されているようです。 +
+EC2で言うと、 /home/ec2-user/environment (~/environment) +
+に設定されております。
 
+つまり、AWS Cloud9のIDE画面左上のルートディレクトリに、srcディレクトリを掘って、 +
+Goっぽくコードを書いていけばよい！ってことになりますね。
+
+ということで、お約束のようなコードを書いてみます。
+
+![コラボ](画像のURL)
+
+っていう、よくある当たり前のコードを書いて、 +
+保存をすると、勝手にgofmtが実行され、いい感じに整形されます。 +
+さらに、IDEの上にある「Run」ボタンを押すと実行されます。 +
+エラー等なければ、IDEの上にある「Preview」=>「Preview Running Application」を押すと、 +
+Previewウィンドウが表示され、8080ポートでListenしているところにhttps経由でアクセスされます。
+
+![コラボ](ac9-6)
+
+う〜ん簡単。。。
 
 
 == 掟破り（？）のGAE/Goの開発環境にしてみる
 
+では、せっかくなので、AWS Cloud9だとしても！Google App EngineのGo言語開発をしてみましょう！
 
+=== 環境を整える
+
+EC2に、環境を整えます！
+
+Google Cloud SDKの入手先は、こちらを見ていただき、最新のものを利用したほうがよいかもしれません。
+https://cloud.google.com/sdk/docs/
+
+
+==== Google Cloud SDKのインストール
+```
+cd ~
+
+sudo yum install python27
+
+wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-170.0.1-linux-x86_64.tar.gz
+tar zxpvf ./google-cloud-sdk-170.0.1-linux-x86_64.tar.gz 
+./google-cloud-sdk/install.sh
+./google-cloud-sdk/bin/gcloud components install app-engine-go
+./google-cloud-sdk/bin/gcloud components update
+```
+
+==== GOPATH、PATHの設定
+.bashrcを編集します
+```
+# .bashrc
+
+export GOPATH=$HOME/go
+export PATH=$PATH:$HOME/.local/bin:$HOME/bin:$HOME/google-cloud-sdk/platform/google_appengine:$GOPATH/bin
+```
+
+==== appengineモジュールのインストール
+```
+go get -u google.golang.org/appengine
+```
+
+==== おまけ、goimports
+
+ついでに、コード保存時に、自動的にgoimportsが実行され、importをいい感じにしてもらうようにします。
+```
+go get -u golang.org/x/tools/cmd/goimports
+```
+
+その後、IDE左上の「AWS Cloud9」=>「Open Your Init Script」でinit.jsを開いて、内容を
+```
+var path = require('path');
+
+var execGoFmt = function execGoFmt(filepath) {
+    services.proc.execFile('bash', {
+        args: ['-c', '/home/ec2-user/go/bin/goimports -w ' + path.join(services.c9.environmentDir, filepath)]
+    }, function (e, a) {
+        console.log(e, a);
+    });
+};
+
+services.save.on('afterSave', function (e) {
+    if (e.path && e.path.endsWith('.go')) {
+        execGoFmt(e.path);
+    }
+}, plugin);
+
+services.format.on('format', function (e) {
+    if (e.mode !== 'golang') return;
+    var tab = e.editor.ace.session.c9doc.tab;
+    services.save.save(tab, {}, function () {
+        execGoFmt(tab.path);
+    });
+    return true;
+}, plugin);
+```
+にしておきます。
+
+こちら、参考にさせていただきました。
+https://qiita.com/koki_cheese/items/a81d90684c21db4863ee
+
+が！、AWS Cloud9では、「environmentDir」を使わないとダメとか、 +
+GOPATHのとり方がわからないとかあったので、上記が無理やり動くようにした版です。 +
+どなたか、まっとうなやりかたを教えてください！
+
+=== Helloなんたらを実行してみる
+
+==== 軽くコードを書く
+
+GAE/Goのお約束にしたがい、こんな感じでapp.yamlとgoファイルを書きます。
+![コラボ](ac9-3)
+![コラボ](ac9-4)
+
+app.yaml
+```
+runtime: go
+api_version: go1
+
+handlers:
+  - url: /.*
+    script: _go_app
+    secure: always
+```
+
+main.go
+```
+package main
+
+import (
+	"fmt"
+	"net/http"
+)
+
+func init() {
+	http.HandleFunc("/", handle)
+}
+
+func handle(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hello AWSC9!")
+}
+```
+
+==== いよいよ実行
+
+IDEの下の方の「+」を押して、「New Run Configuration」を開きます。
+![コラボ](ac9-6)
+
+Commandのところに
+```
+python /home/ec2-user/google-cloud-sdk/platform/google_appengine/dev_appserver.py --skip_sdk_update_check true --host $IP --port $PORT --admin_host $IP --admin_port 8081 /home/ec2-user/environment/src/awsc9test/
+```
+を入れて、「Run」を押すと、デバッグ用サーバが立ち上がるので、 +
+Previewをして、予想通りの文字列が表示されば成功です！
+![コラボ](ac9-6)
+![コラボ](ac9-7)
+
+あとは、いい感じに、gcloudコマンドをあれこれしたり、ヤリホですね！
+
+
+== 心残り
+
+* もっとちゃんと設定をして、AWS Cloud9を利用した快適なGAE開発環境にしたい
+* GAEデバッグのadminサーバ(8081ポート)への接続がわからん
 
 == おしまい
 
@@ -102,8 +260,3 @@ EC2の料金はかかってしまいますが、分単位のEC2課金と相ま�
 === 仕事でプログラムを機会がめっきり無いとしても！！！
 
 以上
-
-
-[Google先生](https://www.google.co.jp/)
-
-![代替テキスト](画像のURL)
