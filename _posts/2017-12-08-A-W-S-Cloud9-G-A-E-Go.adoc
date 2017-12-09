@@ -36,12 +36,13 @@ AWS Cloud9では、自前のEC2があれこれできたり、AWS内なのでな�
 では、早速AWS Cloud9を使ってみましょう。
 
 いつものように、クラスメソッドさんのブログを見れば、 +
-AWSユーザなら誰でも簡単に立ち上げられます！
-
+AWSユーザなら誰でも簡単に立ち上げられます！ +
 https://dev.classmethod.jp/cloud/aws/aws-reinvent-cloud9/
 
 リージョンは、まだ東京に来ていないようなので、わたくしは同じアジアの
+
 * Asia Pacific (Singapore)
+
 を選択してみました。
 
 公式のチュートリアルもあるので簡単ですね！
@@ -56,8 +57,8 @@ EC2のコンソールを見てみると、ちゃんとCloud9用のインスタ�
 
 画面下の方に、コンソールが表示される部分がありますので、それが自分用のCloud9のEC2の環境になります。 +
 ここであれこれすれば、いろいろできちゃいますね〜。
-![EC2の画面](画像のURL)
 
+image::/images/yagasaki/awsc9/ac9-9.png[ac9-9]
 
 === Goのバージョン確認
 
@@ -66,7 +67,8 @@ AWS Cloud9では、デフォルトで最初からGoがサポートされてい�
 いきなり何も考えずにあれこれできます。
 
 が！コードを書く前に、一応コンソールでGoのバージョンでも見てみますか。
-![GoのVersion](画像のURL)
+
+image::/images/yagasaki/awsc9/ac9-1.png[ac9-1]
 
 
 === ついでにコラボってみる
@@ -78,15 +80,16 @@ IDEの右上の「Share」ボタンから簡単にコラボレーションが始
 
 こんな感じで、おのおの同時編集や、お互いに編集した箇所がわかりやすく表示されます。 +
 koheくん、協力ありがとう！
-![コラボ](画像のURL)
 
-詳細は、安定のクラスメソッドさんブログがおすすめ！
+image::/images/yagasaki/awsc9/ac9-2.png[ac9-2]
+
+詳細は、安定のクラスメソッドさんブログがおすすめ！ +
 https://dev.classmethod.jp/cloud/aws/aws-reinvent-cloud9-develop/
 
 
 === GoでHelloなんたら
 
-AWS Cloud9のデフォルトでは、内部的にGOPATHが、 +
+AWS Cloud9のデフォルトでは内部的にGOPATHが、 +
 AWS Cloud9のenvironmentディレクトに設定されているようです。 +
 EC2で言うと、 /home/ec2-user/environment (~/environment) +
 に設定されております。
@@ -96,7 +99,7 @@ Goっぽくコードを書いていけばよい！ってことになりますね
 
 ということで、お約束のようなコードを書いてみます。
 
-![コラボ](画像のURL)
+image::/images/yagasaki/awsc9/ac9-2.png[ac9-2]
 
 っていう、よくある当たり前のコードを書いて、 +
 保存をすると、勝手にgofmtが実行され、いい感じに整形されます。 +
@@ -104,7 +107,7 @@ Goっぽくコードを書いていけばよい！ってことになりますね
 エラー等なければ、IDEの上にある「Preview」=>「Preview Running Application」を押すと、 +
 Previewウィンドウが表示され、8080ポートでListenしているところにhttps経由でアクセスされます。
 
-![コラボ](ac9-6)
+image::/images/yagasaki/awsc9/ac9-6.png[ac9-6]
 
 う〜ん簡単。。。
 
@@ -122,6 +125,7 @@ https://cloud.google.com/sdk/docs/
 
 
 ==== Google Cloud SDKのインストール
+こんな感じです
 ```
 cd ~
 
@@ -184,20 +188,22 @@ services.format.on('format', function (e) {
 ```
 にしておきます。
 
-こちら、参考にさせていただきました。
+こちら、参考にさせていただきました。 +
 https://qiita.com/koki_cheese/items/a81d90684c21db4863ee
 
-が！、AWS Cloud9では、「environmentDir」を使わないとダメとか、 +
-GOPATHのとり方がわからないとかあったので、上記が無理やり動くようにした版です。 +
+が！AWS Cloud9では、「environmentDir」を使わないとダメとか、 +
+GOPATHのとり方がわからないとかあったので、上が無理やり動くようにした版です。 +
 どなたか、まっとうなやりかたを教えてください！
 
 === Helloなんたらを実行してみる
 
 ==== 軽くコードを書く
 
-GAE/Goのお約束にしたがい、こんな感じでapp.yamlとgoファイルを書きます。
-![コラボ](ac9-3)
-![コラボ](ac9-4)
+GAE/Goのお約束にしたがい、こんな感じのディレクトリでapp.yamlとgoファイルを書きます。
+
+image::/images/yagasaki/awsc9/ac9-3.png[ac9-3]
+
+image::/images/yagasaki/awsc9/ac9-4.png[ac9-4]
 
 app.yaml
 ```
@@ -231,16 +237,21 @@ func handle(w http.ResponseWriter, r *http.Request) {
 ==== いよいよ実行
 
 IDEの下の方の「+」を押して、「New Run Configuration」を開きます。
-![コラボ](ac9-6)
+
+image::/images/yagasaki/awsc9/ac9-10.png[ac9-10]
 
 Commandのところに
 ```
 python /home/ec2-user/google-cloud-sdk/platform/google_appengine/dev_appserver.py --skip_sdk_update_check true --host $IP --port $PORT --admin_host $IP --admin_port 8081 /home/ec2-user/environment/src/awsc9test/
 ```
-を入れて、「Run」を押すと、デバッグ用サーバが立ち上がるので、 +
+っていう感じのを入れて、「Run」を押すと、デバッグ用サーバが立ち上がるので、 +
 Previewをして、予想通りの文字列が表示されば成功です！
-![コラボ](ac9-6)
-![コラボ](ac9-7)
+
+image::/images/yagasaki/awsc9/ac9-8.png[ac9-8]
+
+image::/images/yagasaki/awsc9/ac9-6.png[ac9-6]
+
+image::/images/yagasaki/awsc9/ac9-7.png[ac9-7]
 
 あとは、いい感じに、gcloudコマンドをあれこれしたり、ヤリホですね！
 
@@ -249,14 +260,18 @@ Previewをして、予想通りの文字列が表示されば成功です！
 
 * もっとちゃんと設定をして、AWS Cloud9を利用した快適なGAE開発環境にしたい
 * GAEデバッグのadminサーバ(8081ポート)への接続がわからん
+* デバッガまわり
+
+https://twitter.com/yaggytter[@Yaggytter] までお教えいただけますと大変うれしいです！
 
 == おしまい
 
 これで、しばらくは快適な開発生活が送れます。 +
-EC2の料金はかかってしまいますが、分単位のEC2課金と相まって大したコストもかからずに、 +
+EC2の料金はかかってしまいますが、分単位のEC2課金と +
+非利用時の自動シャットダウンが相まって、大したコストもかからずに、 +
 いつでもどこでも同じ開発環境が使えるということは非常に魅力を感じており、 +
 しばらくはAWS Cloud9をメインにバリバリ開発をして行きたいという所存でございます。
 
-=== 仕事でプログラムを機会がめっきり無いとしても！！！
+==== 仕事でプログラミングをする機会がめっきり無いとしても！！！
 
 以上
