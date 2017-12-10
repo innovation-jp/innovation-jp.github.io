@@ -1,5 +1,5 @@
-# GoのORマッパーを試してみた
-:hp-alt-title:　GOlangのORマッパーを試してみた
+# GoのORマッパーを使ってみよう！
+:hp-alt-title:　GOlangのORマッパーを使ってみよう！
 :hp-tags: NewTsukamoto, mac, Golang, gorm
 
 こんにちは。
@@ -9,7 +9,7 @@
 歯を削るキュイーンって音が大の苦手で、苦手というかムリなんです・・・ +
 あの音、なんとかならないでしょうかねー +
 
-さて、今回は、初めのGolangとORマッパーのgormを試してみました。
+さて、今回は、初めのGolangとORマッパーのgormを使ってみました。
 
 
 ====== 目的
@@ -24,11 +24,11 @@ gormライブラリを使って簡単なDB操作を試してみます。 +
 <pre style="font-family: Menlo, Courier">
 import (
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
+	<text style="color:red">_</text> "github.com/jinzhu/gorm/dialects/postgres"
 )
 </pre> 
 ++++
-postgresパッケージは直接は使用されません。gormパッケージからインタフェースを通して使用されます。GOでは、直接使用しないimport文があるとコンパイルエラーとなるため、ブランク修飾子を付けこれを回避します。 +
+gormパッケージからインタフェースを通してpostgresパッケージは使用されます。GOでは、直接使用しないimport文があるとコンパイルエラーとなるため、ブランク修飾子を付けこれを回避します。 使われない変数についても同様にコンパイルエラーとなります。コンパイル言語なので厳格でいい感じです。
 
 ++++
 <pre style="font-family: Menlo, Courier">
@@ -47,8 +47,10 @@ if err != nil {
 ++++
 
 DBコネクションの設定はこれだけ。 +
+
 db.Close()にdeferキーワードを指定していますが、これは遅延実行を意味します。上記サンプルでは、DBコネクションに失敗した場合にpanic()が発生します。その後、必ず、db.Close()が実行されます。javaのfinally句みたいな感じですね。
 
+ちょっとだけ内部処理（gorm.Open）を確認。"database/sql"のライブラリを使用してDBコネクションを生成、コネクションプールの管理もしているようです。オープンソースって楽しい！
 
 ====== 【Create編】 +
 テーブルとのマッピングはmodelパッケージに、Tb_invoiceという構造体を使用しました。 構造体の名称、メンバ変数の先頭文字が大文字となっているのは、別パッケージから参照可能なpublic変数とするためです。
@@ -162,7 +164,7 @@ Model関数を使います。 +
 Where関数のインタフェースは、プリペアードステートメント方式でも可能でした。
 
 
-====== 【その他 Join／Query発行】 +
+====== 【Join／Query発行】 +
 テーブル結合 +
 ++++
 <pre style="font-family: Menlo, Courier">
@@ -196,7 +198,7 @@ db.Raw(sql).
 
 テーブル結合や、クエリビルダを使用しないSQLもこんな書き方で実行できます。 + 
 
-====== 【その他 トランザクション管理】 +
+====== 【トランザクション管理】 +
 ++++
 <pre style="font-family: Menlo, Courier">
 // コネクション設定	
