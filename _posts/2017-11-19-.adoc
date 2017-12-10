@@ -1,4 +1,4 @@
-= 「多重継承」と「クラス分割」と「オブジェクト指向プログラミング」について勉強したメモ
+= 【多重継承】と【クラス分割】と【オブジェクト指向プログラミング】について勉強したメモ
 :published_at: 2017-11-19
 :hp-tags: bigen,OOP,ObjectOrientdPrograming,Trait
 
