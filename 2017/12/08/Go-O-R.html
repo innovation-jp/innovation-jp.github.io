@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>GoのORマッパーを使ってみよう！ - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="GoのORマッパーを使ってみよう！">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="GoのORマッパーを使ってみよう！">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2017/12/08/Go-O-R.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="GoのORマッパーを使ってみよう！" />
+    <meta property="og:description" content="こんにちは。 エンジニアのNew塚本です。 １０月から歯医者に通い始めて３ヶ月過ちましたが、未だ完治しておりません。 歯を削るキュイーンって音が大の苦手で、苦手というかムリなんです・・・ あの音、なんとかならないでしょうかねー さて、今回は、初めてのGolangとORマッパーのgormを使ってみました。 目的 gormライブラリを使って簡単なDB操作を試してみます。 ライブラリの詳細は以下のサイトを参照ください。  http://jinzhu.me/gorm/ 【DB接続】 import ( 	&quot;github.com/jinzhu/gorm&quot; 	_ &quot;..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2017/12/08/Go-O-R.html" />
+    <meta property="article:published_time" content="2017-12-07T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2017-12-10T12:19:15.459Z" />
+    <meta property="article:tag" content="NewTsukamoto" />
+    <meta property="article:tag" content="mac" />
+    <meta property="article:tag" content="Golang" />
+    <meta property="article:tag" content="gorm" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="GoのORマッパーを使ってみよう！" />
+    <meta name="twitter:description" content="こんにちは。 エンジニアのNew塚本です。 １０月から歯医者に通い始めて３ヶ月過ちましたが、未だ完治しておりません。 歯を削るキュイーンって音が大の苦手で、苦手というかムリなんです・・・ あの音、なんとかならないでしょうかねー さて、今回は、初めてのGolangとORマッパーのgormを使ってみました。 目的 gormライブラリを使って簡単なDB操作を試してみます。 ライブラリの詳細は以下のサイトを参照ください。  http://jinzhu.me/gorm/ 【DB接続】 import ( 	&quot;github.com/jinzhu/gorm&quot; 	_ &quot;..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2017/12/08/Go-O-R.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars2.githubusercontent.com/u/29852256?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "GoのORマッパーを使ってみよう！",
+    "url": "http://tech.innovation.co.jp/2017/12/08/Go-O-R.html",
+    "datePublished": "2017-12-07T15:00:00.000Z",
+    "dateModified": "2017-12-10T12:19:15.459Z",
+    "keywords": "NewTsukamoto,  mac,  Golang,  gorm",
+    "description": "こんにちは。 エンジニアのNew塚本です。 １０月から歯医者に通い始めて３ヶ月過ちましたが、未だ完治しておりません。 歯を削るキュイーンって音が大の苦手で、苦手というかムリなんです・・・ あの音、なんとかならないでしょうかねー さて、今回は、初めてのGolangとORマッパーのgormを使ってみました。 目的 gormライブラリを使って簡単なDB操作を試してみます。 ライブラリの詳細は以下のサイトを参照ください。  http://jinzhu.me/gorm/ 【DB接続】 import ( \t&quot;github.com/jinzhu/gorm&quot; \t_ &quot;..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-New-Tsukamoto tag-mac tag-Golang tag-gorm no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="08 Dec 2017" class="post-meta__date date">08 Dec 2017</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/New-Tsukamoto">NewTsukamoto</a>, <a href="http://tech.innovation.co.jp/tag/mac"> mac</a>, <a href="http://tech.innovation.co.jp/tag/Golang"> Golang</a>, <a href="http://tech.innovation.co.jp/tag/gorm"> gorm</a></span>
+        <span class="post-meta__author author"><img src="https://avatars2.githubusercontent.com/u/29852256?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">GoのORマッパーを使ってみよう！</h1>
+    </header>
+
+    <section class="post tag-New-Tsukamoto tag-mac tag-Golang tag-gorm">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんにちは。
+エンジニアのNew塚本です。</p>
+</div>
+<div class="paragraph">
+<p>１０月から歯医者に通い始めて３ヶ月過ちましたが、未だ完治しておりません。<br>
+歯を削るキュイーンって音が大の苦手で、苦手というかムリなんです・・・<br>
+あの音、なんとかならないでしょうかねー<br></p>
+</div>
+<div class="paragraph">
+<p>さて、今回は、初めてのGolangとORマッパーのgormを使ってみました。</p>
+</div>
+</div>
+</div>
+<div class="sect5">
+<h6 id="__">目的</h6>
+<div class="paragraph">
+<p>gormライブラリを使って簡単なDB操作を試してみます。<br></p>
+</div>
+<div class="paragraph">
+<p>ライブラリの詳細は以下のサイトを参照ください。<br>
+ <a href="http://jinzhu.me/gorm/" class="bare">http://jinzhu.me/gorm/</a></p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="__db_br">【DB接続】<br></h6>
+<pre style="font-family: Menlo, Courier">
+import (
+	"github.com/jinzhu/gorm"
+	<text style="color:red">_</text> "github.com/jinzhu/gorm/dialects/postgres"
+)
+</pre>
+<div class="paragraph">
+<p>gormパッケージからインタフェースを通してpostgresパッケージは使用されます。Goでは、直接使用しないimport文があるとコンパイルエラーとなるため、ブランク修飾子を付けこれを回避します。 使われない変数についても同様にコンパイルエラーとなります。コンパイル言語なので厳格でいい感じです。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+func test() {
+	// DBコネクション設定
+	db, err := gorm.Open("postgres", "user=hoge password=hoge dbname=testdb sslmode=disable")
+	if err != nil {
+		panic(err)
+	}
+	// DB操作の実処理
+
+	// コネクション解放
+	defer db.Close()
+}
+</pre>
+<div class="paragraph">
+<p>DBコネクションの設定はこれだけ。<br></p>
+</div>
+<div class="paragraph">
+<p>db.Close()にdeferキーワードを指定していますが、これは遅延実行を意味します。上記サンプルでは、DBコネクションに失敗した場合にpanic()が発生します。その後、必ず、db.Close()が実行されます。javaのfinally句みたいな感じですね。</p>
+</div>
+<div class="paragraph">
+<p>ちょっとだけ内部処理（gorm.Open）を確認。"database/sql"のライブラリを使用してDBコネクションを生成、コネクションプールの管理もしているようです。オープンソースって楽しい！</p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="__create_br">【Create編】<br></h6>
+<div class="paragraph">
+<p>テーブルとのマッピングはmodelパッケージに、Tb_invoiceという構造体を作りました。 構造体の名称、メンバ変数の先頭文字が大文字となっているのは、別パッケージから参照可能な変数とするためです。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+package model
+type Tb_invoice struct {
+	Target_month int
+	Client_id int
+	Price int
+}
+</pre>
+<pre style="font-family: Menlo, Courier">
+func Create() {
+	// DBコネクション設定
+	db, err := gorm.Open("postgres", "user=hoge password=hoge dbname=testdb sslmode=disable")
+	if err != nil {
+		panic(err)
+	}
+
+	// DB登録のための構造体
+	invoice := model.Tb_invoice{}
+	invoice.Target_month = 201711
+	invoice.Client_id = 999999
+	invoice.Price = 50000
+
+	<text style="color:red">db.Create(&invoice)</text>
+
+    	// コネクション解放
+	defer db.Close()
+}
+</pre>
+<div class="paragraph">
+<p>Create関数に登録する情報を設定した構造体のポインタを渡すだけです。</p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="__read_find_br">【Read編 Find】<br></h6>
+<pre style="font-family: Menlo, Courier">
+func Find() {
+	// DBコネクション設定
+	db, err := gorm.Open("postgres", "user=hoge password=hoge dbname=testdb sslmode=disable")
+	if err != nil {
+		panic(err)
+	}
+
+	invoice := []model.Tb_invoice{}
+
+	<text style="color:red">db.Find(&invoice)</text>
+
+	// コネクション解放
+	defer db.Close()
+}
+</pre>
+<div class="paragraph">
+<p>全件検索するFind関数です。返却値は複数件となるため、構造体配列へのポインタを渡します。</p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="__read_find_where_br">【Read編 Find+Where】<br></h6>
+<pre style="font-family: Menlo, Courier">
+func FindWhere() {
+	// DBコネクション設定
+	db, err := gorm.Open("postgres", "user=hoge password=hoge dbname=testdb sslmode=disable")
+	if err != nil {
+		panic(err)
+	}
+	invoice := []model.Tb_invoice{}
+	conditions := model.Tb_invoice{}
+	conditions.Target_month = "999999"
+
+	<text style="color:red">db.Where(&conditions).Find(&invoice)</text>
+
+	// コネクション解放
+	defer db.Close()
+}
+</pre>
+<div class="paragraph">
+<p>Find関数に条件を指定することができます。</p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="__update_br">【Update編】<br></h6>
+<pre style="font-family: Menlo, Courier">
+func Update() {
+	// DBコネクション設定
+	db, err := gorm.Open("postgres", "user=hoge password=hoge dbname=testdb sslmode=disable")
+	if err != nil {
+		panic(err)
+	}
+
+	invoice := model.Tb_invoice{}
+
+	// 更新データ
+	data := invoice
+	data.Client_id = 222
+
+	<text style="color:red">db.Model(&invoice).Where("target_month = ?", "999999").Update(&data)</text>
+
+	// コネクション解放
+	defer db.Close()
+}
+</pre>
+<div class="paragraph">
+<p>Model関数を使います。<br>
+更新テーブルのインタフェースに対して、更新する値を指定したポインタをUpdate関数に設定するようです。<br>
+Where関数のインタフェースは、プリペアードステートメント方式でも可能でした。</p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="__join_query_br">【Join／Query発行】<br></h6>
+<div class="paragraph">
+<p>テーブル結合<br></p>
+</div>
+<pre style="font-family: Menlo, Courier">
+joinResult := []model.JoinResult{}
+
+//select項目
+col := "a.id, a.hoge, b.color"
+
+//基礎テーブルを指定
+db.Table("tableA a").Select(col).
+
+//結合表を指定
+Joins("inner join tableB b on (a.id = b.id)").
+Where("a.delete_flag = ?", 0).
+Order("a.id asc").
+<text style="color:red">Scan(&joinResult)</text>
+</pre>
+<div class="paragraph">
+<p>SQL の直書き</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+multiResult := []client.MultiResult{}
+
+// 発行するSQL sqlとmodelの変数はキャメルケース
+sql := "実行するSQLを記載"
+db.Raw(sql).
+<text style="color:red">Scan(&multiResult)</text>
+</pre>
+<div class="paragraph">
+<p>テーブル結合や、クエリビルダを使用しないSQLもこんな書き方で実行できます。<br></p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="__br">【トランザクション管理】<br></h6>
+<pre style="font-family: Menlo, Courier">
+// コネクション設定
+db, err := gorm.Open("postgres", "user=hoge password=hoge dbname=testdb sslmode=disable")
+if err != nil {
+	panic(err)
+}
+
+// トランザクション開始
+<text style="color:red">mTx := db.Begin()</text>
+
+invoice := model.Tb_invoice{}
+invoice.Create_date = time.Now()
+
+if err := <text style="color:red">mTx.Create(&invoice).Error</text>; err != nil {
+	fmt.Println("err : ", err)
+	<text style="color:red">mTx.Rollback()</text>
+} else {
+	<text style="color:red">mTx.Commit()</text>
+}
+// トランザクション解放
+<text style="color:red">defer mTx.Close()</text>
+</pre>
+<div class="paragraph">
+<p>トランザクションを使う場合も簡単に実装できました。<br></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="___2">感想</h5>
+<div class="paragraph">
+<p>Goのお作法に若干戸惑いましたが、全般的には直感的に書けるので描きやすい言語だと思います。そして、標準ライブラリ（database/sql）との違いですが、標準ライブラリは、Scan関数にマッピングする項目を指定しますが、gormではマッピングする構造体のポインタを渡すだけです。また、db.Debug()にすると、発行するSQLを出力してくれます。
+簡単な検証でしたがこれは使えそうです。</p>
+</div>
+<div class="paragraph">
+<p>おわり</p>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2017. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
