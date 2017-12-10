@@ -9,7 +9,7 @@
 歯を削るキュイーンって音が大の苦手で、苦手というかムリなんです・・・ +
 あの音、なんとかならないでしょうかねー +
 
-さて、今回は、初めのGolangとORマッパーのgormを使ってみました。
+さて、今回は、初めてのGolangとORマッパーのgormを使ってみました。
 
 
 ====== 目的
@@ -35,7 +35,7 @@ gormパッケージからインタフェースを通してpostgresパッケー�
 func test() {
 	// DBコネクション設定
 	db, err := gorm.Open("postgres", "user=hoge password=hoge dbname=testdb sslmode=disable")
-if err != nil {
+	if err != nil {
 		panic(err)
 	}
 	// DB操作の実処理
