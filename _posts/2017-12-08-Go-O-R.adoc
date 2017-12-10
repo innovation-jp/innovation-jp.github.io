@@ -13,7 +13,7 @@
 
 
 ====== 目的
-gormライブラリを使って簡単なDB操作を試し、標準ライブラリとの違いを確認したいと思います。  +
+gormライブラリを使って簡単なDB操作を試してみます。 +
 
 ライブラリの詳細は以下のサイトを参照ください。 +
  http://jinzhu.me/gorm/
@@ -28,7 +28,7 @@ import (
 )
 </pre> 
 ++++
-使っていないimport文があるとコンパイルエラーとなるため、"_"を付けます。 +
+postgresパッケージは直接は使用されません。gormパッケージからインタフェースを通して使用されます。GOでは、直接使用しないimport文があるとコンパイルエラーとなるため、ブランク修飾子を付けこれを回避します。 +
 
 ++++
 <pre style="font-family: Menlo, Courier">
@@ -46,13 +46,12 @@ if err != nil {
 </pre> 
 ++++
 
-DBコネクションの設定はこれだけ。
+DBコネクションの設定はこれだけ。 +
+db.Close()にdeferキーワードを指定していますが、これは遅延実行を意味します。上記サンプルでは、DBコネクションに失敗した場合にpanic()が発生します。その後、必ず、db.Close()が実行されます。javaのfinally句みたいな感じですね。
 
 
 ====== 【Create編】 +
-テーブルとのマッピングはmodelパッケージに、Tb_invoiceという構造体を作成します。 + 
-構造体名称の先頭文字とメンバ変数が大文字となっているのは、別パッケージから参照可能なpublic変数とするためです。
-
+テーブルとのマッピングはmodelパッケージに、Tb_invoiceという構造体を使用しました。 構造体の名称、メンバ変数の先頭文字が大文字となっているのは、別パッケージから参照可能なpublic変数とするためです。
 ++++
 <pre style="font-family: Menlo, Courier">
 package model
@@ -81,7 +80,7 @@ func Create() {
     
 	<text style="color:red">db.Create(&invoice)</text>
 	
-    // コネクション解放
+    	// コネクション解放
 	defer db.Close()
 }
 </pre> 
@@ -121,10 +120,10 @@ func FindWhere() {
 		panic(err)
 	}
 	invoice := []model.Tb_invoice{}
-	where := model.Tb_invoice{}
-	where.Target_month = "999999"
+	conditions := model.Tb_invoice{}
+	conditions.Target_month = "999999"
     
-	<text style="color:red">db.Where(&where).Find(&invoice)</text>
+	<text style="color:red">db.Where(&conditions).Find(&invoice)</text>
 
 	// コネクション解放
 	defer db.Close()
@@ -158,7 +157,8 @@ func Update() {
 </pre> 
 ++++
 
-Model関数を使います。更新対象テーブルとマッピングする構造体のポインタと、Update関数に更新する情報を設定します。 +
+Model関数を使います。 +
+更新テーブルのインタフェースに対して、更新する値を指定したポインタをUpdate関数に設定するようです。 +
 Where関数のインタフェースは、プリペアードステートメント方式でも可能でした。
 
 
@@ -213,18 +213,19 @@ invoice.Create_date = time.Now()
 	
 if err := <text style="color:red">mTx.Create(&invoice).Error</text>; err != nil {
 	fmt.Println("err : ", err)
-	mTx.Rollback()
-	defer mTx.Close()	
+	<text style="color:red">mTx.Rollback()</text>
+} else {
+	<text style="color:red">mTx.Commit()</text>
 }
-	
-// トランザクションコミット＆コネクション解放
-<text style="color:red">mTx.Commit()</text>
-defer mTx.Close()	
+// トランザクション解放
+<text style="color:red">defer mTx.Close()</text>	
+</pre>
 ++++
-
+ 
 トランザクションを使う場合も簡単に実装できました。 + 
 
 ===== 感想
-GOのお作法に若干戸惑いましたが、全般的には直感的に書けるので描きやすい言語だと思います。そして、標準ライブラリ（database/sql）との違いですが、標準ライブラリは、Scan関数にマッピングする項目を指定しますが、gormではDBとマッピングする構造体のポインタを渡すだけです。これは楽でした！！。それとオープンソースのため、ライブラリで実装されていることも確認可能です。これはありだと思いました。
+GOのお作法に若干戸惑いましたが、全般的には直感的に書けるので描きやすい言語だと思います。そして、標準ライブラリ（database/sql）との違いですが、標準ライブラリは、Scan関数にマッピングする項目を指定しますが、gormではマッピングする構造体のポインタを渡すだけです。また、db.Debug()にすると、発行するSQLを出力してくれます。
+簡単な検証でしたが、これは使えるなと感じました。
 
 おわり
