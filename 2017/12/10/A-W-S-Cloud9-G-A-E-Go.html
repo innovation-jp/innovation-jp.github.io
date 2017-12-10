@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>AWS Cloud9でGAE/Goのコードを軽く書いてみる - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="AWS Cloud9でGAE/Goのコードを軽く書いてみる">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="AWS Cloud9でGAE/Goのコードを軽く書いてみる">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2017/12/10/A-W-S-Cloud9-G-A-E-Go.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="AWS Cloud9でGAE/Goのコードを軽く書いてみる" />
+    <meta property="og:description" content="こんにちは！ いや〜激寒ですね！ 八王子の朝は、いろいろ凍っております。 矢ヶ崎です。 クラウドいろいろ 弊社では現在、AWSはもちろんのこと、Azure、GCP、Bluemixと、いろいろなクラウドプラットフォームを利用しています。 AWSのre:Inventには、うちの規模にしては贅沢に5名も！参加させていただきましたが、実はAWSだけ！という感じではありません。 しか〜し？！ AWS Cloud9という、素敵な開発環境がリリースされたではないですか！ こ、これは？！AWS！さすが！って思っているわけでございます。 開発環境への迷い 昨今のわたくし..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2017/12/10/A-W-S-Cloud9-G-A-E-Go.html" />
+    <meta property="article:published_time" content="2017-12-09T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2017-12-10T11:18:22.343Z" />
+    <meta property="article:tag" content="Yagasaki" />
+    <meta property="article:tag" content="AWS" />
+    <meta property="article:tag" content="Cloud9" />
+    <meta property="article:tag" content="IDE" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="AWS Cloud9でGAE/Goのコードを軽く書いてみる" />
+    <meta name="twitter:description" content="こんにちは！ いや〜激寒ですね！ 八王子の朝は、いろいろ凍っております。 矢ヶ崎です。 クラウドいろいろ 弊社では現在、AWSはもちろんのこと、Azure、GCP、Bluemixと、いろいろなクラウドプラットフォームを利用しています。 AWSのre:Inventには、うちの規模にしては贅沢に5名も！参加させていただきましたが、実はAWSだけ！という感じではありません。 しか〜し？！ AWS Cloud9という、素敵な開発環境がリリースされたではないですか！ こ、これは？！AWS！さすが！って思っているわけでございます。 開発環境への迷い 昨今のわたくし..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2017/12/10/A-W-S-Cloud9-G-A-E-Go.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "Akihiro YAGASAKI",
+        "image": "https://avatars1.githubusercontent.com/u/13131599?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "AWS Cloud9でGAE/Goのコードを軽く書いてみる",
+    "url": "http://tech.innovation.co.jp/2017/12/10/A-W-S-Cloud9-G-A-E-Go.html",
+    "datePublished": "2017-12-09T15:00:00.000Z",
+    "dateModified": "2017-12-10T11:18:22.343Z",
+    "keywords": "Yagasaki, AWS, Cloud9, IDE",
+    "description": "こんにちは！ いや〜激寒ですね！ 八王子の朝は、いろいろ凍っております。 矢ヶ崎です。 クラウドいろいろ 弊社では現在、AWSはもちろんのこと、Azure、GCP、Bluemixと、いろいろなクラウドプラットフォームを利用しています。 AWSのre:Inventには、うちの規模にしては贅沢に5名も！参加させていただきましたが、実はAWSだけ！という感じではありません。 しか〜し？！ AWS Cloud9という、素敵な開発環境がリリースされたではないですか！ こ、これは？！AWS！さすが！って思っているわけでございます。 開発環境への迷い 昨今のわたくし..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Yagasaki tag-A-W-S tag-Cloud9 tag-I-D-E no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="10 Dec 2017" class="post-meta__date date">10 Dec 2017</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Yagasaki">Yagasaki</a>, <a href="http://tech.innovation.co.jp/tag/A-W-S">AWS</a>, <a href="http://tech.innovation.co.jp/tag/Cloud9">Cloud9</a>, <a href="http://tech.innovation.co.jp/tag/I-D-E">IDE</a></span>
+        <span class="post-meta__author author"><img src="https://avatars1.githubusercontent.com/u/13131599?v=4" alt="profile image for Akihiro YAGASAKI" class="avatar post-meta__avatar" /> by Akihiro YAGASAKI</span>
+      </div>
+      <h1 class="post-title">AWS Cloud9でGAE/Goのコードを軽く書いてみる</h1>
+    </header>
+
+    <section class="post tag-Yagasaki tag-A-W-S tag-Cloud9 tag-I-D-E">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんにちは！<br>
+いや〜激寒ですね！<br>
+八王子の朝は、いろいろ凍っております。<br>
+矢ヶ崎です。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">クラウドいろいろ</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>弊社では現在、AWSはもちろんのこと、Azure、GCP、Bluemixと、いろいろなクラウドプラットフォームを利用しています。<br>
+AWSのre:Inventには、うちの規模にしては贅沢に5名も！参加させていただきましたが、実はAWSだけ！という感じではありません。</p>
+</div>
+<div class="paragraph">
+<p>しか〜し？！<br>
+AWS Cloud9という、素敵な開発環境がリリースされたではないですか！<br>
+こ、これは？！AWS！さすが！って思っているわけでございます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">開発環境への迷い</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>昨今のわたくしゴトですが、開発するにあたってのIDEやエディタというのに迷いがありました。<br>
+エディタは、vi(の機能しか使わない)ユーザだったのを、とうとうvimを使い始めたり、<br>
+やっぱりVSCodeがいいな〜って使い始めたり、<br>
+結局Eclipseだよね〜って戻ってみたり、<br>
+迷走中だった今日このごろ。<br>
+AWS Cloud9に出会い、これだ！っていうのに出会えちゃった感が無くならないうちに、ブログりたいと思います。</p>
+</div>
+<div class="paragraph">
+<p>Cloud9は使ったことはあるのですが、個人的にはあくまで学習用のIDEっていうイメージが強かったのです。<br>
+しか〜し？！<br>
+AWS Cloud9では、自前のEC2があれこれできたり、AWS内なのでなんとなく安心という、あまり根拠の無い希望が湧いております！</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__go_golang">せっかくだから、Go(golang)のコードを試しに書いてみる</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="___3">まずは立ち上げ</h3>
+<div class="paragraph">
+<p>では、早速AWS Cloud9を使ってみましょう。</p>
+</div>
+<div class="paragraph">
+<p>いつものように、クラスメソッドさんのブログを見れば、<br>
+AWSユーザなら誰でも簡単に立ち上げられます！<br>
+<a href="https://dev.classmethod.jp/cloud/aws/aws-reinvent-cloud9/" class="bare">https://dev.classmethod.jp/cloud/aws/aws-reinvent-cloud9/</a></p>
+</div>
+<div class="paragraph">
+<p>リージョンは、まだ東京に来ていないようなので、わたくしは同じアジアの</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Asia Pacific (Singapore)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>を選択してみました。</p>
+</div>
+<div class="paragraph">
+<p>公式のチュートリアルもあるので簡単ですね！</p>
+</div>
+<div class="paragraph">
+<p>EC2のコンソールを見てみると、ちゃんとCloud9用のインスタンスが立ち上がってますね！</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ide">IDE画面をさわってみる</h3>
+<div class="paragraph">
+<p>起動後に、「Open IDE」ボタンを押すと、それだけでIDE(統合開発環境)が表示されます。簡単ですね〜。</p>
+</div>
+<div class="paragraph">
+<p>いわゆるIDEなので、Cloud9をさわったことが無い方でも、なんの違和感もなくさわれるかと思います！</p>
+</div>
+<div class="paragraph">
+<p>画面下の方に、コンソールが表示される部分がありますので、それが自分用のCloud9のEC2の環境になります。<br>
+ここであれこれすれば、いろいろできちゃいますね〜。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/yagasaki/awsc9/ac9-9.png" alt="ac9-9">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_go">Goのバージョン確認</h3>
+<div class="paragraph">
+<p>では、Goのコードをちょろっと書いてみましょう。<br>
+AWS Cloud9では、デフォルトで最初からGoがサポートされている状態になってたので、<br>
+いきなり何も考えずにあれこれできます。</p>
+</div>
+<div class="paragraph">
+<p>が！コードを書く前に、一応コンソールでGoのバージョンでも見てみますか。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/yagasaki/awsc9/ac9-1.png" alt="ac9-1">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___4">ついでにコラボってみる</h3>
+<div class="paragraph">
+<p>その前に寄り道して、コラボレーション機能的なものをさわってみます。<br>
+ペアプロ、モブプロ的なことをするのにも、とってもしやすそうです！<br>
+AWS Cloud9では、IAMユーザを作成し、Cloud9の操作権限を付与してあげれば、<br>
+IDEの右上の「Share」ボタンから簡単にコラボレーションが始められます！</p>
+</div>
+<div class="paragraph">
+<p>こんな感じで、おのおの同時編集や、お互いに編集した箇所がわかりやすく表示されます。<br>
+koheくん、協力ありがとう！</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/yagasaki/awsc9/ac9-2.png" alt="ac9-2">
+</div>
+</div>
+<div class="paragraph">
+<p>詳細は、安定のクラスメソッドさんブログがおすすめ！<br>
+<a href="https://dev.classmethod.jp/cloud/aws/aws-reinvent-cloud9-develop/" class="bare">https://dev.classmethod.jp/cloud/aws/aws-reinvent-cloud9-develop/</a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_go_hello">GoでHelloなんたら</h3>
+<div class="paragraph">
+<p>AWS Cloud9のデフォルトでは内部的にGOPATHが、<br>
+AWS Cloud9のenvironmentディレクトに設定されているようです。<br>
+EC2で言うと、 /home/ec2-user/environment (~/environment)<br>
+に設定されております。</p>
+</div>
+<div class="paragraph">
+<p>つまり、AWS Cloud9のIDE画面左上のルートディレクトリに、srcディレクトリを掘って、<br>
+Goっぽくコードを書いていけばよい！ってことになりますね。</p>
+</div>
+<div class="paragraph">
+<p>ということで、お約束のようなコードを書いてみます。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/yagasaki/awsc9/ac9-2.png" alt="ac9-2">
+</div>
+</div>
+<div class="paragraph">
+<p>っていう、よくある当たり前のコードを書いて、<br>
+保存をすると、勝手にgofmtが実行され、いい感じに整形されます。<br>
+さらに、IDEの上にある「Run」ボタンを押すと実行されます。<br>
+エラー等なければ、IDEの上にある「Preview」&#8658;「Preview Running Application」を押すと、<br>
+Previewウィンドウが表示され、8080ポートでListenしているところにhttps経由でアクセスされます。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/yagasaki/awsc9/ac9-6.png" alt="ac9-6">
+</div>
+</div>
+<div class="paragraph">
+<p>う〜ん簡単。。。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__gae_go">掟破り（？）のGAE/Goの開発環境にしてみる</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>では、せっかくなので、AWS Cloud9だとしても！Google App EngineのGo言語開発をしてみましょう！</p>
+</div>
+<div class="sect2">
+<h3 id="___5">環境を整える</h3>
+<div class="paragraph">
+<p>EC2に、環境を整えます！</p>
+</div>
+<div class="paragraph">
+<p>Google Cloud SDKの入手先は、こちらを見ていただき、最新のものを利用したほうがよいかもしれません。
+<a href="https://cloud.google.com/sdk/docs/" class="bare">https://cloud.google.com/sdk/docs/</a></p>
+</div>
+<div class="sect3">
+<h4 id="_google_cloud_sdk">Google Cloud SDKのインストール</h4>
+<div class="paragraph">
+<p>こんな感じです</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>cd ~
+
+sudo yum install python27
+
+wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-170.0.1-linux-x86_64.tar.gz
+tar zxpvf ./google-cloud-sdk-170.0.1-linux-x86_64.tar.gz
+./google-cloud-sdk/install.sh
+./google-cloud-sdk/bin/gcloud components install app-engine-go
+./google-cloud-sdk/bin/gcloud components update</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_gopath_path">GOPATH、PATHの設定</h4>
+<div class="listingblock">
+<div class="title">bashrcを編集します</div>
+<div class="content">
+<pre class="highlight"><code># .bashrc
+
+export GOPATH=$HOME/go
+export PATH=$PATH:$HOME/.local/bin:$HOME/bin:$HOME/google-cloud-sdk/platform/google_appengine:$GOPATH/bin</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_appengine">appengineモジュールのインストール</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>go get -u google.golang.org/appengine</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__goimports">おまけ、goimports</h4>
+<div class="paragraph">
+<p>ついでに、コード保存時に、自動的にgoimportsが実行され、importをいい感じにしてもらうようにします。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>go get -u golang.org/x/tools/cmd/goimports</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>その後、IDE左上の「AWS Cloud9」&#8658;「Open Your Init Script」でinit.jsを開いて、内容を</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>var path = require('path');
+
+var execGoFmt = function execGoFmt(filepath) {
+    services.proc.execFile('bash', {
+        args: ['-c', '/home/ec2-user/go/bin/goimports -w ' + path.join(services.c9.environmentDir, filepath)]
+    }, function (e, a) {
+        console.log(e, a);
+    });
+};
+
+services.save.on('afterSave', function (e) {
+    if (e.path &amp;&amp; e.path.endsWith('.go')) {
+        execGoFmt(e.path);
+    }
+}, plugin);
+
+services.format.on('format', function (e) {
+    if (e.mode !== 'golang') return;
+    var tab = e.editor.ace.session.c9doc.tab;
+    services.save.save(tab, {}, function () {
+        execGoFmt(tab.path);
+    });
+    return true;
+}, plugin);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>にしておきます。</p>
+</div>
+<div class="paragraph">
+<p>こちら、参考にさせていただきました。<br>
+<a href="https://qiita.com/koki_cheese/items/a81d90684c21db4863ee" class="bare">https://qiita.com/koki_cheese/items/a81d90684c21db4863ee</a></p>
+</div>
+<div class="paragraph">
+<p>が！AWS Cloud9では、「environmentDir」を使わないとダメとか、<br>
+GOPATHのとり方がわからないとかあったので、上が無理やり動くようにした版です。<br>
+どなたか、まっとうなやりかたを教えてください！</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hello">Helloなんたらを実行してみる</h3>
+<div class="sect3">
+<h4 id="___6">軽くコードを書く</h4>
+<div class="paragraph">
+<p>GAE/Goのお約束にしたがい、こんな感じのディレクトリでapp.yamlとgoファイルを書きます。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/yagasaki/awsc9/ac9-3.png" alt="ac9-3">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/yagasaki/awsc9/ac9-4.png" alt="ac9-4">
+</div>
+</div>
+<div class="paragraph">
+<p>app.yaml</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>runtime: go
+api_version: go1
+
+handlers:
+  - url: /.*
+    script: _go_app
+    secure: always</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>main.go</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>package main
+
+import (
+	"fmt"
+	"net/http"
+)
+
+func init() {
+	http.HandleFunc("/", handle)
+}
+
+func handle(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hello AWSC9!")
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___7">いよいよ実行</h4>
+<div class="paragraph">
+<p>IDEの下の方の「+」を押して、「New Run Configuration」を開きます。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/yagasaki/awsc9/ac9-10.png" alt="ac9-10">
+</div>
+</div>
+<div class="paragraph">
+<p>Commandのところに</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>python /home/ec2-user/google-cloud-sdk/platform/google_appengine/dev_appserver.py --skip_sdk_update_check true --host $IP --port $PORT --admin_host $IP --admin_port 8081 /home/ec2-user/environment/src/awsc9test/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>っていう感じのを入れて、「Run」を押すと、デバッグ用サーバが立ち上がるので、<br>
+Previewをして、予想通りの文字列が表示されば成功です！</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/yagasaki/awsc9/ac9-8.png" alt="ac9-8">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/yagasaki/awsc9/ac9-6.png" alt="ac9-6">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/yagasaki/awsc9/ac9-7.png" alt="ac9-7">
+</div>
+</div>
+<div class="paragraph">
+<p>あとは、いい感じに、gcloudコマンドをあれこれしたり、ヤリホですね！</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___8">心残り</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>もっとちゃんと設定をして、AWS Cloud9を利用した快適なGAE開発環境にしたい</p>
+</li>
+<li>
+<p>GAEデバッグのadminサーバ(8081ポート)への接続がわからん</p>
+</li>
+<li>
+<p>デバッガまわり</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a href="https://twitter.com/yaggytter">@Yaggytter</a> までお教えいただけますと大変うれしいです！</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___9">おしまい</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>これで、しばらくは快適な開発生活が送れます。<br>
+EC2の料金はかかってしまいますが、分単位のEC2課金と<br>
+非利用時の自動シャットダウンが相まって、大したコストもかからずに、<br>
+いつでもどこでも同じ開発環境が使えるということは非常に魅力を感じており、<br>
+しばらくはAWS Cloud9をメインにバリバリ開発をして行きたいという所存でございます。</p>
+</div>
+<div class="sect3">
+<h4 id="___10">最近は、仕事でプログラミングをする機会がめっきり無いとしても！！！</h4>
+<div class="paragraph">
+<p>以上</p>
+</div>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2017. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
