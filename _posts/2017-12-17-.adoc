@@ -1,8 +1,8 @@
 = 書籍のあれこれを元書店アルバイターだったエンジニアが調べてみた
 
 :published_at: 2017-12-17
-:hp-alt-title:An engineer who was former bookstore albite examined the books
-:hp-tags:ozasa,Books,ISBN 
+:hp-alt-title:vAn engineer who was former bookstore albite examined the books
+:hp-tags: ozasa,Books,ISBN 
 
 ### 本屋でアルバイトの話
 こんにちは。小笹です。
