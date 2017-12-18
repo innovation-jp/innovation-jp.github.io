@@ -40,7 +40,7 @@ import "fmt"
 // メインの処理を記述していきます
 func main() {
 	// 文字列を標準出力します	
-	fmt.Println("HelloWorld") // print("Hello World");
+	fmt.Println("HelloWorld")
 }
 </pre>
 ++++
@@ -88,7 +88,7 @@ func aaa() {
 package pkg01
 
 func bbb() {
-	aaa() // 同一packageの先程のaaa関数が呼び出される
+	aaa() // 同一パッケージの先程のaaa関数が呼び出される
 }
 </pre>
 ++++
@@ -179,16 +179,16 @@ var ccc = 1     // 型推論（※初期値の型が自動的に指定される�
 ++++
 <pre style="font-family: Menlo, Courier">
 // 初期化
-var aaa [3]int // $aaa = []; ※PHPでは型指定とか配列長していはできません
+var aaa [3]int //※PHPでは型指定とか配列長指定はできません
 
 // 初期値代入
-bbb := [3]string{"hoge","fuga","foo"} // $bbb = ["hoge","fuga","foo"]; ※同じく配列長は変えられません
+bbb := [3]string{"hoge","fuga","foo"} //※同じく配列長は変えられません
 
 // 配列長省略
-ccc := [...]string{"hoge","fuga","foo","bar"} // $ccc = ["hoge","fuga","foo","bar"]; ※型指定できないところ、配列長がこの場合4で固定になる
+ccc := [...]string{"hoge","fuga","foo","bar"} //※配列長がこの場合4で固定になる
 
 // インデックスキー指定
-ddd := [...]string{1:"hoge",2:"fuga"} // $ddd = [1 => "hoge", 2 => "fuga"];
+ddd := [...]string{1:"hoge",　2:"fuga"} //PHPで近い表現だと、$ddd = [1=>"hoge", 2=>"fuga"];
 </pre>
 ++++
 
@@ -200,7 +200,7 @@ ddd := [...]string{1:"hoge",2:"fuga"} // $ddd = [1 => "hoge", 2 => "fuga"];
 ++++
 <pre style="font-family: Menlo, Courier">
 var aaa []int
-bbb := []string{"hoge","fuga","foo"} // $bbb = ["hoge","fuga","foo"];
+bbb := []string{"hoge","fuga","foo"} //PHPで近い表現だと、$bbb = ["hoge","fuga","foo"];
 </pre>
 ++++
 
@@ -219,7 +219,7 @@ PHPの連想配列的なものと思います。
 <pre style="font-family: Menlo, Courier">
 aaa := map[string]int{"hoge":111, "fuga":222}
 
-aaa["hoge"] = 333 // ※この辺はPHPに似ていると思いました。
+aaa["hoge"] = 333 //※この辺はPHPに似ていると思いました。
 
 fmt.Println(aaa["hoge"], aaa["fuga"]) // 333 222 ここも！
 </pre>
@@ -319,7 +319,7 @@ for i:=0; i<10; i++ {
 // foreach文のようなもの
 aaa := map[string]string{"hoge":"fuga", "foo":"bar"}
 for k, v := range aaa {
-	fmt.Printf("k=%s, v=%s\n", k, v) // k=hoge, v=fuga\n k=foo, v=bar\n
+	fmt.Printf("k=%s, v=%s\n", k, v) // k=hoge, v=fuga k=foo, v=bar
 }
 
 // while文のようなもの
@@ -380,11 +380,9 @@ type Administrator struct {
 </pre>
 ++++
 
-PHPには無い概念と思います。 +
-また、
+PHPには無い概念と思います。
 
-* クラスの概念が無い
-
+また、 +
 Golangにはクラスが無いんだそうです。 +
 なので、 +
 パッケージがクラスと同等なのかと思ったのですが、 +
