@@ -1,7 +1,7 @@
 = 書籍のあれこれを元書店アルバイターだったエンジニアが調べてみた
 
 :published_at: 2017-12-17
-:hp-alt-title:An engineer who was former bookstore albite examined the books
+:hp-alt-title: An engineer who was former bookstore albite examined the books
 :hp-tags: ozasa,Books,ISBN 
 
 ### 本屋でアルバイトの話
