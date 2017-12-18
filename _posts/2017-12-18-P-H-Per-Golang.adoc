@@ -8,7 +8,7 @@
 
 * Hello World
 * コンパイル処理
-* パッケージ
+* パッケージ・関数定義
 * 変数
 * 定数
 * 真偽型
@@ -19,10 +19,13 @@
 * 条件分岐
 * ループ処理
 * 構造体
+* インターフェース型
 
 〜後編へ続く〜
 
 ## Hello World
+
+Hello Worldに関しては、特に迷う部分はありませんでした。 +
 
 ++++
 <pre style="font-family: Menlo, Courier">
@@ -42,33 +45,46 @@ func main() {
 </pre>
 ++++
 
+fmt というパッケージを使わないと標準出力ができないのだな。 +
+と思ったくらいです。
+
+あとは Println は Java っぽいなとも思いました。
+
 ## コンパイル処理
+
+コンパイル処理はPHPにはありませんが、 +
+Java のように行えばよく、特に迷うことはありませんでした。
 
  // コンパイル
  go build helloworld.go
  // 実行
  ./helloworld
 
-## パッケージ
+## パッケージ・関数定義
 
-パッケージはPHPで言うところの名前空間のようなものと捉えました。
+パッケージはPHPで言うところの名前空間のようなものと私は捉えました。
 
 ++++
 <pre style="font-family: Menlo, Courier">
 // sample01.go
 
+// パッケージ名記述
 package pkg01
 
+// 関数定義
 func aaa() {
-	
+	// 何か処理
 }
 </pre>
 ++++
+
+関数は func と宣言します。
 
 ++++
 <pre style="font-family: Menlo, Courier">
 //sample02.go
 
+// 同一ディレクトリにて別ファイル名で同じパッケージを指定
 package pkg01
 
 func bbb() {
@@ -77,7 +93,8 @@ func bbb() {
 </pre>
 ++++
 
-尚、同一パッケージのスクリプトファイルは必ず同じディレクトリ内に格納されていなくてはいけません。
+尚、 +
+同一パッケージのスクリプトファイルは「必ず同じディレクトリ内に」格納されていなくてはいけません。
 
 ### パッケージをインポート
 
@@ -95,9 +112,9 @@ pkg03
 </pre>
 ++++
 
-また、
-小文字で始まるメンバーはprivate、
-大文字で始まるメンバーはpublicになります。
+また、 +
+小文字で始まるメンバーはprivate、 +
+大文字で始まるメンバーはpublicになります。 +
 
 ++++
 <pre style="font-family: Menlo, Courier">
@@ -113,13 +130,15 @@ func Bbb() {
 </pre>
 ++++
 
+パッケージの考え方は特に違和感なく考える事ができました。
+
 ## 変数
 
 ++++
 <pre style="font-family: Menlo, Courier">
 var aaa int = 1 // 型と初期値を指定
 var bbb int     // 型のみ指定（※型固有の初期値が設定される）
-var ccc = 1     // 型推論
+var ccc = 1     // 型推論（※初期値の型が自動的に指定される）
 </pre>
 ++++
 
@@ -130,19 +149,32 @@ var ccc = 1     // 型推論
 
  aaa := 1
 
+変数は型指定や、型推論といった考え方がありますが、 +
+特に違和感なく考えることができました。
+
 ## 定数
 
  const aaa string = "hoge"
 
+定数も特に違和感はありませんでした。
+
 ## 真偽型
 
  true と false
+
+こちらはPHPと全く同じでした！
  
 ## null値
 
  nil がそれに相当するようです。
 
+個人的にはLispを思い出しました。 +
+特に違和感は無いのではないでしょうか。
+
 ## 配列型
+
+配列型は、PHPの配列とは異なりイミュータブルです。 +
+後述のスライス型はPHPの配列に似ていると思われます。
 
 ++++
 <pre style="font-family: Menlo, Courier">
@@ -162,7 +194,8 @@ ddd := [...]string{1:"hoge",2:"fuga"} // $ddd = [1 => "hoge", 2 => "fuga"];
 
 ## スライス型
 
-可変長の配列型みたいなもの。こちらのほうがPHPの配列に近いと思いました。
+可変長の配列型みたいなもの。 +
+こちらのほうがPHPの配列に近いと思いました。
 
 ++++
 <pre style="font-family: Menlo, Courier">
@@ -171,8 +204,17 @@ bbb := []string{"hoge","fuga","foo"} // $bbb = ["hoge","fuga","foo"];
 </pre>
 ++++
 
+PHPerの私には気づくのに時間がかかりましたが、 +
+PHPの配列はかなり特殊で、 +
+型がまぜこぜになった配列とか、 +
+複雑怪奇な連想配列、 +
+何でもかんでも連想配列にブチ込む手法など、 +
+かなりPHPは異端なのだなと。
+
+スッキリ簡単に書けるところは素晴らしいと思っております。
+
 ## マップ型
-PHPの連想配列的なものと思いました。
+PHPの連想配列的なものと思います。
 
 ++++
 <pre style="font-family: Menlo, Courier">
@@ -188,6 +230,12 @@ fmt.Println(aaa["hoge"], aaa["fuga"]) // 333 222 ここも！
 ## 条件分岐
 
 ### if文
+
+if文は、 +
+{ } カッコは省略できないようです。 +
+その点も含めて特に違和感はありません。
+
+むしろ好きです。
 
 ++++
 <pre style="font-family: Menlo, Courier">
@@ -205,6 +253,8 @@ if aaa == 1 {
 	
 ### switch文
 
+switch文も良いなと思いました。
+
 ++++
 <pre style="font-family: Menlo, Courier">
 var aaa int = 1
@@ -221,9 +271,11 @@ default:
 ++++
 
 
-PHPと違うのはbreakが要らないというところです。 +
-標準でbreakされます。 +
-breakしたくない時は fallthrough と書くようです。
+PHPと違うのはbreak記述が要らないというところです。 +
+caseの終端は標準でbreakされます。 +
+逆にbreakしたくない時は fallthrough と書くようです。
+
+こちらの方が世の中のswitchより自然に思えます。
 
 以下の書き方も有効でした。
 
@@ -250,11 +302,12 @@ default:
 </pre>
 ++++
 
+条件分岐はとてもわかり易いと感じました。
 
 ## ループ文
 
 ループは for しかありません！ +
-ですが、ちゃんとPHPで言うところの while foreach 的な書き方も存在しました。
+ですが、ちゃんとPHPで言うところの while foreach 的な書き方も存在しています。
 
 ++++
 <pre style="font-family: Menlo, Courier">
@@ -283,7 +336,140 @@ for i<10 {
 
 これはPHPと同じでした。
 
+違和感なく入って行けました。
+
+## 構造体
+
+構造体はC言語のように使うことができます。 +
+実はC言語に明るくないのでしっかりと学んで行きたい部分です。
+
+++++
+<pre style="font-family: Menlo, Courier">
+// 構造体 User を定義
+type User struct {
+	name string
+	age int
+	token string
+}
+
+func main() {
+
+	// 構造体を型として宣言
+	var user User
+    
+    	// このように利用できる
+	user.name = "Shirota"
+	user.age = 39
+	user.token = "hoge"
+	
+}
+</pre>
+++++
+
+こんなように構造体に値を埋め込んで使えるようです。
+
+また、
+以下のように構造体に構造体を指定もできるようです。
+
+++++
+<pre style="font-family: Menlo, Courier">
+type Administrator struct {
+	User
+	passwd string
+}
+</pre>
+++++
+
+PHPには無い概念と思います。 +
+また、
+
+* クラスの概念が無い
+
+Golangにはクラスが無いんだそうです。 +
+なので、 +
+パッケージがクラスと同等なのかと思ったのですが、 +
+何やらそうではないとわかりました。
+
+++++
+<pre style="font-family: Menlo, Courier">
+package user
+
+type User struct {
+}
+</pre>
+++++
+
+このようにしてしまうと、以下のようなディレクトリ構成になり、冗長です。
+
+++++
+<pre style="font-family: Menlo, Courier">
+models/
+    user/
+        user.go
+</pre>
+++++
+
+ではclassみたいなことをしたい時どうすればよいのか。 +
+そこでGoのメソッドを使うのだと捉えました。
+
+理解が難しかったのは、 +
+関数とメソッドは別物である。 +
+ということです。
+
+++++
+<pre style="font-family: Menlo, Courier">
+package main
+
+import "fmt"
+
+type User struct {
+    name string
+    age int
+    token string
+}
+
+// メソッド定義
+func (u *User) setToken() string {
+    u.token = "fuga"
+    return u.token
+}
+
+func main() {
+    user := &User{"Shirota",39,""}
+    user.setToken()
+    fmt.Println(user.token) // fuga
+}
+</pre>
+++++
+
+Userという構造体に対して setToken というメソッドがある。 +
+この関係がクラスに一番近いと感じました。
+
+また、 +
+クラスが無いので継承もありませんが、 +
+継承のようなことを行いたければ、 +
+先述した構造体の中に構造体を入れるという手法
+
+++++
+<pre style="font-family: Menlo, Courier">
+type Administrator struct {
+	User
+	passwd string
+}
+</pre>
+++++
+
+を使えば、 +
+AdministratorからUserのsetTokenを使えるようです。
+
+この辺はコーディングをして理解を深めていきたいです。
+
 ## インターフェース型
+
+インターフェースは割りと違和感なく入っていけました。 +
+ただ、 +
+インターフェース「型」というのが特殊だなとは感じてしまいますが、 +
+こちらも実際のコーディング経験を積んでものにしていきたいです。
 
 ++++
 <pre style="font-family: Menlo, Courier">
@@ -319,117 +505,6 @@ func main() {
 }
 </pre>
 ++++
-
-## 構造体
-
-++++
-<pre style="font-family: Menlo, Courier">
-type User struct {
-	name string
-	age int
-	token string
-}
-
-func main() {
-	var user User
-	user.name = "Shirota"
-	user.age = 39
-	user.token = "hoge"
-	
-}
-</pre>
-++++
-
-こんなように構造体に値を埋め込んで使えるようです。
-
-また、
-以下のように構造体に構造体を指定もできるようです。
-
-++++
-<pre style="font-family: Menlo, Courier">
-type Administrator struct {
-	User
-	passwd string
-}
-</pre>
-++++
-
-PHPには無い概念と思います。
-
-また、
-GoにはClassが無いんだそうです。 +
-なので、packageがclassと同等なのかと思ったのですが、 +
-何やらそうではないとわかりました。
-
-++++
-<pre style="font-family: Menlo, Courier">
-package user
-
-type User struct {
-}
-</pre>
-++++
-
-このようにしてしまうと、以下のようなディレクトリ構成になり、冗長です。
-
-++++
-<pre style="font-family: Menlo, Courier">
-models/
-	user/
-		user.go
-</pre>
-++++
-
-ではclassみたいなことをしたい時どうすればよいのか。 +
-そこでGoのメソッドを使うのだと捉えました。
-
-関数とメソッドは別物である。
-
-++++
-<pre style="font-family: Menlo, Courier">
-package main
-
-import "fmt"
-
-type User struct {
-    name string
-    age int
-    token string
-}
-
-// メソッド定義
-func (u *User) setToken() string {
-    u.token = "fuga"
-    return u.token
-}
-
-func main() {
-    user := &User{"Shirota",39,""}
-    user.setToken()
-    fmt.Println(user.token) // fuga
-}
-</pre>
-++++
-
-Userという構造体に対して setToken というメソッドがある。 +
-この図式がクラスに一番近いと感じました。
-
-また、 +
-クラスが無いので継承もありませんが、 +
-継承のようなことを行いたければ、 +
-先述した構造体の中に構造体を入れるという手法
-
-++++
-<pre style="font-family: Menlo, Courier">
-type Administrator struct {
-	User
-	passwd string
-}
-</pre>
-++++
-
-を使えば、 +
-AdministratorからUserのsetTokenを使えるようです。
 
 ## 次回
 
