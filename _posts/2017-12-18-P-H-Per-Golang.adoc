@@ -326,7 +326,7 @@ for k, v := range aaa {
 i := 0
 for i<10 {
 	fmt.Println(i)
-	w++
+	i++
 }
 </pre>
 ++++
