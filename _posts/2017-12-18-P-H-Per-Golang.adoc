@@ -418,10 +418,6 @@ models/
 
 ++++
 <pre style="font-family: Menlo, Courier">
-package main
-
-import "fmt"
-
 type User struct {
     name string
     age int
@@ -501,7 +497,7 @@ func main() {
 	
 	user.login()
 	user.logout()
-	user.add() // 出来ない
+	user.add() // エラーとなる
 }
 </pre>
 ++++
