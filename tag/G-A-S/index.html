@@ -213,11 +213,38 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/12/04/Selenium-Google-Apps-Script.html" title="link to SeleniumとGoogle Apps Scriptの連携〜実行導入編〜">SeleniumとGoogle Apps Scriptの連携〜実行導入編〜</a></h2>
+        <p class="excerpt">こんにちは。 新卒エンジニアのはすみんです。 今回のブログのテーマは「Selenium」です。 ブラウザの操作を自動的に行なう→ユーザテストに便利、なので以前から気になっていた技術のひとつでした。 しかしなかなか活かせる機会がなく、触ったことはありませんでした。 ところが最近社内の同期と会話をしているときに、これはSeleniumを活かせるのでは？と思える事象に遭遇しました。 彼はマーケターなのですが、メディアを作る際にフォームを入力するそうで、 ひとつひとつ手打ちでしかも量が多いらしくかなり面倒とのこと。 これはSeleniumを使って自動でフォームを作ることができれば、なかなかのハックだよね、と思いやってみました。 （ここだけの話、Chromeの拡張機能で事足りるらしく、それは別途作る&hellip;</p>
+        <div class="post-list__meta">
+            <time datetime="04 Dec 2017" class="post-list__meta--date date">04 Dec 2017</time> &#8226;
+            <span class="post-list__meta--tags tags"><a href="#blog" title="Hasumin">Hasumin</a>, <a href="#blog" title=" Seated"> Seated</a>, <a href="#blog" title=" Google Apps Script"> Google Apps Script</a>, <a href="#blog" title=" Ruby"> Ruby</a>, <a href="#blog" title=" GAS"> GAS</a></span>
+        </div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/11/12/create-button.html" title="link to ワンクリックで総務に発注できる便利ボタンを作った">ワンクリックで総務に発注できる便利ボタンを作った</a></h2>
         <p class="excerpt">亜美です。情シスにミッション変更となり、早４ヶ月強となりました。 コーディングをすることが少なくなり、少し寂しい気持ちもあります・・・。 そんな寂しい気分を払拭するため、忙しい業務の合間に「ご褒美タスク」を挟んで息抜きをしています。 　※ 　業務改善のGASや、Salesforceのカスタムボタン（ボタン押したらJSが動くみたいなやつ）の改善など、 　私の中の好きな業務を「ご褒美タスク」と呼んでいます 今日はそのご褒美タスクに関するブログを書きます ワンクリックで総務に社内発注できる便利なボタンを作りたい ■概要 GoogleAppsScript（GAS）で作成。 スプレッドシート内のオブジェクトをクリックすると、総務宛に発注依頼のSlackが飛ぶ スプレッドシートに発注履歴が記録される&hellip;</p>
         <div class="post-list__meta">
             <time datetime="12 Nov 2017" class="post-list__meta--date date">12 Nov 2017</time> &#8226;
             <span class="post-list__meta--tags tags"><a href="#blog" title="AMI">AMI</a>, <a href="#blog" title=" GoogleAppsScript"> GoogleAppsScript</a>, <a href="#blog" title=" GAS"> GAS</a>, <a href="#blog" title=" slackBot"> slackBot</a></span>
+        </div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/08/05/mecab.html" title="link to Trello APIとSlackとGASとRaspberryPiを使ってみたお話。">Trello APIとSlackとGASとRaspberryPiを使ってみたお話。</a></h2>
+        <p class="excerpt">みなさまこんばんはこへです。 暑くなってきまして、そろそろTrello APIやラズパイやGASを使って何かしたい時期が来ましたので触ってみました。 イメージ 残タスク通知をGASでやるぜ ↑の今日やることリストに入っているカードを毎日18時にSlackに通知する。 ※事前にTrelloApiのkeyとtoken、リストのidを取得しておく。 function checkTrello() {   var trelloKey   = "###TRELLOKEY###";   var trelloToken = "###TRELLOTOKEN###";   var listId  = "###LISTID###";   var api = "https://trello.com/1/lists&hellip;</p>
+        <div class="post-list__meta">
+            <time datetime="05 Aug 2017" class="post-list__meta--date date">05 Aug 2017</time> &#8226;
+            <span class="post-list__meta--tags tags"><a href="#blog" title="Kohe">Kohe</a>, <a href="#blog" title="Trello API">Trello API</a>, <a href="#blog" title="Slack">Slack</a>, <a href="#blog" title="CoffeeScript">CoffeeScript</a>, <a href="#blog" title="RaspberryPi">RaspberryPi</a>, <a href="#blog" title="GAS">GAS</a></span>
+        </div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2016/11/24/G-A-S.html" title="link to 誕生日を覚えるのも、メールを送るのも忘れてしまいがちな私がGASを使って全自動化した話">誕生日を覚えるのも、メールを送るのも忘れてしまいがちな私がGASを使って全自動化した話</a></h2>
+        <p class="excerpt">こんばんはこへです。 下準備 まずはスプレットシートに必要な情報を記入していく。 こ～んな感じで、 A列に日付 B列に誕生日の人の名前 C列に誕生日の人のメアド D列にメールの件名 E列にメール本文 F列にデフォルトのメールの件名 G列にデフォルトのメールの本文 を書いていく。 これで表側の準備終了！ 仕組みとしては簡単！ 誕生日の日に指定したメアドにメールを送る。 何も指定がなければ、デフォルトの件名と内容が自動的に入る。 指定すれば、指定した件名と内容が送信される！! コードを書いていこう 全部で40行もかからない。なんとお手軽。 ってことで解説。  var sh_id    =　 SpreadsheetApp.openById('ここにスプレットシートのIDが入るよ') まず、どのシ&hellip;</p>
+        <div class="post-list__meta">
+            <time datetime="24 Nov 2016" class="post-list__meta--date date">24 Nov 2016</time> &#8226;
+            <span class="post-list__meta--tags tags"><a href="#blog" title="GooleAppScript">GooleAppScript</a>, <a href="#blog" title="GAS">GAS</a>, <a href="#blog" title="gas">gas</a>, <a href="#blog" title=" kohe"> kohe</a></span>
         </div>
         <hr class="post-list__divider" />
       </li>
