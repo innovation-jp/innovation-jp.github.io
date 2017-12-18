@@ -3,7 +3,7 @@
 :hp-tags: PHP, PHPer, Golang, Go言語, Go
 
 ## 概要
-私はPHPerなのですが、Goを試してみました。 +
+私はPHPerなのですが、Golangを試してみました。 +
 難しいと思った点など書いていければと思います。
 
 * Hello World
@@ -320,10 +320,121 @@ func main() {
 </pre>
 ++++
 
+## 構造体
+
+++++
+<pre style="font-family: Menlo, Courier">
+type User struct {
+	name string
+	age int
+	token string
+}
+
+func main() {
+	var user User
+	user.name = "Shirota"
+	user.age = 39
+	user.token = "hoge"
+	
+}
+</pre>
+++++
+
+こんなように構造体に値を埋め込んで使えるようです。
+
+また、
+以下のように構造体に構造体を指定もできるようです。
+
+++++
+<pre style="font-family: Menlo, Courier">
+type Administrator struct {
+	User
+	passwd string
+}
+</pre>
+++++
+
+PHPには無い概念と思います。
+
+また、
+GoにはClassが無いんだそうです。 +
+なので、packageがclassと同等なのかと思ったのですが、 +
+何やらそうではないとわかりました。
+
+++++
+<pre style="font-family: Menlo, Courier">
+package user
+
+type User struct {
+}
+</pre>
+++++
+
+このようにしてしまうと、以下のようなディレクトリ構成になり、冗長です。
+
+++++
+<pre style="font-family: Menlo, Courier">
+models/
+	user/
+		user.go
+</pre>
+++++
+
+ではclassみたいなことをしたい時どうすればよいのか。 +
+そこでGoのメソッドを使うのだと捉えました。
+
+関数とメソッドは別物である。
+
+++++
+<pre style="font-family: Menlo, Courier">
+package main
+
+import "fmt"
+
+type User struct {
+    name string
+    age int
+    token string
+}
+
+// メソッド定義
+func (u *User) setToken() string {
+    u.token = "fuga"
+    return u.token
+}
+
+func main() {
+    user := &User{"Shirota",39,""}
+    user.setToken()
+    fmt.Println(user.token) // fuga
+}
+</pre>
+++++
+
+Userという構造体に対して setToken というメソッドがある。 +
+この図式がクラスに一番近いと感じました。
+
+また、 +
+クラスが無いので継承もありませんが、 +
+継承のようなことを行いたければ、 +
+先述した構造体の中に構造体を入れるという手法
+
+++++
+<pre style="font-family: Menlo, Courier">
+type Administrator struct {
+	User
+	passwd string
+}
+</pre>
+++++
+
+を使えば、 +
+AdministratorからUserのsetTokenを使えるようです。
+
 ## 次回
 
-例外処理（※try catch finallyが無い）
-並列処理
+* 例外処理（※try catch finallyが無い）
+* 並列処理
 
-の辺りと、
+の辺りと、 +
 前編後編通しての所感を書きたいと思います。
