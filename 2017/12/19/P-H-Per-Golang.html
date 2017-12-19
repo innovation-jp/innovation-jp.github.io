@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>PHPerがGolangを試してみた 前編 - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="PHPerがGolangを試してみた 前編">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="PHPerがGolangを試してみた 前編">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2017/12/19/P-H-Per-Golang.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="PHPerがGolangを試してみた 前編" />
+    <meta property="og:description" content="概要 私はPHPerなのですが、Golangを試してみました。 難しいと思った点など書いていければと思います。 Hello World コンパイル処理 パッケージ・関数定義 変数 定数 真偽型 null値 配列型 スライス型 マップ型 条件分岐 ループ処理 構造体 インターフェース型 〜後編へ続く〜 Hello World Hello Worldに関しては、特に迷う部分はありませんでした。 // vi helloworld.go // メイン処理のパッケージ名 package main // fmtをインポートしています import &quot;fmt&quot; //..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2017/12/19/P-H-Per-Golang.html" />
+    <meta property="article:published_time" content="2017-12-18T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2017-12-19T01:59:29.546Z" />
+    <meta property="article:tag" content="PHP" />
+    <meta property="article:tag" content="PHPer" />
+    <meta property="article:tag" content="Golang" />
+    <meta property="article:tag" content="Go言語" />
+    <meta property="article:tag" content="Go" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="PHPerがGolangを試してみた 前編" />
+    <meta name="twitter:description" content="概要 私はPHPerなのですが、Golangを試してみました。 難しいと思った点など書いていければと思います。 Hello World コンパイル処理 パッケージ・関数定義 変数 定数 真偽型 null値 配列型 スライス型 マップ型 条件分岐 ループ処理 構造体 インターフェース型 〜後編へ続く〜 Hello World Hello Worldに関しては、特に迷う部分はありませんでした。 // vi helloworld.go // メイン処理のパッケージ名 package main // fmtをインポートしています import &quot;fmt&quot; //..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2017/12/19/P-H-Per-Golang.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "Junichi Shirota",
+        "image": "https://avatars2.githubusercontent.com/u/26893225?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "PHPerがGolangを試してみた 前編",
+    "url": "http://tech.innovation.co.jp/2017/12/19/P-H-Per-Golang.html",
+    "datePublished": "2017-12-18T15:00:00.000Z",
+    "dateModified": "2017-12-19T01:59:29.546Z",
+    "keywords": "PHP,  PHPer,  Golang,  Go言語,  Go",
+    "description": "概要 私はPHPerなのですが、Golangを試してみました。 難しいと思った点など書いていければと思います。 Hello World コンパイル処理 パッケージ・関数定義 変数 定数 真偽型 null値 配列型 スライス型 マップ型 条件分岐 ループ処理 構造体 インターフェース型 〜後編へ続く〜 Hello World Hello Worldに関しては、特に迷う部分はありませんでした。 // vi helloworld.go // メイン処理のパッケージ名 package main // fmtをインポートしています import &quot;fmt&quot; //..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-P-H-P tag-P-H-Per tag-Golang tag-Go tag-Go no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="19 Dec 2017" class="post-meta__date date">19 Dec 2017</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/P-H-P">PHP</a>, <a href="http://tech.innovation.co.jp/tag/P-H-Per"> PHPer</a>, <a href="http://tech.innovation.co.jp/tag/Golang"> Golang</a>, <a href="http://tech.innovation.co.jp/tag/Go"> Go言語</a>, <a href="http://tech.innovation.co.jp/tag/Go"> Go</a></span>
+        <span class="post-meta__author author"><img src="https://avatars2.githubusercontent.com/u/26893225?v=4" alt="profile image for Junichi Shirota" class="avatar post-meta__avatar" /> by Junichi Shirota</span>
+      </div>
+      <h1 class="post-title">PHPerがGolangを試してみた 前編</h1>
+    </header>
+
+    <section class="post tag-P-H-P tag-P-H-Per tag-Golang tag-Go tag-Go">
+      <div class="sect1">
+<h2 id="__">概要</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>私はPHPerなのですが、Golangを試してみました。<br>
+難しいと思った点など書いていければと思います。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Hello World</p>
+</li>
+<li>
+<p>コンパイル処理</p>
+</li>
+<li>
+<p>パッケージ・関数定義</p>
+</li>
+<li>
+<p>変数</p>
+</li>
+<li>
+<p>定数</p>
+</li>
+<li>
+<p>真偽型</p>
+</li>
+<li>
+<p>null値</p>
+</li>
+<li>
+<p>配列型</p>
+</li>
+<li>
+<p>スライス型</p>
+</li>
+<li>
+<p>マップ型</p>
+</li>
+<li>
+<p>条件分岐</p>
+</li>
+<li>
+<p>ループ処理</p>
+</li>
+<li>
+<p>構造体</p>
+</li>
+<li>
+<p>インターフェース型</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>〜後編へ続く〜</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hello_world">Hello World</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Hello Worldに関しては、特に迷う部分はありませんでした。<br></p>
+</div>
+<pre style="font-family: Menlo, Courier">
+// vi helloworld.go
+
+// メイン処理のパッケージ名
+package main
+
+// fmtをインポートしています
+import "fmt"
+
+// メインの処理を記述していきます
+func main() {
+	// 文字列を標準出力します
+	fmt.Println("HelloWorld")
+}
+</pre>
+<div class="paragraph">
+<p>fmt というパッケージを使わないと標準出力ができないのだな。<br>
+と思ったくらいです。</p>
+</div>
+<div class="paragraph">
+<p>あとは Println は Java っぽいなとも思いました。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">コンパイル処理</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>コンパイル処理はPHPにはありませんが、<br>
+Java のように行えばよく、特に迷うことはありませんでした。</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>// コンパイル
+go build helloworld.go
+// 実行
+./helloworld</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">パッケージ・関数定義</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>パッケージはPHPで言うところの名前空間のようなものと私は捉えました。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+// sample01.go
+
+// パッケージ名記述
+package pkg01
+
+// 関数定義
+func aaa() {
+	// 何か処理
+}
+</pre>
+<div class="paragraph">
+<p>関数は func と宣言します。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+//sample02.go
+
+// 同一ディレクトリにて別ファイル名で同じパッケージを指定
+package pkg01
+
+func bbb() {
+	aaa() // 同一パッケージの先程のaaa関数が呼び出される
+}
+</pre>
+<div class="paragraph">
+<p>尚、<br>
+同一パッケージのスクリプトファイルは「必ず同じディレクトリ内に」格納されていなくてはいけません。</p>
+</div>
+<div class="sect2">
+<h3 id="___4">パッケージをインポート</h3>
+<pre style="font-family: Menlo, Courier">
+// 1つだけインポートする場合
+import "pkg01"
+
+// 複数インポートする場合
+import (
+pkg01
+pkg02
+pkg03
+)
+</pre>
+<div class="paragraph">
+<p>また、<br>
+小文字で始まるメンバーはprivate、<br>
+大文字で始まるメンバーはpublicになります。<br></p>
+</div>
+<pre style="font-family: Menlo, Courier">
+package pkg01
+
+// privateになる
+func aaa() {
+}
+
+// publicになる
+func Bbb() {
+}
+</pre>
+<div class="paragraph">
+<p>パッケージの考え方は特に違和感なく入っていくことができました。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___5">変数</h2>
+<div class="sectionbody">
+<pre style="font-family: Menlo, Courier">
+var aaa int = 1 // 型と初期値を指定
+var bbb int     // 型のみ指定（※型固有の初期値が設定される）
+var ccc = 1     // 型推論（※初期値の型が自動的に指定される）
+</pre>
+<div class="paragraph">
+<p>ソースのトップレベルで宣言すればグローバルスコープ、<br>
+関数内で宣言すればローカルスコープになります。</p>
+</div>
+<div class="paragraph">
+<p>尚、ローカル変数のみ以下のように記述可。</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>aaa := 1</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>変数は型指定や、型推論といった考え方がありますが、<br>
+特に違和感なく入っていくことができました。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___6">定数</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>const aaa string = "hoge"</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>定数も特に違和感はありませんでした。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___7">真偽型</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>true と false</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>こちらはPHPと全く同じでした！</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_null">null値</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>nil がそれに相当するようです。</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>個人的にはLispを思い出しました。<br>
+特に違和感は無いのではないでしょうか。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___8">配列型</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>配列型は、PHPの配列とは異なりイミュータブルです。<br>
+後述のスライス型はPHPの配列に似ていると思われます。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+// 初期化
+var aaa [3]int //※PHPでは型指定とか配列長指定はできません
+
+// 初期値代入
+bbb := [3]string{"hoge","fuga","foo"} //※同じく配列長は変えられません
+
+// 配列長省略
+ccc := [...]string{"hoge","fuga","foo","bar"} //※配列長がこの場合4で固定になる
+
+// インデックスキー指定
+ddd := [...]string{1:"hoge",　2:"fuga"} //PHPで近い表現だと、$ddd = [1=>"hoge", 2=>"fuga"];
+</pre>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___9">スライス型</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>可変長の配列型みたいなもの。<br>
+こちらのほうがPHPの配列に近いと思いました。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+var aaa []int
+bbb := []string{"hoge","fuga","foo"} //PHPで近い表現だと、$bbb = ["hoge","fuga","foo"];
+</pre>
+<div class="paragraph">
+<p>PHPerの私には気づくのに時間がかかりましたが、<br>
+PHPの配列はかなり特殊で、<br>
+型がまぜこぜになった配列とか、<br>
+複雑怪奇な連想配列、<br>
+何でもかんでも連想配列にブチ込む手法など、<br>
+かなりPHPは異端なのだなと。<br>
+PHPの配列はスッキリ簡単に書けるところは素晴らしいと思っております。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___10">マップ型</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>PHPの連想配列的なものと思います。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+aaa := map[string]int{"hoge":111, "fuga":222}
+
+aaa["hoge"] = 333 //※この辺はPHPに似ていると思いました。
+
+fmt.Println(aaa["hoge"], aaa["fuga"]) // 333 222 ここも！
+</pre>
+<div class="paragraph">
+<p>ここは違和感ありませんでした。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___11">条件分岐</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_if">if文</h3>
+<div class="paragraph">
+<p>if文は、<br>
+{ } カッコは省略できないようです。<br>
+その点も含めて特に違和感はありません。</p>
+</div>
+<div class="paragraph">
+<p>むしろ好きです。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+var aaa int = 1
+
+if aaa == 1 {
+
+} else if aaa == 2 {
+
+} else {
+
+}
+</pre>
+</div>
+<div class="sect2">
+<h3 id="_switch">switch文</h3>
+<div class="paragraph">
+<p>switch文も良いなと思いました。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+var aaa int = 1
+
+switch aaa {
+case 1:
+	fallthrough
+case 2:
+
+default:
+
+}
+</pre>
+<div class="paragraph">
+<p>PHPと違うのはbreak記述が要らないというところです。<br>
+caseの終端は標準でbreakされます。<br>
+逆にbreakしたくない時は fallthrough と書くようです。</p>
+</div>
+<div class="paragraph">
+<p>こちらの方が世間一般のswitchより自然に思えます。</p>
+</div>
+<div class="paragraph">
+<p>以下のような、switchの判定値を省略した書き方も有効でした。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+var aaa int = 1
+
+switch {
+case aaa == 1:
+	fallthrough
+case aaa == 2:
+
+default:
+
+}
+
+// PHPで言うところの
+switch (1) {
+case $aaa == 1:
+case $aaa == 2:
+	break;
+default:
+}
+</pre>
+<div class="paragraph">
+<p>条件分岐はとてもわかり易いと感じました。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___12">ループ文</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ループは for しかありません！<br>
+ですが、ちゃんとPHPで言うところの while foreach 的な書き方も存在しています。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+// for文
+for i:=0; i<10; i++ {
+	fmt.Println(i)
+}
+
+// foreach文のようなもの
+aaa := map[string]string{"hoge":"fuga", "foo":"bar"}
+for k, v := range aaa {
+	fmt.Printf("k=%s, v=%s\n", k, v) // k=hoge, v=fuga k=foo, v=bar
+}
+
+// while文のようなもの
+i := 0
+for i<10 {
+	fmt.Println(i)
+	i++
+}
+</pre>
+<div class="paragraph">
+<p>ループを抜ける break<br>
+ループ処理をスキップする continue</p>
+</div>
+<div class="paragraph">
+<p>これはPHPと同じでした。</p>
+</div>
+<div class="paragraph">
+<p>違和感なく入って行けました。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___13">構造体</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>構造体はC言語のように使うことができます。<br>
+（個人的には）C言語に明るくないのでしっかりと学んで行きたい部分です。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+// 構造体 User を定義
+type User struct {
+	name string
+	age int
+	token string
+}
+
+func main() {
+
+	// 構造体を型として宣言
+	var user User
+
+    	// このように利用できる
+	user.name = "Shirota"
+	user.age = 39
+	user.token = "hoge"
+
+}
+</pre>
+<div class="paragraph">
+<p>こんなように構造体に値を埋め込んで使えるようです。</p>
+</div>
+<div class="paragraph">
+<p>また、
+以下のように構造体に構造体を指定もできるようです。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+type Administrator struct {
+	User
+	passwd string
+}
+</pre>
+<div class="paragraph">
+<p>PHPには無い概念と思います。</p>
+</div>
+<div class="paragraph">
+<p>また、<br>
+Golangにはクラスが無いんだそうです。<br>
+なので、<br>
+パッケージがクラスと同等なのかと思ったのですが、<br>
+何やらそうではないとわかりました。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+package user
+
+type User struct {
+}
+</pre>
+<div class="paragraph">
+<p>このようにしてしまうと、以下のようなディレクトリ構成になり、冗長です。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+models/
+    user/
+        user.go
+</pre>
+<div class="paragraph">
+<p>ではクラスみたいなことをしたい時どうすればよいのか。<br>
+そこでGolangはメソッドを使うのだと捉えました。</p>
+</div>
+<div class="paragraph">
+<p>理解が難しかったのは、<br>
+関数とメソッドは別物である。<br>
+ということです。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+type User struct {
+    name string
+    age int
+    token string
+}
+
+// メソッド定義
+func (u *User) setToken() string {
+    u.token = "fuga"
+    return u.token
+}
+
+func main() {
+    user := &User{"Shirota",39,""}
+    user.setToken()
+    fmt.Println(user.token) // fuga
+}
+</pre>
+<div class="paragraph">
+<p>Userという構造体に対して setToken というメソッドがある。<br>
+この関係がクラスに一番近いと感じました。</p>
+</div>
+<div class="paragraph">
+<p>また、<br>
+クラスが無いので継承もありませんが、<br>
+継承のようなことを行いたければ、<br>
+先述した構造体の中に構造体を入れるという手法</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+type Administrator struct {
+	User
+	passwd string
+}
+</pre>
+<div class="paragraph">
+<p>を使えば、<br>
+AdministratorからUserのsetTokenを使えるようです。</p>
+</div>
+<div class="paragraph">
+<p>この辺はコーディングをして理解を深めていきたいです。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___14">インターフェース型</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>インターフェースは割りと違和感なく入っていけました。<br>
+ただ、<br>
+インターフェース「型」というのが特殊だなとは感じてしまいますが、<br>
+こちらも実際のコーディング経験を積んでものにしていきたいです。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+type User interface {
+	login()
+	logout()
+}
+
+type Administrator struct {
+	id int
+	passwd string
+}
+
+func (adm Administrator) login() {
+	// ログイン処理
+}
+
+func (adm Administrator) logout() {
+	// ログアウト処理
+}
+
+func (adm Administrator) add() {
+	// add処理
+}
+
+func main() {
+	admin := Administrator{10001, "hoge"}
+	var user User = admin
+
+	user.login()
+	user.logout()
+	user.add() // エラーとなる
+}
+</pre>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___15">次回</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>例外処理（※try catch finallyが無い）</p>
+</li>
+<li>
+<p>並列処理</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>の辺りと、<br>
+前編後編通しての所感を書きたいと思います。</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2017. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
