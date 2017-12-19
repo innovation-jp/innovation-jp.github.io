@@ -1,6 +1,12 @@
 = 「多重継承」と「クラス分割」と「オブジェクト指向プログラミング」について勉強したメモ
 :published_at: 2017-11-19
-:hp-tags: bigen,OOP,ObjectOrientdPrograming,Trait
+:hp-alt-title: notes for Object Oriented Programing
+:hp-tags: bigen,OOP,ObjectOrientedPrograming,Trait
+
+# macのGNS3でNETWORK(CISCO CCNA)のお勉強？ 〜VPN〜
+:published_at: 2017-11-21
+:hp-tags: Network, GNS3, CISCO, CCNA, KTN, VPN
+
 
 みなさんこんばんは。*bigen*です。 +
  +
