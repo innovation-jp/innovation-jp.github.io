@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>「多重継承」と「クラス分割」と「オブジェクト指向プログラミング」について勉強したメモ - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="「多重継承」と「クラス分割」と「オブジェクト指向プログラミング」について勉強したメモ">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="「多重継承」と「クラス分割」と「オブジェクト指向プログラミング」について勉強したメモ">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2017/11/21/notes-for-Object-Oriented-Programing.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="「多重継承」と「クラス分割」と「オブジェクト指向プログラミング」について勉強したメモ" />
+    <meta property="og:description" content="macのGNS3でNETWORK(CISCO CCNA)のお勉強？ 〜VPN〜 みなさんこんばんは。bigenです。 先月、プログラマになって１年経ちましたが、 恥ずかしながら先日はじめてPHPのTraitという機能を知りまして、 そこから色々勉強したので、とりとめもなくメモしていきます。 目次 Traitってどう使うの？ 多重継承のデメリット 水平継承しないほうがよさそうなケースについて オブジェクト指向プログラミング（OOP）的な観点では おわりに 1. Traitってどう使うの？ PHPにはTraitという水平継承の機能があるそうです。 機能の詳細..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2017/11/21/notes-for-Object-Oriented-Programing.html" />
+    <meta property="article:published_time" content="2017-11-20T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2017-12-19T07:01:28.054Z" />
+    <meta property="article:tag" content="Network" />
+    <meta property="article:tag" content="GNS3" />
+    <meta property="article:tag" content="CISCO" />
+    <meta property="article:tag" content="CCNA" />
+    <meta property="article:tag" content="KTN" />
+    <meta property="article:tag" content="VPN" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="「多重継承」と「クラス分割」と「オブジェクト指向プログラミング」について勉強したメモ" />
+    <meta name="twitter:description" content="macのGNS3でNETWORK(CISCO CCNA)のお勉強？ 〜VPN〜 みなさんこんばんは。bigenです。 先月、プログラマになって１年経ちましたが、 恥ずかしながら先日はじめてPHPのTraitという機能を知りまして、 そこから色々勉強したので、とりとめもなくメモしていきます。 目次 Traitってどう使うの？ 多重継承のデメリット 水平継承しないほうがよさそうなケースについて オブジェクト指向プログラミング（OOP）的な観点では おわりに 1. Traitってどう使うの？ PHPにはTraitという水平継承の機能があるそうです。 機能の詳細..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2017/11/21/notes-for-Object-Oriented-Programing.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars1.githubusercontent.com/u/23183770?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "「多重継承」と「クラス分割」と「オブジェクト指向プログラミング」について勉強したメモ",
+    "url": "http://tech.innovation.co.jp/2017/11/21/notes-for-Object-Oriented-Programing.html",
+    "datePublished": "2017-11-20T15:00:00.000Z",
+    "dateModified": "2017-12-19T07:01:28.054Z",
+    "keywords": "Network,  GNS3,  CISCO,  CCNA,  KTN,  VPN",
+    "description": "macのGNS3でNETWORK(CISCO CCNA)のお勉強？ 〜VPN〜 みなさんこんばんは。bigenです。 先月、プログラマになって１年経ちましたが、 恥ずかしながら先日はじめてPHPのTraitという機能を知りまして、 そこから色々勉強したので、とりとめもなくメモしていきます。 目次 Traitってどう使うの？ 多重継承のデメリット 水平継承しないほうがよさそうなケースについて オブジェクト指向プログラミング（OOP）的な観点では おわりに 1. Traitってどう使うの？ PHPにはTraitという水平継承の機能があるそうです。 機能の詳細..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Network tag-G-N-S3 tag-C-I-S-C-O tag-C-C-N-A tag-K-T-N tag-V-P-N no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="21 Nov 2017" class="post-meta__date date">21 Nov 2017</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Network">Network</a>, <a href="http://tech.innovation.co.jp/tag/G-N-S3"> GNS3</a>, <a href="http://tech.innovation.co.jp/tag/C-I-S-C-O"> CISCO</a>, <a href="http://tech.innovation.co.jp/tag/C-C-N-A"> CCNA</a>, <a href="http://tech.innovation.co.jp/tag/K-T-N"> KTN</a>, <a href="http://tech.innovation.co.jp/tag/V-P-N"> VPN</a></span>
+        <span class="post-meta__author author"><img src="https://avatars1.githubusercontent.com/u/23183770?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">「多重継承」と「クラス分割」と「オブジェクト指向プログラミング」について勉強したメモ</h1>
+    </header>
+
+    <section class="post tag-Network tag-G-N-S3 tag-C-I-S-C-O tag-C-C-N-A tag-K-T-N tag-V-P-N">
+      <h1 id="_mac_gns3_network_cisco_ccna_vpn" class="sect0">macのGNS3でNETWORK(CISCO CCNA)のお勉強？ 〜VPN〜</h1>
+<div class="paragraph">
+<p>みなさんこんばんは。<strong>bigen</strong>です。<br>
+<br>
+先月、プログラマになって１年経ちましたが、<br>
+恥ずかしながら先日はじめてPHPのTraitという機能を知りまして、<br>
+そこから色々勉強したので、とりとめもなくメモしていきます。<br>
+<br></p>
+</div>
+<div class="sect1">
+<h2 id="__">目次</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Traitってどう使うの？<br></p>
+</li>
+<li>
+<p>多重継承のデメリット<br></p>
+</li>
+<li>
+<p>水平継承しないほうがよさそうなケースについて<br></p>
+</li>
+<li>
+<p>オブジェクト指向プログラミング（OOP）的な観点では<br></p>
+</li>
+<li>
+<p>おわりに<br></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_1_trait">1. Traitってどう使うの？</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>PHPにはTraitという水平継承の機能があるそうです。<br>
+機能の詳細や使い所は下記を参照してください。<br></p>
+</div>
+<div class="paragraph">
+<p>参考1: <a href="http://php.net/manual/ja/language.oop5.traits.php">PHP: トレイト - Manual</a><br>
+参考2: <a href="http://blog.toshimaru.net/php-trait/">PHP5.4 から導入された trait 機能の使いドコロ - Hack Your Design!</a><br></p>
+</div>
+<div class="paragraph">
+<p>ぱっと読んだら実に便利そうなんですが、いくつか疑問点が。<br>
+<br>
+①始めから複数クラスを継承できるようにすればいいのでは？<br>
+②Utilityクラスを水平継承するというやり方は良いやり方なのだろうか？<br>
+③そもそも継承っていう機能ってなんのためにあんの？<br>
+<br>
+これらについて考えました。
+<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_2">2. 多重継承のデメリット</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>①始めから複数クラスを継承できるようにすればいいのでは？ </strong><br>
+<br>
+Traitは水平継承と書かれていますが、結局のところ複数のクラスを継承できることを意味します。<br>
+つまり、水平継承ではなく多重継承。<br>
+PHPは<strong>単一継承しか許さないという縛りがある一方で、同時に多重継承させるような機能を提供する</strong>のは謎です。<br>
+はじめから多重継承できるようにしとけよって思いました。<br>
+<br>
+というわけでなぜ単一継承なのか調べました。<br>
+<br>
+参考3:　<a href="http://ufcpp.net/study/csharp/oop/oo_multipleinheritance">【雑記】 多重継承できない理由</a><br>
+<br>
+このサイトでは <strong>実装上のコスト</strong> の問題が触れられています。なるほど・・・。<br>
+こういった多重継承にまつわる問題に対処するため、Mixinという機能もあるそうです。<br>
+Trait機能に関しても、単純な継承にはないいくつかのルールや制約があるのもそれが理由でしょう。<br>
+<br>
+社内で話を聞くと、設計時のリスクについての話題も出てきました。<br>
+つまり、用心深くクラス設計を行わないといわゆる <strong>キメラクラスが作られてしまう</strong> ということです。<br>
+これは多重継承だからこそ起きる問題ではないのですが、単一継承のほうが設計が容易でキメラをつくりにくいため安心のようです。<br>
+<br>
+他にも、安直な実装をするとクラス間の暗黙の依存関係が生まれやすく、メンテナンス性を損ないやすいなどの問題も指摘されています。<br>
+<br>
+そんなこんなで、ただ闇雲に多重継承を使ってしまうと結局デメリットのほうが大きくなってしまうため、 <strong>実装者のスキルがかなり高くないと使わないほうが良い</strong> という意見が多いようです。<br>
+また、それゆえに多重継承を言語としてそもそも禁止してしまっているものも多く、PHPもその一つのようです。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_3">3. 水平継承しないほうがよさそうなケースについて</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>②UtilityクラスをTraitにして水平継承するというやり方は良いやり方なのだろうか？ </strong><br>
+<br>
+ぱっと思いつく水平継承（多重継承）の使い方は、<br>
+色々なクラスで共通で使うUtilityメソッドをもったクラス（Utilityクラスと呼ぶ）を継承することでした。<br>
+<br>
+でもUtilityクラスと呼び出し元クラスと依存性が少ないのであれば、メソッドを静的呼び出ししたり、必要であればインスタンス化して使えばいい気がするんですよね。<br>
+（ここでは計算量的コストはいったん無視してます）<br>
+<br>
+「継承」しなければいけないということは、ポリモーフィズムを期待するということです。<br>
+しかし、Utilityメソッドのポリモーフィズムは、Utilityクラスでやっとけばよくない？まるごと継承する意味ある？ということです。<br>
+<br>
+<strong>では水平継承すべきものとは・・・？</strong><br>
+今回はそこまでよくわからなかったので自分の宿題にしておきます。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_4_oop">4. オブジェクト指向プログラミング（OOP）的な観点では</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>③そもそも継承っていう機能ってなんのためにあんの？</strong></p>
+</div>
+<div class="paragraph">
+<p>そもそもクラスとか継承とかなんでやってんの？ポリモーフィズムも結局メソッドをif分岐すればいいだけだし？<br>
+というわけで、これを機にOOPについても勉強してみました。<br>
+<br>
+余談ですが、色々調べて見えてきたのは、「オブジェクト指向プログラミングは世の中のモノ（オブジェクト）を全て表現できる」という説明が <strong>とんでもない罠</strong> で、理解を阻んでいることでした。<br>
+OOPは世の中のモノを表現するための概念である、というミスリーディングを生じさせる表現です。<br>
+また、このミスリーディングは先の発言者本人も認めています。<br>
+<br>
+参考4: <a href="https://qiita.com/hirokidaichi/items/591ad96ab12938878fe1">新人プログラマに知っておいてもらいたい人類がオブジェクト指向を手に入れるまでの軌跡</a><br>
+<br>
+ プログラム管理の歴史的流れを見れば、OOPは構造化プログラミングに端を発する <strong>処理の構造化・データの構造化における洗練された一形態</strong> でしかないようです。<br>
+ また、OOPの概念の中ではポリモーフィズムは必ずしも「継承」という実装を必要としないことも分かります。<br>
+(とはいえ「継承」システムはポリモーフィズムの本質を表現していて、ほぼすべてのOOLが利用している）<br>
+ <br>
+ この辺りの観点から見ていくと、「どう上手く"継承"するか」ではなく、<br>
+ まず「どのようにオブジェクトが分割されているか」が前提にあって、<br>
+ その上で互いにどのようにメッセージングするかを考えるべきなのでしょう。<br>
+ <br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_5">5.おわりに</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>オブジェクト指向についてゆっくり学べたところで、満足して今回はここまでにしておこうと思います。<br>
+上手な水平継承の一般化については、今後の開発の中で考えていこうと思います。<br>
+<br>
+ ところで、「継承」以外の概念でポリモーフィズムを実装しているオブジェクト指向言語があれば是非教えてください。<br>
+<br>
+それでは。</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2017. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
