@@ -274,3 +274,5 @@ app.blade.php
 </html>
 
 ```
+
+vuejs_laravel.gif
