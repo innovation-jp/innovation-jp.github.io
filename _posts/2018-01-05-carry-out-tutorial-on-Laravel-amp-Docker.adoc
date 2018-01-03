@@ -13,7 +13,6 @@
 といっても、Vue.jsはLaravelの環境を作れば既に使えるようになっているため、Laravelの環境をつくれば良いだけ。
 ※nginx使います
 
-構成
 
 docker-compose.yml
 
@@ -103,7 +102,7 @@ COPY ./etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
 
 ```
 
-構成や詳細はgithubに上げておきました。
+構成や詳細はgithubに上げておきました。 +
 https://github.com/kooooohe/Laravel-docker-minimum-required
 を参照
 
@@ -111,3 +110,4 @@ https://github.com/kooooohe/Laravel-docker-minimum-required
 php-fpmコンテナに入り、
 `composer create-project --prefer-dist laravel/laravel laravel`
 でLaravel Projectを作成。
+
