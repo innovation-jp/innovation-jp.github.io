@@ -277,4 +277,5 @@ app.blade.php
 ```
 
 image::kohe/vuejs_laravel.gif[]
+おわり
 
