@@ -275,6 +275,10 @@ app.blade.php
 </html>
 
 ```
+Vue.jsをコンパルしたいときは +
+php-fpmコンテナに入り +
+`npm run watch-poll`を行う。
+dockerを使用する場合はこの`poll`を使わないと上手くコンパイルされない。
 
 image::kohe/vuejs_laravel.gif[]
 おわり
