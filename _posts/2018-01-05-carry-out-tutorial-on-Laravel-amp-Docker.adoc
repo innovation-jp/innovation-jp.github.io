@@ -275,4 +275,4 @@ app.blade.php
 
 ```
 
-vuejs_laravel.gif
+image::/images/kohe/vuejs_laravel.gif[]
