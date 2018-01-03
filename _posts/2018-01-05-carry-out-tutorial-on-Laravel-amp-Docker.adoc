@@ -112,4 +112,165 @@ php-fpmコンテナに入り、
 でLaravel Projectを作成。
 
 
+# Vue.jsのチュートリアル
+https://jp.vuejs.org/v2/guide/index.html
+のはじめにの箇所をやっていく。 +
+`app.blade.php`を作成し、
+routesを変更する 
 
+routes/web.php
+
+```
+Route::get('/{any}', function () {
+    return view('app');
+})->where('any', '.*');
+
+```
+
+そして、assets/js/app.jsにVue.jsを書いていく。
+```
+
+/**
+ * First we will load all of this project's JavaScript dependencies which
+ * includes Vue and other libraries. It is a great starting point when
+ * building robust, powerful web applications using Vue and Laravel.
+ */
+
+require('./bootstrap');
+
+window.Vue = require('vue');
+
+
+Vue.component('example', require('./components/ExampleComponent.vue'));
+
+Vue.component('todo-item', {
+    props: ['todo'],
+    template: '<li> {{ todo.text }} </li>'
+})
+
+const app7 = new Vue({
+    el: '#app-7',
+    data: {
+        groceryList: [
+            {id:0, text: 'VegeTables'},
+            {id:1, text: 'Cheese'},
+            {id:2, text: 'Whatever else humans are supposed to eat'}
+        ]
+    }
+})
+
+const app = new Vue({
+    el: '#app',
+    data: {
+        message: 'Hello kohe'
+    }
+})
+
+const app2 = new Vue({
+    el: '#app-2',
+    data: {
+        message: 'You loaded this page on' + new Date().toLocaleString()
+    }
+})
+
+const app3 = new Vue({
+   el: '#app-3',
+    data: {
+        seen: false
+    }
+})
+
+const app4 = new Vue({
+    el: '#app-4',
+    data: {
+        todos: [
+            { text:'kohe1' },
+            { text:'kohe2' },
+            { text:'kohe3' },
+            { text:'kohe4' }
+        ]
+    }
+})
+
+const app5 = new Vue({
+    el: '#app-5',
+    data: {
+        message: 'Hello Vue.js!'
+    },
+    methods: {
+        reverseMessage: function() {
+            this.message = this.message.split('').reverse().join('')
+        }
+    }
+})
+
+const app6 = new Vue({
+    el:'#app-6',
+    data: {
+        message: 'Hello'
+    }
+})
+
+
+
+```
+
+app.blade.php
+```
+<!DOCTYPE html>
+<html lang="{{ config('app.locale') }}">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
+        <title>Vue TODO</title>
+
+        <link rel="stylesheet" href="css/app.css">
+
+        <script>
+            window.Laravel = {};
+            window.Laravel.csrfToken = "{{ csrf_token() }}";
+        </script>
+    </head>
+    <body>
+        <div id="app">
+          {{-- <example></example> --}}
+          @{{ message }}
+        </div>
+        <div id="app-2">
+            <span v-bind:title="message">
+                Hover
+            </span>
+        </div>
+        <div id="app-3">
+            <span v-if="seen">
+                show message
+            </span>
+        </div>
+        <div id="app-4">
+            <ol>
+                <li v-for="todo in todos">
+                    @{{ todo.text }}
+                </li>
+            </ol>
+        </div>
+        <div id="app-5">
+            <p>@{{ message }}</p>
+            <button v-on:click="reverseMessage">Reverse Message</button>
+        </div>
+        <div id="app-6">
+            <p>@{{ message }}</p>
+            <input v-model="message">
+        </div>
+        <div id="app-7">
+            <ol>
+                <todo-item v-for="item in groceryList" v-bind:todo="item"></todo-item>
+            </ol>
+        </div>
+
+    <script src=" {{ mix('js/app.js') }} "></script>
+</html>
+
+```
