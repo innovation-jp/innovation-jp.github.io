@@ -281,5 +281,10 @@ php-fpmコンテナに入り +
 dockerを使用する場合はこの`poll`を使わないと上手くコンパイルされない。
 
 image::kohe/vuejs_laravel.gif[]
+
+まだVue.jsの基礎を行っただけですが、これからもっと勉強して、Applicationを作っていきたいと思います。
+次回はLaravelとVue.jsを使ったApplication開発に、コンテナを使ってデプロイまで行おうと思います。
+
+
 おわり
 
