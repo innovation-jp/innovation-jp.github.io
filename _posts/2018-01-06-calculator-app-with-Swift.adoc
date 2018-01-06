@@ -65,7 +65,7 @@ func tapOpeButton(_ text:String) {
 }
 ```
 
-テキストフィールドが編集されるたびにuserdefaultに値を保存する +
+### テキストフィールドが編集されるたびにuserDefaultに値を保存する
 アプリを途中で閉じても、左右のテキストフィールドの値を覚えておけるよう、 +
 テキストフィールドに変更があるたびに呼ばれるメソッドを作成します +
 
@@ -75,14 +75,13 @@ image::ami/20180106/3.gif[]
 ### 細かな設定
 
 以下でUITextFieldのキーボードを数字入力だけにすることができます +
-```
-self.{UITextField名}.keyboardType = UIKeyboardType.numberPad
-```
+`self.{UITextField名}.keyboardType = UIKeyboardType.numberPad`
+
 
 テキストフィールドにフォーカスを当てるには以下で設定できます +
-```
-self.{UITextField名}.becomeFirstResponder()
-``
+
+`self.{UITextField名}.becomeFirstResponder()`
+
 アプリを起動した時に左側テキストフィールドに +
 演算子ボタンを押した後に右側テキストフィールドにフォーカスが当たるように設定します +
 
@@ -150,6 +149,7 @@ override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         resultViewController.ope = ope
     }
     
+```
 
 `segue.destination`で次のページの情報をまるごと取ってくる +
 `as! ResultViewController`でダウンキャストする +
