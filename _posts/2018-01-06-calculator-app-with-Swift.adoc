@@ -1,0 +1,168 @@
+= swiftで電卓アプリをつくる
+
+:published_at: 2018-01-06
+:hp-alt-title: calculator app with Swift
+:hp-tags: Xcode,Swift,iOS,AMI
+
+
+会社のみんなでXcodeによるアプリ開発を勉強しており、 +
+簡易電卓アプリを作成したので発表します +
+
+## 作ったもの
+image::ami/20180106/1.gif[]
+
+## 開発環境
+Xcode 9 +
+Swift 4 +
+ 
+## 条件
+・入力画面と結果画面がある +
+・計算するで結果画面に +
+・もう一度で入力画面に戻る +
+・戻ると入力画面が空になる +
+・途中でアプリを閉じてもテキストフィールドに数字が保存されている +
+ +
+プロジェクトを作成したら、以下の流れで作成をしてきます。 +
+①画面を作る +
+②入力画面側の処理を作る +
+③結果画面側の処理を作る +
+④2つのページを繋ぐ処理を作る +
+
+## ①画面を作る
+以下のような配置にします
+
+image::ami/20180106/2.png[]
+
+数値部分はキーボードで入力し、演算子はボタンで選択するしようにします。 +
+
+## ②入力画面側の処理を作る
+
+各テキストフィールドを紐付けます +
+```
+@IBOutlet weak var leftNumField: UITextField!
+@IBOutlet weak var rightNumField: UITextField!
+@IBOutlet weak var ope: UITextField!
+```
+
+### 演算子ボタンの処理
+演算子ボタンがタップされた時にテキストフィールドに文字が入るようにし、 +
+テキストフィールドの値をuserdefaultに保存します。 +
+
+```
+@IBAction func tapDividedButton(_ sender: Any) {
+    tapOpeButton("÷")
+}
+
+//各ボタンを押したときの処理を共通化したもの
+func tapOpeButton(_ text:String) {
+    ope.text = text
+    rightNumField.becomeFirstResponder()
+    
+    //userDefaultに保存
+    let ud = UserDefaults.standard
+    ud.set(ope.text!, forKey: "ope")
+    ud.synchronize()
+}
+```
+
+テキストフィールドが編集されるたびにuserdefaultに値を保存する +
+アプリを途中で閉じても、左右のテキストフィールドの値を覚えておけるよう、 +
+テキストフィールドに変更があるたびに呼ばれるメソッドを作成します +
+
+image::ami/20180106/3.gif[]
+
+
+### 細かな設定
+
+以下でUITextFieldのキーボードを数字入力だけにすることができます +
+```
+self.{UITextField名}.keyboardType = UIKeyboardType.numberPad
+```
+
+テキストフィールドにフォーカスを当てるには以下で設定できます +
+```
+self.{UITextField名}.becomeFirstResponder()
+``
+アプリを起動した時に左側テキストフィールドに +
+演算子ボタンを押した後に右側テキストフィールドにフォーカスが当たるように設定します +
+
+
+## ③結果画面側の処理を作る
+
+変数を宣言します +
+
+```
+//データを受け取るための変数
+var letfNum:String  = "1"
+var rightNum:String = "1"
+var ope:String      = "＋"
+
+//計算式を表示させるLabel
+@IBOutlet weak var formula: UILabel!
+
+//結果を格納する変数
+var result:Float = 0
+```
+
+### 計算部分
+```
+//受け取った数字をFloat型に変換し、nilのチェックをする
+if let lNum = Float(letfNum){
+    if let rNum = Float(rightNum){
+        switch ope {
+        case "＋":
+            result = lNum + rNum
+        case "−":
+            result = lNum - rNum
+        case "×":
+            result = lNum * rNum
+        case "÷":
+            result = lNum / rNum
+
+        default:
+            result = 0
+        }
+        
+        //計算式を表示させる
+        formula.text = letfNum + "　" + ope + "　" + rightNum + "　＝　" + String(result)
+```
+
+## ④2つのページを繋ぐ処理を作る
+
+### 入力画面の値を結果画面に渡す
+まず、「計算する」ボタンを押すと、次のページに遷移するよう設定した後に、 +
+Segueを使い結果画面に値を渡します +
+
+```
+//次のページに情報を渡す処理
+override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    //次のページを取得する
+    let resultViewController = segue.destination as! ResultViewController
+    
+    //左数字、演算子、右数字をそれぞれ渡す
+    if let leftNum = leftNumField.text {
+        resultViewController.letfNum = leftNum
+    }
+    if let rightNum = rightNumField.text {
+        resultViewController.rightNum = rightNum
+    }
+    if let ope = ope.text {
+        resultViewController.ope = ope
+    }
+}
+```
+
+`segue.destination`で次のページの情報をまるごと取ってくる +
+`as! ResultViewController`でダウンキャストする +
+`resultViewController`の`letfNum`に値を渡す +
+
+## コード
+
+https://github.com/amiamiyamamoto/dentaku +
+
+
+## まとめ
+
+2018念1個めのブログです。 +
+今年は地道にswift、Xcodeの勉強を続けて行きたいと思います！ +
+本年もよろしくお願いいたします。 +
