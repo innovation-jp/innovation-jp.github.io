@@ -149,8 +149,7 @@ override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     if let ope = ope.text {
         resultViewController.ope = ope
     }
-}
-```
+    
 
 `segue.destination`で次のページの情報をまるごと取ってくる +
 `as! ResultViewController`でダウンキャストする +
