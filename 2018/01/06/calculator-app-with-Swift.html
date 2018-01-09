@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>swiftで電卓アプリをつくる - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="swiftで電卓アプリをつくる">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="swiftで電卓アプリをつくる">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/01/06/calculator-app-with-Swift.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="swiftで電卓アプリをつくる" />
+    <meta property="og:description" content="会社のみんなでXcodeによるアプリ開発を勉強しており、 簡易電卓アプリを作成したので発表します 作ったもの 開発環境 Xcode 9 Swift 4 条件 ・入力画面と結果画面がある ・計算するで結果画面に ・もう一度で入力画面に戻る ・戻ると入力画面が空になる ・途中でアプリを閉じてもテキストフィールドに数字が保存されている プロジェクトを作成したら、以下の流れで作成をしてきます。 ①画面を作る ②入力画面側の処理を作る ③結果画面側の処理を作る ④2つのページを繋ぐ処理を作る ①画面を作る 以下のような配置にします 数値部分はキーボードで入力し、..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/01/06/calculator-app-with-Swift.html" />
+    <meta property="article:published_time" content="2018-01-06T00:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-01-09T01:06:16.169Z" />
+    <meta property="article:tag" content="Xcode" />
+    <meta property="article:tag" content="Swift" />
+    <meta property="article:tag" content="iOS" />
+    <meta property="article:tag" content="AMI" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="swiftで電卓アプリをつくる" />
+    <meta name="twitter:description" content="会社のみんなでXcodeによるアプリ開発を勉強しており、 簡易電卓アプリを作成したので発表します 作ったもの 開発環境 Xcode 9 Swift 4 条件 ・入力画面と結果画面がある ・計算するで結果画面に ・もう一度で入力画面に戻る ・戻ると入力画面が空になる ・途中でアプリを閉じてもテキストフィールドに数字が保存されている プロジェクトを作成したら、以下の流れで作成をしてきます。 ①画面を作る ②入力画面側の処理を作る ③結果画面側の処理を作る ④2つのページを繋ぐ処理を作る ①画面を作る 以下のような配置にします 数値部分はキーボードで入力し、..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/01/06/calculator-app-with-Swift.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "AMI",
+        "image": "https://avatars2.githubusercontent.com/u/17684148?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "swiftで電卓アプリをつくる",
+    "url": "http://tech.innovation.co.jp/2018/01/06/calculator-app-with-Swift.html",
+    "datePublished": "2018-01-06T00:00:00.000Z",
+    "dateModified": "2018-01-09T01:06:16.169Z",
+    "keywords": "Xcode, Swift, iOS, AMI",
+    "description": "会社のみんなでXcodeによるアプリ開発を勉強しており、 簡易電卓アプリを作成したので発表します 作ったもの 開発環境 Xcode 9 Swift 4 条件 ・入力画面と結果画面がある ・計算するで結果画面に ・もう一度で入力画面に戻る ・戻ると入力画面が空になる ・途中でアプリを閉じてもテキストフィールドに数字が保存されている プロジェクトを作成したら、以下の流れで作成をしてきます。 ①画面を作る ②入力画面側の処理を作る ③結果画面側の処理を作る ④2つのページを繋ぐ処理を作る ①画面を作る 以下のような配置にします 数値部分はキーボードで入力し、..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Xcode tag-Swift tag-i-O-S tag-A-M-I no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="06 Jan 2018" class="post-meta__date date">06 Jan 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Xcode">Xcode</a>, <a href="http://tech.innovation.co.jp/tag/Swift">Swift</a>, <a href="http://tech.innovation.co.jp/tag/i-O-S">iOS</a>, <a href="http://tech.innovation.co.jp/tag/A-M-I">AMI</a></span>
+        <span class="post-meta__author author"><img src="https://avatars2.githubusercontent.com/u/17684148?v=4" alt="profile image for AMI" class="avatar post-meta__avatar" /> by AMI</span>
+      </div>
+      <h1 class="post-title">swiftで電卓アプリをつくる</h1>
+    </header>
+
+    <section class="post tag-Xcode tag-Swift tag-i-O-S tag-A-M-I">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>会社のみんなでXcodeによるアプリ開発を勉強しており、<br>
+簡易電卓アプリを作成したので発表します<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">作ったもの</h2>
+<div class="sectionbody">
+<div class="imageblock">
+<div class="content">
+<img src="/images/ami/20180106/1.gif" alt="1.gif">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">開発環境</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Xcode 9<br>
+Swift 4<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">条件</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>・入力画面と結果画面がある<br>
+・計算するで結果画面に<br>
+・もう一度で入力画面に戻る<br>
+・戻ると入力画面が空になる<br>
+・途中でアプリを閉じてもテキストフィールドに数字が保存されている<br>
+<br>
+プロジェクトを作成したら、以下の流れで作成をしてきます。<br>
+①画面を作る<br>
+②入力画面側の処理を作る<br>
+③結果画面側の処理を作る<br>
+④2つのページを繋ぐ処理を作る<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___4">①画面を作る</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>以下のような配置にします</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/ami/20180106/2.png" alt="2.png">
+</div>
+</div>
+<div class="paragraph">
+<p>数値部分はキーボードで入力し、演算子はボタンで選択するしようにします。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___5">②入力画面側の処理を作る</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>各テキストフィールドを紐付けます<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>@IBOutlet weak var leftNumField: UITextField!
+@IBOutlet weak var rightNumField: UITextField!
+@IBOutlet weak var ope: UITextField!</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___6">演算子ボタンの処理</h3>
+<div class="paragraph">
+<p>演算子ボタンがタップされた時にテキストフィールドに文字が入るようにし、<br>
+テキストフィールドの値をuserdefaultに保存します。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>@IBAction func tapDividedButton(_ sender: Any) {
+    tapOpeButton("÷")
+}
+
+//各ボタンを押したときの処理を共通化したもの
+func tapOpeButton(_ text:String) {
+    ope.text = text
+    rightNumField.becomeFirstResponder()
+
+    //userDefaultに保存
+    let ud = UserDefaults.standard
+    ud.set(ope.text!, forKey: "ope")
+    ud.synchronize()
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__userdefault">テキストフィールドが編集されるたびにuserDefaultに値を保存する</h3>
+<div class="paragraph">
+<p>アプリを途中で閉じても、左右のテキストフィールドの値を覚えておけるよう、<br>
+テキストフィールドに変更があるたびに呼ばれるメソッドを作成します<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/ami/20180106/3.gif" alt="3.gif">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___7">細かな設定</h3>
+<div class="paragraph">
+<p>以下でUITextFieldのキーボードを数字入力だけにすることができます<br>
+<code>self.{UITextField名}.keyboardType = UIKeyboardType.numberPad</code></p>
+</div>
+<div class="paragraph">
+<p>テキストフィールドにフォーカスを当てるには以下で設定できます<br></p>
+</div>
+<div class="paragraph">
+<p><code>self.{UITextField名}.becomeFirstResponder()</code></p>
+</div>
+<div class="paragraph">
+<p>アプリを起動した時に左側テキストフィールドに<br>
+演算子ボタンを押した後に右側テキストフィールドにフォーカスが当たるように設定します<br></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___8">③結果画面側の処理を作る</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>変数を宣言します<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>//データを受け取るための変数
+var letfNum:String  = "1"
+var rightNum:String = "1"
+var ope:String      = "＋"
+
+//計算式を表示させるLabel
+@IBOutlet weak var formula: UILabel!
+
+//結果を格納する変数
+var result:Float = 0</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___9">計算部分</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>//受け取った数字をFloat型に変換し、nilのチェックをする
+if let lNum = Float(letfNum){
+    if let rNum = Float(rightNum){
+        switch ope {
+        case "＋":
+            result = lNum + rNum
+        case "−":
+            result = lNum - rNum
+        case "×":
+            result = lNum * rNum
+        case "÷":
+            result = lNum / rNum
+
+        default:
+            result = 0
+        }
+
+        //計算式を表示させる
+        formula.text = letfNum + "　" + ope + "　" + rightNum + "　＝　" + String(result)</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__2">④2つのページを繋ぐ処理を作る</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="___10">入力画面の値を結果画面に渡す</h3>
+<div class="paragraph">
+<p>まず、「計算する」ボタンを押すと、次のページに遷移するよう設定した後に、<br>
+Segueを使い結果画面に値を渡します<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>//次のページに情報を渡す処理
+override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    //次のページを取得する
+    let resultViewController = segue.destination as! ResultViewController
+
+    //左数字、演算子、右数字をそれぞれ渡す
+    if let leftNum = leftNumField.text {
+        resultViewController.letfNum = leftNum
+    }
+    if let rightNum = rightNumField.text {
+        resultViewController.rightNum = rightNum
+    }
+    if let ope = ope.text {
+        resultViewController.ope = ope
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>segue.destination</code>で次のページの情報をまるごと取ってくる<br>
+<code>as! ResultViewController</code>でダウンキャストする<br>
+<code>resultViewController</code>の<code>letfNum</code>に値を渡す<br></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___11">コード</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://github.com/amiamiyamamoto/dentaku" class="bare">https://github.com/amiamiyamamoto/dentaku</a><br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___12">まとめ</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>2018念1個めのブログです。<br>
+今年は地道にswift、Xcodeの勉強を続けて行きたいと思います！<br>
+本年もよろしくお願いいたします。<br></p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
