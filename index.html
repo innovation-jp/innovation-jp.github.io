@@ -210,6 +210,12 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/01/06/calculator-app-with-Swift.html" title="link to swiftで電卓アプリをつくる">swiftで電卓アプリをつくる</a></h2>
+        <p class="excerpt">会社のみんなでXcodeによるアプリ開発を勉強しており、 簡易電卓アプリを作成したので発表します 作ったもの 開発環境 Xcode 9 Swift 4 条件 ・入力画面と結果画面がある ・計算するで結果画面に ・もう一度で入力画面に戻る ・戻ると入力画面が空になる ・途中でアプリを閉じてもテキストフィールドに数字が保存されている プロジェクトを作成したら、以下の流れで作成をしてきます。 ①画面を作る ②入力画面側の処理を作る ③結果画面側の処理を作る ④2つのページを繋ぐ処理を作る ①画面を作る 以下のような配置にします 数値部分はキーボードで入力し、演算子はボタンで選択するしようにします。 ②入力画面側の処理を作る 各テキストフィールドを紐付けます @IBOutlet weak var&hellip;</p>
+        <div class="post-list__meta"><time datetime="06 Jan 2018" class="post-list__meta--date date">06 Jan 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Xcode">Xcode</a>, <a href="http://tech.innovation.co.jp/tag/Swift">Swift</a>, <a href="http://tech.innovation.co.jp/tag/i-O-S">iOS</a>, <a href="http://tech.innovation.co.jp/tag/A-M-I">AMI</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/01/05/carry-out-tutorial-on-Laravel-amp-Docker.html" title="link to Vue.js のチュートリアルをLaravel＆Docker環境で行う">Vue.js のチュートリアルをLaravel＆Docker環境で行う</a></h2>
         <p class="excerpt">2018年になりました。 koheです。 年が明けたということで、そろそろ Vue.jsをLaravelとDocker環境上で使いたい 時期が来ましたので、作成。 環境構築 といっても、Vue.jsはLaravelの環境を作れば既に使えるようになっているため、Laravelの環境をつくれば良いだけ。 ※nginx使います docker-compose.yml version: '3' services:   nginx:     build:       context: ./nginx     depends_on:       - php     ports:       - 80:80     volumes:       - ./www:/var/www:cached   php:&hellip;</p>
         <div class="post-list__meta"><time datetime="05 Jan 2018" class="post-list__meta--date date">05 Jan 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/kohe">kohe</a>, <a href="http://tech.innovation.co.jp/tag/Vuejs">Vue.js</a>, <a href="http://tech.innovation.co.jp/tag/Laravel">Laravel</a>, <a href="http://tech.innovation.co.jp/tag/Docker">Docker</a></span></div>
@@ -261,12 +267,6 @@ var _trackingid = 'LFT-10003-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/11/23/Azure-8.html" title="link to Azure Container Service（AKS）で人生というコンテナもオーケストレーションしてもらいたい話">Azure Container Service（AKS）で人生というコンテナもオーケストレーションしてもらいたい話</a></h2>
         <p class="excerpt">お久しぶりです、年のせいか風邪がなかなか完治しない自分に若干引き気味な SRE チームの syoga です。 今年も後少しで終わってしまいますが、皆様やり残した事はありますか？ 私は Microsoft 社の新型ゲームハード Xbox One X を買いそびれてしまい悶々としております。 日本で売れる訳ないとたかをくくっていたのですが、まさかの転売屋需要により予約が出来ず今にいたっております。 この悔しさを10月に Preview 版がリリースされた Azure Container Service - AKS（以下AKS）へぶつけてみようと思います。 Kubernetes の詳細については Google 先生に確認下さい。 Azure Container Service とは？ ACS 以&hellip;</p>
         <div class="post-list__meta"><time datetime="23 Nov 2017" class="post-list__meta--date date">23 Nov 2017</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/syoga">syoga</a>, <a href="http://tech.innovation.co.jp/tag/log"> log</a>, <a href="http://tech.innovation.co.jp/tag/Azure"> Azure</a>, <a href="http://tech.innovation.co.jp/tag/Container"> Container</a>, <a href="http://tech.innovation.co.jp/tag/Kubernetes"> Kubernetes</a>, <a href="http://tech.innovation.co.jp/tag/Docker"> Docker</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/11/21/notes-for-Object-Oriented-Programing.html" title="link to 「多重継承」と「クラス分割」と「オブジェクト指向プログラミング」について勉強したメモ">「多重継承」と「クラス分割」と「オブジェクト指向プログラミング」について勉強したメモ</a></h2>
-        <p class="excerpt">macのGNS3でNETWORK(CISCO CCNA)のお勉強？ 〜VPN〜 みなさんこんばんは。bigenです。 先月、プログラマになって１年経ちましたが、 恥ずかしながら先日はじめてPHPのTraitという機能を知りまして、 そこから色々勉強したので、とりとめもなくメモしていきます。 目次 Traitってどう使うの？ 多重継承のデメリット 水平継承しないほうがよさそうなケースについて オブジェクト指向プログラミング（OOP）的な観点では おわりに 1. Traitってどう使うの？ PHPにはTraitという水平継承の機能があるそうです。 機能の詳細や使い所は下記を参照してください。 参考1: PHP: トレイト - Manual 参考2: PHP5.4 から導入された trait 機能&hellip;</p>
-        <div class="post-list__meta"><time datetime="21 Nov 2017" class="post-list__meta--date date">21 Nov 2017</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Network">Network</a>, <a href="http://tech.innovation.co.jp/tag/G-N-S3"> GNS3</a>, <a href="http://tech.innovation.co.jp/tag/C-I-S-C-O"> CISCO</a>, <a href="http://tech.innovation.co.jp/tag/C-C-N-A"> CCNA</a>, <a href="http://tech.innovation.co.jp/tag/K-T-N"> KTN</a>, <a href="http://tech.innovation.co.jp/tag/V-P-N"> VPN</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
