@@ -24,30 +24,73 @@ VirtualBoxで仮想マシンを作成してから、GNS3の登録して使える
 
 以下画像の通り仮想マシンを作成してCentOSをインストールしていきます
 
+image::/images/kotani/20180115/1/1.png[]
+image::/images/kotani/20180115/1/2.png[]
+image::/images/kotani/20180115/1/3.png[]
+image::/images/kotani/20180115/1/4.png[]
+image::/images/kotani/20180115/1/5.png[]
+image::/images/kotani/20180115/1/6.png[]
+image::/images/kotani/20180115/1/7.png[]
+image::/images/kotani/20180115/1/8.png[]
+image::/images/kotani/20180115/1/9.png[]
+image::/images/kotani/20180115/1/10.png[]
+image::/images/kotani/20180115/1/11.png[]
+image::/images/kotani/20180115/1/12.png[]
+image::/images/kotani/20180115/1/13.png[]
+image::/images/kotani/20180115/1/14.png[]
+image::/images/kotani/20180115/1/15.png[]
+image::/images/kotani/20180115/1/16.png[]
+image::/images/kotani/20180115/1/17.png[]
+image::/images/kotani/20180115/1/18.png[]
+image::/images/kotani/20180115/1/19.png[]
+image::/images/kotani/20180115/1/20.png[]
+image::/images/kotani/20180115/1/21.png[]
+image::/images/kotani/20180115/1/22.png[]
+image::/images/kotani/20180115/1/23.png[]
+
 インストールが終わったらインターネットに接続できるよう、 +
 ネットワークの設定をしてから起動します +
 ※今回はブリッジにして接続するようにしました +
 
+image::/images/kotani/20180115/1/31.png[]
+image::/images/kotani/20180115/1/32.png[]
+
 Webサーバで使うので、apacheをインストールしておきます +
-[code]
+----
 yum install httpd
+----
 
-準備出来たのでシャットダウンします
-仮想マシンは複数台欲しいので、クローンしておきます
-とりあえず3台作ってみました
+準備出来たのでシャットダウンします +
+仮想マシンは複数台欲しいので、クローンしておきます +
+とりあえず3台作ってみました +
 
-その後、GNS3の設定画面のVirtualBox VMsに追加して、
+image::/images/kotani/20180115/1/41.png[]
+image::/images/kotani/20180115/1/42.png[]
+image::/images/kotani/20180115/1/43.png[]
+
+その後、GNS3の設定画面のVirtualBox VMsに追加して、 +
 以下のように配置しました
-GNS3から仮想マシンを起動すると「ネットワーク設定はしないでね」というエラーになるので、
-Virtual Boxの設定画面で各仮想マシンのネットワーク設定を削除します
 
-再度仮想マシンを起動します。
-起動後以下のコマンドでIPアドレスを設定します
-設定後pingして疎通確認してみます
+image::/images/kotani/20180115/1/61.png[]
 
 
+GNS3から仮想マシンを起動すると「ネットワーク設定はしないでね」というエラーになるの	で、 +
+Virtual Boxの設定画面で各仮想マシンのネットワーク設定を削除します +
 
-疎通できたのでOKです
+image::/images/kotani/20180115/1/51.png[]
+image::/images/kotani/20180115/1/52.png[]
+image::/images/kotani/20180115/1/53.png[]
+image::/images/kotani/20180115/1/54.png[]
+image::/images/kotani/20180115/1/55.png[]
+image::/images/kotani/20180115/1/56.png[]
+
+再度仮想マシンを起動します。 +
+起動後以下のコマンドでIPアドレスを設定します +
+設定後pingして疎通確認してみます +
+
+image::/images/kotani/20180115/1/71.png[]
+
+疎通できたのでOKです +
 
 
 ## ２．Webサイトを構築する
