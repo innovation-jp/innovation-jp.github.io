@@ -91,24 +91,38 @@ image::/images/kotani/20180115/1/41.png[]
 image::/images/kotani/20180115/1/42.png[]
 image::/images/kotani/20180115/1/43.png[]
 
-その後、GNS3の設定画面のVirtualBox VMsに追加して、 +
-以下のように配置しました
-
-image::/images/kotani/20180115/1/61.png[]
-
-
-GNS3から仮想マシンを起動すると「ネットワーク設定はしないでね」というエラーになるの	で、 +
-Virtual Boxの設定画面で各仮想マシンのネットワーク設定を削除します +
+その後、GNS3の設定画面のVirtualBox VMsに追加します +
 
 image::/images/kotani/20180115/1/51.png[]
 image::/images/kotani/20180115/1/52.png[]
 image::/images/kotani/20180115/1/53.png[]
 image::/images/kotani/20180115/1/54.png[]
+
+追加後、以下のように配置しました
+
+image::/images/kotani/20180115/1/61.png[]
+
+GNS3から仮想マシンを起動すると「ネットワーク設定はしないでね」というエラーになりました
+
 image::/images/kotani/20180115/1/55.png[]
+
+Virtual Boxの設定画面で各仮想マシンのネットワーク設定を削除します +
+
 image::/images/kotani/20180115/1/56.png[]
 
-再度仮想マシンを起動します。 +
+削除後、再度仮想マシンを起動します。 +
 起動後以下のコマンドでIPアドレスを設定します +
+----
+■gns3-centos7-1
+nmcli connection modify enp0s3 ipv4.method manual ipv4.addresses 192.168.1.11/24
+nmcli connection modify enp0s3 ipv4.gateway 192.168.1.1ip
+
+■gns3-centos7-2
+nmcli connection modify enp0s3 ipv4.method manual ipv4.addresses 192.168.11.11/24
+nmcli connection modify enp0s3 ipv4.gateway 192.168.11.1ip
+----
+
+
 設定後pingして疎通確認してみます +
 
 image::/images/kotani/20180115/1/71.png[]
@@ -129,6 +143,14 @@ image::/images/kotani/20180115/2/2.png[]
 image::/images/kotani/20180115/2/3.png[]
 
 再起動後以下のコマンドでIPアドレスを設定します +
+----
+■gns3-centos7-3
+nmcli connection modify enp0s3 ipv4.method manual ipv4.addresses 10.10.10.10/24
+nmcli connection modify enp0s3 ipv4.gateway 10.10.10.1ip
+
+■R1
+
+----
 設定後apacheを起動し、CURLコマンドで確認します +
 
 # ３．本社ルータにNAT設定をする
