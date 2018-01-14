@@ -125,7 +125,16 @@ nmcli connection modify enp0s3 ipv4.gateway 192.168.11.1ip
 
 設定後pingして疎通確認してみます +
 
-image::/images/kotani/20180115/1/71.png[]
+----
+■gns3-centos7-1
+gns3-centos7-1> ping 192.168.11.11
+PING 192.168.11.11 (192.168.11.11) 56(84) bytes of data.
+64 bytes from 192.168.11.11 icmp_seq=1 ttl=254 time=33.4 ms
+64 bytes from 192.168.11.11 icmp_seq=2 ttl=254 time=51.6 ms
+64 bytes from 192.168.11.11 icmp_seq=3 ttl=254 time=43.9 ms
+64 bytes from 192.168.11.11 icmp_seq=4 ttl=254 time=43.7 ms
+64 bytes from 192.168.11.11 icmp_seq=5 ttl=254 time=44.8 ms
+----
 
 疎通できたのでOKです +
 
@@ -149,9 +158,51 @@ nmcli connection modify enp0s3 ipv4.method manual ipv4.addresses 10.10.10.10/24
 nmcli connection modify enp0s3 ipv4.gateway 10.10.10.1ip
 
 ■R1
+R1#configure terminal
+R1(config)#interface ethernet 1/0
+R1(config-if)#ip address 10.10.10.1 255.255.255.0
+R1(config-if)#no shutdown 
+R1(config-if)#exit
+R1(config)#exit
 
 ----
 設定後apacheを起動し、CURLコマンドで確認します +
+----
+■gns3-centos7-3
+service httpd start
+curl localhost
+----
+Webサーバから何か応答があれば大丈夫です +
+----
+■NGだった場合こうなります
+curl: (7) Failed connect to localhost:80; Connection refused
+----
+
+本社PCから疎通確認してみます
+----
+■gns3-centos7-1
+gns3-centos7-1> ping 10.10.10.10
+PING 10.10.10.10 (10.10.10.10) 56(84) bytes of data.
+--- 10.10.10.10 ping statistics ---
+5 packets transmitted, 0 received, 100%	 packet loss, time 4006ms
+----
+
+本社PCはローカルIPが設定されているので、 +
+グローバルIPアドレスを持っているWebサーバとは通信できませんでした +
+本社のルータから疎通確認してみます +
+
+----
+■R2
+R2#ping 10.10.10.10
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.10.10.10, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 20/26/36 ms
+R2#
+----
+
+疎通できました、一旦ここまでは良さそうです
 
 # ３．本社ルータにNAT設定をする
 
