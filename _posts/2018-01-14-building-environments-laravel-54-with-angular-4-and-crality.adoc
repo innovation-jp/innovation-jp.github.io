@@ -1,0 +1,289 @@
+= Angularを使えるLaravel環境を作る。あとcralityも使う。
+
+:published_at:
+:hp-alt-title: building environments laravel 5.4 with angular 4 and crality
+:hp-tags: PHP,Docker,angular,laravel,crality
+
+どうも、bigenです。 +
+わたくし、新卒でListFinder開発チームに配属されてから１年が経ちました。 +
+ +
+配属されてからは来る日も来る日もZendFrameWorkとjQueryと戦う毎日。 +
+最近では公私ともに社外の方と話す機会もあり、 +
+触発されてもう少し今風の技術にも触れてみたいなぁと思いまして、 +
+
+==== Angular4入りLaravel5.4環境の構築
+
+に挑戦しました。 +
+また、デザインフレームワークである *https://vmware.github.io/clarity/[Clarity Design System]*も入れて、 +
+盛りだくさんの今風アプリケーションを一つ作ってやろうという算段です。 +
+ +
+LaravelもAngularもClarityも、使って開発したことがないので、ゼロからのスタートです。 +
+周囲の人に色々質問しながら進めてみました。 +
+
+
+== 目次
+. 前準備
+. Laravel-5.4 with Angular 4 を導入する
+. 中身を眺めて勉強する
+. Clarity を導入する
+. 簡単なアプリケーション
+. おわりに
+
+=== 1. 前準備
+
+事前準備として、phpサーバーを用意します。 +
+今回は、dockerを使って *nginx + php-fpm + mysql* でそれぞれをコンテナとして構成しました。 +
+構成の設定は *http://tech.innovation.co.jp/2018/01/05/carry-out-tutorial-on-Laravel-amp-Docker.html[kohe先生の記事]*のものを使わせてもらいました。 +
+ +
+
+
+=== 2. Laravel-5.4 with Angular 4 を導入する
+そして、環境構築に挑戦といいつつ、こちらもできあがりのものを拝借いたします。 +
+ehsanhasani氏に多大なる感謝を。
+
+まず、 +
+https://github.com/ehsanhasani/laravel-5-angular-4[start project laravel 5.4 with angular 4] +
+↑の中身をphpサーバーのアプリケーション部分に配置します。 +
+
+あとは書いてある手順どおりに環境設定をしていきます。 +
+そして、Angularアプリケーションのトランスパイルをする。
+[code]
+----
+npm run dev
+----
+表示される赤字エラー・・・ +
+http://naotosetta.hateblo.jp/entry/2017/10/27/153524[こちら]を参考にtypescriptのバージョンをあげると、無事トランスパイルできました。 +
+[code]
+----
+http://localhost:8080
+----
+へアクセスしてみると、アプリトップが表示されました。
+
+
+image::bigen/laraveltop.png[]
+
+=== 3.中身を眺めて勉強する
+さて、ここからClarity Design Systemを入れていきたいのですが、 +
+いきなりではどのように組み込んでいけば良いのか分かりません。 +
+ +
+というわけで、少し上記のアプリケーションを観察してみます。 +
+ +
+Angularのコンパイルの流れについて調べてみると、次の記事が非常に参考になりました。　＋
+http://tech.quartetcom.co.jp/2017/07/20/angular2-compilation/[Angular/TypeScriptプロジェクトのコンパイルの仕組み]
+ +
+今回のアプリケーションではどうやらwebpackが使われているようですので設定ファイルを探してみると、 +
+ルートディレクトリ直下に`webpack.mix.js`があるので中を見てみます。 +
+
+[source, js]
+.webpack.mix.js
+----
+mix.webpackConfig({
+    resolve: {
+        extensions: ['.ts']
+    },
+    module: {
+        rules: [
+            {
+                test: /\.ts$/,
+                loader: 'ts-loader'
+            }
+        ]
+    }
+});
+
+mix.js([
+    'resources/assets/ts/polyfills.ts',
+    'resources/assets/ts/vendor.ts',
+    'resources/assets/ts/main.ts'
+], 'public/js/app.js');
+----
+
+通常のwebpackの設定ファイルと違うのは、`Laravel-mix`というライブラリが用いらているようです。 +
+`Laravel-mix`はLaravel内でwebpackを使ってコンパイルしてリソースを設置するのを簡単にするライブラリとのことです。 +
+https://readouble.com/laravel/5.4/ja/mix.html[アセットのコンパイル(Laravel Mix)
+] +
+ +
+Laravelのお勉強はいったん宿題にしておいて、 +
+とにかくAngularのソースは`resources/assets/ts`の下に配置されていて、 +
+3つのtsファイルをトランスパイルしてapp.jsに集積してくれていることがわかったので、 +
+それぞれ中身を見てみます。
+
+[source, js]
+.polyfills.ts
+----
+import 'core-js/es6';
+import 'core-js/es7/reflect';
+require('zone.js/dist/zone');
+if (process.env.ENV === 'production') {
+    // Production
+} else {
+    // Development and test
+    Error['stackTraceLimit'] = Infinity;
+    require('zone.js/dist/long-stack-trace-zone');
+}
+----
+ファイル名のとおり、旧ECMA Scriptとの互換ライブラリを読み込んでるっぽい？ +
+あとDev環境でのStackTraceの制限を設定していますが、ここでやるべきことなのかは謎・・・
+
+[source, js]
+.vendor.ts
+----
+// Angular
+import '@angular/platform-browser';
+import '@angular/platform-browser-dynamic';
+import '@angular/core';
+import '@angular/common';
+import '@angular/http';
+import '@angular/router';
+// RxJS
+import 'rxjs';
+// Other vendors for example jQuery, Lodash or Bootstrap
+// You can import js, ts, css, sass, ...
+import '../scss/styles.scss';
+----
+AngularのコンポーネントやリアクトJS、その他外部ベンダー製のライブラリの読み込みをするファイルのようです。 +
+アプリトップのCSS（ピンク色の背景に、センターに見出し）も、ここで読み込まれている`styles.scss`にかかれていました。 
+
+[source, js]
+.main.ts
+----
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { enableProdMode } from '@angular/core';
+import { AppModule } from './app/app.module';
+if (process.env.ENV === 'production') {
+    enableProdMode();
+}
+platformBrowserDynamic().bootstrapModule(AppModule);
+----
+こいつがAngularアプリケーションの本体で、`app.module.ts`を皮切りに色々なファイルをトランスパイルしてくれています。 +
+ +
+これぐらいわかれば、だいたいの目星はついたので、Clarityを導入していきます。
+
+=== 4.Clarity Design Systemを導入する
+https://vmware.github.io/clarity/documentation/v0.11/get-started[公式ページ]を参考に順番に導入していきます。 +
+ +
+まずは各ライブラリのインストールから。 
+
+[code]
+----
+npm install @clr/icons --save
+npm install @webcomponents/custom-elements@1.0.0 --save
+npm install @clr/ui --save
+npm install @clr/angular --save
+----
+
+次に、cssやjsなどが標準で読み込まれた状態でトランスパイルしてもらうために、 +
+`vendor.ts`に追記します。
+
+[source, js]
+.vendor.ts
+----
+...
+
+// Clarity Design System
+import '@clr/icons/clr-icons.min.css';
+import '@webcomponents/custom-elements/custom-elements.min.js';
+import '@clr/icons/clr-icons.min.js';
+import '@clr/ui/clr-ui.min.css';
+----
+
+最後に、AngularのClarityコンポーネントが使えるようにモジュールに追加します。
+
+[souce, js]
+.app.module.ts
+----
+import { NgModule } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
+import { ClarityModule } from "@clr/angular";
+import { AppComponent } from "./app.component";
+
+@NgModule({
+    imports: [
+        BrowserModule,
+        ClarityModule,
+        ...
+     ],
+     declarations: [ AppComponent ],
+     bootstrap: [ AppComponent ]
+})
+export class AppModule {    }
+----
+
+以上で準備は完了です。
+
+=== 5.簡単なアプリケーション
+せっかくなので簡単なアプリケーションを作ってみました。 +
+麻雀の対局予約画面のイメージですが、初期の予約人数は0人固定で、 +
+ボタンを押したら増えたり減ったりするだけです。
+
+image::bigen/angular.gif[]
+
+ソースコードはこちら
+
+[source, html]
+.app.component.html
+----
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h1>麻雀しますか？</h1>
+            </div>
+            <div class="card-block">
+                <h2>現在の人数: {{count}}人</h2>
+            </div>
+            <div class="card-footer">
+                    <button id="reserve" name="reserve" class="btn btn-primary" (click)="reserve()" [clrInMenu]="true">予約する</button>
+                    <button class="btn btn-outline" [clrInMenu]="true">予約しない</button>
+                    <button id="cancel" name="cancel" class="btn btn-warning" (click)="cancel()" [clrInMenu]="true">キャンセルする</button>
+            </div>
+        </div>
+    </div>
+</div>
+----
+ 
+[source, typescript]
+.app.component.ts
+----
+import { Component } from '@angular/core';
+
+@Component({
+    selector: 'my-app',
+    template: require('./app.component.html'),
+    styles: [
+        `${require('./app.component.scss')}`,
+    ]
+})
+export class AppComponent {
+    count: number=0;
+
+    public reserve() {
+        this.count++;
+    }
+    public cancel() {
+        this.count--;
+    }
+}
+----
+
+=== 6.おわりに
+とりあえずベースができたので、これをもとに色々遊んでみようと思います。 +
+やっぱり、業務の範囲だけだとなかなか新しい技術に気軽にチャレンジできないので、 +
+こういった機会を自ら作り出すのは大事だなーと思いました。 +
+ +
+自ら機会を生み出し、機会によって自らを変えよ +
+ +
+ですね。 +
+ +
+ +
+ちなみに、Angularについては +
+https://www.amazon.co.jp/Angular%E3%82%A2%E3%83%97%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0-%E5%B1%B1%E7%94%B0-%E7%A5%A5%E5%AF%9B/dp/4774191302[Angularアプリケーションプログラミング　著：山田 祥寛] +
+で勉強中です。 +
+内容はかなり重厚で、一部難しい部分もありまだ読み込みきれてませんが、 +
+非常にわかりやすく良き本でした。 +
+ +
+Laravelもとりあえず何か厚めの教科書をさらっと通して読もうかなって思っているところです。 +
+ +
+では、今回はこれぐらいで。 +
+ +
+次はなんか組織論の話をできるといいな〜〜 +
