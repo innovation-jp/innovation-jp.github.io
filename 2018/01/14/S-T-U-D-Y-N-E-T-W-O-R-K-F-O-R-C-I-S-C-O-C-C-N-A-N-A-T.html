@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>macのGNS3でNETWORK(CISCO CCNA)のお勉強？(NAT) - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="macのGNS3でNETWORK(CISCO CCNA)のお勉強？(NAT)">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="macのGNS3でNETWORK(CISCO CCNA)のお勉強？(NAT)">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/01/14/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-N-A-T.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="macのGNS3でNETWORK(CISCO CCNA)のお勉強？(NAT)" />
+    <meta property="og:description" content="KTNです 前回の続きで今度はNATの勉強をしていきたいと思います 早速始めましょう！ NATしてみます 今回は本社PCから仮想インターネットに公開されているWebサイトを見れるよう 環境構築していきたいと思います おおまかな手順は以下になります １．GNS3の標準VPCSからCentOSに切り替える ２．Webサイトを用意する ３．本社ルータにNAT設定をする ４．本社PCを増やしてもWebサイトを見れることを確認する ※今回のブログでは１、２のみを記載しています 　３、４については次回のブログで！ １．GNS3の標準VPCSからCentOSに切り替..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/01/14/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-N-A-T.html" />
+    <meta property="article:published_time" content="2018-01-13T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-01-15T09:51:15.823Z" />
+    <meta property="article:tag" content="Network" />
+    <meta property="article:tag" content="GNS3" />
+    <meta property="article:tag" content="CISCO" />
+    <meta property="article:tag" content="CCNA" />
+    <meta property="article:tag" content="KTN" />
+    <meta property="article:tag" content="NAT" />
+    <meta property="article:tag" content="CentOS" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="macのGNS3でNETWORK(CISCO CCNA)のお勉強？(NAT)" />
+    <meta name="twitter:description" content="KTNです 前回の続きで今度はNATの勉強をしていきたいと思います 早速始めましょう！ NATしてみます 今回は本社PCから仮想インターネットに公開されているWebサイトを見れるよう 環境構築していきたいと思います おおまかな手順は以下になります １．GNS3の標準VPCSからCentOSに切り替える ２．Webサイトを用意する ３．本社ルータにNAT設定をする ４．本社PCを増やしてもWebサイトを見れることを確認する ※今回のブログでは１、２のみを記載しています 　３、４については次回のブログで！ １．GNS3の標準VPCSからCentOSに切り替..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/01/14/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-N-A-T.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars0.githubusercontent.com/u/24905783?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "macのGNS3でNETWORK(CISCO CCNA)のお勉強？(NAT)",
+    "url": "http://tech.innovation.co.jp/2018/01/14/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-N-A-T.html",
+    "datePublished": "2018-01-13T15:00:00.000Z",
+    "dateModified": "2018-01-15T09:51:15.823Z",
+    "keywords": "Network,  GNS3,  CISCO,  CCNA,  KTN,  NAT,  CentOS",
+    "description": "KTNです 前回の続きで今度はNATの勉強をしていきたいと思います 早速始めましょう！ NATしてみます 今回は本社PCから仮想インターネットに公開されているWebサイトを見れるよう 環境構築していきたいと思います おおまかな手順は以下になります １．GNS3の標準VPCSからCentOSに切り替える ２．Webサイトを用意する ３．本社ルータにNAT設定をする ４．本社PCを増やしてもWebサイトを見れることを確認する ※今回のブログでは１、２のみを記載しています 　３、４については次回のブログで！ １．GNS3の標準VPCSからCentOSに切り替..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Network tag-G-N-S3 tag-C-I-S-C-O tag-C-C-N-A tag-K-T-N tag-N-A-T tag-Cent-O-S no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="14 Jan 2018" class="post-meta__date date">14 Jan 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Network">Network</a>, <a href="http://tech.innovation.co.jp/tag/G-N-S3"> GNS3</a>, <a href="http://tech.innovation.co.jp/tag/C-I-S-C-O"> CISCO</a>, <a href="http://tech.innovation.co.jp/tag/C-C-N-A"> CCNA</a>, <a href="http://tech.innovation.co.jp/tag/K-T-N"> KTN</a>, <a href="http://tech.innovation.co.jp/tag/N-A-T"> NAT</a>, <a href="http://tech.innovation.co.jp/tag/Cent-O-S"> CentOS</a></span>
+        <span class="post-meta__author author"><img src="https://avatars0.githubusercontent.com/u/24905783?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">macのGNS3でNETWORK(CISCO CCNA)のお勉強？(NAT)</h1>
+    </header>
+
+    <section class="post tag-Network tag-G-N-S3 tag-C-I-S-C-O tag-C-C-N-A tag-K-T-N tag-N-A-T tag-Cent-O-S">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>KTNです<br>
+前回の続きで今度はNATの勉強をしていきたいと思います<br>
+早速始めましょう！<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_nat">NATしてみます</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>今回は本社PCから仮想インターネットに公開されているWebサイトを見れるよう<br>
+環境構築していきたいと思います<br></p>
+</div>
+<div class="paragraph">
+<p>おおまかな手順は以下になります<br>
+１．GNS3の標準VPCSからCentOSに切り替える<br>
+２．Webサイトを用意する<br>
+３．本社ルータにNAT設定をする<br>
+４．本社PCを増やしてもWebサイトを見れることを確認する<br>
+※今回のブログでは１、２のみを記載しています<br>
+　３、４については次回のブログで！</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__gns3_vpcs_centos">１．GNS3の標準VPCSからCentOSに切り替える</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>標準のVPCSだとcurlコマンドも無いし、<br>
+Webサーバを立てる方法もわからなかったので、CentOSにしたいと思います<br>
+Virtual Boxで仮想マシンを作成してから、GNS3の登録して使えるようにしていきます<br></p>
+</div>
+<div class="paragraph">
+<p>以下画像の通り仮想マシンを作成してCentOSをインストールしていきます</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/1.png" alt="1.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/2.png" alt="2.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/3.png" alt="3.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/4.png" alt="4.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/5.png" alt="5.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/6.png" alt="6.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/7.png" alt="7.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/8.png" alt="8.png">
+</div>
+</div>
+<div class="paragraph">
+<p>これで仮想マシンの作成が出来ました<br>
+起動時にCentOSのインストールディスクを使いたいので設定します</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/9.png" alt="9.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/10.png" alt="10.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/11.png" alt="11.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/12.png" alt="12.png">
+</div>
+</div>
+<div class="paragraph">
+<p>これで起動時にISOイメージを読み込むように設定できました<br>
+仮想マシンを起動します</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/14.png" alt="14.png">
+</div>
+</div>
+<div class="paragraph">
+<p>Install CentOS 7 を選択します</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/16.png" alt="16.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/17.png" alt="17.png">
+</div>
+</div>
+<div class="paragraph">
+<p>「インストール先」で設定が必要となっているのでクリックして設定します</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/18.png" alt="18.png">
+</div>
+</div>
+<div class="paragraph">
+<p>デフォルトの設定で問題ないので、「完了」をクリック</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/19.png" alt="19.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/20.png" alt="20.png">
+</div>
+</div>
+<div class="paragraph">
+<p>「ROOT パスワード」を設定しないと終れないようなので、クリックして設定します</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/21.png" alt="21.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/22.png" alt="22.png">
+</div>
+</div>
+<div class="paragraph">
+<p>「設定完了」をクリックしたらインストール終了です</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/23.png" alt="23.png">
+</div>
+</div>
+<div class="paragraph">
+<p>インターネットに接続できるよう、ネットワークの設定をしてから起動します<br>
+仮想マシンを停止してから設定していきます<br>
+※今回はブリッジにして接続するようにしました<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/32.png" alt="32.png">
+</div>
+</div>
+<div class="paragraph">
+<p>上記ネットワークの設定後起動します<br>
+Webサーバで使うので、apacheをインストールしておきます<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>yum install httpd</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>準備出来たので再度シャットダウンします<br>
+仮想マシンは複数台欲しいので、クローンしておきます<br>
+とりあえずクローンで3台にしてみます<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/41.png" alt="41.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/42.png" alt="42.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/43.png" alt="43.png">
+</div>
+</div>
+<div class="paragraph">
+<p>その後、GNS3の設定画面の「VirtualBox VMs」に追加します<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/51.png" alt="51.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/52.png" alt="52.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/53.png" alt="53.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/54.png" alt="54.png">
+</div>
+</div>
+<div class="paragraph">
+<p>追加後、以下のように配置しました</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/61.png" alt="61.png">
+</div>
+</div>
+<div class="paragraph">
+<p>GNS3から仮想マシンを起動すると「ネットワーク設定がされてるんだけど。。。」というエラーになりました</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/55.png" alt="55.png">
+</div>
+</div>
+<div class="paragraph">
+<p>Virtual Boxの設定画面で各仮想マシンのネットワーク設定を削除します<br>
+「ネットワークアダプターを有効化」にチェックを入れたまま、<br>
+「割り当て」を未割り当てにしてください<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/1/56.png" alt="56.png">
+</div>
+</div>
+<div class="paragraph">
+<p>削除後、再度仮想マシンを起動します。<br>
+起動後以下のコマンドでIPアドレスを設定します<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>■gns3-centos7-1
+nmcli connection modify enp0s3 ipv4.method manual ipv4.addresses 192.168.1.11/24
+nmcli connection modify enp0s3 ipv4.gateway 192.168.1.1ip
+
+■gns3-centos7-2
+nmcli connection modify enp0s3 ipv4.method manual ipv4.addresses 192.168.11.11/24
+nmcli connection modify enp0s3 ipv4.gateway 192.168.11.1ip</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>設定後pingして疎通確認してみます<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>■gns3-centos7-1
+gns3-centos7-1&gt; ping 192.168.11.11
+PING 192.168.11.11 (192.168.11.11) 56(84) bytes of data.
+64 bytes from 192.168.11.11 icmp_seq=1 ttl=254 time=33.4 ms
+64 bytes from 192.168.11.11 icmp_seq=2 ttl=254 time=51.6 ms
+64 bytes from 192.168.11.11 icmp_seq=3 ttl=254 time=43.9 ms
+64 bytes from 192.168.11.11 icmp_seq=4 ttl=254 time=43.7 ms
+64 bytes from 192.168.11.11 icmp_seq=5 ttl=254 time=44.8 ms</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>疎通できたのでOKです<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__web">２．Webサイトを用意する</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>以下のように仮想インターネットにWebサイト用の仮想マシンを接続します<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/2/1.png" alt="1.png">
+</div>
+</div>
+<div class="paragraph">
+<p>R1に接続しようとしたのですがインタフェース数が足りなかったので追加します<br>
+NM-4Eインターフェースを追加して再起動します<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/2/2.png" alt="2.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180115/2/3.png" alt="3.png">
+</div>
+</div>
+<div class="paragraph">
+<p>再起動後以下のコマンドでIPアドレスを設定します<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>■gns3-centos7-3
+nmcli connection modify enp0s3 ipv4.method manual ipv4.addresses 10.10.10.10/24
+nmcli connection modify enp0s3 ipv4.gateway 10.10.10.1ip
+
+■R1
+R1#configure terminal
+R1(config)#interface ethernet 1/0
+R1(config-if)#ip address 10.10.10.1 255.255.255.0
+R1(config-if)#no shutdown
+R1(config-if)#exit
+R1(config)#exit</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>設定後apacheを起動し、CURLコマンドで確認します<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>■gns3-centos7-3
+service httpd start
+curl localhost</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>サーバから何か応答があれば大丈夫です<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>■NGだった場合こうなります
+curl: (7) Failed connect to localhost:80; Connection refused</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>本社PCから疎通確認してみます</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>■gns3-centos7-1
+gns3-centos7-1&gt; ping 10.10.10.10
+PING 10.10.10.10 (10.10.10.10) 56(84) bytes of data.
+--- 10.10.10.10 ping statistics ---
+5 packets transmitted, 0 received, 100%	 packet loss, time 4006ms</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>本社PCはローカルIPが設定されているので、<br>
+グローバルIPアドレスを持っているWebサイトとは通信できませんでした<br>
+本社ルータから疎通確認してみます<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>■R2
+R2#ping 10.10.10.10
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.10.10.10, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 20/26/36 ms
+R2#</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>疎通できました、一旦ここまでは良さそうです<br>
+仮想マシンの用意に思ったより時間がかかったので、<br>
+今回はここまでにして、次回続きをやりたいと思います<br></p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
