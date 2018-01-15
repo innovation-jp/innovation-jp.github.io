@@ -7,7 +7,7 @@
 どうも、bigenです。 +
 わたくし、新卒でListFinder開発チームに配属されてから１年が経ちました。 +
  +
-配属されてからは来る日も来る日もZendFrameWorkとjQueryと戦う毎日。 +
+配属されてからは来る日も来る日もZend FrameworkとjQueryと戦う毎日。 +
 最近では公私ともに社外の方と話す機会もあり、 +
 触発されてもう少し今風の技術にも触れてみたいなぁと思いまして、 +
 
@@ -52,7 +52,8 @@ https://github.com/ehsanhasani/laravel-5-angular-4[start project laravel 5.4 wit
 npm run dev
 ----
 表示される赤字エラー・・・ +
-http://naotosetta.hateblo.jp/entry/2017/10/27/153524[こちら]を参考にtypescriptのバージョンをあげると、無事トランスパイルできました。 +
+調べてみると、↓のような記事があったので参考にTypescriptのバージョンをあげると、無事トランスパイルできました。 +
+http://naotosetta.hateblo.jp/entry/2017/10/27/153524[LaravelとAngularの環境構築をする: 圧倒的成長記]
 [code]
 ----
 http://localhost:8080
@@ -68,7 +69,7 @@ image::bigen/laraveltop.png[]
  +
 というわけで、少し上記のアプリケーションを観察してみます。 +
  +
-Angularのコンパイルの流れについて調べてみると、次の記事が非常に参考になりました。　＋
+Angularのコンパイルの流れについて調べてみると、次の記事が非常に参考になりました。 +
 http://tech.quartetcom.co.jp/2017/07/20/angular2-compilation/[Angular/TypeScriptプロジェクトのコンパイルの仕組み]
  +
 今回のアプリケーションではどうやらwebpackが使われているようですので設定ファイルを探してみると、 +
@@ -122,7 +123,7 @@ if (process.env.ENV === 'production') {
     require('zone.js/dist/long-stack-trace-zone');
 }
 ----
-ファイル名のとおり、旧ECMA Scriptとの互換ライブラリを読み込んでるっぽい？ +
+ファイル名のとおり、旧ECMAScriptとの互換ライブラリを読み込んでるっぽい？ +
 あとDev環境でのStackTraceの制限を設定していますが、ここでやるべきことなのかは謎・・・
 
 [source, js]
@@ -141,7 +142,7 @@ import 'rxjs';
 // You can import js, ts, css, sass, ...
 import '../scss/styles.scss';
 ----
-AngularのコンポーネントやリアクトJS、その他外部ベンダー製のライブラリの読み込みをするファイルのようです。 +
+AngularのコンポーネントやRxJS、その他外部ベンダー製のライブラリの読み込みをするファイルのようです。 +
 アプリトップのCSS（ピンク色の背景に、センターに見出し）も、ここで読み込まれている`styles.scss`にかかれていました。 
 
 [source, js]
