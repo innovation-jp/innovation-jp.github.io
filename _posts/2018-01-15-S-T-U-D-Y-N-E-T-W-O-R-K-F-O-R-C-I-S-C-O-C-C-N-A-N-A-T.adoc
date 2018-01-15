@@ -16,11 +16,13 @@ KTNです +
 ２．Webサイトを用意する +
 ３．本社ルータにNAT設定をする +
 ４．本社PCを増やしてもWebサイトを見れることを確認する +
+※今回のブログでは１、２のみを記載しています + 
+　３、４については次回のブログで！
 
 ## １．GNS3の標準VPCSからCentOSに切り替える
 標準のVPCSだとcurlコマンドも無いし、 +
 Webサーバを立てる方法もわからなかったので、CentOSにしたいと思います +
-VirtualBoxで仮想マシンを作成してから、GNS3の登録して使えるようにしていきます +
+Virtual Boxで仮想マシンを作成してから、GNS3の登録して使えるようにしていきます +
 
 以下画像の通り仮想マシンを作成してCentOSをインストールしていきます
 
@@ -89,7 +91,7 @@ image::/images/kotani/20180115/1/41.png[]
 image::/images/kotani/20180115/1/42.png[]
 image::/images/kotani/20180115/1/43.png[]
 
-その後、GNS3の設定画面のVirtualBox VMsに追加します +
+その後、GNS3の設定画面の「VirtualBox VMs」に追加します +
 
 image::/images/kotani/20180115/1/51.png[]
 image::/images/kotani/20180115/1/52.png[]
