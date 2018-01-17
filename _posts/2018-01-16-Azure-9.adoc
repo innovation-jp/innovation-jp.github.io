@@ -1,4 +1,4 @@
-= 執筆中
+= Azure CosmosDB へ Go でログ出力するお話
 :hp-alt-title: Azure 9
 :hp-tags: syoga, log, Azure, Go, Cosmos DB
 
@@ -18,9 +18,10 @@
 CosmosDB では利用する API を選択できるのですが、今回は MongoDB API を利用したいと思います、リソースの作成部分は割愛しますが、東日本リージョンに CosmosDB を作成しました。
 
 ## Go で Go!!
-まずは MongoDB API を利用する上で必要なパッケージを取得します。
+まずは MongoDB API を利用する上で必要なパッケージを取得します、またログ出力時にプロセス名を取得するためのパッケージも取得します。
 ```
 go get gopkg.in/mgo.v2
+github.com/mitchellh/go-ps
 ```
 さっそく実装してみます。
 
@@ -48,9 +49,9 @@ const (
 
 // Azure Cosmos DB 接続情報
 const (
-	Host = "CosmosDB 作成時に払出されたホスト名を設定"
-	User = "CosmosDB 作成時に払出されたユーザ名を設定"
-	Pass = "CosmosDB 作成時に払出された接続キーを設定"
+	Host = "ホスト"
+	User = "ユーザ"
+	Pass = "パスワード"
 )
 
 // ログ出力構造体
@@ -62,7 +63,7 @@ type Logstruct struct {
 	Logprocessid int
 }
 
-func main() {
+func log(loglevel, logmessage string) {
 	// DialInfo 構造体に接続情報を設定し DialServer 関数を定義し、tls.Dial で CosmosDB に接続
 	dialInfo := &mgo.DialInfo{
 		Addrs:    []string{fmt.Sprintf("%s.documents.azure.com:10255", Host)},
@@ -75,36 +76,44 @@ func main() {
 		},
 	}
 
-	// セッションスタート
+	// コネクションオープン
 	session, err := mgo.DialWithInfo(dialInfo)
 
 	if err != nil {
 		fmt.Printf("Can't connect to mongo, go error %v\n", err)
-		// エラーの場合はセッションクローズはしない
+		// エラーの場合は defer は動作させない
 		os.Exit(1)
 	}
 
-	// main 関数 return 後にセッションクローズ
+	// main 関数 return 後にコネクションクローズ
 	defer session.Close()
 
-	// セーフモードを無効にして処理を実施
+	// セーフモードを無効にして接続
 	session.SetSafe(&mgo.Safe{})
 
 	// Golog コレクションを操作
 	collection := session.DB(Host).C("Golog")
 
-　　     // プロセスIDからプロセス名を取得
 	pid := os.Getpid()
 	pidInfo, _ := ps.FindProcess(pid)
 
 	//CosmosDB へ登録
 	err = collection.Insert(&Logstruct{
-		Loglevel:     INFO,
-		Logdate:     time.Now().String(),
-		Logmessage:  "小宇宙は燃えているか",
+		Loglevel:     loglevel,
+		Logdate:      time.Now().String(),
+		Logmessage:   logmessage,
 		Logprocess:   pidInfo.Executable(),
 		Logprocessid: pidInfo.Pid(),
 	})
+
+	if err != nil {
+		fmt.Printf("log insert error, go error %v\n", err)
+		os.Exit(1)
+	}
+}
+
+func main() {
+	log(INFO, "小宇宙は燃えているか")
 }
 
 ```
@@ -131,8 +140,8 @@ go build main.go
 ・ログ出力プロセス +
 ・ログ出力プロセス ID
 
-## ざっと説明
-見ての通り定数、構造体の宣言です、ログ出力情報は配列でも良いかと思いましたが。
+## ざっと説明で Go!!
+見ての通り定数、構造体の宣言です。
 ```
 const (
 	DEBUG = "DEBUG"
@@ -158,35 +167,125 @@ type Logstruct struct {
 	Logprocessid int
 }
 ```
-CosmosDB に接続するのためはTLS 接続が必要なため
+CosmosDB とのコネクションをオープンするために tls.Dial 関数を利用しハンドシェイクを行います。 
 ```
-   // DialInfo 構造体に接続情報を設定し DialServer 関数を定義し、tls.Dial で CosmosDB に接続
-	dialInfo := &mgo.DialInfo{
-		Addrs:    []string{fmt.Sprintf("%s.documents.azure.com:10255", Host)},
-		Timeout:  60 * time.Second,
-		Database: Host,
-		Username: User,
-		Password: Pass,
-		DialServer: func(addr *mgo.ServerAddr) (net.Conn, error) {
-			return tls.Dial("tcp", addr.String(), &tls.Config{})
-		},
-	}
+// DialInfo 構造体に接続情報を設定し DialServer 関数を定義し、tls.Dial で CosmosDB に接続
+dialInfo := &mgo.DialInfo{
+	Addrs:    []string{fmt.Sprintf("%s.documents.azure.com:10255", Host)},
+	Timeout:  60 * time.Second,
+	Database: Host,
+	Username: User,
+	Password: Pass,
+	DialServer: func(addr *mgo.ServerAddr) (net.Conn, error) {
+		return tls.Dial("tcp", addr.String(), &tls.Config{})
+	},
+}
 
-	// コネクションオープン
-	session, err := mgo.DialWithInfo(dialInfo)
-
-	if err != nil {
-		fmt.Printf("Can't connect to mongo, go error %v\n", err)
-		// エラーの場合はセッションクローズはしない
-		os.Exit(1)
-	}
-
-	// main 関数 return 後にセッションクローズ
-	defer session.Close()
 ```
+CosmosDB とのコネクションをオープンする処理です、os.Exit を利用すると defer で定義された処理は呼ばれないという事で、コネクションオープンが失敗した場合に不要なクローズ処理が走らないようになります。
+
+package mgo の GoDoc を参考にしましたが、セーフモードを無効にする事で、書込みのチェックを待たずドキュメントのインサートが行われる（投げっぱなし）になるため、処理が高速になるようです。
+
+オプションが諸々あったのですが、今回は特に気にせずセーフモードを無効にしています。
+```
+// コネクションオープン
+session, err := mgo.DialWithInfo(dialInfo)
+
+if err != nil {
+	fmt.Printf("Can't connect to mongo, go error %v\n", err)
+	// エラーの場合は defer は動作させない
+	os.Exit(1)
+}
+
+// main 関数 return 後にコネクションクローズ
+defer session.Close()
+
+// セーフモードを無効にして接続
+session.SetSafe(&mgo.Safe{})
+```
+ドキュメントを登録する処理です insert 関数を利用します、Golog コレクションがなければ作成してくれます。
+
+```
+// Golog コレクションを操作
+collection := session.DB(Host).C("Golog")
+
+pid := os.Getpid()
+pidInfo, _ := ps.FindProcess(pid)
+
+//CosmosDB へ登録
+err = collection.Insert(&Logstruct{
+	Loglevel:     loglevel,
+	Logdate:      time.Now().String(),
+	Logmessage:   logmessage,
+	Logprocess:   pidInfo.Executable(),
+	Logprocessid: pidInfo.Pid(),
+})
+```
+## 時間をはかってみて Go!!
+DB へログを出力する場合どれくらい時間がかかるのか、先程のログ出力処理を azurelog として切り出して import し、単純に10回ループさせてループの開始、終了をログ出力してみます。
+```
+package main
+
+import (
+	"azurelog"
+	"fmt"
+)
+
+func main() {
+
+	for i := 1; i <= 10; i++ {
+		azurelog.Log(azurelog.INFO, fmt.Sprintf("Start %d", i))
+		fmt.Println(i)
+		azurelog.Log(azurelog.INFO, fmt.Sprintf("End %d", i))
+	}
+}
+```
+blog という名前で作成しました、それでは結果発表です。
+```
+time ./blog
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+real    0m8.438s
+user    0m0.171s
+sys     0m0.111s
+```
+*なん…だと* +
+CosmosDB のログを見てみます…（1ループのみ記載）
+
+```
+{
+	"_id" : ObjectId("5a5f0a69a9e72b34d45947e1"),
+	"loglevel" : "INFO",
+	"logdate" : "2018-01-17 17:33:45.019934483 +0900 JST m=+0.801694457",
+	"logmessage" : "Start 1",
+	"logprocess" : "blog",
+	"logprocessid" : 31480
+}
+
+{
+	"_id" : ObjectId("5a5f0a69801a6c36e055ef93"),
+	"loglevel" : "INFO",
+	"logdate" : "2018-01-17 17:33:45.895626905 +0900 JST m=+1.677332879",
+	"logmessage" : "End 1",
+	"logprocess" : "blog",
+	"logprocessid" : 31480
+}
+```
+なんとループの開始と終了のログを出力間に 0.7 秒もかかっていました… 
+
+ログ出力する度に CosmosDB へコネクションのオープン、クローズを行っていることで遅延が発生している気がしますが、改善できるかを次回のテーマにしてみたいと思います。
 
 #### 感想
-Go のお勉強として今回作成してみましたが、実際ログを DB に登録するというのはどうかなと思いましたが、個人的には
+Go の勉強もかねて今回試してみましたが、新しい言語を学ぶのはやはり楽しいです、個人的には取っ付きやすい言語かなと思います。
 
 余談ですが今回のブログタイトルを「CosmosDB で Go!!」にしようと思っていたのですが、意味不明すぎるので自重しました。
 
