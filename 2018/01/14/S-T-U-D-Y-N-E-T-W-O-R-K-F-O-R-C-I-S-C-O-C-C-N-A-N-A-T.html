@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <title>macのGNS3でNETWORK(CISCO CCNA)のお勉強？(NAT) - イノベーション　エンジニアブログ</title>
+    <title>macのGNS3でNETWORK(CISCO CCNA)の勉強　〜③NAT準備〜 - イノベーション　エンジニアブログ</title>
 
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
@@ -15,11 +15,11 @@
     <meta name="description" content="">
 
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="macのGNS3でNETWORK(CISCO CCNA)のお勉強？(NAT)">
+    <meta name="twitter:title" content="macのGNS3でNETWORK(CISCO CCNA)の勉強　〜③NAT準備〜">
     <meta name="twitter:description" content="">
 
     <meta property="og:type" content="article">
-    <meta property="og:title" content="macのGNS3でNETWORK(CISCO CCNA)のお勉強？(NAT)">
+    <meta property="og:title" content="macのGNS3でNETWORK(CISCO CCNA)の勉強　〜③NAT準備〜">
     <meta property="og:description" content="">
 
     <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
@@ -51,21 +51,22 @@ var _trackingid = 'LFT-10003-1';
     
     <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="macのGNS3でNETWORK(CISCO CCNA)のお勉強？(NAT)" />
+    <meta property="og:title" content="macのGNS3でNETWORK(CISCO CCNA)の勉強　〜③NAT準備〜" />
     <meta property="og:description" content="KTNです 前回の続きで今度はNATの勉強をしていきたいと思います 早速始めましょう！ NATしてみます 今回は本社PCから仮想インターネットに公開されているWebサイトを見れるよう 環境構築していきたいと思います おおまかな手順は以下になります １．GNS3の標準VPCSからCentOSに切り替える ２．Webサイトを用意する ３．本社ルータにNAT設定をする ４．本社PCを増やしてもWebサイトを見れることを確認する ※今回のブログでは１、２のみを記載しています 　３、４については次回のブログで！ １．GNS3の標準VPCSからCentOSに切り替..." />
     <meta property="og:url" content="http://tech.innovation.co.jp/2018/01/14/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-N-A-T.html" />
     <meta property="article:published_time" content="2018-01-13T15:00:00.000Z" />
-    <meta property="article:modified_time" content="2018-01-15T09:51:15.823Z" />
+    <meta property="article:modified_time" content="2018-01-19T08:14:16.811Z" />
+    <meta property="article:tag" content="Study" />
     <meta property="article:tag" content="Network" />
+    <meta property="article:tag" content="mac" />
     <meta property="article:tag" content="GNS3" />
     <meta property="article:tag" content="CISCO" />
     <meta property="article:tag" content="CCNA" />
-    <meta property="article:tag" content="KTN" />
     <meta property="article:tag" content="NAT" />
     <meta property="article:tag" content="CentOS" />
     
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="macのGNS3でNETWORK(CISCO CCNA)のお勉強？(NAT)" />
+    <meta name="twitter:title" content="macのGNS3でNETWORK(CISCO CCNA)の勉強　〜③NAT準備〜" />
     <meta name="twitter:description" content="KTNです 前回の続きで今度はNATの勉強をしていきたいと思います 早速始めましょう！ NATしてみます 今回は本社PCから仮想インターネットに公開されているWebサイトを見れるよう 環境構築していきたいと思います おおまかな手順は以下になります １．GNS3の標準VPCSからCentOSに切り替える ２．Webサイトを用意する ３．本社ルータにNAT設定をする ４．本社PCを増やしてもWebサイトを見れることを確認する ※今回のブログでは１、２のみを記載しています 　３、４については次回のブログで！ １．GNS3の標準VPCSからCentOSに切り替..." />
     <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/01/14/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-N-A-T.html" />
     
@@ -81,11 +82,11 @@ var _trackingid = 'LFT-10003-1';
         "url": "undefined/author/undefined",
         "sameAs": ""
     },
-    "headline": "macのGNS3でNETWORK(CISCO CCNA)のお勉強？(NAT)",
+    "headline": "macのGNS3でNETWORK(CISCO CCNA)の勉強　〜③NAT準備〜",
     "url": "http://tech.innovation.co.jp/2018/01/14/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-N-A-T.html",
     "datePublished": "2018-01-13T15:00:00.000Z",
-    "dateModified": "2018-01-15T09:51:15.823Z",
-    "keywords": "Network,  GNS3,  CISCO,  CCNA,  KTN,  NAT,  CentOS",
+    "dateModified": "2018-01-19T08:14:16.811Z",
+    "keywords": "Study,  Network,  mac,  GNS3,  CISCO,  CCNA,  NAT,  CentOS",
     "description": "KTNです 前回の続きで今度はNATの勉強をしていきたいと思います 早速始めましょう！ NATしてみます 今回は本社PCから仮想インターネットに公開されているWebサイトを見れるよう 環境構築していきたいと思います おおまかな手順は以下になります １．GNS3の標準VPCSからCentOSに切り替える ２．Webサイトを用意する ３．本社ルータにNAT設定をする ４．本社PCを増やしてもWebサイトを見れることを確認する ※今回のブログでは１、２のみを記載しています 　３、４については次回のブログで！ １．GNS3の標準VPCSからCentOSに切り替..."
 }
     </script>
@@ -96,7 +97,7 @@ var _trackingid = 'LFT-10003-1';
 
 
 </head>
-<body class="post-template tag-Network tag-G-N-S3 tag-C-I-S-C-O tag-C-C-N-A tag-K-T-N tag-N-A-T tag-Cent-O-S no-js">
+<body class="post-template tag-Study tag-Network tag-mac tag-G-N-S3 tag-C-I-S-C-O tag-C-C-N-A tag-N-A-T tag-Cent-O-S no-js">
 
     <span class="mobile btn-mobile-menu">
         <i class="icon icon-list btn-mobile-menu__icon"></i>
@@ -252,13 +253,13 @@ var _trackingid = 'LFT-10003-1';
 
     <header class="post-header">
       <div class="post-meta">
-        <time datetime="14 Jan 2018" class="post-meta__date date">14 Jan 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Network">Network</a>, <a href="http://tech.innovation.co.jp/tag/G-N-S3"> GNS3</a>, <a href="http://tech.innovation.co.jp/tag/C-I-S-C-O"> CISCO</a>, <a href="http://tech.innovation.co.jp/tag/C-C-N-A"> CCNA</a>, <a href="http://tech.innovation.co.jp/tag/K-T-N"> KTN</a>, <a href="http://tech.innovation.co.jp/tag/N-A-T"> NAT</a>, <a href="http://tech.innovation.co.jp/tag/Cent-O-S"> CentOS</a></span>
+        <time datetime="14 Jan 2018" class="post-meta__date date">14 Jan 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Study">Study</a>, <a href="http://tech.innovation.co.jp/tag/Network"> Network</a>, <a href="http://tech.innovation.co.jp/tag/mac"> mac</a>, <a href="http://tech.innovation.co.jp/tag/G-N-S3"> GNS3</a>, <a href="http://tech.innovation.co.jp/tag/C-I-S-C-O"> CISCO</a>, <a href="http://tech.innovation.co.jp/tag/C-C-N-A"> CCNA</a>, <a href="http://tech.innovation.co.jp/tag/N-A-T"> NAT</a>, <a href="http://tech.innovation.co.jp/tag/Cent-O-S"> CentOS</a></span>
         <span class="post-meta__author author"><img src="https://avatars0.githubusercontent.com/u/24905783?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
       </div>
-      <h1 class="post-title">macのGNS3でNETWORK(CISCO CCNA)のお勉強？(NAT)</h1>
+      <h1 class="post-title">macのGNS3でNETWORK(CISCO CCNA)の勉強　〜③NAT準備〜</h1>
     </header>
 
-    <section class="post tag-Network tag-G-N-S3 tag-C-I-S-C-O tag-C-C-N-A tag-K-T-N tag-N-A-T tag-Cent-O-S">
+    <section class="post tag-Study tag-Network tag-mac tag-G-N-S3 tag-C-I-S-C-O tag-C-C-N-A tag-N-A-T tag-Cent-O-S">
       <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
