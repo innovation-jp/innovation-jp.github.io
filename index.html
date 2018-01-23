@@ -210,6 +210,12 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/01/20/Bitrise-de-ci.html" title="link to Bitriseでアプリ開発をお手軽CI">Bitriseでアプリ開発をお手軽CI</a></h2>
+        <p class="excerpt">Bitriseとは？ Bitriseはアプリ開発に特化したCIサービスで、「Android」「iOS」「Xamarin」の３つの開発環境に対応しています。 使ってみて特に便利だと感じた点は、 アプリに特化しているので、アプリプロジェクトであれば、ほぼ設定不要で導入できる まずは、無料で導入することが出来る（2018年1月19日時点、チームメンバー2名まで等の制約あり） 多数の外部サービスと連携できる(テスト、デプロイ、通知など。もちろんビルド完了時にSlack通知もできる) テストメンバーにビルドしたアプリの配布ができる などです。 BitriseのWebサイトは、下記になります。 https://www.bitrise.io/ 導入 導入はとても簡単です。 Bitriseのアカウントを作&hellip;</p>
+        <div class="post-list__meta"><time datetime="20 Jan 2018" class="post-list__meta--date date">20 Jan 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/kato">kato</a>, <a href="http://tech.innovation.co.jp/tag/ci"> ci</a>, <a href="http://tech.innovation.co.jp/tag/bitrise"> bitrise</a>, <a href="http://tech.innovation.co.jp/tag/android"> android</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/01/16/Azure-9.html" title="link to Azure CosmosDB へ Go でログ出力するお話">Azure CosmosDB へ Go でログ出力するお話</a></h2>
         <p class="excerpt">明けましておめでとうございます、SRE チームの syoga です。 来週ついに Monster Hunter World が発売する訳ですが、ネット人見知りの私はソロで頑張る予定です、 そんな中思いついた事を今回のブログに書き綴りたいと思います。 思いついた事 以前の記事でログについて思いの丈をぶつけたのですが、個人的にオートスケーリングやコンテナ化、サーバレスが当たり前になりつつある世の中で、ログをファイルに出力するというのは、モンハンに例えるのならオンライン集会所のクエストにソロで挑むようなものです（個人の意見です）！！ という訳で、Go 言語を利用し Azure Cosmos DB（以下 CosmosDB）にログを出力する実験を行ってみました。 CosmosDB で Go!! まず&hellip;</p>
         <div class="post-list__meta"><time datetime="16 Jan 2018" class="post-list__meta--date date">16 Jan 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/syoga">syoga</a>, <a href="http://tech.innovation.co.jp/tag/log"> log</a>, <a href="http://tech.innovation.co.jp/tag/Azure"> Azure</a>, <a href="http://tech.innovation.co.jp/tag/Go"> Go</a>, <a href="http://tech.innovation.co.jp/tag/Cosmos-D-B"> Cosmos DB</a></span></div>
@@ -261,12 +267,6 @@ var _trackingid = 'LFT-10003-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/12/08/Go-O-R.html" title="link to GoのORマッパーを使ってみよう！">GoのORマッパーを使ってみよう！</a></h2>
         <p class="excerpt">こんにちは。 エンジニアのNew塚本です。 １０月から歯医者に通い始めて３ヶ月過ちましたが、未だ完治しておりません。 歯を削るキュイーンって音が大の苦手で、苦手というかムリなんです・・・ あの音、なんとかならないでしょうかねー さて、今回は、初めてのGolangとORマッパーのgormを使ってみました。 目的 gormライブラリを使って簡単なDB操作を試してみます。 ライブラリの詳細は以下のサイトを参照ください。  http://jinzhu.me/gorm/ 【DB接続】 import ( 	"github.com/jinzhu/gorm" 	_ "github.com/jinzhu/gorm/dialects/postgres" ) gormパッケージからインタフェースを通してpost&hellip;</p>
         <div class="post-list__meta"><time datetime="08 Dec 2017" class="post-list__meta--date date">08 Dec 2017</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/New-Tsukamoto">NewTsukamoto</a>, <a href="http://tech.innovation.co.jp/tag/mac"> mac</a>, <a href="http://tech.innovation.co.jp/tag/Golang"> Golang</a>, <a href="http://tech.innovation.co.jp/tag/gorm"> gorm</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/12/04/Selenium-Google-Apps-Script.html" title="link to SeleniumとGoogle Apps Scriptの連携〜実行導入編〜">SeleniumとGoogle Apps Scriptの連携〜実行導入編〜</a></h2>
-        <p class="excerpt">こんにちは。 新卒エンジニアのはすみんです。 今回のブログのテーマは「Selenium」です。 ブラウザの操作を自動的に行なう→ユーザテストに便利、なので以前から気になっていた技術のひとつでした。 しかしなかなか活かせる機会がなく、触ったことはありませんでした。 ところが最近社内の同期と会話をしているときに、これはSeleniumを活かせるのでは？と思える事象に遭遇しました。 彼はマーケターなのですが、メディアを作る際にフォームを入力するそうで、 ひとつひとつ手打ちでしかも量が多いらしくかなり面倒とのこと。 これはSeleniumを使って自動でフォームを作ることができれば、なかなかのハックだよね、と思いやってみました。 （ここだけの話、Chromeの拡張機能で事足りるらしく、それは別途作る&hellip;</p>
-        <div class="post-list__meta"><time datetime="04 Dec 2017" class="post-list__meta--date date">04 Dec 2017</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Hasumin">Hasumin</a>, <a href="http://tech.innovation.co.jp/tag/Seated"> Seated</a>, <a href="http://tech.innovation.co.jp/tag/Google-Apps-Script"> Google Apps Script</a>, <a href="http://tech.innovation.co.jp/tag/Ruby"> Ruby</a>, <a href="http://tech.innovation.co.jp/tag/G-A-S"> GAS</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
