@@ -1,0 +1,153 @@
+= Dockerfileとdocker-compose.ymlが何を書いてるか読み解こう
+:hp-alt-title: read_docker_files
+:hp-tags: obata, docker
+
+## 先輩の背中を追いたい人生だった
+
+雪、凄かったですね。新人エンジニアの小畑です。
+
+最近起こったこととしては、毎日書いてる個人ブログが無事に100日目を迎えました。 +
+技術記事が7割くらいなので、70記事分くらいは成長してる・・・と信じたい。
+
+それでもやはり、先輩方の技術凄いなーってなってるわけで。 +
+先輩方の書く記事で『なにコレ？』ってなってしまうことがまだまだ多々あります。
+
+ということで、1つの記事決めて全力で読もうと考えてみました。
+
+## 選ばれたのは、Dockerでした
+
+そこで選んだ記事はkoheさんの
+
+> Vue.js のチュートリアルをLaravel＆Docker環境で行う
+
+> http://tech.innovation.co.jp/2018/01/05/carry-out-tutorial-on-Laravel-amp-Docker.html
+
+これを参考にDockerfileとかdocker-compose.ymlが何を書いているか勉強しよう！ってことにしました。
+
+## 読者対象
+Docker使ってるけど、Dockerfileとか何書いてるかわかんないって方向け。
+
+## docker-compose.yml
+基本的に書かれているのはこの2つ。 +
+難しい事は書いてないです！
+
+1. 各コンテナはどのイメージから作るか +
+2. 追加設定
+
+```
+version: '3'                                    # docker-composeの使用バージョン
+services:                                       # コンテナから作られるサービス達。コンテナの設定を以下に。
+  nginx:                                         # コンテナの名前
+    build:                                        # Dockerfileからコンテナを作る
+      context: ./nginx                    # Dockerfileのパス。
+    depends_on:                           # 対象のコンテナとリンク。 /etc/hostsにローカルipが書かれる
+      - php                                     # 172.17.0.3 php とか書かれる
+    ports:                                      # 公開port
+      - 80:80                                  # 外部公開ポート番号 : コンテナのポート番号
+    volumes:                                  # マウント。コンテナのデータと、手元のデータが同期する。
+      - ./www:/var/www:cached     # 手元のパス : コンテナのパス : キャッシュオプション
+
+  php:
+    ~略~
+
+  mysql:
+    restart: always                     # コンテナが止まった時に再起動する
+    image: mysql:latest             # イメージ(コンテナのテンプレ)からコンテナを作る
+    volumes:
+      - ./mysql:/var/lib/mysql
+    environment:                         # 環境変数の設定
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+    ports:
+      - 3306:3306
+```
+
+ネットワーク設定や、ボリューム(ドライバとか)の設定もここに書くのですが、 +
+今回はその設定がなかったので割愛。
+
+## php-fpm Dockerfile
+FROMがどのイメージを使うか、なので。 +
+実際は公式イメージそのままだと困るから、追加でいろいろ設定しようってお話です。
+
+```
+FROM php:7.1-fpm                      # どのイメージを使うか
+RUN apt-get update \                  # RUN→コマンドの実行
+ && apt-get install -y \              # apt-get→パッケージ管理
+        git \                                     # apt-get install
+        unzip \                               # →インストール。
+        libz-dev \                            # つまり、必要なものをインストールしています！
+        aptitude \                          # 下のnpmとかもパッケージ管理+インストールです。
+        libpng12-dev \
+        mysql-client \
+        libmcrypt-dev \
+        libmemcached-dev \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        nodejs \
+        npm \
+                                                      # PHPのイメージが作ってくれたdocker-php-*を使って
+                                                      # mcrypt(暗号化・複合)とかPHPの拡張機能をインストール
+                                                      # peclもphpの拡張機能インストールするもの
+ && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+ && docker-php-ext-install -j$(nproc) gd iconv mcrypt pdo_mysql \
+ && pecl install xdebug-2.5.5 \ 
+ && pecl install memcached \
+ && echo extension=memcached.so >> /usr/local/etc/php/conf.d/memcached.ini
+                                                      # memcached.so読み込んでねっていう設定を
+                                                      # memcach.iniに書き込み。
+
+RUN npm cache clean \
+ && npm install -g npm \
+
+ ~略~
+
+WORKDIR /var/www                 # RUNとかCMDで定義したコマンドをどのディレクトリでやるか
+# install vim-gnome
+RUN aptitude install -y vim      # （略）
+
+```
+
+これも、必要なものをインストールしている感じですね！
+
+## nginx Dockerfile
+```
+FROM nginx:latest
+COPY ./etc/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY ./etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
+```
+
+COPYは、手元のファイルを、コンテナ内にコピーします。 +
+nginxの設定ファイルをコンテナ内にコピーした感じですね！
+
+## まとめ
+コメントたくさん書きましたが、やっていることは、とにかく設定＋インストールです。
+
+なので、すっごく簡単に書くなら、
+
+docker-compose.yml
+```
+version: '3'
+services:
+  php-apache:
+    image: php:7.1-apache
+    ports:
+      - 80:80
+    volumes:
+      - .:/var/www/html
+```
+index.html
+```
+Hello world!
+```
+
+これで `docker-compose up` ってするだけでブラウザの `localhost` でハローワールドが出ます。 +
+phpのapacheなのは特に意味はありません！
+
+ただ、恐れずに読んでいくと、結構何をしているかわかると思います！
+
+私はDockerの本を一冊読むまで、アレルギーが如く読むのを拒絶していましたが、 +
+理解して読むと凄く簡潔でわかりやすいファイルだなというのがわかりました。
+
+恐れないこと、そして興味持って勉強すること。 +
+大切ですね！
+
