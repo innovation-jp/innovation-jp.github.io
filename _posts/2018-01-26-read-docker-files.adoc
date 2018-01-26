@@ -38,8 +38,8 @@ Docker使ってるけど、Dockerfileとか何書いてるかわかんないっ�
 version: '3'                                    # docker-composeの使用バージョン
 services:                                       # コンテナから作られるサービス達。コンテナの設定を以下に。
   nginx:                                         # コンテナの名前
-    build:                                        # Dockerfileからコンテナを作る
-      context: ./nginx                    # Dockerfileのパス。
+    build:                                        # イメージ(コンテナのテンプレ)を作るためのDockerfileがある場所
+      context: ./nginx                    # Dockerfileの場所
     depends_on:                           # 対象のコンテナとリンク。 /etc/hostsにローカルipが書かれる
       - php                                     # 172.17.0.3 php とか書かれる
     ports:                                      # 公開port
@@ -52,7 +52,7 @@ services:                                       # コンテナから作られる
 
   mysql:
     restart: always                     # コンテナが止まった時に再起動する
-    image: mysql:latest             # イメージ(コンテナのテンプレ)からコンテナを作る
+    image: mysql:latest             # コンテナを作るためのイメージ
     volumes:
       - ./mysql:/var/lib/mysql
     environment:                         # 環境変数の設定
@@ -116,8 +116,11 @@ COPY ./etc/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY ./etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
 ```
 
-COPYは、手元のファイルを、コンテナ内にコピーします。 +
+COPYは、手元のファイルを、コンテナ内にそのままコピーします。 +
 nginxの設定ファイルをコンテナ内にコピーした感じですね！
+
+ちなみにCOPYとADDの違いは、1.URLが使える、2.tarやtar.zipとかは解答されて配置される +
+という違いです。
 
 ## まとめ
 コメントたくさん書きましたが、やっていることは、とにかく設定＋インストールです。
@@ -146,7 +149,7 @@ phpのapacheなのは特に意味はありません！
 ただ、恐れずに読んでいくと、結構何をしているかわかると思います！
 
 私はDockerの本を一冊読むまで、アレルギーが如く読むのを拒絶していましたが、 +
-理解して読むと凄く簡潔でわかりやすいファイルだなというのがわかりました。
+理解して読むと凄く簡潔でわかりやすいファイルだなというのがわかりました。
 
 恐れないこと、そして興味持って勉強すること。 +
 大切ですね！
