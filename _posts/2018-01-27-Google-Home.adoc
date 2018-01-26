@@ -1,0 +1,260 @@
+# Google Homeを使って出勤の打刻をしたい…！
+:hp-alt-title:　Google Homeを使って出勤の打刻をしたい
+:hp-tags: Hasumin, google home, selenium, ruby, nodejs
+
+こんにちは。 +
+新卒エンジニアのはすみんです。 +
+
+もうすぐ4月ですね。 +
+「新卒」と呼べるのもあと3ヶ月。 +
+年齢的にはあれなんですが、世間的に言われている大いに甘えられる年は終了なわけで。 +
+ただ、個人的には挑戦して失敗してというサイクルは、何歳になっても続けていきたいと思っています。 +
+一番の成長のきっかけは挑戦と失敗の先にあると思っています。 +
+死ぬまで挑戦と失敗を繰り返し、成長と改善を繰り返すことができたら幸せだな〜 +
+
+さて、思いに浸るのは置いておいて、今回のテーマは巷で話題の「Google Home」です。 +
+昨年の12月にやっていた半額セール時にこそっと手に入れました。（mini） +
+せっかく新しいデバイスを手に入れたのだから開発しないともったいない！と思い、プチハックしてみました。 +
+内容は、毎朝のルーチンワークの1つである勤怠打刻をGoogle Homeくんにお願いしたいと思います。 +
+ちなみに、前回のブログのSeleniumと絡めてやってみました〜 +
+
+## 準備
+Google Home / Google Home mini +
+PC（Mac、Windows、ラズパイ、、、） +
+※権限　後ほど詳しく… +
+
+## 環境
+Node.js +
+Ruby +
+Selenium +
+IFTTT +
+Firebase +
+
+## 処理の流れ
+image:hasumi/ghome/ghome-flow2.png[]
+簡単に説明すると、Google Homeが音声を受信すると、IFTTTが起動しWebhookでリクエストをFirebaseに送ります。 +
+Node.jsがFirebaseの更新を見ているので、更新のタイミングで関数が起動し、Seleniumを動かしてくれるといった感じです。 +
+
+## インストール、準備など
+##### Node.jsのインストール
+まず、Node.jsをインストールして使えるようにしましょう。 +
+Homebrewを使えば一発です。 +
+```
+$ brew install node
+```
+インストール後、以下のコマンドで表示されればＯＫです。 +
+```
+$ node -v
+```
+
+
+##### Ruby
+RubyもHomebrewを使えば一発です。 +
+めちゃめちゃ便利ですね。 +
+```
+$ brew install ruby
+```
+こちらも、以下のコマンドで表示されればＯＫです。 +
+```
+$ ruby -v
+```
+
+
+##### Selenium
+gemコマンドでインストールしましょう。 +
+```
+$ gem install selenium-webdriver
+```
+詳しくは前回の記事にあるのでよければご参照ください。 +
+http://tech.innovation.co.jp/2017/12/04/Selenium-Google-Apps-Script.html
+
+
+## Firebaseの設定
+次に、Firebaseの設定です。 +
+image:hasumi/ghome/firebase-top.png[]
+https://firebase.google.com/?hl=ja +
+Firebaseは、色々な機能を取り揃えていますが、よく用いられている機能のひとつにリアルタイムデータベースがあります。 +
+ユーザのアクションに対してリアルタイムにデータベースを更新してくれるので、ユーザとサーバが双方向にやり取りすることが多いスマホアプリで多く用いられているようです。 +
+今回は、Google Homeにトリガーとなる音声が受信されたときに更新されるようにしたいと思います。 +
+
+##### プロジェクトの作成
+任意の名前でプロジェクトを作成します。 +
+国 / 地域は日本を選ぶといいでしょう。 +
+プロジェクトが作成できたらこんな感じのダッシュボードにいきます。 +
+image:hasumi/ghome/firebase-dashboard.png[]
+
+##### データタブの設定
+DEVELOPからDatabaseを選択します。 +
+データタブにおいて以下のように適宜設定してください。 +
+```
+project-name 
+|__anyname
+     |__message: "initial message"
+```
+anyname, message, ダブルコーテーション内の文言はお好きなやつでどうぞ。 +
+
+##### ルールタブの設定
+次にルールタブにおいて以下のように設定します。 +
+```
+{
+  "rules": {
+    ".read": "true",
+    ".write": "true"
+  }
+}
+```
+今回は試験的に公開でやっていますが、適宜変更してください。 +
+
+最後にProject Overviewに移動し、「ウェブアプリにFirebaseを追加」を選択します。 +
+アプリの場合はそれぞれ選んでください。 +
+すると、スクリプトが出てくるのでコピーして保管しておいてください。 +
+今回使うのは以下です。 +
+```
+  // Initialize Firebase
+  var config = {
+    apiKey: "XXXXXXXXXXXXXXXXXXXXXXXXXX",
+    authDomain: "project-name.firebaseapp.com",
+    databaseURL: "https://project-name.firebaseio.com",
+    projectId: "project-name",
+    storageBucket: "project-name.appspot.com",
+    messagingSenderId: "00000000000"
+  };
+  firebase.initializeApp(config);
+```
+
+これでFirebaseの設定は終わりです。 +
+
+## IFTTTの設定
+次に、IFTTTの設定をします。 +
+image:hasumi/ghome/ifttt-top.png[]
+IFTTTは、Webサービス同士を連携することが出来るサービスです。 +
+例えば、GmailとSlackを連携させてメールが来たときにSlackに通知する、といったことが出来ます。 +
+ちなみに、IFTTTとは「IF This Then That」の略です。まんまですね。 +
+
+それではAppletと呼ばれるプログラムを作成します。 +
+thisではGoogle Assistantを選択してください。 +
+今回は「Say a phrase with a text ingredient」を選びました。 +
+
+写真のように設定しましたが、聞かれているのは +
+・どんな言葉をトリガーにするか +
+・トリガーを受信したときにGoogle Homeにどのように発言してもらうか +
+・言語をどうするか +
+といった感じです。 +
+image:hasumi/ghome/ifttt-this.png[]
+
+Createしたら次はthenの設定です。 +
+Webhookと入力後、「Make a web request」を選択します。 +
+image:hasumi/ghome/ifttt-then.png[]
+URLには、さきほどFirebaseで設定したURLと名前を入力します。 +
+さきほどの例で言うと、 +
+"https://project-name.firebaseio.com/anyname/message.json" +
+ですね。 +
+
+MethodはPUT、Content Typeはapplication/jsonを選択します。 +
+Body部は" {{CreatedAt}} に勤怠を {{TextField}} にしました"のように設定しました。 +
+勤務開始と終了で分けたかったので、TextFieldの内容によって更新をかけるようにしています。 +
+
+これでIFTTTの設定はOKです。 +
+ここまでちょっと工数はかかりますが簡単ですね。 +
+
+## Node.js
+まず、Node.jsのモジュールを読み込ませます。 +
+```
+$ npm install firebase
+$ npm install superagent
+```
+firebaseモジュールはFirebaseを適用させるため、superagentはHTTPリクエストを送るためのモジュールです。 +
+書いたコードはこちらです。 +
+
+[[app-listing]]
+[source,javascript]
+.index.js
+----
+// 必要なモジュールの読み込み
+const request  = require("superagent");
+const firebase = require("firebase");
+
+// Initialize Firebase
+var config = {
+  apiKey:            "XXXXXXXXXXXXXXXXXXXXXXXXXX",
+  authDomain:        "project-name.firebaseapp.com",
+  databaseURL:       "https://project-name.firebaseio.com",
+  projectId:         "project-name",
+  storageBucket:     "project-name.appspot.com",
+  messagingSenderId: "00000000000"
+};
+firebase.initializeApp(config);
+
+// Firebase更新時の処理
+const db  = firebase.database();
+const ref = db.ref("anyname");
+ref.on("child_changed", function (changedSnapshot) {
+  const command = 'ruby ./selenium.rb';
+  console.log("Firebaseの更新をキャッチしたのでコマンドを実行します。" + command);
+  const exec = require('child_process').exec;
+  exec(command, (err, stdout, stderr) => {
+    if (err) { console.log(err); }
+    console.log(stdout);
+  });
+});
+----
+
+ref.onのところでFirebaseの更新をチェックしており、更新があった場合コマンドを実行するようになっています。 +
+エラーハンドリングや受信した音声のチェックには現在目をつぶっていることはご容赦ください…。 +
+
+## Selenium(Ruby)
+Firebaseの更新後、実行されるRubyファイルはこちらです。 +
+前回のブログのほぼまんまです。 +
+
+[[app-listing]]
+[source,ruby]
+.selenium.rb
+----
+require "selenium-webdriver"
+
+# Firefox用のドライバを使う
+driver = Selenium::WebDriver.for :firefox
+puts "Selenium起動"
+
+# salesforceにアクセス
+driver.navigate.to "https://login.salesforce.com/?locale=jp"
+puts "salesforceの表示"
+sleep 3
+
+# ログインメールアドレスとパスワードの入力
+input_mail_address = driver.find_element(:id, 'username')
+input_mail_address.send_keys "mail@mail.com"
+sleep 2
+
+input_password = driver.find_element(:id, 'password')
+input_password.send_keys "password"
+
+# 実行
+driver.find_element(:id, 'Login').click
+
+sleep 5
+
+# 起爆用のボタンをクリックして実行
+driver.find_element(:id, "btnStInput").click
+puts "出勤完了"
+----
+
+ここまでできたらあとは発射ボタンを押すだけです。
+```
+node index.js
+```
+
+Firebaseの更新をキャッチし、よし起爆した！と思ったのもつかの間、例の機械によるアクセスをキャッチするセキュリティに引っかかっちゃいました。。。 +
+いい感じに出来たと思いましたがまさかのタイムアップ。。。 +
+次回に持ち越しですね…
+
+## まとめとか
+途中まではうまくいきましたが、認証系となると引っかかっちゃいますね。 +
+以前、弊社のエンジニアの長がいい感じにペッパーくんでやっていたのでこの機会に聞いてみようと思います。 +
+http://tech.innovation.co.jp/2017/07/14/Pepper.html +
+また、出勤だけでなく退勤の切り分け、声によって操作できる人を制限するなど、まだまだやることは多そうです。 +
+
+それにしても、身近なめんどくさいと感じている作業を楽ちんにできるのがエンジニアの魅力ですね。 +
+常にプログラムで日常をハックして改善を繰り返していこうと思います。 +
+
+〜続く〜
