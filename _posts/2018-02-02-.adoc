@@ -1,6 +1,6 @@
-# GoのORマッパーを使ってみよう！
-:hp-alt-title:　GolangのORマッパーを使ってみよう！
-:hp-tags: NewTsukamoto, mac
+# システム開発で必要なドキュメントについて考えてみる
+:hp-alt-title:　システム開発で必要なドキュメントについて考えてみる
+:hp-tags: NewTsukamoto
 
 こんにちは。
 エンジニアのNew塚本です。
