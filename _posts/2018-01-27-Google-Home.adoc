@@ -36,7 +36,7 @@ image:hasumi/ghome/ghome-flow2.png[]
 Node.jsがFirebaseの更新を見ているので、更新のタイミングで関数が起動し、Seleniumを動かしてくれるといった感じです。 +
 
 ## インストール、準備など
-##### Node.jsのインストール
+### Node.jsのインストール
 まず、Node.jsをインストールして使えるようにしましょう。 +
 Homebrewを使えば一発です。 +
 ```
@@ -48,7 +48,7 @@ $ node -v
 ```
 
 
-##### Ruby
+### Ruby
 RubyもHomebrewを使えば一発です。 +
 めちゃめちゃ便利ですね。 +
 ```
@@ -60,7 +60,7 @@ $ ruby -v
 ```
 
 
-##### Selenium
+### Selenium
 gemコマンドでインストールしましょう。 +
 ```
 $ gem install selenium-webdriver
@@ -71,19 +71,22 @@ http://tech.innovation.co.jp/2017/12/04/Selenium-Google-Apps-Script.html
 
 ## Firebaseの設定
 次に、Firebaseの設定です。 +
+
 image:hasumi/ghome/firebase-top.png[]
 https://firebase.google.com/?hl=ja +
+
 Firebaseは、色々な機能を取り揃えていますが、よく用いられている機能のひとつにリアルタイムデータベースがあります。 +
 ユーザのアクションに対してリアルタイムにデータベースを更新してくれるので、ユーザとサーバが双方向にやり取りすることが多いスマホアプリで多く用いられているようです。 +
 今回は、Google Homeにトリガーとなる音声が受信されたときに更新されるようにしたいと思います。 +
 
-##### プロジェクトの作成
+### プロジェクトの作成
 任意の名前でプロジェクトを作成します。 +
 国 / 地域は日本を選ぶといいでしょう。 +
 プロジェクトが作成できたらこんな感じのダッシュボードにいきます。 +
+
 image:hasumi/ghome/firebase-dashboard.png[]
 
-##### データタブの設定
+### データタブの設定
 DEVELOPからDatabaseを選択します。 +
 データタブにおいて以下のように適宜設定してください。 +
 ```
@@ -93,7 +96,7 @@ project-name
 ```
 anyname, message, ダブルコーテーション内の文言はお好きなやつでどうぞ。 +
 
-##### ルールタブの設定
+### ルールタブの設定
 次にルールタブにおいて以下のように設定します。 +
 ```
 {
