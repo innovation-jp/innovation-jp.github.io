@@ -37,6 +37,78 @@ WebRTCについて、Webで検索してみると、もうたくさんの情報�
 また、iOSを対象にするとちょっとプラスでやらないといけないようなので、 +
 まずは、PCとAndroidのChromeでの動作を前提としてやってみようと思います！
 
+== httpsの準備
+
+昨今のサービスやプロトコル系は、httpsになっていないと「セキュアじゃない！」とか怒られて、いろいろ使わせてくれなかったりもします。 +
+WebRTCをやるときも、もれずになかなか許してくれません。 +
+しかし！ローカルでちょろっとテストするのに、サーバー証明書を買うのもあれですし、無料の証明書もいろいろありますが、問題があったりなかったり意外とめんどくさかったりします。
+
+そこで！みなさんおなじみ！オレオレ証明書(自己証明書)でなんとかしていきます。 +
+前提として、Macであれこれする例になります。
+
+=== 自己証明書の作成
+
+$ brew install openssl
+ => ほかの方法でもよいので、opensslを入れておく
+$ openssl req -days 3650 -new -nodes -newkey rsa:4096 -x509 -keyout cert.pem -out cert.pem
+ => 10年有効のオレオレ証明書を作成。証明書の内容を聞かれるので入力する
+$ openssl dhparam -out dhparam.pem 2048
+ => DHパラメータも作っておく
+
+=== 作成した証明書をMacに許してもらう
+
+$ open cert.pem
+ => キーチェーンアクセスが開くので、この証明書を「常に信頼」にしておく
+ 
+ === nginxでhttpsの設定をする
+ 
+まあ、ふつーですね。 +
+一応、このあとにWebSocketを使うので、そのプロキシの設定も入れておきます。
+
+upstream socket_nodes {
+    ip_hash;
+    server wstest.momiage.com:9001 weight=5;
+}
+
+server {
+    listen 443 ssl;
+    server_name _;
+
+    # SSL Settings
+    ssl_certificate /usr/local/etc/openssl/certs/cert.pem;
+    ssl_certificate_key /usr/local/etc/openssl/certs/cert.pem;
+    ssl_session_timeout 5m;
+    ssl_session_cache shared:SSL:50m;
+    ssl_dhparam /usr/local/etc/openssl/certs/dhparam.pem;
+    ssl_protocols TLSv1.1 TLSv1.2;
+    ssl_ciphers 'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!3DES:!MD5:!PSK';
+    ssl_prefer_server_ciphers on;
+
+    # Document Root
+    root html;
+
+    # Static file location
+    location /static/ {
+        alias html/;
+    }
+
+    # WebScoket Proxy
+    location / {
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_http_version 1.1;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host;
+        proxy_pass http://socket_nodes;
+    }
+
+}
+
+=== 
+
+
+
+
 == マルチメディア(死語)の世界がもう手中に！
 
 もはや、こんな簡単にこんなすごい物が作れちゃう世の中、そりゃプログラミングも簡単かつ複雑になってくるわけですね。
