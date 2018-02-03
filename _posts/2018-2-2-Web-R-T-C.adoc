@@ -34,7 +34,7 @@ WebRTCについて、Webで検索してみると、もうたくさんの情報�
 しかも、できれば1対1ではなく、複数人で通話できるといいですよね〜。 +
 そんな気持ちでやってみたいと思います！
 
-また、iOSを対象にするとちょっとプラスでやらないといけないようなので、 +
+ちなみに、iOSを対象にするとちょっとプラスでやらないといけないようなので、 +
 まずは、PCとAndroidのChromeでの動作を前提としてやってみようと思います！
 
 == httpsの準備
@@ -52,15 +52,26 @@ $ brew install openssl
  => ほかの方法でもよいので、opensslを入れておく
 $ openssl req -days 3650 -new -nodes -newkey rsa:4096 -x509 -keyout cert.pem -out cert.pem
  => 10年有効のオレオレ証明書を作成。証明書の内容を聞かれるので入力する
+ CommonNameは、以下でアクセスさせるサーバのURLのホスト名と一致させる必要があり。
+ 今回は、 wstest.momiage.com で設定してみます
 $ openssl dhparam -out dhparam.pem 2048
  => DHパラメータも作っておく
+
+=== hostsを設定する
+
+DNSに設定しちゃってもよいのですが、お手軽にhostsを書き換えちゃいます。 +
+ただ、接続する複数のマシンのhostsを書き換えないといけないので、本格的にやる場合は、 +
+ローカルDNSとか作ったほうがよいかもしれません。
+
+設定例
+192.168.1.9 wstest.momiage.com
 
 === 作成した証明書をMacに許してもらう
 
 $ open cert.pem
  => キーチェーンアクセスが開くので、この証明書を「常に信頼」にしておく
  
- === nginxでhttpsの設定をする
+=== nginxでhttpsの設定をする
  
 まあ、ふつーですね。 +
 一応、このあとにWebSocketを使うので、そのプロキシの設定も入れておきます。
@@ -104,10 +115,69 @@ server {
 
 }
 
-=== 
+ここまでやれば、Chromeでのアクセスでは、オレオレ証明書をなんとか許してくれますね。 +
+Chromeに怒られても、怒られた画面で、 +
+詳細設定 => wstest.momiage.com にアクセスする（安全ではありません） +
+を選べは、無理やりアクセスできます！
 
+== WebRTCのクライアントを実装する
 
+シグナリングサーバーを応用！ 「WebRTCを使って複数人で話してみよう」 +
+https://html5experts.jp/mganeko/5438/
 
+こちらのコードをほぼそのまま利用させていただいております。 +
+変更した点は、 +
+・https化 +
+・ビットレートの調整を入れた +
+・社内LANを使うためにiceを意識しておいた
+( https://stackoverflow.com/questions/30742431/webrtc-on-isolated-lan-without-ice-stun-turn-server )
+くらいです！
+
+これを、nginxのstaticのディレクトリにhtmlファイルとして置きます。
+
+== WebSocketのサーバを実装
+
+同じく +
+シグナリングサーバーを応用！ 「WebRTCを使って複数人で話してみよう」 +
+https://html5experts.jp/mganeko/5438/
+
+をほぼそのまま使わせていただいております。 +
+これは単純ですが、一部、 +
+・Socket.IOの新しいバージョンに合わせて記述を変更 +
+をしております。
+
+ふつーにnode.jsにてSocket.IOが使える状態にして、 +
+$ node ./sig.js
+とかで実行します。今回は9001でListenするようにしてます。 +
+上記のnginxでのhttpsでのProxyを経由できるようになってます。
+
+== まずはMac同士で試す
+
+Mac同士で試すため、複数台のMacのChromeで、
+https://wstest.momiage.com/static/webrtctest.html
+※社内LAN用なので自分のPCでしか開きません
+を開いて、接続してみます！
+いい感じ！
+
+== Androidでもつないでみる
+
+=== オレオレ証明書のインストール
+
+先ほど作成した、cert.pemをcert.crtという名前にして、Android端末にメールかファイル転送で持っていきます。
+Android端末本体の、
+設定 => セキュリティ => SDカードからインストール
+※端末やAndroidのバージョンなどによって表現が微妙に違いますが、だいたいこんな感じです
+を選んで、cert.crtをインポートしておきます。
+
+=== hostsの変更
+
+Android端末のhostsの変更が必要な方はやってください
+※今回の例では、wstest.momiage.comがなんらかの形で解決できればOK
+
+=== Chromeで開く
+
+Macの時と同じように開いてみます。
+お！通信できた！
 
 == マルチメディア(死語)の世界がもう手中に！
 
