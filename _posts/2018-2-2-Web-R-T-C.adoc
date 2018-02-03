@@ -19,7 +19,7 @@
 はい、前提で進めます。
 
 そんなときって、いまはSlackとかいろいろなもので簡単にビデオ会議できちゃいますが、 +
-なんか、それでインターネットの帯域を使いまくっちゃうのって、なんか嫌です。+
+なんか、それでインターネットの帯域を使いまくっちゃうのって、なんか嫌です。 +
 そんな時、昨今ってWebRTCとかで社内LANから出ずにP2Pでビデオ会議するやつって、 +
 実は簡単に実装できちゃうんじゃないの？ +
 という声が聴こえたり聴こえなかったりしてきたわけで、ちょっと試しにやってみたいと思います。
@@ -48,6 +48,7 @@ WebRTCをやるときも、もれずになかなか許してくれません。 +
 
 === 自己証明書の作成
 
+```
 $ brew install openssl
  => ほかの方法でもよいので、opensslを入れておく
 $ openssl req -days 3650 -new -nodes -newkey rsa:4096 -x509 -keyout cert.pem -out cert.pem
@@ -56,6 +57,7 @@ $ openssl req -days 3650 -new -nodes -newkey rsa:4096 -x509 -keyout cert.pem -ou
  今回は、 wstest.momiage.com で設定してみます
 $ openssl dhparam -out dhparam.pem 2048
  => DHパラメータも作っておく
+```
 
 === hostsを設定する
 
@@ -64,18 +66,23 @@ DNSに設定しちゃってもよいのですが、お手軽にhostsを書き換
 ローカルDNSとか作ったほうがよいかもしれません。
 
 設定例
+```
 192.168.1.9 wstest.momiage.com
+```
 
 === 作成した証明書をMacに許してもらう
 
+```
 $ open cert.pem
  => キーチェーンアクセスが開くので、この証明書を「常に信頼」にしておく
- 
+```
+
 === nginxでhttpsの設定をする
  
 まあ、ふつーですね。 +
 一応、このあとにWebSocketを使うので、そのプロキシの設定も入れておきます。
 
+```
 upstream socket_nodes {
     ip_hash;
     server wstest.momiage.com:9001 weight=5;
@@ -114,6 +121,7 @@ server {
     }
 
 }
+```
 
 ここまでやれば、Chromeでのアクセスでは、オレオレ証明書をなんとか許してくれますね。 +
 Chromeに怒られても、怒られた画面で、 +
@@ -133,6 +141,518 @@ https://html5experts.jp/mganeko/5438/
 ( https://stackoverflow.com/questions/30742431/webrtc-on-isolated-lan-without-ice-stun-turn-server )
 くらいです！
 
+```
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>WebRTC Test!</title>
+</head>
+
+<body>
+    <button type="button" onclick="startVideo();">Start video</button>
+    <button type="button" onclick="stopVideo();">Stop video</button>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <button type="button" onclick="call();">Connect</button>
+    <button type="button" onclick="hangUp();">Hang Up</button>
+    <br />
+    <div style="position: relative;">
+        <video id="local-video" autoplay style="width: 240px; height: 180px; border: 1px solid black;"></video>
+        <video id="webrtc-remote-video-0" autoplay style="position: absolute; top: 250px; left: 0px; width: 320px; height: 240px; border: 1px solid black; "></video>
+        <video id="webrtc-remote-video-1" autoplay style="position: absolute; top: 250px; left: 330px; width: 320px; height: 240px; border: 1px solid black; "></video>
+        <video id="webrtc-remote-video-2" autoplay style="position: absolute; top: 0px; left: 330px; width: 320px; height: 240px; border: 1px solid black; "></video>
+    </div>
+
+    <!---- socket ------>
+    <script src="https://test11.momiage.com/socket.io/socket.io.js"></script>
+
+    <script>
+        var localVideo = document.getElementById('local-video');
+        //var remoteVideo = document.getElementById('remote-video');
+        var localStream = null;
+        var mediaConstraints = { 'mandatory': { 'OfferToReceiveAudio': true, 'OfferToReceiveVideo': true } };
+
+        // ---- multi people video & audio ----
+        var videoElementsInUse = {};
+        var videoElementsStandBy = {};
+        pushVideoStandBy(getVideoForRemote(0));
+        pushVideoStandBy(getVideoForRemote(1));
+        pushVideoStandBy(getVideoForRemote(2));
+
+
+        function getVideoForRemote(index) {
+            var elementID = 'webrtc-remote-video-' + index;
+            var element = document.getElementById(elementID);
+            return element;
+        }
+
+        // ---- video element management ---
+        function pushVideoStandBy(element) {
+            videoElementsStandBy[element.id] = element;
+        }
+
+        function popVideoStandBy() {
+            var element = null;
+            for (var id in videoElementsStandBy) {
+                element = videoElementsStandBy[id];
+                delete videoElementsStandBy[id];
+                return element;
+            }
+            return null;
+        }
+
+        function pushVideoInUse(id, element) {
+            videoElementsInUse[id] = element;
+        }
+
+        function popVideoInUse(id) {
+            element = videoElementsInUse[id];
+            delete videoElementsInUse[id];
+            return element;
+        }
+
+        function attachVideo(id, stream) {
+            console.log('try to attach video. id=' + id);
+            var videoElement = popVideoStandBy();
+            if (videoElement) {
+                videoElement.src = window.URL.createObjectURL(stream);
+                console.log("videoElement.src=" + videoElement.src);
+                pushVideoInUse(id, videoElement);
+                videoElement.style.display = 'block';
+            }
+            else {
+                console.error('--- no video element stand by.');
+            }
+        }
+
+        function detachVideo(id) {
+            console.log('try to detach video. id=' + id);
+            var videoElement = popVideoInUse(id);
+            if (videoElement) {
+                videoElement.pause();
+                videoElement.src = "";
+                console.log("videoElement.src=" + videoElement.src);
+                pushVideoStandBy(videoElement);
+            }
+            else {
+                console.warn('warning --- no video element using with id=' + id);
+            }
+        }
+
+        function detachAllVideo() {
+            var element = null;
+            for (var id in videoElementsInUse) {
+                detachVideo(id);
+            }
+        }
+
+        function getFirstVideoInUse() {
+            var element = null;
+            for (var id in videoElementsInUse) {
+                element = videoElementsInUse[id];
+                return element;
+            }
+            return null;
+        }
+
+        function getVideoCountInUse() {
+            var count = 0;
+            for (var id in videoElementsInUse) {
+                count++;
+            }
+            return count;
+        }
+
+
+        function isLocalStreamStarted() {
+            if (localStream) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        // -------------- multi connections --------------------
+        var MAX_CONNECTION_COUNT = 3;
+        var connections = {}; // Connection hash
+        function Connection() { // Connection Class
+            var self = this;
+            var id = "";  // socket.id of partner
+            var peerconnection = null; // RTCPeerConnection instance
+            var established = false; // is Already Established
+            var iceReady = false;
+        }
+
+        function getConnection(id) {
+            var con = null;
+            con = connections[id];
+            return con;
+        }
+
+        function addConnection(id, connection) {
+            connections[id] = connection;
+        }
+
+        function getConnectionCount() {
+            var count = 0;
+            for (var id in connections) {
+                count++;
+            }
+
+            console.log('getConnectionCount=' + count);
+            return count;
+        }
+
+        function isConnectPossible() {
+            if (getConnectionCount() < MAX_CONNECTION_COUNT)
+                return true;
+            else
+                return false;
+        }
+
+        function getConnectionIndex(id_to_lookup) {
+            var index = 0;
+            for (var id in connections) {
+                if (id == id_to_lookup) {
+                    return index;
+                }
+
+                index++;
+            }
+
+            // not found
+            return -1;
+        }
+
+        function deleteConnection(id) {
+            delete connections[id];
+        }
+
+        function stopAllConnections() {
+            for (var id in connections) {
+                var conn = connections[id];
+                conn.peerconnection.close();
+                conn.peerconnection = null;
+                delete connections[id];
+            }
+        }
+
+        function stopConnection(id) {
+            var conn = connections[id];
+            if (conn) {
+                console.log('stop and delete connection with id=' + id);
+                conn.peerconnection.close();
+                conn.peerconnection = null;
+                delete connections[id];
+            }
+            else {
+                console.log('try to stop connection, but not found id=' + id);
+            }
+        }
+
+        function isPeerStarted() {
+            if (getConnectionCount() > 0) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+
+        // ---- socket ------
+        // create socket
+        var socketReady = false;
+        var port = 9001;
+        var socket = io.connect('https://test11.momiage.com/');
+
+        // socket: channel connected
+        socket.on('connect', onOpened)
+            .on('message', onMessage);
+
+        function onOpened(evt) {
+            console.log('socket opened.');
+            socketReady = true;
+
+            var roomname = getRoomName(); // 会議室名を取得する
+            socket.emit('enter', roomname);
+            console.log('enter to ' + roomname);
+        }
+
+        // socket: accept connection request
+        function onMessage(evt) {
+            var id = evt.from;
+            var target = evt.sendto;
+            var conn = getConnection(id);
+
+            if (evt.type === 'call') {
+                if (!isLocalStreamStarted()) {
+                    return;
+                }
+                if (conn) {
+                    return;  // already connected
+                }
+
+                if (isConnectPossible()) {
+                    socket.json.send({ type: "response", sendto: id });
+                }
+                else {
+                    console.warn('max connections. so ignore call');
+                }
+                return;
+            }
+            else if (evt.type === 'response') {
+                sendOffer(id);
+                return;
+            } else if (evt.type === 'offer') {
+                console.log("Received offer, set offer, sending answer....")
+                onOffer(evt);
+            } else if (evt.type === 'answer' && isPeerStarted()) {  // **
+                console.log('Received answer, settinng answer SDP');
+                onAnswer(evt);
+            } else if (evt.type === 'candidate' && isPeerStarted()) { // **
+                console.log('Received ICE candidate...');
+                onCandidate(evt);
+            } else if (evt.type === 'user dissconnected' && isPeerStarted()) { // **
+                console.log("disconnected");
+                //stop();
+                detachVideo(id); // force detach video
+                stopConnection(id);
+            }
+        }
+
+        function getRoomName() { // たとえば、 URLに  ?roomname  とする
+            var url = document.location.href;
+            var args = url.split('?');
+            if (args.length > 1) {
+                var room = args[1];
+                if (room != "") {
+                    return room;
+                }
+            }
+            return "_defaultroom";
+        }
+
+        function onOffer(evt) {
+            console.log("Received offer...")
+            console.log(evt);
+            setOffer(evt);
+            sendAnswer(evt);
+            //peerStarted = true; --
+        }
+
+        function onAnswer(evt) {
+            console.log("Received Answer...")
+            console.log(evt);
+            setAnswer(evt);
+        }
+
+        function onCandidate(evt) {
+            var id = evt.from;
+            var conn = getConnection(id);
+            if (!conn) {
+                console.error('peerConnection not exist!');
+                return;
+            }
+
+            // --- check if ice ready ---
+            if (!conn.iceReady) {
+                console.warn("PeerConn is not ICE ready, so ignore");
+                return;
+            }
+
+            var candidate = new RTCIceCandidate({ sdpMLineIndex: evt.sdpMLineIndex, sdpMid: evt.sdpMid, candidate: evt.candidate });
+            console.log("Received Candidate...")
+            console.log(candidate);
+            conn.peerconnection.addIceCandidate(candidate);
+        }
+
+        function sendSDP(sdp) {
+            var text = JSON.stringify(sdp);
+            console.log("---sending sdp text ---");
+            console.log(text);
+
+            // send via socket
+            socket.json.send(sdp);
+        }
+
+        function sendCandidate(candidate) {
+            var text = JSON.stringify(candidate);
+            console.log("---sending candidate text ---");
+            console.log(text);
+
+            // send via socket
+            socket.json.send(candidate);
+        }
+
+        // ---------------------- video handling -----------------------
+        // start local video
+        function startVideo() {
+            navigator.webkitGetUserMedia({ video: true, audio: true },
+                function (stream) { // success
+                    localStream = stream;
+                    localVideo.src = window.webkitURL.createObjectURL(stream);
+                    localVideo.play();
+                    localVideo.volume = 0;
+                },
+                function (error) { // error
+                    console.error('An error occurred:');
+                    console.error(error);
+                    return;
+                }
+            );
+        }
+
+        // stop local video
+        function stopVideo() {
+            localVideo.src = "";
+            localStream.stop();
+        }
+
+        // ---------------------- connection handling -----------------------
+        function prepareNewConnection(id) {
+            var pc_config = { "iceServers": [] };
+            var peer = null;
+            try {
+                peer = new webkitRTCPeerConnection(pc_config);
+            } catch (e) {
+                console.log("Failed to create PeerConnection, exception: " + e.message);
+            }
+            var conn = new Connection();
+            conn.id = id;
+            conn.peerconnection = peer;
+            peer.id = id;
+            addConnection(id, conn);
+
+            // send any ice candidates to the other peer
+            peer.onicecandidate = function (evt) {
+                if (evt.candidate) {
+                    console.log(evt.candidate);
+                    sendCandidate({
+                        type: "candidate",
+                        sendto: conn.id,
+                        sdpMLineIndex: evt.candidate.sdpMLineIndex,
+                        sdpMid: evt.candidate.sdpMid,
+                        candidate: evt.candidate.candidate
+                    });
+                } else {
+                    console.log("End of candidates. ------------------- phase=" + evt.eventPhase);
+                    conn.established = true;
+                }
+            };
+
+            console.log('Adding local stream...');
+            peer.addStream(localStream);
+
+            peer.addEventListener("addstream", onRemoteStreamAdded, false);
+            peer.addEventListener("removestream", onRemoteStreamRemoved, false)
+
+            // when remote adds a stream, hand it on to the local video element
+            function onRemoteStreamAdded(event) {
+                console.log("Added remote stream");
+                attachVideo(this.id, event.stream);
+            }
+
+            // when remote removes a stream, remove it from the local video element
+            function onRemoteStreamRemoved(event) {
+                console.log("Remove remote stream");
+                detachVideo(this.id);
+            }
+
+            return conn;
+        }
+
+        function sendOffer(id) {
+            var conn = getConnection(id);
+            if (!conn) {
+                conn = prepareNewConnection(id);
+            }
+
+            conn.peerconnection.createOffer(function (sessionDescription) { // in case of success
+                conn.iceReady = true;
+                conn.peerconnection.setLocalDescription(sessionDescription);
+                sessionDescription.sendto = id;
+                sendSDP(sessionDescription);
+            }, function () { // in case of error
+                console.log("Create Offer failed");
+            }, mediaConstraints);
+            conn.iceReady = true;
+        }
+
+        function setOffer(evt) {
+            var id = evt.from;
+            var conn = getConnection(id);
+            if (!conn) {
+                conn = prepareNewConnection(id);
+                conn.peerconnection.setRemoteDescription(new RTCSessionDescription(evt));
+            }
+            else {
+                console.error('peerConnection alreay exist!');
+            }
+        }
+
+        function sendAnswer(evt) {
+            console.log('sending Answer. Creating remote session description...');
+            var id = evt.from;
+            var conn = getConnection(id);
+            if (!conn) {
+                console.error('peerConnection not exist!');
+                return
+            }
+
+            conn.peerconnection.createAnswer(function (sessionDescription) {
+                // in case of success
+                conn.iceReady = true;
+                conn.peerconnection.setLocalDescription(sessionDescription);
+                sessionDescription.sendto = id;
+                sendSDP(sessionDescription);
+            }, function () { // in case of error
+                console.log("Create Answer failed");
+            }, mediaConstraints);
+            conn.iceReady = true;
+        }
+
+        function setAnswer(evt) {
+            var id = evt.from;
+            var conn = getConnection(id);
+            if (!conn) {
+                console.error('peerConnection not exist!');
+                return
+            }
+            conn.peerconnection.setRemoteDescription(new RTCSessionDescription(evt));
+        }
+
+        // call others before connecting peer
+        function call() {
+            if (!isLocalStreamStarted()) {
+                alert("Local stream not running yet. Please [Start Video] or [Start Screen].");
+                return;
+            }
+            if (!socketReady) {
+                alert("Socket is not connected to server. Please reload and try again.");
+                return;
+            }
+
+            // call others, in same room
+            console.log("call others in same room, befeore offer");
+            socket.json.send({ type: "call" });
+        }
+
+        // stop the connection upon user request
+        function hangUp() {
+            console.log("Hang up.");
+            socket.json.send({ type: "bye" });
+            detachAllVideo();
+            stopAllConnections();
+        }
+
+    </script>
+</body>
+
+</html>
+```
+
 これを、nginxのstaticのディレクトリにhtmlファイルとして置きます。
 
 == WebSocketのサーバを実装
@@ -146,37 +666,87 @@ https://html5experts.jp/mganeko/5438/
 ・Socket.IOの新しいバージョンに合わせて記述を変更 +
 をしております。
 
-ふつーにnode.jsにてSocket.IOが使える状態にして、 +
+```
+var SSL_KEY = '/usr/local/etc/openssl/certs/cert.pem';
+var SSL_CERT = '/usr/local/etc/openssl/certs/cert.pem';
+
+var port = 9001;
+var fs = require('fs');
+var io = require('socket.io').listen(port);
+console.log((new Date()) + " Server is listening on port " + port);
+
+io.sockets.on('connection', function (socket) {
+  // 入室
+  socket.on('enter', function (roomname) {
+    socket.roomname = roomname;
+    socket.join(roomname);
+  });
+
+  socket.on('message', function (message) {
+    // 送信元のidをメッセージに追加（相手が分かるように）
+    message.from = socket.id;
+
+    // 送信先が指定されているか？
+    var target = message.sendto;
+    if (target) {
+      // 送信先が指定されていた場合は、その相手のみに送信
+      socket.to(target).json.emit('message', message);
+
+      return;
+    }
+
+    // 特に指定がなければ、ブロードキャスト
+    emitMessage('message', message);
+  });
+
+  socket.on('disconnect', function () {
+    emitMessage('user disconnected');
+  });
+
+  // 会議室名が指定されていたら、室内だけに通知
+  function emitMessage(type, message) {
+    var roomname = socket.roomname;
+    if (roomname) { socket.broadcast.to(roomname).emit(type, message); }
+    else { socket.broadcast.emit(type, message); }
+  }
+});
+```
+
+ふつーにnode.jsにてSocket.IOが使える状態にして、
+```
 $ node ./sig.js
+```
 とかで実行します。今回は9001でListenするようにしてます。 +
-上記のnginxでのhttpsでのProxyを経由できるようになってます。
+上記のnginxのhttpsでのProxyを経由できるようになってます。
 
 == まずはMac同士で試す
 
-Mac同士で試すため、複数台のMacのChromeで、
-https://wstest.momiage.com/static/webrtctest.html
-※社内LAN用なので自分のPCでしか開きません
-を開いて、接続してみます！
+Mac同士で試すため、複数台のMacのChromeで、 +
+https://wstest.momiage.com/static/webrtctest.html +
+※社内LAN用なので自分のPCでしか開きません +
+を開いて、接続してみます！ +
 いい感じ！
 
 == Androidでもつないでみる
 
 === オレオレ証明書のインストール
 
-先ほど作成した、cert.pemをcert.crtという名前にして、Android端末にメールかファイル転送で持っていきます。
-Android端末本体の、
+先ほど作成した、cert.pemをcert.crtという名前にして、Android端末にメールかファイル転送で持っていきます。 +
+Android端末本体の、 +
+```
 設定 => セキュリティ => SDカードからインストール
 ※端末やAndroidのバージョンなどによって表現が微妙に違いますが、だいたいこんな感じです
+```
 を選んで、cert.crtをインポートしておきます。
 
 === hostsの変更
 
-Android端末のhostsの変更が必要な方はやってください
+Android端末のhostsの変更が必要な方はやってください。 +
 ※今回の例では、wstest.momiage.comがなんらかの形で解決できればOK
 
 === Chromeで開く
 
-Macの時と同じように開いてみます。
+Macの時と同じように開いてみます。 +
 お！通信できた！
 
 == マルチメディア(死語)の世界がもう手中に！
@@ -187,6 +757,6 @@ Macの時と同じように開いてみます。
 
 こちらからは以上です。
 
-image::/images/yagasaki/awsc9/ac9-9.png[ac9-9]
+ image::/images/yagasaki/awsc9/ac9-9.png[ac9-9]
 
 以上
