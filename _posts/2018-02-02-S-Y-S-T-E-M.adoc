@@ -1,4 +1,4 @@
-# システム開発で作られるドキュメントについて考えてみる
+# SYSTEM開発で作られるドキュメントについて考えてみる
 :hp-alt-title:　ThinkAboutDocuments
 :hp-tags: NewTsukamoto, Documents
 
