@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>いまさら？！WebRTCを使って社内のビデオ会議をお手軽に行う - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="いまさら？！WebRTCを使って社内のビデオ会議をお手軽に行う">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="いまさら？！WebRTCを使って社内のビデオ会議をお手軽に行う">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp2018-2-2-Web-R-T-C.adoc" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="いまさら？！WebRTCを使って社内のビデオ会議をお手軽に行う" />
+    <meta property="og:description" content="こんにちは！ いやいやいや〜寒いですね〜 八王子は雪があれで、もう滑るのなんので、大変ですね〜。 矢ヶ崎です。 リモート？ローカル？ そんな出勤困難な状況でも、ビデオ会議できればいい感じですよね？ あと、そんな八王子と渋谷みたいに離れてなくても、社内で席が遠かったり、 なんなりしたときって、意外とビデオ会議やビデオ通話って便利だと思いませんか？ はい(Y)　いいえ(N) いいえの方は、ほんとすいません。 はい、前提で進めます。 そんなときって、いまはSlackとかいろいろなもので簡単にビデオ会議できちゃいますが、 なんか、それでインターネットの帯域を使..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp2018-2-2-Web-R-T-C.adoc" />
+    <meta property="article:published_time" content="2018-02-01T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-02-05T09:19:22.188Z" />
+    <meta property="article:tag" content="Yagasaki" />
+    <meta property="article:tag" content="WebRTC" />
+    <meta property="article:tag" content="Video" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="いまさら？！WebRTCを使って社内のビデオ会議をお手軽に行う" />
+    <meta name="twitter:description" content="こんにちは！ いやいやいや〜寒いですね〜 八王子は雪があれで、もう滑るのなんので、大変ですね〜。 矢ヶ崎です。 リモート？ローカル？ そんな出勤困難な状況でも、ビデオ会議できればいい感じですよね？ あと、そんな八王子と渋谷みたいに離れてなくても、社内で席が遠かったり、 なんなりしたときって、意外とビデオ会議やビデオ通話って便利だと思いませんか？ はい(Y)　いいえ(N) いいえの方は、ほんとすいません。 はい、前提で進めます。 そんなときって、いまはSlackとかいろいろなもので簡単にビデオ会議できちゃいますが、 なんか、それでインターネットの帯域を使..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp2018-2-2-Web-R-T-C.adoc" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "Akihiro YAGASAKI",
+        "image": "https://avatars1.githubusercontent.com/u/13131599?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "いまさら？！WebRTCを使って社内のビデオ会議をお手軽に行う",
+    "url": "http://tech.innovation.co.jp2018-2-2-Web-R-T-C.adoc",
+    "datePublished": "2018-02-01T15:00:00.000Z",
+    "dateModified": "2018-02-05T09:19:22.188Z",
+    "keywords": "Yagasaki, WebRTC, Video",
+    "description": "こんにちは！ いやいやいや〜寒いですね〜 八王子は雪があれで、もう滑るのなんので、大変ですね〜。 矢ヶ崎です。 リモート？ローカル？ そんな出勤困難な状況でも、ビデオ会議できればいい感じですよね？ あと、そんな八王子と渋谷みたいに離れてなくても、社内で席が遠かったり、 なんなりしたときって、意外とビデオ会議やビデオ通話って便利だと思いませんか？ はい(Y)　いいえ(N) いいえの方は、ほんとすいません。 はい、前提で進めます。 そんなときって、いまはSlackとかいろいろなもので簡単にビデオ会議できちゃいますが、 なんか、それでインターネットの帯域を使..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Yagasaki tag-Web-R-T-C tag-Video no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="02 Feb 2018" class="post-meta__date date">02 Feb 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Yagasaki">Yagasaki</a>, <a href="http://tech.innovation.co.jp/tag/Web-R-T-C">WebRTC</a>, <a href="http://tech.innovation.co.jp/tag/Video">Video</a></span>
+        <span class="post-meta__author author"><img src="https://avatars1.githubusercontent.com/u/13131599?v=4" alt="profile image for Akihiro YAGASAKI" class="avatar post-meta__avatar" /> by Akihiro YAGASAKI</span>
+      </div>
+      <h1 class="post-title">いまさら？！WebRTCを使って社内のビデオ会議をお手軽に行う</h1>
+    </header>
+
+    <section class="post tag-Yagasaki tag-Web-R-T-C tag-Video">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんにちは！<br>
+いやいやいや〜寒いですね〜<br>
+八王子は雪があれで、もう滑るのなんので、大変ですね〜。<br>
+矢ヶ崎です。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">リモート？ローカル？</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>そんな出勤困難な状況でも、ビデオ会議できればいい感じですよね？<br>
+あと、そんな八王子と渋谷みたいに離れてなくても、社内で席が遠かったり、<br>
+なんなりしたときって、意外とビデオ会議やビデオ通話って便利だと思いませんか？</p>
+</div>
+<div class="paragraph">
+<p>はい(Y)　いいえ(N)</p>
+</div>
+<div class="paragraph">
+<p>いいえの方は、ほんとすいません。<br>
+はい、前提で進めます。</p>
+</div>
+<div class="paragraph">
+<p>そんなときって、いまはSlackとかいろいろなもので簡単にビデオ会議できちゃいますが、<br>
+なんか、それでインターネットの帯域を使いまくっちゃうのって、なんか嫌です。<br>
+そんな時、昨今ってWebRTCとかで社内LANから出ずにP2Pでビデオ会議するやつって、<br>
+実は簡単に実装できちゃうんじゃないの？<br>
+という声が聴こえたり聴こえなかったりしてきたわけで、ちょっと試しにやってみたいと思います。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_webrtc">WebRTCの情報はたっぷり目にあります</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>WebRTCについて、Webで検索してみると、もうたくさんの情報が溢れています。<br>
+ただ、ちょっと古かったり、閉域網内でのWebRTCの利用の情報は意外と多くなかったりしますね。(感覚値)</p>
+</div>
+<div class="paragraph">
+<p>では、そのたっぷりある情報を利用させていただきつつ、閉域網内での利用についてやってみたいと思います。</p>
+</div>
+<div class="paragraph">
+<p>しかも、できれば1対1ではなく、複数人で通話できるといいですよね〜。<br>
+そんな気持ちでやってみたいと思います！</p>
+</div>
+<div class="paragraph">
+<p>ちなみに、iOSを対象にするとちょっとプラスでやらないといけないようなので、<br>
+まずは、PCとAndroidのChromeでの動作を前提としてやってみようと思います！</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_https">httpsの準備</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>昨今のサービスやプロトコル系は、httpsになっていないと「セキュアじゃない！」とか怒られて、いろいろ使わせてくれなかったりもします。<br>
+WebRTCをやるときも、もれずになかなか許してくれません。<br>
+しかし！ローカルでちょろっとテストするのに、サーバー証明書を買うのもあれですし、無料の証明書もいろいろありますが、問題があったりなかったり意外とめんどくさかったりします。</p>
+</div>
+<div class="paragraph">
+<p>そこで！みなさんおなじみ！オレオレ証明書(自己証明書)でなんとかしていきます。<br>
+前提として、Macであれこれする例になります。</p>
+</div>
+<div class="sect2">
+<h3 id="___2">自己証明書の作成</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ brew install openssl
+ =&gt; ほかの方法でもよいので、opensslを入れておく
+$ openssl req -days 3650 -new -nodes -newkey rsa:4096 -x509 -keyout cert.pem -out cert.pem
+ =&gt; 10年有効のオレオレ証明書を作成。証明書の内容を聞かれるので入力する
+ CommonNameは、以下でアクセスさせるサーバのURLのホスト名と一致させる必要があり。
+ 今回は、 wstest.momiage.com で設定してみます
+$ openssl dhparam -out dhparam.pem 2048
+ =&gt; DHパラメータも作っておく</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hosts">hostsを設定する</h3>
+<div class="paragraph">
+<p>DNSに設定しちゃってもよいのですが、お手軽にhostsを書き換えちゃいます。<br>
+ただ、接続する複数のマシンのhostsを書き換えないといけないので、本格的にやる場合は、<br>
+ローカルDNSとか作ったほうがよいかもしれません。</p>
+</div>
+<div class="paragraph">
+<p>設定例</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>192.168.1.9 wstest.momiage.com</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__mac">作成した証明書をMacに許してもらう</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ open cert.pem
+ =&gt; キーチェーンアクセスが開くので、この証明書を「常に信頼」にしておく</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_nginx_https">nginxでhttpsの設定をする</h3>
+<div class="paragraph">
+<p>まあ、ふつーですね。<br>
+一応、このあとにWebSocketを使うので、そのプロキシの設定も入れておきます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>upstream socket_nodes {
+    ip_hash;
+    server wstest.momiage.com:9001 weight=5;
+}
+
+server {
+    listen 443 ssl;
+    server_name _;
+
+    # SSL Settings
+    ssl_certificate /usr/local/etc/openssl/certs/cert.pem;
+    ssl_certificate_key /usr/local/etc/openssl/certs/cert.pem;
+    ssl_session_timeout 5m;
+    ssl_session_cache shared:SSL:50m;
+    ssl_dhparam /usr/local/etc/openssl/certs/dhparam.pem;
+    ssl_protocols TLSv1.1 TLSv1.2;
+    ssl_ciphers 'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!3DES:!MD5:!PSK';
+    ssl_prefer_server_ciphers on;
+
+    # Document Root
+    root html;
+
+    # Static file location
+    location /static/ {
+        alias html/;
+    }
+
+    # WebScoket Proxy
+    location / {
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_http_version 1.1;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host;
+        proxy_pass http://socket_nodes;
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>ここまでやれば、Chromeでのアクセスでは、オレオレ証明書をなんとか許してくれますね。<br>
+Chromeに怒られても、怒られた画面で、<br>
+詳細設定 &#8658; wstest.momiage.com にアクセスする（安全ではありません）<br>
+を選べは、無理やりアクセスできます！</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_webrtc_2">WebRTCのクライアントを実装する</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>シグナリングサーバーを応用！ 「WebRTCを使って複数人で話してみよう」<br>
+<a href="https://html5experts.jp/mganeko/5438/" class="bare">https://html5experts.jp/mganeko/5438/</a></p>
+</div>
+<div class="paragraph">
+<p>こちらのコードをほぼそのまま利用させていただいております。<br>
+変更した点は、<br>
+・https化<br>
+・ビットレートの調整を入れた<br>
+・社内LANを使うためにiceを意識しておいた
+( <a href="https://stackoverflow.com/questions/30742431/webrtc-on-isolated-lan-without-ice-stun-turn-server" class="bare">https://stackoverflow.com/questions/30742431/webrtc-on-isolated-lan-without-ice-stun-turn-server</a> )
+くらいです！</p>
+</div>
+<div class="paragraph">
+<p>コードはこちら！<br>
+webrtctest.html<br>
+<a href="https://gist.github.com/yaggytter/a9b204bb80f6a30e75298c8b88b385fc" class="bare">https://gist.github.com/yaggytter/a9b204bb80f6a30e75298c8b88b385fc</a></p>
+</div>
+<div class="paragraph">
+<p>これを、nginxのstaticのディレクトリにhtmlファイルとして置きます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_websocket">WebSocketのサーバを実装</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>同じく<br>
+シグナリングサーバーを応用！ 「WebRTCを使って複数人で話してみよう」<br>
+<a href="https://html5experts.jp/mganeko/5438/" class="bare">https://html5experts.jp/mganeko/5438/</a></p>
+</div>
+<div class="paragraph">
+<p>をほぼそのまま使わせていただいております。<br>
+これは単純ですが、一部、<br>
+・Socket.IOの新しいバージョンに合わせて記述を変更<br>
+をしております。</p>
+</div>
+<div class="paragraph">
+<p>コードはこちら！<br>
+sig.js<br>
+<a href="https://gist.github.com/yaggytter/a9b204bb80f6a30e75298c8b88b385fc" class="bare">https://gist.github.com/yaggytter/a9b204bb80f6a30e75298c8b88b385fc</a></p>
+</div>
+<div class="paragraph">
+<p>ふつーにnode.jsにてSocket.IOが使える状態にして、</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ node ./sig.js</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>とかで実行します。今回は9001でListenするようにしてます。<br>
+上記のnginxのhttpsでのProxyを経由できるようになってます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__mac_2">まずはMac同士で試す</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Mac同士で試すため、複数台のMacのChromeで、<br>
+<a href="https://wstest.momiage.com/static/webrtctest.html" class="bare">https://wstest.momiage.com/static/webrtctest.html</a><br>
+※社内LAN用なので自分のPCでしか開きません<br>
+を開いて、接続してみます！<br>
+いい感じ！</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_android">Androidでもつないでみる</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="___3">オレオレ証明書のインストール</h3>
+<div class="paragraph">
+<p>先ほど作成した、cert.pemをcert.crtという名前にして、Android端末にメールかファイル転送で持っていきます。<br>
+Android端末本体の、<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>設定 =&gt; セキュリティ =&gt; SDカードからインストール
+※端末やAndroidのバージョンなどによって表現が微妙に違いますが、だいたいこんな感じです</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>を選んで、cert.crtをインポートしておきます。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hosts_2">hostsの変更</h3>
+<div class="paragraph">
+<p>Android端末のhostsの変更が必要な方はやってください。<br>
+※今回の例では、wstest.momiage.comがなんらかの形で解決できればOK</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_chrome">Chromeで開く</h3>
+<div class="paragraph">
+<p>Macの時と同じように開いてみます。<br>
+お！通信できた！</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___4">マルチメディア(死語)の世界がもう手中に！</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>もはや、こんな簡単にこんなすごい物が作れちゃう世の中、そりゃプログラミングも簡単かつ複雑になってくるわけですね。</p>
+</div>
+<div class="paragraph">
+<p>これからも、学び続ける！</p>
+</div>
+<div class="paragraph">
+<p>こちらからは以上です。</p>
+</div>
+<div class="paragraph">
+<p>以上</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
