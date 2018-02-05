@@ -210,6 +210,12 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp2018-2-2-Web-R-T-C.adoc" title="link to いまさら？！WebRTCを使って社内のビデオ会議をお手軽に行う">いまさら？！WebRTCを使って社内のビデオ会議をお手軽に行う</a></h2>
+        <p class="excerpt">こんにちは！ いやいやいや〜寒いですね〜 八王子は雪があれで、もう滑るのなんので、大変ですね〜。 矢ヶ崎です。 リモート？ローカル？ そんな出勤困難な状況でも、ビデオ会議できればいい感じですよね？ あと、そんな八王子と渋谷みたいに離れてなくても、社内で席が遠かったり、 なんなりしたときって、意外とビデオ会議やビデオ通話って便利だと思いませんか？ はい(Y)　いいえ(N) いいえの方は、ほんとすいません。 はい、前提で進めます。 そんなときって、いまはSlackとかいろいろなもので簡単にビデオ会議できちゃいますが、 なんか、それでインターネットの帯域を使いまくっちゃうのって、なんか嫌です。 そんな時、昨今ってWebRTCとかで社内LANから出ずにP2Pでビデオ会議するやつって、 実は簡単に実&hellip;</p>
+        <div class="post-list__meta"><time datetime="02 Feb 2018" class="post-list__meta--date date">02 Feb 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Yagasaki">Yagasaki</a>, <a href="http://tech.innovation.co.jp/tag/Web-R-T-C">WebRTC</a>, <a href="http://tech.innovation.co.jp/tag/Video">Video</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/02/05/Think-About-Documents.html" title="link to システム開発で作られるドキュメントについて考えてみる">システム開発で作られるドキュメントについて考えてみる</a></h2>
         <p class="excerpt">こんにちは。 エンジニアのNew塚本です。 私、今年が本厄でして、去年からロクなことが起きておりません。 車検をあげた次の月にヘッドライトが切れ、次の月になんと高速でタイヤがバースト、 さらに、上野の件や、車をぶつけられたり。 まだまだありますが・・・ホンキでお祓いを考えてます。 気を取り直して！ 今回は、システム開発で作成されるドキュメントについて考えてみました。 きっかけ 私は長年、ウォーターフォールモデルでの開発をしていました。 上流から下流へ水が流れる様に工程をっていう、あれです。 さらに開発標準なるものが用いられ、それに則り各工程での成果物（ドキュメント類）が決められてました。 （正直これいる？みたいなものもありましたが。） また、アジャイル開発も経験していますが、 そこは極端で&hellip;</p>
         <div class="post-list__meta"><time datetime="05 Feb 2018" class="post-list__meta--date date">05 Feb 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/New-Tsukamoto">NewTsukamoto</a>, <a href="http://tech.innovation.co.jp/tag/Documents"> Documents</a></span></div>
@@ -261,12 +267,6 @@ var _trackingid = 'LFT-10003-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/01/05/carry-out-tutorial-on-Laravel-amp-Docker.html" title="link to Vue.js のチュートリアルをLaravel＆Docker環境で行う">Vue.js のチュートリアルをLaravel＆Docker環境で行う</a></h2>
         <p class="excerpt">2018年になりました。 koheです。 年が明けたということで、そろそろ Vue.jsをLaravelとDocker環境上で使いたい 時期が来ましたので、作成。 環境構築 といっても、Vue.jsはLaravelの環境を作れば既に使えるようになっているため、Laravelの環境をつくれば良いだけ。 ※nginx使います docker-compose.yml version: '3' services:   nginx:     build:       context: ./nginx     depends_on:       - php     ports:       - 80:80     volumes:       - ./www:/var/www:cached   php:&hellip;</p>
         <div class="post-list__meta"><time datetime="05 Jan 2018" class="post-list__meta--date date">05 Jan 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/kohe">kohe</a>, <a href="http://tech.innovation.co.jp/tag/Vuejs">Vue.js</a>, <a href="http://tech.innovation.co.jp/tag/Laravel">Laravel</a>, <a href="http://tech.innovation.co.jp/tag/Docker">Docker</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/12/19/P-H-Per-Golang.html" title="link to PHPerがGolangを試してみた 前編">PHPerがGolangを試してみた 前編</a></h2>
-        <p class="excerpt">概要 私はPHPerなのですが、Golangを試してみました。 難しいと思った点など書いていければと思います。 Hello World コンパイル処理 パッケージ・関数定義 変数 定数 真偽型 null値 配列型 スライス型 マップ型 条件分岐 ループ処理 構造体 インターフェース型 〜後編へ続く〜 Hello World Hello Worldに関しては、特に迷う部分はありませんでした。 // vi helloworld.go // メイン処理のパッケージ名 package main // fmtをインポートしています import "fmt" // メインの処理を記述していきます func main() { 	// 文字列を標準出力します 	fmt.Println("HelloWorl&hellip;</p>
-        <div class="post-list__meta"><time datetime="19 Dec 2017" class="post-list__meta--date date">19 Dec 2017</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/P-H-P">PHP</a>, <a href="http://tech.innovation.co.jp/tag/P-H-Per"> PHPer</a>, <a href="http://tech.innovation.co.jp/tag/Golang"> Golang</a>, <a href="http://tech.innovation.co.jp/tag/Go"> Go言語</a>, <a href="http://tech.innovation.co.jp/tag/Go"> Go</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
