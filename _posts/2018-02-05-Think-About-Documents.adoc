@@ -1,5 +1,4 @@
-# システム開発で作られるドキュメントについて考えてみる
-:published_at: 2018-02-05
+# （ボツ）システム開発で作られるドキュメントについて考えてみる
 :hp-alt-title: ThinkAboutDocuments
 :hp-tags: NewTsukamoto, Documents
 
