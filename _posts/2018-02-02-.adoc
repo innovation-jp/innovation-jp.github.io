@@ -1,6 +1,6 @@
 # システム開発で作られるドキュメントについて考えてみる
-:hp-alt-title:　システム開発で作られるドキュメントについて考えてみる
-:hp-tags: NewTsukamoto
+:hp-alt-title:　ThinkAboutDocuments
+:hp-tags: NewTsukamoto, Documents
 
 こんにちは。
 エンジニアのNew塚本です。
