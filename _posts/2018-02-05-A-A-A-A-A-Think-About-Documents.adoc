@@ -1,6 +1,6 @@
 # （ボツ）システム開発で作られるドキュメントについて考えてみる
-:hp-alt-title: ThinkAboutDocuments
-:hp-tags: NewTsukamoto, Documents
+:hp-alt-title: AAAAAThinkAboutDocuments
+:hp-tags: ANewTsukamoto, Documents
 
 こんにちは。
 エンジニアのNew塚本です。
