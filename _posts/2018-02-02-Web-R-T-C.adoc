@@ -1,5 +1,5 @@
 = いまさら？！WebRTCを使って社内のビデオ会議をお手軽に行う
-:published_at: 2018-2-2
+:published_at: 2018-02-02
 :hp-tags: Yagasaki,WebRTC,Video
 
 こんにちは！ +
