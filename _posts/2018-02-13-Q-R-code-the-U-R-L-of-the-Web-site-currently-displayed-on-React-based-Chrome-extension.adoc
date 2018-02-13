@@ -1,7 +1,6 @@
-= ReactベースのChrome Extesionで現在表示しているWebサイトのURLをQRコード化する
-
-:hp-alt-title: QR-code-the-URL-of-the-Web-site-currently-displayed-on-React-based-Chrome-extesion
-:hp-tags: Chrome Extesion,React,QRcode
+= ReactベースのChrome Extensionで現在表示しているWebサイトのURLをQRコード化する
+:hp-alt-title: QR-code-the-URL-of-the-Web-site-currently-displayed-on-React-based-Chrome-extension
+:hp-tags: Chrome Extension,React,QRcode
 
 さて、いきなりですが、 +
 会社用のPCで読んでいた記事を個人のスマホとかで +
@@ -18,7 +17,7 @@ PCでFacebookシェアしてスマホから見る？
 
 ということで
 今回はバーコードシリーズの続きとして、
-Chrome Extesionを自作し、
+Chrome Extensionを自作し、
 「現在表示しているWebサイトのURLをQRコード化する」ことにチャレンジしてみます。
 
 ## 作ってみる
@@ -28,7 +27,7 @@ qrcode.reactパッケージを利用させていただきます。
 
 https://github.com/zpao/qrcode.react
 
-まずは当該パッケージを利用するためにReactベースでChrome Extesionを作っていきます。
+まずは当該パッケージを利用するためにReactベースでChrome Extensionを作っていきます。
 
 任意のワークスペースで作業を行っていきます。
 
@@ -68,7 +67,7 @@ publicの下にすでにmanifest.jsonが入っていると思うので、
 ここを +
 chrome://extensions/ +
 にアクセスした上で拡張機能として読み込みましょう。 +
-これだけで一旦reactを使った拡張機能の素が動いていることが確認できると思います。
+これだけで一旦Reactを使った拡張機能の素が動いていることが確認できると思います。
 
 ここからは自分でプログラムを書いていきます。 +
 冒頭にも書いた通り今回はqrcode.reactパッケージを利用します。
