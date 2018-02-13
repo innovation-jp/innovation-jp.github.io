@@ -1,0 +1,183 @@
+= Google Cloud Vision APIを使って、Androidで取った写真から書籍検索をしてみる
+:published_at: 2018-02-13
+:hp-alt-title: android with google cloud vision api
+:hp-tags: KatoK,CloudVisionAPI,Android
+:hp-image: kato/12/01.png
+
+
+
+最近、Androidの勉強をしている加藤です。
+
+スマホの特徴的な機能といえば「カメラ」 +
+カメラと言えば「写真」 +
+写真といえば「画像解析」 +
+画像解析といえば「Google Cloud Vision API」。
+
+ということで、今回は「Google Cloud Vision API」を使って、書籍検索アプリを作ってみました。
+
+
+## やりたい事
+
+「スマホ(Android)で書籍を撮影すると、その書籍情報を表示してくれる」
+
+です。
+処理の流れとしては、下記のようになります。
+
+image::kato/12/01.png[]
+
+書籍検索であれば、バーコードからISBNコードを読み取るのが一番早いのですが、
+あえて(！)、画像データから検索したいと思います。
+
+
+
+
+## 環境
+
+* Androidの下記の設定で動作確認を行いました。 +
+   minSdkVersion 21 +
+   targetSdkVersion 26
+
+
+今回は、Web上にあまり情報が見当たらなかった「Google Vision API」「Google Books API」を +
+Android上から実行する際のサンプルを記載します。
+
+
+
+## Androidプロジェクトに、依存ライブラリを追加
+
+build.gradeに下記を追記します。 +
+これで、Google Vision APIとGoogle Books APIの実行に必要なパッケージが使えるようになります。
+
+```
+dependencies {
+    implementation 'com.google.api-client:google-api-client-android:1.23.0'
+    implementation 'com.google.apis:google-api-services-vision:v1-rev370-1.23.0'
+    implementation 'com.google.apis:google-api-services-books:v1-rev95-1.23.0'
+    implementation 'commons-io:commons-io:2.6'
+}
+```
+
+
+## Google Vision APIのサンプルコード
+
+前項で追加したパッケージを使用すると、下記のようにデータを取得することが出来ます。
+
+[ API_KEY ]、[ 画像データ byte[] ]は、適切な値に置換して下さい。 +
+画像データは、Google Vision APIで対応している形式(JPEG)などを指定します。
+
+今回は、type=WEB_DETECTIONとした際にレスポンス内に含まれる「ラベル」を使用することにします。 +
+ここで「ラベル」が取得できれば、次項のGoogle Books APIでの検索時のキーワードとして使用します。
+
+```
+final Vision vision = new Vision.Builder(new NetHttpTransport(), new AndroidJsonFactory(), null)
+    .setVisionRequestInitializer(new VisionRequestInitializer([ API_KEY ]))
+    .build();
+
+Image inputImage = new Image();
+inputImage.encodeContent([ 画像データ byte[] ]);
+
+Feature desiredFeature = new Feature();
+desiredFeature.setType("WEB_DETECTION");
+
+AnnotateImageRequest request = new AnnotateImageRequest();
+request.setImage(inputImage);
+request.setFeatures(Arrays.asList(desiredFeature));
+
+BatchAnnotateImagesRequest batchRequest = new BatchAnnotateImagesRequest();
+batchRequest.setRequests(Arrays.asList(request));
+
+try {
+    BatchAnnotateImagesResponse batchResponse = vision.images().annotate(batchRequest).execute();
+    WebDetection annotation = batchResponse.getResponses().get(0).getWebDetection();
+    WebLabel webLabel = annotation.getBestGuessLabels().get(0);
+
+    if(webLabel != null) {
+        Log.d(TAG, "[WEB_DETECTION]ラベル検出" + webLabel.getLabel());
+    }
+
+} catch (IOException e) {
+    e.printStackTrace();
+}
+
+```
+
+
+
+## Google Books APIのサンプルコード
+
+Google Books APIの実行サンプルは下記のとおりです。 +
+[ API_KEY ]、[ キーワード ]は適切なものに置き換えて下さい。
+
+ここで、キーワードはGoogle Vision APIで取得した「ラベル」を指定し、 + 
+関連性が高い順で、1件のデータを取得するようにしました。
+
+
+```
+final Books book = new Books.Builder(new NetHttpTransport(), new AndroidJsonFactory(), null)
+    .setBooksRequestInitializer(new BooksRequestInitializer([API_KEY]))
+    .build();
+
+try {
+    Volumes volumes = book.volumes()
+            .list([ キーワード ])
+            .setMaxResults((long)1)
+            .setOrderBy("relevance")
+            .execute();
+
+    Volume.VolumeInfo volumeInfo = volumes.getItems().get(0).getVolumeInfo();
+
+    if(volumeInfo != null) {
+        Log.d(TAG, "[Book Volume]title:      " + volumeInfo.getTitle());
+        Log.d(TAG, "[Book Volume]subTitle:   " + volumeInfo.getSubtitle());
+        Log.d(TAG, "[Book Volume]description: " + volumeInfo.getDescription());
+        Log.d(TAG, "[Book Volume]thumbnail:   " + volumeInfo.getImageLinks().getThumbnail());
+    }
+    
+} catch (IOException e) {
+    e.printStackTrace();
+}
+```
+
+
+## 動作サンプル
+
+スマホのカメラからのデータを元に、動作させたサンプルは、下記のようになります。 +
+Google Vision APIの精度が高く、かなりいい感じに検出が出来ています。 +
+
+ただ、場合によっては似たような書籍が検索されてしまうことがありました。 +
+書籍の表紙のデザインに特徴がある方が、精度が高く検出できるようです。
+
+
+
+*上手く検出できる例*
+
+
+++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/KGaTzZl4GsU" frameborder="0" allowfullscreen></iframe>
+++++
+
+
+*似た書籍を検出してしまった例*
+
+
+++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/bSaaMECx_7A" frameborder="0" allowfullscreen></iframe>
+++++
+
+
+## まとめ
+
+今回の実験で、Google Vision APIの検出精度がかなり高いという事が分かりました。
+やはり、Googleの技術はすごいです。
+
+
+
+
+
+
+
+
+
+
+
+
