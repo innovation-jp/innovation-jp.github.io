@@ -39,58 +39,129 @@
 
 image::/images/nakamura/eweilnk/1_1.png[]
 
+こんな感じのかなりコンパクトなパッケージになってます。
+
 image::/images/nakamura/eweilnk/1_2.png[]
+中身は本体、ネジｘ4、説明書。 +
+ネジは余分に付いてないので無くさないようにしないとですね。
 
 image::/images/nakamura/eweilnk/1_3.png[]
+こちら配線部分の蓋を取ったところ。
 
 image::/images/nakamura/eweilnk/1_4.png[]
+ここにプラスとマイナスの線を挿入して上からネジで閉めればOKです。
 
 image::/images/nakamura/eweilnk/1_5.png[]
+ちなみにおまけでテスト用のLEDが付いてました！ +
+やさしい...けど使いませんでした(笑)
 
 image::/images/nakamura/eweilnk/1_6.png[]
+で、作成したものがこちら。 +
+電源タップをぶった切って間にSonoffを取り付けただけなので特に写真も撮ってません。
 
+注意した方が良い点としては、ケーブルを切断する前に上下がわかるようにしておいた方がいいです。 +
+電源タップの中は赤黒のケーブルが入っているわけではないので、どちらがプラスかが分からなくなります。。。
+
+こんな感じで手動で動作すれば完璧です！
+
+***ここに動画入れる***
 
 
 === eWeLinkの設定
 
+次にSonoffをアプリから操作できるようにしましょう。 +
+説明書にも書いてあるので問題ないと思いますが、英語or中国語なので以下参考にしてみてください。
+
 image::/images/nakamura/eweilnk/2_1.PNG[width="250"]
 
+まずはeWeLinkというアプリを検索してインストールします。
+
 image::/images/nakamura/eweilnk/2_2.PNG[width="250"]
+インストールしたアプリを起動すると、こんな画面になりますので、まずは新規登録を行います。 +
+流れとしては、
+
+電話番号入力 +
+↓ +
+SMSで4桁のパスワード通知 +
+↓ +
+届いた4桁のパスワードと設定したいパスワードを入力 +
+↓ +
+登録完了 +
+↓ +
+先ほどのログイン画面に電話番号と設定したパスワード（4桁じゃない）を入力してログイン +
+
 
 image::/images/nakamura/eweilnk/2_3.PNG[width="250"]
+無事ログインできるとこんな画面になるので、新規デバイスを追加します。
 
 image::/images/nakamura/eweilnk/2_4.png[width="250"]
+Sonoffについているボタン（ON/OFFスイッチ）を7秒間押し続けるとベアリングモードになります。
+
 
 image::/images/nakamura/eweilnk/2_5.PNG[width="250"]
+SonoffのLED点滅と同じものをアプリ側で選択し、次へ進みます。
+
 
 image::/images/nakamura/eweilnk/2_6.PNG[width="250"]
+WiFiを切り替えるように言われますので、設定から「ITEAD-xxxx」へ接続しアプリ画面へ戻ります。
+
 
 image::/images/nakamura/eweilnk/2_7.PNG[width="250"]
+次に家で使っているWiFi環境の情報を入力します。 +
+(eWeLinkのログイン情報ではありません）
 
 image::/images/nakamura/eweilnk/2_8.PNG[width="250"]
+デバイスを検索中...
+
 
 image::/images/nakamura/eweilnk/2_9.PNG[width="250"]
+無事に追加できました。 +
+どうやらデバイスの名前を変更できるようなので、わかりやすいように変えておきましょう。
 
 image::/images/nakamura/eweilnk/2_10.PNG[width="250"]
+「電源タップ」にしてみました（笑） +
+日本語も普通に入力できるみたいです。
+
 
 image::/images/nakamura/eweilnk/2_11.PNG[width="250"]
+ログイン後の画面にデバイスが追加されました。 +
+ここからON/OFFが切り替えられれば、正常に動作しています。
+
 
 === alexaの設定
 
+最後にalexaの設定をしていきます。
+
 image::/images/nakamura/eweilnk/3_1.PNG[width="250"]
+alexaのアプリを開いて、スキルを「ewelink」で検索します。
+
 
 image::/images/nakamura/eweilnk/3_2.PNG[width="250"]
+こちらのスキルが出てきますので、スキルを有効にしてください。
 
 image::/images/nakamura/eweilnk/3_3.PNG[width="250"]
+このような画面になると思いますので、こちらにはeWeLinkで設定したログイン情報を入力してください。
+
 
 image::/images/nakamura/eweilnk/3_4.PNG[width="250"]
+無事にスキルを有効にできました。
+
 
 image::/images/nakamura/eweilnk/3_5.PNG[width="250"]
+続いてこちらの画面が出ると思いますので、「端末の検出」をタップしてください。
 
 image::/images/nakamura/eweilnk/3_6.PNG[width="250"]
+eWeLinkで登録したデバイス名でalexaのスマートホームに追加されました！
+
 
 image::/images/nakamura/eweilnk/3_7.PNG[width="250"]
+実は「電源タップ」という名称はalexaで認識してくれませんでした(笑) +
+そういう場合には名称を変更しましょう。 +
+今回は間接照明を操作するので「ライト」にしてみました。
 
+こんな感じに操作できれば完了です！
+
+***ここに動画を入れる***
 
 
 === 最後に
