@@ -1,0 +1,109 @@
+= Amazon Echoから簡単に家電を操作してみる
+:hp-tags: nakamura,Amazon Echo,alexa,Sonoff,eWeLink
+
+去年あたりから日本でもスマートスピーカーがとても流行りだしましたね！ +
+私も衝動買いをして幾つか持っているんですが、天気聞くのが一番多く正直あまり使いこなせてなかった感じでした。
+
+そこで、今回はalexaから今まで持っていた家電を操作する方法をご紹介したいと思います。
+
+=== 今回やること
+
+ずばり
+
+「alexa経由で電源タップのON/OFFができるようにする」
+
+です。
+
+細かい設定などが必要なものは今回の方法では無理ですが（例えばalexa経由で電子レンジを操作するとか）、間接照明や加湿器などを一斉に操作するようになります。
+
+今回はこちらを実現するために、「Sonoff Basic」という商品を使ってみました。
+
+
+=== 必要なもの
+
+- Sonoff Basic
+- Amazon Echo
+- 電源タップ
+- 精密ドライバー（+と-両方 )
+- ペンチなどケーブルを処理できるもの
+- スマートフォン（今回はiPhoneを使っています）
+
+それでは早速やっていきましょう。
+
+※自己責任でお願いします！
+
+
+=== Sonoff
+
+まずはSonoffの商品説明から。
+
+image::/images/nakamura/ewelink/1_1.png[]
+
+image::/images/nakamura/ewelink/1_2.png[]
+
+image::/images/nakamura/ewelink/1_3.png[]
+
+image::/images/nakamura/ewelink/1_4.png[]
+
+image::/images/nakamura/ewelink/1_5.png[]
+
+image::/images/nakamura/ewelink/1_6.png[]
+
+
+
+=== eWeLinkの設定
+
+image::/images/nakamura/ewelink/2_1.png[]
+
+image::/images/nakamura/ewelink/2_2.png[]
+
+image::/images/nakamura/ewelink/2_3.png[]
+
+image::/images/nakamura/ewelink/2_4.png[]
+
+image::/images/nakamura/ewelink/2_5.png[]
+
+image::/images/nakamura/ewelink/2_6.png[]
+
+image::/images/nakamura/ewelink/2_7.png[]
+
+image::/images/nakamura/ewelink/2_8.png[]
+
+image::/images/nakamura/ewelink/2_9.png[]
+
+image::/images/nakamura/ewelink/2_10.png[]
+
+image::/images/nakamura/ewelink/2_11.png[]
+
+=== alexaの設定
+
+image::/images/nakamura/ewelink/3_1.png[]
+
+image::/images/nakamura/ewelink/3_2.png[]
+
+image::/images/nakamura/ewelink/3_3.png[]
+
+image::/images/nakamura/ewelink/3_4.png[]
+
+image::/images/nakamura/ewelink/3_5.png[]
+
+image::/images/nakamura/ewelink/3_6.png[]
+
+image::/images/nakamura/ewelink/3_7.png[]
+
+
+
+=== 最後に
+
+いかがでしたか？ +
+声で家電を操作できると結構感動ですよね(笑) +
+
+我が家では赤外線を操作できる機器とalexaを連動させて、さらにTVやエアコンなども操作できるようにしてます。 +
+今回のよりも簡単に導入できますので（工作が不要）、是非試してみてください〜
+
+
+おしまい！
+
+
+
+
