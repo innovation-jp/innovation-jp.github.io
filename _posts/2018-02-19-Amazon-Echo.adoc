@@ -53,43 +53,43 @@ image::/images/nakamura/eweilnk/1_6.png[]
 
 === eWeLinkの設定
 
-image::/images/nakamura/eweilnk/2_1.PNG[]
+image::/images/nakamura/eweilnk/2_1.PNG[width="250"]
 
-image::/images/nakamura/eweilnk/2_2.PNG[]
+image::/images/nakamura/eweilnk/2_2.PNG[width="250"]
 
-image::/images/nakamura/eweilnk/2_3.PNG[]
+image::/images/nakamura/eweilnk/2_3.PNG[width="250"]
 
-image::/images/nakamura/eweilnk/2_4.png[]
+image::/images/nakamura/eweilnk/2_4.png[width="250"]
 
-image::/images/nakamura/eweilnk/2_5.PNG[]
+image::/images/nakamura/eweilnk/2_5.PNG[width="250"]
 
-image::/images/nakamura/eweilnk/2_6.PNG[]
+image::/images/nakamura/eweilnk/2_6.PNG[width="250"]
 
-image::/images/nakamura/eweilnk/2_7.PNG[]
+image::/images/nakamura/eweilnk/2_7.PNG[width="250"]
 
-image::/images/nakamura/eweilnk/2_8.PNG[]
+image::/images/nakamura/eweilnk/2_8.PNG[width="250"]
 
-image::/images/nakamura/eweilnk/2_9.PNG[]
+image::/images/nakamura/eweilnk/2_9.PNG[width="250"]
 
-image::/images/nakamura/eweilnk/2_10.PNG[]
+image::/images/nakamura/eweilnk/2_10.PNG[width="250"]
 
-image::/images/nakamura/eweilnk/2_11.PNG[]
+image::/images/nakamura/eweilnk/2_11.PNG[width="250"]
 
 === alexaの設定
 
-image::/images/nakamura/eweilnk/3_1.PNG[]
+image::/images/nakamura/eweilnk/3_1.PNG[width="250"]
 
-image::/images/nakamura/eweilnk/3_2.PNG[]
+image::/images/nakamura/eweilnk/3_2.PNG[width="250"]
 
-image::/images/nakamura/eweilnk/3_3.PNG[]
+image::/images/nakamura/eweilnk/3_3.PNG[width="250"]
 
-image::/images/nakamura/eweilnk/3_4.PNG[]
+image::/images/nakamura/eweilnk/3_4.PNG[width="250"]
 
-image::/images/nakamura/eweilnk/3_5.PNG[]
+image::/images/nakamura/eweilnk/3_5.PNG[width="250"]
 
-image::/images/nakamura/eweilnk/3_6.PNG[]
+image::/images/nakamura/eweilnk/3_6.PNG[width="250"]
 
-image::/images/nakamura/eweilnk/3_7.PNG[]
+image::/images/nakamura/eweilnk/3_7.PNG[width="250"]
 
 
 
