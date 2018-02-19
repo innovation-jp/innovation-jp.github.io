@@ -64,7 +64,10 @@ image::/images/nakamura/eweilnk/1_6.png[]
 
 こんな感じで手動で動作すれば完璧です！
 
-***ここに動画入れる***
+++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/TQbRa1jCXZ4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+++++
+
 
 
 === eWeLinkの設定
@@ -161,7 +164,9 @@ image::/images/nakamura/eweilnk/3_7.PNG[width="250"]
 
 こんな感じに操作できれば完了です！
 
-***ここに動画を入れる***
+++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/CzA5qK8zIns" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+++++
 
 
 === 最後に
