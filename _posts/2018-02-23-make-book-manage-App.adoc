@@ -11,9 +11,14 @@
 `Vuejs` `Laravel` `Docker`  `GKE` `gitlab` +  
 を使って社内の本の管理アプリを作りたい時期が来ましたので作成することにしました。
 
-お金を1円もかけたくない、と言う裏目標も持ちます。
+_お金を1円もかけたくない_ + 
+と言う裏目標も持ちます。
 
-まずversion管理に githubではなくgitlabを使います。
+## 完成物 
+完成物のイメージ
+
+## Version管理
+version管理に githubではなくgitlabを使います。
 
 理由:
 
@@ -46,7 +51,6 @@ http://tech.innovation.co.jp/2018/01/05/carry-out-tutorial-on-Laravel-amp-Docker
 
 
 ```
-
   mailhog:
     image          : mailhog/mailhog:latest
     container_name : mailhog
@@ -56,3 +60,10 @@ http://tech.innovation.co.jp/2018/01/05/carry-out-tutorial-on-Laravel-amp-Docker
       - "8025:8025"
 ```
 
+そして `localhost:8025` にアクセスするとこんな画面が見えます。
+
+IMAGE1
+
+
+
+ 
