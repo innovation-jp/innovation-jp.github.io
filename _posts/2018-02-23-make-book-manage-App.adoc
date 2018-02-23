@@ -13,3 +13,23 @@
 
 お金を1円もかけたくない、と言う裏目標も持ちます。
 
+まずversion管理に githubではなくgitlabを使います。
+
+理由:
+
+- private repository が無料
+- Resistory が使える
+
+
+## 構成
+
+
+├── docker-compose.yml +
+├── nginx +
+│   ├── Dockerfile +
+│   └── etc +
+│       └── nginx +
+├── phpfpm +
+│   └── Dockerfile +
+└── www +
+   　　└── BookApp +
