@@ -31,26 +31,27 @@ FPとFCPはGoogle Chromeのデベロッパーツールを使って視覚的に�
 3. Performanceのタブを開く
 4. reloadボタンを押す
 
-画像 +
-画像 +
+image::/images/oyaizu/performance_tab.png?[]
+
+image::/images/oyaizu/performance_reload.png?[]
 
 スクリーンショットの部分にマウスをホバーすると何msのタイミングでページがどのように表示されているかが分かるようになります。 +
 
-画像 +
+image::/images/oyaizu/performance_white.png?[]
 _※赤い枠線がスクリーンショット_ +
 
 この機能を活用すればFP, FCPが確認できます。 +
 
-画像 +
+image::/images/oyaizu/performance_reload.png?[]
 _※白い画面_ +
 
-画像 +
+image::/images/oyaizu/performance_fp.png?[]
 _※FP(backgound-colorが表示されている)_ +
 
-画像 +
+image::/images/oyaizu/performance_fcp.png?[]
 _※FCP(テキストが表示されている)_ +
 
-画像 +
+image::/images/oyaizu/performance_complete.png?[]
 _※表示完了_ +
 
 ## Paint Timing API
@@ -77,13 +78,13 @@ APIの仕様をもとにFC,FCPをコンソールに出力させてみました�
 
 ```
 
-画像 +
+image::/images/oyaizu/performance_console.png[]
 
 上記の画像ではコンソールに出力させていますが、この値をGoogle Analyticsに送信することで、定量的にサイトのパフォーマンスを計測することができそうです。 +
 
 このFP, FCPを直帰率などの他のKPIと紐付けることで、どのページを改善するのか、何秒まで縮めるのかという具体的な目標をもってパフォーマンス改善ができそうですね。 +
 
-今回はクライアントサイドのパフォーマンス計測ををしましたが、最近はサーバからの応答時間を計測するServer Timing APIというのも策定されているらしいので、それについても調べていこうと思います！ +
+今回はクライアントサイドのパフォーマンス計測をしましたが、最近はサーバからの応答時間を計測するServer Timing APIというのも策定されているらしいので、それについても調べていこうと思います！ +
 
 今回はここで失礼します。 +
 
