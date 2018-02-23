@@ -1,0 +1,92 @@
+# Paint Timing APIを使用してクライアントサイドのパフォーマンスを計測してみた
+
+:published_at: 2018-02-23
+:hp-alt-title: measuring performance of website
+:hp-tags: JavaScript,Paint Timing API
+
+こんにちは！小柳津です。 +
+もう2018年になってから２月後半になりました。 +
+時の流れは早いですね。。。早すぎる。。。 +
+
+エンジニアとしては時の流れに負けないくらい高速なWebサイトを作っていきたいですよね。 +
+でもWebサイトを高速化させるにはそもそも表示が遅いのか早いのかを知る必要があります。 +
+そこで今回は、Paint Timing APIというものを使用してクライアントサイドのパフォーマンスを計測してみました。 +
+
+## First PaintとFirst Contentful Paint
+
+まず前提知識の紹介です。 +
+
+昨今のWebサイトのパフォーマンスを指標としてFirst Paint(FP)とFirst Contentful Paint(FCP)というものが定義されています。 +
+
+First Paint(以下FP)はページにアクセスしてからブラウザが白い画面から何か1ピクセルでもレンダリングするまで時間のことを指します。 +
+
+それに対して、First Contentful Paint(以下FCP)はページにアクセスしてからブラウザがコンテンツの最初のビットをレンダリングするまで時間のこと指しており、そのコンテンツにはテキスト、画像、SVGなどが含まれます。 +
+
+上記のFP, FCPの値が小さければ小さいほどユーザーはページにアクセスしてからのページの表示が早いと感じるのでパフォーマンスがよいと感じることになります。 +
+
+FPとFCPはGoogle Chromeのデベロッパーツールを使って視覚的に確認することができます。 +
+
+1. 計測したいページを開いておく
+2. デベロッパーツールを開く
+3. Performanceのタブを開く
+4. reloadボタンを押す
+
+画像 +
+画像 +
+
+スクリーンショットの部分にマウスをホバーすると何msのタイミングでページがどのように表示されているかが分かるようになります。 +
+
+画像 +
+_※赤い枠線がスクリーンショット_ +
+
+この機能を活用すればFP, FCPが確認できます。 +
+
+画像 +
+_※白い画面_ +
+
+画像 +
+_※FP(backgound-colorが表示されている)_ +
+
+画像 +
+_※FCP(テキストが表示されている)_ +
+
+画像 +
+_※表示完了_ +
+
+## Paint Timing API
+
+Paint Timing APIとは、上記で説明したFC, FCPを取得できるAPIです。 +
+Google Chrome 60からこのAPIが使用できるようになっています。 +
+
+APIの仕様は以下のページです
+https://w3c.github.io/paint-timing/
+
+APIの仕様をもとにFC,FCPをコンソールに出力させてみました。 +
+
+```
+    var observer = new PerformanceObserver(function(list) {
+        var perfEntries = list.getEntries();
+        
+        for (var i = 0; i < perfEntries.length; i++) {
+            var metricName = perfEntries[i].name;
+            var time = Math.round(perfEntries[i].startTime + perfEntries[i].duration);
+            console.log(metricName, time);
+        }
+    });
+    observer.observe({entryTypes: ["paint"]});
+
+```
+
+画像 +
+
+上記の画像ではコンソールに出力させていますが、この値をGoogle Analyticsに送信することで、定量的にサイトのパフォーマンスを計測することができそうです。 +
+
+このFP, FCPを直帰率などの他のKPIと紐付けることで、どのページを改善するのか、何秒まで縮めるのかという具体的な目標をもってパフォーマンス改善ができそうですね。 +
+
+今回はクライアントサイドのパフォーマンス計測ををしましたが、最近はサーバからの応答時間を計測するServer Timing APIというのも策定されているらしいので、それについても調べていこうと思います！ +
+
+今回はここで失礼します。 +
+
+
+
+
