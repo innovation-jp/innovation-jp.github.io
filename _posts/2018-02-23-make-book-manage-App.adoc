@@ -18,7 +18,7 @@
 理由:
 
 - private repository が無料
-- Resistory が使える
+- Container Resistory が使える
 
 
 ## 構成
@@ -40,4 +40,19 @@ Dockerの構成や、中身などは
 ↓の記事にかかれてあります。
 
 http://tech.innovation.co.jp/2018/01/05/carry-out-tutorial-on-Laravel-amp-Docker.html
+
+上記の設定に加え、今回はメール認証＆Login機能をつけたいので
+開発用に `Mailhog` コンテナを使用する用に `docker-compose.yml` に追記、
+
+
+```
+
+  mailhog:
+    image          : mailhog/mailhog:latest
+    container_name : mailhog
+    hostname       : mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+```
 
