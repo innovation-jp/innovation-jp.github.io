@@ -33,3 +33,10 @@
 │   └── Dockerfile +
 └── www +
    　　└── BookApp +
+
+
+## 環境構築(Doker)
+Dockerの構成や、中身などは
+↓の記事にかかれてあります。
+
+http://tech.innovation.co.jp/2018/01/05/carry-out-tutorial-on-Laravel-amp-Docker.html
