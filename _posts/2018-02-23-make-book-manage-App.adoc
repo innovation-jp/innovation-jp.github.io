@@ -1,6 +1,15 @@
-# TestKohe
+# 本の管理アプリをVuejs,Laravel,Docker,GCP,GKE,gitlabを使って作った話。
 
 
 :hp-alt-title: make book manage App
-:hp-tags: kohe, Vuejs,Laravel,Docker,GCP,GKE,Kubernetes
+:hp-tags: kohe, Vuejs,Laravel,Docker,GCP,GKE,Kubernetes,gitlab
+
+
+こへです。
+
+そろそろ +
+`Vuejs` `Laravel` `Docker`  `GKE` `gitlab` +  
+を使って社内の本の管理アプリを作りたい時期が来ましたので作成することにしました。
+
+お金を1円もかけたくない、と言う裏目標も持ちます。
 
