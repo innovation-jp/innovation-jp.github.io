@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Paint Timing APIを使用してクライアントサイドのパフォーマンスを計測してみた - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Paint Timing APIを使用してクライアントサイドのパフォーマンスを計測してみた">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Paint Timing APIを使用してクライアントサイドのパフォーマンスを計測してみた">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/02/23/measuring-performance-of-website.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Paint Timing APIを使用してクライアントサイドのパフォーマンスを計測してみた" />
+    <meta property="og:description" content="こんにちは！小柳津です。 もう2018年になってから２月後半になりました。 時の流れは早いですね。。。早すぎる。。。 エンジニアとしては時の流れに負けないくらい高速なWebサイトを作っていきたいですよね。 でもWebサイトを高速化させるにはそもそも表示が遅いのか早いのかを知る必要があります。 そこで今回は、Paint Timing APIというものを使用してクライアントサイドのパフォーマンスを計測してみました。 First PaintとFirst Contentful Paint まず前提知識の紹介です。 昨今のWebサイトのパフォーマンスを指標として..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/02/23/measuring-performance-of-website.html" />
+    <meta property="article:published_time" content="2018-02-22T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-02-23T03:45:17.323Z" />
+    <meta property="article:tag" content="JavaScript" />
+    <meta property="article:tag" content="Paint Timing API" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Paint Timing APIを使用してクライアントサイドのパフォーマンスを計測してみた" />
+    <meta name="twitter:description" content="こんにちは！小柳津です。 もう2018年になってから２月後半になりました。 時の流れは早いですね。。。早すぎる。。。 エンジニアとしては時の流れに負けないくらい高速なWebサイトを作っていきたいですよね。 でもWebサイトを高速化させるにはそもそも表示が遅いのか早いのかを知る必要があります。 そこで今回は、Paint Timing APIというものを使用してクライアントサイドのパフォーマンスを計測してみました。 First PaintとFirst Contentful Paint まず前提知識の紹介です。 昨今のWebサイトのパフォーマンスを指標として..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/02/23/measuring-performance-of-website.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars3.githubusercontent.com/u/16201452?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "Paint Timing APIを使用してクライアントサイドのパフォーマンスを計測してみた",
+    "url": "http://tech.innovation.co.jp/2018/02/23/measuring-performance-of-website.html",
+    "datePublished": "2018-02-22T15:00:00.000Z",
+    "dateModified": "2018-02-23T03:45:17.323Z",
+    "keywords": "JavaScript, Paint Timing API",
+    "description": "こんにちは！小柳津です。 もう2018年になってから２月後半になりました。 時の流れは早いですね。。。早すぎる。。。 エンジニアとしては時の流れに負けないくらい高速なWebサイトを作っていきたいですよね。 でもWebサイトを高速化させるにはそもそも表示が遅いのか早いのかを知る必要があります。 そこで今回は、Paint Timing APIというものを使用してクライアントサイドのパフォーマンスを計測してみました。 First PaintとFirst Contentful Paint まず前提知識の紹介です。 昨今のWebサイトのパフォーマンスを指標として..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Java-Script tag-Paint-Timing-A-P-I no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="23 Feb 2018" class="post-meta__date date">23 Feb 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Java-Script">JavaScript</a>, <a href="http://tech.innovation.co.jp/tag/Paint-Timing-A-P-I">Paint Timing API</a></span>
+        <span class="post-meta__author author"><img src="https://avatars3.githubusercontent.com/u/16201452?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">Paint Timing APIを使用してクライアントサイドのパフォーマンスを計測してみた</h1>
+    </header>
+
+    <section class="post tag-Java-Script tag-Paint-Timing-A-P-I">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんにちは！小柳津です。<br>
+もう2018年になってから２月後半になりました。<br>
+時の流れは早いですね。。。早すぎる。。。<br></p>
+</div>
+<div class="paragraph">
+<p>エンジニアとしては時の流れに負けないくらい高速なWebサイトを作っていきたいですよね。<br>
+でもWebサイトを高速化させるにはそもそも表示が遅いのか早いのかを知る必要があります。<br>
+そこで今回は、Paint Timing APIというものを使用してクライアントサイドのパフォーマンスを計測してみました。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_first_paint_first_contentful_paint">First PaintとFirst Contentful Paint</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>まず前提知識の紹介です。<br></p>
+</div>
+<div class="paragraph">
+<p>昨今のWebサイトのパフォーマンスを指標としてFirst Paint(FP)とFirst Contentful Paint(FCP)というものが定義されています。<br></p>
+</div>
+<div class="paragraph">
+<p>First Paint(以下FP)はページにアクセスしてからブラウザが白い画面から何か1ピクセルでもレンダリングするまで時間のことを指します。<br></p>
+</div>
+<div class="paragraph">
+<p>それに対して、First Contentful Paint(以下FCP)はページにアクセスしてからブラウザがコンテンツの最初のビットをレンダリングするまで時間のこと指しており、そのコンテンツにはテキスト、画像、SVGなどが含まれます。<br></p>
+</div>
+<div class="paragraph">
+<p>上記のFP, FCPの値が小さければ小さいほどユーザーはページにアクセスしてからのページの表示が早いと感じるのでパフォーマンスがよいと感じることになります。<br></p>
+</div>
+<div class="paragraph">
+<p>FPとFCPはGoogle Chromeのデベロッパーツールを使って視覚的に確認することができます。<br></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>計測したいページを開いておく</p>
+</li>
+<li>
+<p>デベロッパーツールを開く</p>
+</li>
+<li>
+<p>Performanceのタブを開く</p>
+</li>
+<li>
+<p>reloadボタンを押す</p>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/performance_tab.png?" alt="performance tab.png?">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/performance_reload.png?" alt="performance reload.png?">
+</div>
+</div>
+<div class="paragraph">
+<p>スクリーンショットの部分にマウスをホバーすると何msのタイミングでページがどのように表示されているかが分かるようになります。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/performance_white.png?" alt="performance white.png?">
+</div>
+</div>
+<div class="paragraph">
+<p><em>※赤い枠線がスクリーンショット</em><br></p>
+</div>
+<div class="paragraph">
+<p>この機能を活用すればFP, FCPが確認できます。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/performance_reload.png?" alt="performance reload.png?">
+</div>
+</div>
+<div class="paragraph">
+<p><em>※白い画面</em><br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/performance_fp.png?" alt="performance fp.png?">
+</div>
+</div>
+<div class="paragraph">
+<p><em>※FP(backgound-colorが表示されている)</em><br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/performance_fcp.png?" alt="performance fcp.png?">
+</div>
+</div>
+<div class="paragraph">
+<p><em>※FCP(テキストが表示されている)</em><br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/performance_complete.png?" alt="performance complete.png?">
+</div>
+</div>
+<div class="paragraph">
+<p><em>※表示完了</em><br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_paint_timing_api">Paint Timing API</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Paint Timing APIとは、上記で説明したFC, FCPを取得できるAPIです。<br>
+Google Chrome 60からこのAPIが使用できるようになっています。<br></p>
+</div>
+<div class="paragraph">
+<p>APIの仕様は以下のページです
+<a href="https://w3c.github.io/paint-timing/" class="bare">https://w3c.github.io/paint-timing/</a></p>
+</div>
+<div class="paragraph">
+<p>APIの仕様をもとにFC,FCPをコンソールに出力させてみました。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>    var observer = new PerformanceObserver(function(list) {
+        var perfEntries = list.getEntries();
+
+        for (var i = 0; i &lt; perfEntries.length; i++) {
+            var metricName = perfEntries[i].name;
+            var time = Math.round(perfEntries[i].startTime + perfEntries[i].duration);
+            console.log(metricName, time);
+        }
+    });
+    observer.observe({entryTypes: ["paint"]});</code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/performance_console.png" alt="performance console.png">
+</div>
+</div>
+<div class="paragraph">
+<p>上記の画像ではコンソールに出力させていますが、この値をGoogle Analyticsに送信することで、定量的にサイトのパフォーマンスを計測することができそうです。<br></p>
+</div>
+<div class="paragraph">
+<p>このFP, FCPを直帰率などの他のKPIと紐付けることで、どのページを改善するのか、何秒まで縮めるのかという具体的な目標をもってパフォーマンス改善ができそうですね。<br></p>
+</div>
+<div class="paragraph">
+<p>今回はクライアントサイドのパフォーマンス計測をしましたが、最近はサーバからの応答時間を計測するServer Timing APIというのも策定されているらしいので、それについても調べていこうと思います！<br></p>
+</div>
+<div class="paragraph">
+<p>今回はここで失礼します。<br></p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
