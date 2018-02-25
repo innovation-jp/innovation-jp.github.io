@@ -15,7 +15,7 @@ _お金を1円もかけたくない_ +
 と言う裏目標も持ちます。
 
 ## 完成物 
-完成物のイメージ
+image::/images/kohe/ginee1.0.gif?[]
 
 ## Version管理
 version管理に githubではなくgitlabを使います。
@@ -87,11 +87,17 @@ image::/images/kohe/ginee2.0.png?[]
 image::/images/kohe/ginee3.0.png?[]
 
 
+## Vuejs
 
+├── app.js +
+├── app.vue +
+├── bootstrap.js +
+├── components +
+│   ├── Books.vue +
+│   ├── addBook.vue +
+├── router.js +
+└── services +
+    └── http.js +
 
-
-
-
-
-
+構成はこんな感じ。
 
