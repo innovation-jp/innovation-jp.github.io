@@ -15,7 +15,7 @@ _お金を1円もかけたくない_ +
 と言う裏目標も持ちます。
 
 ## 完成物 
-image::/images/kohe/ginee1.0.gif?[]
+image::/images/kohe/ginee1.0.gif[]
 
 ## Version管理
 version管理に githubではなくgitlabを使います。
