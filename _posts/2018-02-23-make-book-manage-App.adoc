@@ -40,7 +40,7 @@ version管理に githubではなくgitlabを使います。
    　　└── *[blue]#BookApp#* +
 
 
-## 環境構築(Doker)
+## 環境構築(Docker)
 Dockerの構成や、中身などは
 ↓の記事にかかれてあります。
 
@@ -60,10 +60,20 @@ http://tech.innovation.co.jp/2018/01/05/carry-out-tutorial-on-Laravel-amp-Docker
       - "8025:8025"
 ```
 
-そして `localhost:8025` にアクセスするとこんな画面が見えます。
+そして `localhost:8025` にアクセスすると受信BOXが使えます。
 
-IMAGE1
+## ログイン機能
+
+本の貸し借りということで、必須機能の1つであるログイン機能を作ります。
+
+_https://github.com/bestmomo/laravel-email-confirmation_
+
+↑主にこちらの記事を参考に作らせていただきました。
+メール送信にはAmazon SESを使おうと思いましたが、
+認証に使うだけなので、本番ではお手軽にできるGmailを使って、メールを送ることにしました。
+
+メール認証もする必要がなければ `php artisan make:auth` 実行するだけで、
+できてしまうのは非常に便利ですね。 +
+_参考：https://readouble.com/laravel/5.5/ja/authentication.html_
 
 
-
- 
