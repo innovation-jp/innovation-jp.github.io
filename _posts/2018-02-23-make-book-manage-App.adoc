@@ -76,4 +76,13 @@ _https://github.com/bestmomo/laravel-email-confirmation_
 できてしまうのは非常に便利ですね。 +
 _参考：https://readouble.com/laravel/5.5/ja/authentication.html_
 
+`localhost`にアクセスするとこんな感じ。
+ 
+image::/images/kohe/ginee2.0.png?[]
+
+
+そしてResisterで登録。
+
+image::/images/kohe/ginee3.0.png?[]
+
 
