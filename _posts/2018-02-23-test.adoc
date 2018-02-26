@@ -20,6 +20,11 @@ _https://firebase.google.com/docs/ios/setup?hl=ja_
 
 初期の設定は公式の通り行う。
 
+## Twitter Developer 登録
+
+image::/images/kohe/swiftFire2.0.png?[]
+
+
 ## FirebaseUI
 
 TwitterやGoogle,Mail,FBログインなどのUIを要してくれれてFirebaseとつなげてくれるやつ。
