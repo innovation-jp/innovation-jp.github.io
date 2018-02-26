@@ -63,3 +63,82 @@ end
 ```
 
 ## Swift 
+
+### ViewController.swift
+```
+//
+//  ViewController.swift
+//  ToWish
+//
+//  Created by 近藤 康平 on 2018/01/28.
+//  Copyright © 2018年 kohe. All rights reserved.
+//
+    
+import UIKit
+import Firebase
+import FirebaseAuthUI
+import FirebaseTwitterAuthUI
+import FirebaseDatabaseUI
+import TwitterKit
+    
+    
+    
+class ViewController: UIViewController {
+    var authUI: FUIAuth { get { return FUIAuth.defaultAuthUI()!}}
+
+    let providers: [FUIAuthProvider] = [FUITwitterAuth()]
+        
+    override func viewDidLoad() {
+        super.viewDidLoad()
+       
+    }
+        
+        
+    func authUI(_ authUI: FUIAuth, didSignInWith user: User?, error: Error?) {
+            // handle user and error as necessary
+    }
+        
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+            // Dispose of any resources that can be recreated.
+    }
+    
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        checkLoggedIn()
+    }
+}
+extension ViewController: FUIAuthDelegate {
+        
+    func checkLoggedIn() {
+            
+        self.setupLogin()
+        Auth.auth().addStateDidChangeListener{auth, user in
+            if user != nil{
+                //サインインしている
+                print("してる")
+            } else {
+                //サインインしていない
+                print("してない")
+                self.login()
+            }
+        }
+    }
+        
+    func setupLogin() {
+            
+        authUI.delegate = self
+        authUI.providers = providers
+        authUI.isSignInWithEmailHidden = true
+    }
+    
+    func login() {
+        
+        let authViewController = authUI.authViewController()
+        self.present(authViewController, animated: true, completion: nil)
+    }
+    
+}
+
+```
