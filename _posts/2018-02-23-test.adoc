@@ -24,6 +24,10 @@ _https://firebase.google.com/docs/ios/setup?hl=ja_
 
 image::/images/kohe/swiftFire2.0.png?[]
 
+Callback以外の情報を入力していく。
+Callbackの箇所はFirebaseを自信のアプリと連携した際に、
+表示されるので、それを取得後登録する。
+
 
 ## FirebaseUI
 
