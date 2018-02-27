@@ -1,4 +1,4 @@
-# 本の管理アプリをVue.js,Laravel,Docker,GCP,GKE,gitlab,ElementUIを使って作った話。
+# 本の管理アプリをVue.js,Laravel,Docker,GCP,gitlab,ElementUIを使って作った話。
 
 
 :hp-alt-title: make book manage App
