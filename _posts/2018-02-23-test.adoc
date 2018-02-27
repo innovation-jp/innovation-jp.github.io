@@ -7,7 +7,7 @@
 皆様こんばんは。
 こへです。
 
-そろそろFirebaeUIを試用して、Twitter login機能の開発をしたい時期が来ましたので、作成。
+そろそろFirebaseUIを試用して、Twitter login機能の開発をしたい時期が来ましたので、作成。
 
 
 ## 完成品
@@ -25,13 +25,13 @@ _https://firebase.google.com/docs/ios/setup?hl=ja_
 image::/images/kohe/swiftFire2.0.png?[]
 
 Callback以外の情報を入力していく。
-Callbackの箇所はFirebaseを自信のアプリと連携した際に、
+Callbackの箇所はFirebaseを自身のアプリと連携した際に、
 表示されるので、それを取得後登録する。
 
 
 ## FirebaseUI
 
-TwitterやGoogle,Mail,FBログインなどのUIを要してくれれてFirebaseとつなげてくれるやつ。
+TwitterやGoogle,Mail,FBログインなどのUIを要してくれてFirebaseとつなげてくれるやつ。
 
 _https://github.com/firebase/FirebaseUI-iOS_
 
