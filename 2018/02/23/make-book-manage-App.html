@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>本の管理アプリをVue.js,Laravel,Docker,GCP,gitlab,ElementUIを使って作った話。 - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="本の管理アプリをVue.js,Laravel,Docker,GCP,gitlab,ElementUIを使って作った話。">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="本の管理アプリをVue.js,Laravel,Docker,GCP,gitlab,ElementUIを使って作った話。">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/02/23/make-book-manage-App.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="本の管理アプリをVue.js,Laravel,Docker,GCP,gitlab,ElementUIを使って作った話。" />
+    <meta property="og:description" content="こへです。 そろそろ Vue.js Laravel Docker  GKE gitlab を使って社内の本の管理アプリを作りたい時期が来ましたので作成することにしました。 お金を1円もかけたくない と言う裏目標も持ちます。 完成物 Version管理 version管理に githubではなくgitlabを使います。 理由: private repository が無料 Container Registory が使える デザイン Vue.js用のライブラリElementを使います。 簡単にいい感じのデザインを作れる予感がするので選択。 http://e..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/02/23/make-book-manage-App.html" />
+    <meta property="article:published_time" content="2018-02-22T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-02-27T08:46:06.270Z" />
+    <meta property="article:tag" content="kohe" />
+    <meta property="article:tag" content="Vuejs" />
+    <meta property="article:tag" content="Laravel" />
+    <meta property="article:tag" content="Docker" />
+    <meta property="article:tag" content="GCP" />
+    <meta property="article:tag" content="gitlab" />
+    <meta property="article:tag" content="ElementUI" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="本の管理アプリをVue.js,Laravel,Docker,GCP,gitlab,ElementUIを使って作った話。" />
+    <meta name="twitter:description" content="こへです。 そろそろ Vue.js Laravel Docker  GKE gitlab を使って社内の本の管理アプリを作りたい時期が来ましたので作成することにしました。 お金を1円もかけたくない と言う裏目標も持ちます。 完成物 Version管理 version管理に githubではなくgitlabを使います。 理由: private repository が無料 Container Registory が使える デザイン Vue.js用のライブラリElementを使います。 簡単にいい感じのデザインを作れる予感がするので選択。 http://e..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/02/23/make-book-manage-App.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "kohe",
+        "image": "https://avatars1.githubusercontent.com/u/17563192?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "本の管理アプリをVue.js,Laravel,Docker,GCP,gitlab,ElementUIを使って作った話。",
+    "url": "http://tech.innovation.co.jp/2018/02/23/make-book-manage-App.html",
+    "datePublished": "2018-02-22T15:00:00.000Z",
+    "dateModified": "2018-02-27T08:46:06.270Z",
+    "keywords": "kohe,  Vuejs, Laravel, Docker, GCP, gitlab, ElementUI",
+    "description": "こへです。 そろそろ Vue.js Laravel Docker  GKE gitlab を使って社内の本の管理アプリを作りたい時期が来ましたので作成することにしました。 お金を1円もかけたくない と言う裏目標も持ちます。 完成物 Version管理 version管理に githubではなくgitlabを使います。 理由: private repository が無料 Container Registory が使える デザイン Vue.js用のライブラリElementを使います。 簡単にいい感じのデザインを作れる予感がするので選択。 http://e..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-kohe tag-Vuejs tag-Laravel tag-Docker tag-G-C-P tag-gitlab tag-Element-U-I no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="23 Feb 2018" class="post-meta__date date">23 Feb 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/kohe">kohe</a>, <a href="http://tech.innovation.co.jp/tag/Vuejs"> Vuejs</a>, <a href="http://tech.innovation.co.jp/tag/Laravel">Laravel</a>, <a href="http://tech.innovation.co.jp/tag/Docker">Docker</a>, <a href="http://tech.innovation.co.jp/tag/G-C-P">GCP</a>, <a href="http://tech.innovation.co.jp/tag/gitlab">gitlab</a>, <a href="http://tech.innovation.co.jp/tag/Element-U-I">ElementUI</a></span>
+        <span class="post-meta__author author"><img src="https://avatars1.githubusercontent.com/u/17563192?v=4" alt="profile image for kohe" class="avatar post-meta__avatar" /> by kohe</span>
+      </div>
+      <h1 class="post-title">本の管理アプリをVue.js,Laravel,Docker,GCP,gitlab,ElementUIを使って作った話。</h1>
+    </header>
+
+    <section class="post tag-kohe tag-Vuejs tag-Laravel tag-Docker tag-G-C-P tag-gitlab tag-Element-U-I">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>こへです。</p>
+</div>
+<div class="paragraph">
+<p>そろそろ<br>
+<code>Vue.js</code> <code>Laravel</code> <code>Docker</code>  <code>GKE</code> <code>gitlab</code><br>
+を使って社内の本の管理アプリを作りたい時期が来ましたので作成することにしました。</p>
+</div>
+<div class="paragraph">
+<p><em>お金を1円もかけたくない</em><br>
+と言う裏目標も持ちます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">完成物</h2>
+<div class="sectionbody">
+<div class="imageblock">
+<div class="content">
+<img src="/images/kohe/ginee1.0.gif" alt="ginee1.0.gif">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_version">Version管理</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>version管理に githubではなくgitlabを使います。</p>
+</div>
+<div class="paragraph">
+<p>理由:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>private repository が無料</p>
+</li>
+<li>
+<p>Container Registory が使える</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">デザイン</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Vue.js用のライブラリElementを使います。
+簡単にいい感じのデザインを作れる予感がするので選択。</p>
+</div>
+<div class="paragraph">
+<p><em><a href="http://element.eleme.io/#/en-US/component/installation" class="bare">http://element.eleme.io/#/en-US/component/installation</a></em></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">構成</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>├── docker-compose.yml<br>
+├── nginx<br>
+│   ├── Dockerfile<br>
+│   └── etc<br>
+│       └── nginx<br>
+├── phpfpm<br>
+│   └── Dockerfile<br>
+└── www<br>
+   　　└── <strong><span class="blue">BookApp</span></strong><br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__docker">環境構築(Docker)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Dockerの構成や、中身などは
+↓の記事にかかれてあります。</p>
+</div>
+<div class="paragraph">
+<p><a href="http://tech.innovation.co.jp/2018/01/05/carry-out-tutorial-on-Laravel-amp-Docker.html" class="bare">http://tech.innovation.co.jp/2018/01/05/carry-out-tutorial-on-Laravel-amp-Docker.html</a></p>
+</div>
+<div class="paragraph">
+<p>上記の設定に加え、今回はメール認証＆Login機能をつけたいので
+メール受信を開発用に <code>Mailhog</code> コンテナを使用する用に <code>docker-compose.yml</code> に追記、</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>  mailhog:
+    image          : mailhog/mailhog:latest
+    container_name : mailhog
+    hostname       : mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>そして <code>localhost:8025</code> にアクセスすると受信BOXが使えます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___4">ログイン機能</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>本の貸し借りということで、必須機能の1つであるログイン機能を作ります。</p>
+</div>
+<div class="paragraph">
+<p><em><a href="https://github.com/bestmomo/laravel-email-confirmation" class="bare">https://github.com/bestmomo/laravel-email-confirmation</a></em></p>
+</div>
+<div class="paragraph">
+<p>↑主にこちらの記事を参考に作らせていただきました。
+メール送信にはAmazon SESを使おうと思いましたが、
+認証に使うだけなので、本番ではお手軽にできるGmailを使って、メールを送ることにしました。</p>
+</div>
+<div class="paragraph">
+<p>メール認証もする必要がなければ <code>php artisan make:auth</code> 実行するだけで、
+できてしまうのは非常に便利ですね。<br>
+<em>参考：https://readouble.com/laravel/5.5/ja/authentication.html</em></p>
+</div>
+<div class="paragraph">
+<p><code>localhost</code>にアクセスするとこんな感じ。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kohe/ginee2.0.png?" alt="ginee2.0.png?">
+</div>
+</div>
+<div class="paragraph">
+<p>そしてRegisterで登録。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kohe/ginee3.0.png?" alt="ginee3.0.png?">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_vue_js">Vue.js</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>※Vue.jsの開発の補助ツールをChromeの拡張機能で入れる。
+<em><a href="https://chrome.google.com/webstore/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd" class="bare">https://chrome.google.com/webstore/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd</a></em></p>
+</div>
+<div class="paragraph">
+<p>├── app.js<br>
+├── app.vue<br>
+├── bootstrap.js<br>
+├── components<br>
+│   ├── Books.vue<br>
+│   ├── addBook.vue<br>
+├── router.js<br>
+└── services<br>
+    └── http.js<br></p>
+</div>
+<div class="paragraph">
+<p>構成はこんな感じ。</p>
+</div>
+<div class="sect2">
+<h3 id="_app_js">app.js</h3>
+<div class="paragraph">
+<p>一番最初に呼ばれる。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>require('./bootstrap');
+
+import Vue from 'vue'
+import router from './router'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css';
+
+import locale from 'element-ui/lib/locale/lang/ja'
+import http from './services/http.js'
+Vue.use(ElementUI, { locale })
+
+
+const app = new Vue({
+    router,
+
+    created () {
+      http.init()
+    },
+    el: '#app',
+    render: h =&gt; h(require('./app.vue')),
+})</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_router_js">router.js</h3>
+<div class="paragraph">
+<p>その名の通りURLに合わせて、指定のコンポーネントを呼び出す。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import VueRouter from 'vue-router'
+import Vue from 'vue'
+
+Vue.use(VueRouter)
+
+export default new VueRouter({
+  mode: 'history',
+  routes: [
+    { path: '/', name:'books', component: require('./components/Books.vue') },
+    { path: '/addbook', name:'addBook', component: require('./components/addBook.vue') },
+    { path: '/addjob', name:'addJob', component:
+  ],
+  scrollBehavior (to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x: 0, y: 0 }
+    }
+  },
+})</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_app_vue">app.vue</h3>
+<div class="paragraph">
+<p>基本的なレイアウトを書いていく。
+※navigation　bar　など</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>&lt;template&gt;
+  &lt;div id="app"&gt;
+    &lt;el-container style="height: 100%; border: 1px solid #eee"&gt;
+        &lt;el-aside width="200px" style="background-color: rgb(238, 241, 246)"&gt;
+
+         &lt;el-menu :default-openeds="['1', '1']"&gt;
+          &lt;el-submenu index="1"&gt;
+            &lt;template slot="title"&gt;&lt;i class="el-icon-star-off"&gt;&lt;/i&gt;Book&lt;/template&gt;
+              &lt;router-link :to="{ name: 'books'}"&gt;
+                &lt;el-menu-item index="1-1"&gt;
+                  Book List
+                &lt;/el-menu-item&gt;
+              &lt;/router-link&gt;
+              &lt;router-link :to="{ name: 'addBook'}"&gt;
+                &lt;el-menu-item index="1-2"&gt;
+                  Add Book
+                &lt;/el-menu-item&gt;
+              &lt;/router-link&gt;
+          &lt;/el-submenu&gt;
+          &lt;el-submenu index="2"&gt;
+            &lt;template slot="title"&gt;&lt;i class="el-icon-tickets"&gt;&lt;/i&gt;Job&lt;/template&gt;
+              &lt;router-link :to="{ name: 'jobList'}"&gt;
+                &lt;el-menu-item index="2-1"&gt;
+                  Job List
+                &lt;/el-menu-item&gt;
+              &lt;/router-link&gt;
+              &lt;router-link :to="{ name: 'addJob'}"&gt;
+                &lt;el-menu-item index="20"&gt;
+                  Add Job
+                &lt;/el-menu-item&gt;
+              &lt;/router-link&gt;
+          &lt;/el-submenu&gt;
+
+         &lt;/el-menu&gt;
+
+        &lt;/el-aside&gt;
+        &lt;el-main&gt;
+            &lt;div&gt;
+              &lt;router-view&gt;&lt;/router-view&gt;
+            &lt;/div&gt;
+        &lt;/el-main&gt;
+    &lt;/el-container&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_book_vue">Book.vue</h3>
+<div class="paragraph">
+<p>本の一覧ページ</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>&lt;template&gt;
+&lt;div&gt;
+&lt;el-autocomplete
+  v-model="search_word"
+  @keyup.enter="testSubmit"
+  :fetch-suggestions="querySearchAsync"
+  placeholder="Please input"
+  @select="handleSelect"
+&gt;&lt;/el-autocomplete&gt;
+&lt;el-button type="primary" icon="el-icon-search" :loading="is_loading" @click="fetchBooks"&gt;Search&lt;/el-button&gt;
+
+&lt;hr&gt;
+
+  &lt;el-table
+    v-loading="loading2"
+    element-loading-text="Loading..."
+    element-loading-background="rgba(0, 0, 0, 0.8)"
+
+    :data="books"
+    height="500"
+    style="width: 100%"&gt;
+    &lt;el-table-column
+      prop="name"
+      sortable
+      label="Name"
+      width="300"&gt;
+    &lt;/el-table-column&gt;
+      &lt;el-table-column
+      width="180"
+      label="Operations"&gt;
+      &lt;template slot-scope="scope"&gt;
+        &lt;el-button
+          v-if="user_id === scope.row['user_id']"
+          size="warning"
+          @click="returnBook(scope.$index, scope.row)" plain&gt;Return&lt;/el-button&gt;
+        &lt;el-button
+          v-else
+          size="success"
+          @click="borrowBook(scope.$index, scope.row)" plain v-bind:disabled="scope.row['is_lend'] == 1"&gt;Borrow&lt;/el-button&gt;
+      &lt;/template&gt;
+    &lt;/el-table-column&gt;
+    &lt;el-table-column
+      prop="lend_date"
+      sortable
+      label="LendDate"
+      width="180"&gt;
+    &lt;/el-table-column&gt;
+    &lt;el-table-column
+      prop="user_name"
+      label="BorrowUser"
+      width="180"&gt;
+    &lt;/el-table-column&gt;
+  &lt;/el-table&gt;
+&lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+  import http from '../services/http'
+
+  export default {
+    mounted() {
+      //run when load this page
+      this.fetchAllBooks();
+    },
+    data() {
+      return {
+        books: [],
+        books_backup: [],
+        author: '',
+        created_at: '',
+        is_loading:false,
+
+        sujests: [],
+        search_word: '',
+        timeout:  null,
+        user_id: parseInt(document.getElementById('user_id').value),
+
+        loading2: true,
+
+      }
+    },
+    methods: {
+      fetchBooks () {
+        console.log(this.search_word);
+        this.is_loading = true;
+        this.loading2 = true;
+        http.post('books', {name: this.search_word}, res =&gt; {
+          this.books = res.data;
+          this.is_loading = false;
+          this.loading2 = false;
+
+        });
+      },
+
+      fetchAllBooks () {
+        this.loading2 = true;
+
+        http.get('books', res =&gt; {
+          this.books = res.data;
+          this.books_backup = res.data;
+
+          let names = [];
+          for (let i in res.data){
+            names.push({"value": res.data[i].name, "id": res.data[i].id});
+          }
+          this.sujests = names;
+          this.loading2 = false;
+          console.log(names);
+        })
+
+      },
+
+      querySearchAsync(queryString, cb) {
+        let sujests = this.sujests;
+        let results = queryString ? sujests.filter(this.createFilter(queryString)) : sujests;
+
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(() =&gt; {
+          cb(results);
+        }, 3000 * Math.random());
+      },
+      createFilter(queryString) {
+        return (link) =&gt; {
+          return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
+      //既存のデータから選択した情報だけ出す
+      handleSelect(item) {
+        console.log(item.id);
+        this.books = this.books_backup.filter(function(element, index, array) {
+           return (element.name == item.value);
+        });
+      },
+
+      borrowBook(index, row) {
+        const book_id = row['id'];
+        console.log(row["id"]);
+        row['is_lend'] = true;
+        row['user_id'] = this.user_id;
+        http.get('book/borrow/' + book_id, res =&gt; {
+          console.log(res.data);
+        });
+         this.$notify.success({
+          title: 'Info',
+          message: 'You borrow ' + row['name'],
+          showClose: false
+        });
+      },
+      returnBook(index, row) {
+        console.log(row["id"]);
+        const book_id = row['id'];
+        row['user_id'] = null;
+        http.get('book/return/' + book_id, res =&gt; {
+          console.log(res.data);
+        });
+         this.$notify.success({
+          title: 'Info',
+          message: 'You return ' + row['name'],
+          showClose: false
+        });
+      },
+    }
+  }
+&lt;/script&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_addbook_vue">addBook.vue</h3>
+<div class="paragraph">
+<p>本の追加ページ</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>&lt;template&gt;
+&lt;el-form :inline="false" :model="addBookForm" ref="addBookForm" class=""  &gt;
+  &lt;el-form-item
+  prop="name"
+  label="Name"
+  :rules="[{
+      required: true ,message: 'name is required', trigger: 'blur'
+      }]"
+  &gt;
+    &lt;el-input v-model="addBookForm.name" placeholder="name"&gt;&lt;/el-input&gt;
+  &lt;/el-form-item&gt;
+  &lt;el-form-item label="Author"&gt;
+    &lt;el-input v-model="addBookForm.author" placeholder="author"&gt;&lt;/el-input&gt;
+  &lt;/el-form-item&gt;
+
+  &lt;el-form-item&gt;
+    &lt;el-button type="primary" @click="onSubmit('addBookForm')"&gt;Submit&lt;/el-button&gt;
+  &lt;/el-form-item&gt;
+&lt;/el-form&gt;
+
+&lt;/template&gt;
+
+&lt;script&gt;
+  import http from '../services/http'
+
+  export default {
+
+    data() {
+      return {
+          addBookForm: {
+            name:'',
+            author:'',
+            response:[],
+          }
+      }
+    },
+    methods: {
+      onSubmit(formName) {
+
+        //check validation
+        this.$refs[formName].validate((valid) =&gt; {
+          if (valid) {
+
+            http.post('addbook', {name: this.addBookForm.name, author: this.addBookForm.author}, res =&gt; {
+              this.response = res.data
+            });
+
+            this.$message({
+              showClose: true,
+              message: 'Congrats, this is a success',
+              type: 'success'
+            });
+
+            this.addBookForm.name = "";
+            this.addBookForm.author = "";
+
+          } else {
+            this.$message({
+              showClose: true,
+              message: 'error',
+              type: 'error'
+            });
+            console.log('error submit!!');
+            return false;
+          }
+        });
+
+        console.log(this.response);
+      },
+
+    }
+  }
+&lt;/script&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___5">コンパイル</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>php-fpmコンテナに入り <code>npm run watch-poll</code>を行う。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__laravel">裏側(Laravel)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>リクエストに合わせていい感じにデータを返すだけ。
+※Auth認証したユーザしか受け付けないように注意。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_db">DB</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Tables<br></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Books</p>
+</li>
+<li>
+<p>Users</p>
+</li>
+<li>
+<p>BookLendHistories</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___6">ローンチ</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>GCPの米国リージョンのt2microインスタンスは無料で使えるので、そのインスタンスを立てる。</p>
+</div>
+<div class="paragraph">
+<p>そしてDockerとDockerComposeをインストールし、
+このsourceを落とし、<code>docker-compose up</code>を行うだけ！
+お手軽！</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___7">ドメイン</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Freenom の無料ドメインを使おうとしたが、会員制のサイトは規約に違反しているラシク断念。
+お名前ドットコムで1年間1円のものを適当に買いました。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___8">次回</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>GKEを使い、smallインスタンスのノードのクラスターを組み、
+それにCloud SQLをつなげ運用していけるようにしようと考えています。</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
