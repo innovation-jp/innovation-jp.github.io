@@ -1,6 +1,6 @@
 # 本の管理アプリをVue.js,Laravel,Docker,GCP,gitlab,ElementUIを使って作った話。
 
-
+:published_at: 2018-02-26
 :hp-alt-title: make book manage App
 :hp-tags: kohe, Vuejs,Laravel,Docker,GCP,gitlab,ElementUI
 
@@ -8,7 +8,7 @@
 こへです。
 
 そろそろ +
-`Vue.js` `Laravel` `Docker`  `GKE` `gitlab` +  
+`Vue.js` `Laravel` `Docker`  `GCP` `gitlab` +  
 を使って社内の本の管理アプリを作りたい時期が来ましたので作成することにしました。
 
 _お金を1円もかけたくない_ + 
