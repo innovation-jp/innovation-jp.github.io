@@ -24,7 +24,7 @@ version管理に githubではなくgitlabを使います。
 理由:
 
 - private repository が無料
-- Container Resistory が使える
+- Container Registory が使える
 
 ## デザイン
 Vue.js用のライブラリElementを使います。
