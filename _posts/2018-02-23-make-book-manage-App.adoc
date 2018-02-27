@@ -2,7 +2,7 @@
 
 
 :hp-alt-title: make book manage App
-:hp-tags: kohe, Vuejs,Laravel,Docker,GCP,GKE,Kubernetes,gitlab,ElementUI
+:hp-tags: kohe, Vuejs,Laravel,Docker,GCP,gitlab,ElementUI
 
 
 こへです。
@@ -27,7 +27,7 @@ version管理に githubではなくgitlabを使います。
 - Container Resistory が使える
 
 ## デザイン
-Vue.js用のライブラリElemetを使います。
+Vue.js用のライブラリElementを使います。
 簡単にいい感じのデザインを作れる予感がするので選択。
 
 _http://element.eleme.io/#/en-US/component/installation_
@@ -87,7 +87,7 @@ _参考：https://readouble.com/laravel/5.5/ja/authentication.html_
 image::/images/kohe/ginee2.0.png?[]
 
 
-そしてResisterで登録。
+そしてRegisterで登録。
 
 
 image::/images/kohe/ginee3.0.png?[]
