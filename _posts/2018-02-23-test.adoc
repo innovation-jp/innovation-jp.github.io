@@ -63,16 +63,11 @@ end
 ```
 
 ## Swift 
+AppDelegateはFirebaseUIの公式に載っている通り、Twitter login用に設定する。
 
 ### ViewController.swift
 ```
-//
-//  ViewController.swift
-//  ToWish
-//
-//  Created by 近藤 康平 on 2018/01/28.
-//  Copyright © 2018年 kohe. All rights reserved.
-//
+
     
 import UIKit
 import Firebase
@@ -116,11 +111,9 @@ extension ViewController: FUIAuthDelegate {
         self.setupLogin()
         Auth.auth().addStateDidChangeListener{auth, user in
             if user != nil{
-                //サインインしている
-                print("してる")
+                print("success")
             } else {
-                //サインインしていない
-                print("してない")
+                print("fail")
                 self.login()
             }
         }
@@ -142,3 +135,13 @@ extension ViewController: FUIAuthDelegate {
 }
 
 ```
+
+そして、Twitter アカウント情報を入力して、ログインすると…
+
+FIrebaseに情報が入ってますね。
+
+
+image::/images/kohe/swiftFire3.0.png?[]
+
+
+これをベースに様々なアプリをこれから作っていこうと思います。
