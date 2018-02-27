@@ -95,6 +95,9 @@ image::/images/kohe/ginee3.0.png?[]
 
 ## Vue.js
 
+※Vue.jsの開発の補助ツールをChromeの拡張機能で入れる。
+_https://chrome.google.com/webstore/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd_
+
 ├── app.js +
 ├── app.vue +
 ├── bootstrap.js +
