@@ -1,7 +1,7 @@
 # FirebaseUIを使ってTwitter loginを実装したお話。
 
-
-:hp-alt-title: test
+:published_at: 2018-02-26
+:hp-alt-title: FirebaeUi
 :hp-tags: Swift,Firebase,FirebaseUI
 
 皆様こんばんは。
