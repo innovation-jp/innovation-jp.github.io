@@ -138,7 +138,7 @@ extension ViewController: FUIAuthDelegate {
 
 そして、Twitter アカウント情報を入力して、ログインすると…
 
-FIrebaseに情報が入ってますね。
+Firebaseに情報が入ってますね。
 
 
 image::/images/kohe/swiftFire3.0.png?[]
