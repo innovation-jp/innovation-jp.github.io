@@ -1,0 +1,209 @@
+# macのGNS3でNETWORK(CISCO CCNA)の勉強　〜③NAT準備〜
+:published_at: 2018-01-14
+:hp-alt-title: STUDY NETWORK FOR CISCO CCNA(NAT)
+:hp-tags: Study, Network, mac, GNS3, CISCO, CCNA, NAT, CentOS
+
+KTNです +
+前回の続きで今度はNATの勉強をしていきたいと思います +
+早速始めましょう！ +
+
+## NATしてみます
+今回は本社PCから仮想インターネットに公開されているWebサイトを見れるよう +
+環境構築していきたいと思います +
+
+おおまかな手順は以下になります +
+１．GNS3の標準VPCSからCentOSに切り替える +
+２．Webサイトを用意する +
+３．本社ルータにNAT設定をする +
+４．本社PCを増やしてもWebサイトを見れることを確認する +
+※今回のブログでは１、２のみを記載しています + 
+　３、４については次回のブログで！
+
+## １．GNS3の標準VPCSからCentOSに切り替える
+標準のVPCSだとcurlコマンドも無いし、 +
+Webサーバを立てる方法もわからなかったので、CentOSにしたいと思います +
+Virtual Boxで仮想マシンを作成してから、GNS3の登録して使えるようにしていきます +
+
+以下画像の通り仮想マシンを作成してCentOSをインストールしていきます
+
+image::/images/kotani/20180115/1/1.png[]
+image::/images/kotani/20180115/1/2.png[]
+image::/images/kotani/20180115/1/3.png[]
+image::/images/kotani/20180115/1/4.png[]
+image::/images/kotani/20180115/1/5.png[]
+image::/images/kotani/20180115/1/6.png[]
+image::/images/kotani/20180115/1/7.png[]
+image::/images/kotani/20180115/1/8.png[]
+
+これで仮想マシンの作成が出来ました + 
+起動時にCentOSのインストールディスクを使いたいので設定します
+
+image::/images/kotani/20180115/1/9.png[]
+image::/images/kotani/20180115/1/10.png[]
+image::/images/kotani/20180115/1/11.png[]
+image::/images/kotani/20180115/1/12.png[]
+
+これで起動時にISOイメージを読み込むように設定できました +
+仮想マシンを起動します
+
+image::/images/kotani/20180115/1/14.png[]
+
+Install CentOS 7 を選択します
+
+image::/images/kotani/20180115/1/16.png[]
+image::/images/kotani/20180115/1/17.png[]
+
+「インストール先」で設定が必要となっているのでクリックして設定します
+
+image::/images/kotani/20180115/1/18.png[]
+
+デフォルトの設定で問題ないので、「完了」をクリック
+
+image::/images/kotani/20180115/1/19.png[]
+image::/images/kotani/20180115/1/20.png[]
+
+「ROOT パスワード」を設定しないと終れないようなので、クリックして設定します
+
+image::/images/kotani/20180115/1/21.png[]
+image::/images/kotani/20180115/1/22.png[]
+
+「設定完了」をクリックしたらインストール終了です
+
+image::/images/kotani/20180115/1/23.png[]
+
+インターネットに接続できるよう、ネットワークの設定をしてから起動します +
+仮想マシンを停止してから設定していきます +
+※今回はブリッジにして接続するようにしました +
+
+image::/images/kotani/20180115/1/32.png[]
+
+上記ネットワークの設定後起動します +
+Webサーバで使うので、apacheをインストールしておきます +
+----
+yum install httpd
+----
+
+準備出来たので再度シャットダウンします +
+仮想マシンは複数台欲しいので、クローンしておきます +
+とりあえずクローンで3台にしてみます +
+
+image::/images/kotani/20180115/1/41.png[]
+image::/images/kotani/20180115/1/42.png[]
+image::/images/kotani/20180115/1/43.png[]
+
+その後、GNS3の設定画面の「VirtualBox VMs」に追加します +
+
+image::/images/kotani/20180115/1/51.png[]
+image::/images/kotani/20180115/1/52.png[]
+image::/images/kotani/20180115/1/53.png[]
+image::/images/kotani/20180115/1/54.png[]
+
+追加後、以下のように配置しました
+
+image::/images/kotani/20180115/1/61.png[]
+
+GNS3から仮想マシンを起動すると「ネットワーク設定がされてるんだけど。。。」というエラーになりました
+
+image::/images/kotani/20180115/1/55.png[]
+
+Virtual Boxの設定画面で各仮想マシンのネットワーク設定を削除します +
+「ネットワークアダプターを有効化」にチェックを入れたまま、 +
+「割り当て」を未割り当てにしてください +
+
+image::/images/kotani/20180115/1/56.png[]
+
+削除後、再度仮想マシンを起動します。 +
+起動後以下のコマンドでIPアドレスを設定します +
+----
+■gns3-centos7-1
+nmcli connection modify enp0s3 ipv4.method manual ipv4.addresses 192.168.1.11/24
+nmcli connection modify enp0s3 ipv4.gateway 192.168.1.1ip
+
+■gns3-centos7-2
+nmcli connection modify enp0s3 ipv4.method manual ipv4.addresses 192.168.11.11/24
+nmcli connection modify enp0s3 ipv4.gateway 192.168.11.1ip
+----
+
+
+設定後pingして疎通確認してみます +
+
+----
+■gns3-centos7-1
+gns3-centos7-1> ping 192.168.11.11
+PING 192.168.11.11 (192.168.11.11) 56(84) bytes of data.
+64 bytes from 192.168.11.11 icmp_seq=1 ttl=254 time=33.4 ms
+64 bytes from 192.168.11.11 icmp_seq=2 ttl=254 time=51.6 ms
+64 bytes from 192.168.11.11 icmp_seq=3 ttl=254 time=43.9 ms
+64 bytes from 192.168.11.11 icmp_seq=4 ttl=254 time=43.7 ms
+64 bytes from 192.168.11.11 icmp_seq=5 ttl=254 time=44.8 ms
+----
+
+疎通できたのでOKです +
+
+
+## ２．Webサイトを用意する
+
+以下のように仮想インターネットにWebサイト用の仮想マシンを接続します +
+
+image::/images/kotani/20180115/2/1.png[]
+
+R1に接続しようとしたのですがインタフェース数が足りなかったので追加します +
+NM-4Eインターフェースを追加して再起動します +
+
+image::/images/kotani/20180115/2/2.png[]
+image::/images/kotani/20180115/2/3.png[]
+
+再起動後以下のコマンドでIPアドレスを設定します +
+----
+■gns3-centos7-3
+nmcli connection modify enp0s3 ipv4.method manual ipv4.addresses 10.10.10.10/24
+nmcli connection modify enp0s3 ipv4.gateway 10.10.10.1ip
+
+■R1
+R1#configure terminal
+R1(config)#interface ethernet 1/0
+R1(config-if)#ip address 10.10.10.1 255.255.255.0
+R1(config-if)#no shutdown 
+R1(config-if)#exit
+R1(config)#exit
+
+----
+設定後apacheを起動し、CURLコマンドで確認します +
+----
+■gns3-centos7-3
+service httpd start
+curl localhost
+----
+サーバから何か応答があれば大丈夫です +
+----
+■NGだった場合こうなります
+curl: (7) Failed connect to localhost:80; Connection refused
+----
+
+本社PCから疎通確認してみます
+----
+■gns3-centos7-1
+gns3-centos7-1> ping 10.10.10.10
+PING 10.10.10.10 (10.10.10.10) 56(84) bytes of data.
+--- 10.10.10.10 ping statistics ---
+5 packets transmitted, 0 received, 100%	 packet loss, time 4006ms
+----
+
+本社PCはローカルIPが設定されているので、 +
+グローバルIPアドレスを持っているWebサイトとは通信できませんでした +
+本社ルータから疎通確認してみます +
+
+----
+■R2
+R2#ping 10.10.10.10
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.10.10.10, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 20/26/36 ms
+R2#
+----
+
+疎通できました、一旦ここまでは良さそうです +
+仮想マシンの用意に思ったより時間がかかったので、 +
+今回はここまでにして、次回続きをやりたいと思います +

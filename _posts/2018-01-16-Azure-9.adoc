@@ -1,0 +1,292 @@
+= Azure CosmosDB へ Go でログ出力するお話
+:hp-alt-title: Azure 9
+:hp-tags: syoga, log, Azure, Go, Cosmos DB
+
+明けましておめでとうございます、SRE チームの syoga です。
+
+来週ついに Monster Hunter World が発売する訳ですが、ネット人見知りの私はソロで頑張る予定です、
+そんな中思いついた事を今回のブログに書き綴りたいと思います。
+
+## 思いついた事
+以前の記事でログについて思いの丈をぶつけたのですが、個人的にオートスケーリングやコンテナ化、サーバレスが当たり前になりつつある世の中で、ログをファイルに出力するというのは、モンハンに例えるのならオンライン集会所のクエストにソロで挑むようなものです（個人の意見です）！！
+
+という訳で、Go 言語を利用し Azure Cosmos DB（以下 CosmosDB）にログを出力する実験を行ってみました。
+
+## CosmosDB で Go!!
+まずは Azure ポータル画面で CosmosDB を作成します、CosmosDB はグローバル分散型のデータベースとなり、なんと 99.999% の高可用性を誇るため、もしもの事を気にせず安心してログを出力できます。
+
+CosmosDB では利用する API を選択できるのですが、今回は MongoDB API を利用したいと思います、リソースの作成部分は割愛しますが、東日本リージョンに CosmosDB を作成しました。
+
+## Go で Go!!
+まずは MongoDB API を利用する上で必要なパッケージを取得します、またログ出力時にプロセス名を取得するためのパッケージも取得します。
+```
+go get gopkg.in/mgo.v2
+go get github.com/mitchellh/go-ps
+```
+さっそく実装してみます。
+
+```
+package main
+
+import (
+	"crypto/tls"
+	"fmt"
+	"net"
+	"os"
+	"time"
+
+	"github.com/mitchellh/go-ps"
+	"gopkg.in/mgo.v2"
+)
+
+const (
+	DEBUG = "DEBUG"
+	INFO  = "INFO"
+	WARN  = "WARN"
+	ERROR = "ERROR"
+	FATAL = "FATAL"
+)
+
+// Azure Cosmos DB 接続情報
+const (
+	Host = "ホスト"
+	User = "ユーザ"
+	Pass = "パスワード"
+)
+
+// ログ出力構造体
+type Logstruct struct {
+	Loglevel     string
+	Logdate      string
+	Logmessage   string
+	Logprocess   string
+	Logprocessid int
+}
+
+func log(loglevel, logmessage string) {
+	// DialInfo 構造体に接続情報を設定し DialServer 関数を定義し、tls.Dial で CosmosDB に接続
+	dialInfo := &mgo.DialInfo{
+		Addrs:    []string{fmt.Sprintf("%s.documents.azure.com:10255", Host)},
+		Timeout:  60 * time.Second,
+		Database: Host,
+		Username: User,
+		Password: Pass,
+		DialServer: func(addr *mgo.ServerAddr) (net.Conn, error) {
+			return tls.Dial("tcp", addr.String(), &tls.Config{})
+		},
+	}
+
+	// コネクションオープン
+	session, err := mgo.DialWithInfo(dialInfo)
+
+	if err != nil {
+		fmt.Printf("Can't connect to mongo, go error %v\n", err)
+		// エラーの場合は defer は動作させない
+		os.Exit(1)
+	}
+
+	// main 関数 return 後にコネクションクローズ
+	defer session.Close()
+
+	// セーフモードを無効にして接続
+	session.SetSafe(&mgo.Safe{})
+
+	// Golog コレクションを操作
+	collection := session.DB(Host).C("Golog")
+
+	pid := os.Getpid()
+	pidInfo, _ := ps.FindProcess(pid)
+
+	//CosmosDB へ登録
+	err = collection.Insert(&Logstruct{
+		Loglevel:     loglevel,
+		Logdate:      time.Now().String(),
+		Logmessage:   logmessage,
+		Logprocess:   pidInfo.Executable(),
+		Logprocessid: pidInfo.Pid(),
+	})
+
+	if err != nil {
+		fmt.Printf("log insert error, go error %v\n", err)
+		os.Exit(1)
+	}
+}
+
+func main() {
+	log(INFO, "小宇宙は燃えているか")
+}
+
+```
+上記の main.go をビルドし実行します。
+```
+go build main.go
+./main.go
+```
+そして Azure ポータル画面から、データエクスプローラを利用し CosmosDB に登録されたデータを確認します。
+```
+{
+	"_id" : ObjectId("5a5dd830a9e72b34d458570f"),
+	"loglevel" : "INFO",
+	"logdate" : "2018-01-16 19:47:12.643171666 +0900 JST m=+0.519109358",
+	"logmessage" : "小宇宙は燃えているか",
+	"logprocess" : "main",
+	"logprocessid" : 63904
+}
+```
+とりあえず登録は出来たようです、ログ出力内容としては以下となります。 +
+・ログレベル +
+・ログ出力日時 +
+・ログ出力メッセージ +
+・ログ出力プロセス +
+・ログ出力プロセス ID
+
+## ざっと説明で Go!!
+見ての通り定数、構造体の宣言です。
+```
+const (
+	DEBUG = "DEBUG"
+	INFO  = "INFO"
+	WARN  = "WARN"
+	ERROR = "ERROR"
+	FATAL = "FATAL"
+)
+
+// Azure Cosmos DB 接続情報
+const (
+	Host = "CosmosDB 作成時に払出されたホスト名を設定"
+	User = "CosmosDB 作成時に払出されたユーザ名を設定"
+	Pass = "CosmosDB 作成時に払出された接続キーを設定"
+)
+
+// ログ出力構造体
+type Logstruct struct {
+	Loglevel     string
+	Logdate      string
+	Logmessage   string
+	Logprocess   string
+	Logprocessid int
+}
+```
+CosmosDB とのコネクションをオープンするために tls.Dial 関数を利用しハンドシェイクを行います。 
+```
+// DialInfo 構造体に接続情報を設定し DialServer 関数を定義し、tls.Dial で CosmosDB に接続
+dialInfo := &mgo.DialInfo{
+	Addrs:    []string{fmt.Sprintf("%s.documents.azure.com:10255", Host)},
+	Timeout:  60 * time.Second,
+	Database: Host,
+	Username: User,
+	Password: Pass,
+	DialServer: func(addr *mgo.ServerAddr) (net.Conn, error) {
+		return tls.Dial("tcp", addr.String(), &tls.Config{})
+	},
+}
+
+```
+CosmosDB とのコネクションをオープンする処理です、os.Exit を利用すると defer で定義された処理は呼ばれないという事で、コネクションオープンが失敗した場合に不要なクローズ処理が走らないようになります。
+
+package mgo の GoDoc を参考にしましたが、セーフモードを無効にする事で、書込みのチェックを待たずドキュメントのインサートが行われる（投げっぱなし）になるため、処理が高速になるようです。
+
+オプションが諸々あったのですが、今回は特に気にせずセーフモードを無効にしています。
+```
+// コネクションオープン
+session, err := mgo.DialWithInfo(dialInfo)
+
+if err != nil {
+	fmt.Printf("Can't connect to mongo, go error %v\n", err)
+	// エラーの場合は defer は動作させない
+	os.Exit(1)
+}
+
+// main 関数 return 後にコネクションクローズ
+defer session.Close()
+
+// セーフモードを無効にして接続
+session.SetSafe(&mgo.Safe{})
+```
+ドキュメントを登録する処理です insert 関数を利用します、Golog コレクションがなければ作成してくれます。
+
+```
+// Golog コレクションを操作
+collection := session.DB(Host).C("Golog")
+
+pid := os.Getpid()
+pidInfo, _ := ps.FindProcess(pid)
+
+//CosmosDB へ登録
+err = collection.Insert(&Logstruct{
+	Loglevel:     loglevel,
+	Logdate:      time.Now().String(),
+	Logmessage:   logmessage,
+	Logprocess:   pidInfo.Executable(),
+	Logprocessid: pidInfo.Pid(),
+})
+```
+## 時間をはかってみて Go!!
+DB へログを出力する場合どれくらい時間がかかるのか、先程のログ出力処理を azurelog として切り出して import し、単純に10回ループさせてループの開始、終了をログ出力してみます。
+```
+package main
+
+import (
+	"azurelog"
+	"fmt"
+)
+
+func main() {
+
+	for i := 1; i <= 10; i++ {
+		azurelog.Log(azurelog.INFO, fmt.Sprintf("Start %d", i))
+		fmt.Println(i)
+		azurelog.Log(azurelog.INFO, fmt.Sprintf("End %d", i))
+	}
+}
+```
+blog という名前で作成しました、それでは結果発表です。
+```
+time ./blog
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+
+real    0m8.438s
+user    0m0.171s
+sys     0m0.111s
+```
+*なん…だと* +
+CosmosDB のログを見てみます…（1ループのみ記載）
+
+```
+{
+	"_id" : ObjectId("5a5f0a69a9e72b34d45947e1"),
+	"loglevel" : "INFO",
+	"logdate" : "2018-01-17 17:33:45.019934483 +0900 JST m=+0.801694457",
+	"logmessage" : "Start 1",
+	"logprocess" : "blog",
+	"logprocessid" : 31480
+}
+
+{
+	"_id" : ObjectId("5a5f0a69801a6c36e055ef93"),
+	"loglevel" : "INFO",
+	"logdate" : "2018-01-17 17:33:45.895626905 +0900 JST m=+1.677332879",
+	"logmessage" : "End 1",
+	"logprocess" : "blog",
+	"logprocessid" : 31480
+}
+```
+なんとループの開始と終了のログ出力までに 0.7 秒もかかっていました… 
+
+ログ出力する度に CosmosDB へコネクションのオープン、クローズを行っていることで遅延が発生している気がしますが、これでは DB にログを出力する有用性が見いだせなかったので、次回速度を改善する事をテーマにしたいと思います。
+
+#### 感想
+Go の勉強もかねて今回試してみましたが、新しい言語を学ぶのはやはり楽しいです、個人的には取っ付きやすい言語かなと思います。
+
+余談ですが今回のブログタイトルを「CosmosDB で Go!!」にしようと思っていたのですが、意味不明すぎるので自重しました。
+
+完

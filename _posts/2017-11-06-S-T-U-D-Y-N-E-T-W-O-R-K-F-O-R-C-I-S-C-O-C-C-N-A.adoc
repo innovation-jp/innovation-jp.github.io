@@ -1,7 +1,7 @@
-# macのGNS3でNETWORK(CISCO CCNA)のお勉強？
+# macのGNS3でNETWORK(CISCO CCNA)の勉強　〜①GNS3導入〜
 :published_at: 2017-11-06
 :hp-alt-title: STUDY NETWORK FOR CISCO CCNA
-:hp-tags: Network, mac, GNS3, CISCO, CCNA, KTN
+:hp-tags: Study, Network, mac, GNS3, CISCO, CCNA
 
 KTNです。 +
 私が書いた記事の中ではネットワークの記事のほうが見に来てくれる人が多いようなので、 +

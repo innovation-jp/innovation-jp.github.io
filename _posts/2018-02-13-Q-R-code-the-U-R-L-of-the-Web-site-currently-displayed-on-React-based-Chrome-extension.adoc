@@ -1,0 +1,161 @@
+= ReactベースのChrome Extensionで現在表示しているWebサイトのURLをQRコード化する
+:hp-alt-title: QR-code-the-URL-of-the-Web-site-currently-displayed-on-React-based-Chrome-extension
+:hp-tags: Chrome Extension,React,QRcode
+
+さて、いきなりですが、 +
+会社用のPCで読んでいた記事を個人のスマホとかで +
+帰りがけに読みたくなるってことがあったとして、 +
+皆さんはどうしますか(されていますか)？
+
+Slackで自分向けにURLを送る？ +
+PCでFacebookシェアしてスマホから見る？
+
+色々あるかと思うのですが、ちょっとめんどくさいですよね(きっと)？！
+
+では、スマホのChromeアプリにQRコード機能があるのはご存知ですか？ +
+これを使えばサクッと読んでいる記事にアクセスできるのではないでしょうか？
+
+ということで
+今回はバーコードシリーズの続きとして、
+Chrome Extensionを自作し、
+「現在表示しているWebサイトのURLをQRコード化する」ことにチャレンジしてみます。
+
+## 作ってみる
+
+QRコード化するにあたっては、
+qrcode.reactパッケージを利用させていただきます。
+
+https://github.com/zpao/qrcode.react
+
+まずは当該パッケージを利用するためにReactベースでChrome Extensionを作っていきます。
+
+任意のワークスペースで作業を行っていきます。
+
+`npm install -g create-react-app`
+
+create-react-appはReact.js開発元であるFacebookが提供しているコマンドラインツールです。
+とってもお手軽なので使っていきましょう。
+
+`create-react-app <projectname>`
+
+publicの下にすでにmanifest.jsonが入っていると思うので、
+これを好きなように書き換えましょう。
+
+[source, rust]
+----
+
+"manifest_version": 2,
+  "version": "0.0.1",
+  "browser_action": {
+    "default_title": "Ext title",
+    "default_popup": "./index.html"
+  },
+  "permissions": [
+    "tabs"
+  ]
+----
+
+次に
+
+`npm run build`
+
+してみましょう。
+※この際package.jsonのscriptsで定義されたbuildコマンドが走っています。
+
+するとbulid配下に色々とできたはずです。
+
+ここを +
+chrome://extensions/ +
+にアクセスした上で拡張機能として読み込みましょう。 +
+これだけで一旦Reactを使った拡張機能の素が動いていることが確認できると思います。
+
+ここからは自分でプログラムを書いていきます。 +
+冒頭にも書いた通り今回はqrcode.reactパッケージを利用します。
+
+`npm i qrcode.react`
+
+それでは今回のコードです。
+
+[source, rust]
+----
+
+/*global chrome*/
+import React, { Component } from 'react';
+// qrcode.reactの読み込み
+import QRCode from "qrcode.react";
+import logo from './logo.svg';
+import './App.css';
+
+class App extends Component {
+    constructor(props) {
+        super(props);
+        // 初期化
+        this.state = {
+        url: []
+        };
+    }
+    // レンダリングが実行された後に実行される関数
+    componentDidMount(){
+        // getSelected内からsetStateを呼ぶため。
+        // ちょっと歪ですが、ファットな感じにもしないので今回はこれで。
+        var that = this;
+        chrome.tabs.getSelected(null, function(tab) {
+            var temp = tab.url;
+            that.setState({url: temp});
+        })
+    }
+    render(){
+        return (
+            <div>
+                <p>{this.state.url}</p>
+                <QRCode value={this.state.url} />
+            </div>
+        )
+    }
+}
+
+export default App;
+
+----
+
+
+実際の画面はこちら。
+
+image::http://tech.innovation.co.jp/images/ozasa/qrcode.png[代替テキスト]
+
+これを読み込めば帰りながらブログが読める！
+
+ということで今回はApp.jsのみをいい感じにして実装しました。 +
+が、React自体初めて触ったことも +
+なかなか時間がかかってしまいました。
+
+当たり前ですが、コンポーネントやprops,stateなどの概念をまず捉えておくことが大事だと感じました。 +
+まだまだ勉強不足です。
+
+例えばsetStateのタイミングでComponentがrerenderされるというのが
+あまり理解できていなかったため、 +
+Promiseを用いて判定を頑張ろうとしたりしてしまいました。
+
+色々と覚えることが多いので、 +
+当たり前ですが、使い続けないと慣れそうにない印象です・・・ +
+(※あくまで個人の感想です)
+
+ちなみに今回の実装で +
+React以外で地味にハマったポイントはESLintでした。
+
+`npm run build`
+
+とかの時に構文チェックとして裏ではESLintが動いてくれているのですが、 +
+最初は
+
+`'chrome' is not defined no-undef`
+
+とエラーを出してしまいました。
+
+chrome.*APIを利用するためにも、
+特定のグローバル変数を許可するためのコメントを書かないといけないようです。
+
+`/\*global chrome*/`
+
+学びが多い実装となりました。 +
+こちらからは以上です。

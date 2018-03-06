@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Angularを使えるLaravel環境を作る。あとcralityも使う。 - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Angularを使えるLaravel環境を作る。あとcralityも使う。">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Angularを使えるLaravel環境を作る。あとcralityも使う。">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/01/14/building-environments-laravel-54-with-angular-4-and-crality.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Angularを使えるLaravel環境を作る。あとcralityも使う。" />
+    <meta property="og:description" content="どうも、bigenです。 わたくし、新卒でListFinder開発チームに配属されてから１年が経ちました。 配属されてからは来る日も来る日もZend FrameworkとjQueryと戦う毎日。 最近では公私ともに社外の方と話す機会もあり、 触発されてもう少し今風の技術にも触れてみたいなぁと思いまして、 Angular4入りLaravel5.4環境の構築 に挑戦しました。 また、デザインフレームワークである Clarity Design Systemも入れて、 盛りだくさんの今風アプリケーションを一つ作ってやろうという算段です。 LaravelもAng..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/01/14/building-environments-laravel-54-with-angular-4-and-crality.html" />
+    <meta property="article:published_time" content="2018-01-13T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-01-15T05:36:51.663Z" />
+    <meta property="article:tag" content="PHP" />
+    <meta property="article:tag" content="Docker" />
+    <meta property="article:tag" content="angular" />
+    <meta property="article:tag" content="laravel" />
+    <meta property="article:tag" content="crality" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Angularを使えるLaravel環境を作る。あとcralityも使う。" />
+    <meta name="twitter:description" content="どうも、bigenです。 わたくし、新卒でListFinder開発チームに配属されてから１年が経ちました。 配属されてからは来る日も来る日もZend FrameworkとjQueryと戦う毎日。 最近では公私ともに社外の方と話す機会もあり、 触発されてもう少し今風の技術にも触れてみたいなぁと思いまして、 Angular4入りLaravel5.4環境の構築 に挑戦しました。 また、デザインフレームワークである Clarity Design Systemも入れて、 盛りだくさんの今風アプリケーションを一つ作ってやろうという算段です。 LaravelもAng..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/01/14/building-environments-laravel-54-with-angular-4-and-crality.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars1.githubusercontent.com/u/23183770?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "Angularを使えるLaravel環境を作る。あとcralityも使う。",
+    "url": "http://tech.innovation.co.jp/2018/01/14/building-environments-laravel-54-with-angular-4-and-crality.html",
+    "datePublished": "2018-01-13T15:00:00.000Z",
+    "dateModified": "2018-01-15T05:36:51.663Z",
+    "keywords": "PHP, Docker, angular, laravel, crality",
+    "description": "どうも、bigenです。 わたくし、新卒でListFinder開発チームに配属されてから１年が経ちました。 配属されてからは来る日も来る日もZend FrameworkとjQueryと戦う毎日。 最近では公私ともに社外の方と話す機会もあり、 触発されてもう少し今風の技術にも触れてみたいなぁと思いまして、 Angular4入りLaravel5.4環境の構築 に挑戦しました。 また、デザインフレームワークである Clarity Design Systemも入れて、 盛りだくさんの今風アプリケーションを一つ作ってやろうという算段です。 LaravelもAng..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-P-H-P tag-Docker tag-angular tag-laravel tag-crality no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="14 Jan 2018" class="post-meta__date date">14 Jan 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/P-H-P">PHP</a>, <a href="http://tech.innovation.co.jp/tag/Docker">Docker</a>, <a href="http://tech.innovation.co.jp/tag/angular">angular</a>, <a href="http://tech.innovation.co.jp/tag/laravel">laravel</a>, <a href="http://tech.innovation.co.jp/tag/crality">crality</a></span>
+        <span class="post-meta__author author"><img src="https://avatars1.githubusercontent.com/u/23183770?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">Angularを使えるLaravel環境を作る。あとcralityも使う。</h1>
+    </header>
+
+    <section class="post tag-P-H-P tag-Docker tag-angular tag-laravel tag-crality">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>どうも、bigenです。<br>
+わたくし、新卒でListFinder開発チームに配属されてから１年が経ちました。<br>
+<br>
+配属されてからは来る日も来る日もZend FrameworkとjQueryと戦う毎日。<br>
+最近では公私ともに社外の方と話す機会もあり、<br>
+触発されてもう少し今風の技術にも触れてみたいなぁと思いまして、<br></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_angular4_laravel5_4">Angular4入りLaravel5.4環境の構築</h4>
+<div class="paragraph">
+<p>に挑戦しました。<br>
+また、デザインフレームワークである <strong><a href="https://vmware.github.io/clarity/">Clarity Design System</a></strong>も入れて、<br>
+盛りだくさんの今風アプリケーションを一つ作ってやろうという算段です。<br>
+<br>
+LaravelもAngularもClarityも、使って開発したことがないので、ゼロからのスタートです。<br>
+周囲の人に色々質問しながら進めてみました。<br></p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">目次</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>前準備</p>
+</li>
+<li>
+<p>Laravel-5.4 with Angular 4 を導入する</p>
+</li>
+<li>
+<p>中身を眺めて勉強する</p>
+</li>
+<li>
+<p>Clarity を導入する</p>
+</li>
+<li>
+<p>簡単なアプリケーション</p>
+</li>
+<li>
+<p>おわりに</p>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="_1">1. 前準備</h3>
+<div class="paragraph">
+<p>事前準備として、phpサーバーを用意します。<br>
+今回は、dockerを使って <strong>nginx + php-fpm + mysql</strong> でそれぞれをコンテナとして構成しました。<br>
+構成の設定は <strong><a href="http://tech.innovation.co.jp/2018/01/05/carry-out-tutorial-on-Laravel-amp-Docker.html">kohe先生の記事</a></strong>のものを使わせてもらいました。<br>
+<br></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_2_laravel_5_4_with_angular_4">2. Laravel-5.4 with Angular 4 を導入する</h3>
+<div class="paragraph">
+<p>そして、環境構築に挑戦といいつつ、こちらもできあがりのものを拝借いたします。<br>
+ehsanhasani氏に多大なる感謝を。</p>
+</div>
+<div class="paragraph">
+<p>まず、<br>
+<a href="https://github.com/ehsanhasani/laravel-5-angular-4">start project laravel 5.4 with angular 4</a><br>
+↑の中身をphpサーバーのアプリケーション部分に配置します。<br></p>
+</div>
+<div class="paragraph">
+<p>あとは書いてある手順どおりに環境設定をしていきます。<br>
+そして、Angularアプリケーションのトランスパイルをする。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>npm run dev</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>表示される赤字エラー・・・<br>
+調べてみると、↓のような記事があったので参考にTypescriptのバージョンをあげると、無事トランスパイルできました。<br>
+<a href="http://naotosetta.hateblo.jp/entry/2017/10/27/153524">LaravelとAngularの環境構築をする: 圧倒的成長記</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>http://localhost:8080</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>へアクセスしてみると、アプリトップが表示されました。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/bigen/laraveltop.png" alt="laraveltop.png">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_3">3.中身を眺めて勉強する</h3>
+<div class="paragraph">
+<p>さて、ここからClarity Design Systemを入れていきたいのですが、<br>
+いきなりではどのように組み込んでいけば良いのか分かりません。<br>
+<br>
+というわけで、少し上記のアプリケーションを観察してみます。<br>
+<br>
+Angularのコンパイルの流れについて調べてみると、次の記事が非常に参考になりました。<br>
+<a href="http://tech.quartetcom.co.jp/2017/07/20/angular2-compilation/">Angular/TypeScriptプロジェクトのコンパイルの仕組み</a>
+<br>
+今回のアプリケーションではどうやらwebpackが使われているようですので設定ファイルを探してみると、<br>
+ルートディレクトリ直下に<code>webpack.mix.js</code>があるので中を見てみます。<br></p>
+</div>
+<div class="listingblock">
+<div class="title">webpack.mix.js</div>
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js">mix.webpackConfig({
+    resolve: {
+        extensions: ['.ts']
+    },
+    module: {
+        rules: [
+            {
+                test: /\.ts$/,
+                loader: 'ts-loader'
+            }
+        ]
+    }
+});
+
+mix.js([
+    'resources/assets/ts/polyfills.ts',
+    'resources/assets/ts/vendor.ts',
+    'resources/assets/ts/main.ts'
+], 'public/js/app.js');</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>通常のwebpackの設定ファイルと違うのは、<code>Laravel-mix</code>というライブラリが用いらているようです。<br>
+<code>Laravel-mix</code>はLaravel内でwebpackを使ってコンパイルしてリソースを設置するのを簡単にするライブラリとのことです。<br>
+<a href="https://readouble.com/laravel/5.4/ja/mix.html">アセットのコンパイル(Laravel Mix)
+</a><br>
+<br>
+Laravelのお勉強はいったん宿題にしておいて、<br>
+とにかくAngularのソースは<code>resources/assets/ts</code>の下に配置されていて、<br>
+3つのtsファイルをトランスパイルしてapp.jsに集積してくれていることがわかったので、<br>
+それぞれ中身を見てみます。</p>
+</div>
+<div class="listingblock">
+<div class="title">polyfills.ts</div>
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js">import 'core-js/es6';
+import 'core-js/es7/reflect';
+require('zone.js/dist/zone');
+if (process.env.ENV === 'production') {
+    // Production
+} else {
+    // Development and test
+    Error['stackTraceLimit'] = Infinity;
+    require('zone.js/dist/long-stack-trace-zone');
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>ファイル名のとおり、旧ECMAScriptとの互換ライブラリを読み込んでるっぽい？<br>
+あとDev環境でのStackTraceの制限を設定していますが、ここでやるべきことなのかは謎・・・</p>
+</div>
+<div class="listingblock">
+<div class="title">vendor.ts</div>
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js">// Angular
+import '@angular/platform-browser';
+import '@angular/platform-browser-dynamic';
+import '@angular/core';
+import '@angular/common';
+import '@angular/http';
+import '@angular/router';
+// RxJS
+import 'rxjs';
+// Other vendors for example jQuery, Lodash or Bootstrap
+// You can import js, ts, css, sass, ...
+import '../scss/styles.scss';</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>AngularのコンポーネントやRxJS、その他外部ベンダー製のライブラリの読み込みをするファイルのようです。<br>
+アプリトップのCSS（ピンク色の背景に、センターに見出し）も、ここで読み込まれている<code>styles.scss</code>にかかれていました。</p>
+</div>
+<div class="listingblock">
+<div class="title">main.ts</div>
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js">import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { enableProdMode } from '@angular/core';
+import { AppModule } from './app/app.module';
+if (process.env.ENV === 'production') {
+    enableProdMode();
+}
+platformBrowserDynamic().bootstrapModule(AppModule);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>こいつがAngularアプリケーションの本体で、<code>app.module.ts</code>を皮切りに色々なファイルをトランスパイルしてくれています。<br>
+<br>
+これぐらいわかれば、だいたいの目星はついたので、Clarityを導入していきます。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_4_clarity_design_system">4.Clarity Design Systemを導入する</h3>
+<div class="paragraph">
+<p><a href="https://vmware.github.io/clarity/documentation/v0.11/get-started">公式ページ</a>を参考に順番に導入していきます。<br>
+<br>
+まずは各ライブラリのインストールから。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>npm install @clr/icons --save
+npm install @webcomponents/custom-elements@1.0.0 --save
+npm install @clr/ui --save
+npm install @clr/angular --save</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>次に、cssやjsなどが標準で読み込まれた状態でトランスパイルしてもらうために、<br>
+<code>vendor.ts</code>に追記します。</p>
+</div>
+<div class="listingblock">
+<div class="title">vendor.ts</div>
+<div class="content">
+<pre class="highlight"><code class="language-js" data-lang="js">...
+
+// Clarity Design System
+import '@clr/icons/clr-icons.min.css';
+import '@webcomponents/custom-elements/custom-elements.min.js';
+import '@clr/icons/clr-icons.min.js';
+import '@clr/ui/clr-ui.min.css';</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>最後に、AngularのClarityコンポーネントが使えるようにモジュールに追加します。</p>
+</div>
+<div class="listingblock">
+<div class="title">app.module.ts</div>
+<div class="content">
+<pre>import { NgModule } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
+import { ClarityModule } from "@clr/angular";
+import { AppComponent } from "./app.component";
+
+@NgModule({
+    imports: [
+        BrowserModule,
+        ClarityModule,
+        ...
+     ],
+     declarations: [ AppComponent ],
+     bootstrap: [ AppComponent ]
+})
+export class AppModule {    }</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>以上で準備は完了です。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_5">5.簡単なアプリケーション</h3>
+<div class="paragraph">
+<p>せっかくなので簡単なアプリケーションを作ってみました。<br>
+麻雀の対局予約画面のイメージですが、初期の予約人数は0人固定で、<br>
+ボタンを押したら増えたり減ったりするだけです。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/bigen/angular.gif" alt="angular.gif">
+</div>
+</div>
+<div class="paragraph">
+<p>ソースコードはこちら</p>
+</div>
+<div class="listingblock">
+<div class="title">app.component.html</div>
+<div class="content">
+<pre class="highlight"><code class="language-html" data-lang="html">&lt;div class="row"&gt;
+    &lt;div class="col-md-4"&gt;
+        &lt;div class="card"&gt;
+            &lt;div class="card-header"&gt;
+                &lt;h1&gt;麻雀しますか？&lt;/h1&gt;
+            &lt;/div&gt;
+            &lt;div class="card-block"&gt;
+                &lt;h2&gt;現在の人数: {{count}}人&lt;/h2&gt;
+            &lt;/div&gt;
+            &lt;div class="card-footer"&gt;
+                    &lt;button id="reserve" name="reserve" class="btn btn-primary" (click)="reserve()" [clrInMenu]="true"&gt;予約する&lt;/button&gt;
+                    &lt;button class="btn btn-outline" [clrInMenu]="true"&gt;予約しない&lt;/button&gt;
+                    &lt;button id="cancel" name="cancel" class="btn btn-warning" (click)="cancel()" [clrInMenu]="true"&gt;キャンセルする&lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">app.component.ts</div>
+<div class="content">
+<pre class="highlight"><code class="language-typescript" data-lang="typescript">import { Component } from '@angular/core';
+
+@Component({
+    selector: 'my-app',
+    template: require('./app.component.html'),
+    styles: [
+        `${require('./app.component.scss')}`,
+    ]
+})
+export class AppComponent {
+    count: number=0;
+
+    public reserve() {
+        this.count++;
+    }
+    public cancel() {
+        this.count--;
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_6">6.おわりに</h3>
+<div class="paragraph">
+<p>とりあえずベースができたので、これをもとに色々遊んでみようと思います。<br>
+やっぱり、業務の範囲だけだとなかなか新しい技術に気軽にチャレンジできないので、<br>
+こういった機会を自ら作り出すのは大事だなーと思いました。<br>
+<br>
+自ら機会を生み出し、機会によって自らを変えよ<br>
+<br>
+ですね。<br>
+<br>
+<br>
+ちなみに、Angularについては<br>
+<a href="https://www.amazon.co.jp/Angular%E3%82%A2%E3%83%97%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0-%E5%B1%B1%E7%94%B0-%E7%A5%A5%E5%AF%9B/dp/4774191302">Angularアプリケーションプログラミング　著：山田 祥寛</a><br>
+で勉強中です。<br>
+内容はかなり重厚で、一部難しい部分もありまだ読み込みきれてませんが、<br>
+非常にわかりやすく良き本でした。<br>
+<br>
+Laravelもとりあえず何か厚めの教科書をさらっと通して読もうかなって思っているところです。<br>
+<br>
+では、今回はこれぐらいで。<br>
+<br>
+次はなんか組織論の話をできるといいな〜〜<br></p>
+</div>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,147 @@
+# FirebaseUIを使ってTwitter loginを実装したお話。
+
+:published_at: 2018-02-26
+:hp-alt-title: FirebaeUi
+:hp-tags: Swift,Firebase,FirebaseUI
+
+皆様こんばんは。
+こへです。
+
+そろそろFirebaseUIを試用して、Twitter login機能の開発をしたい時期が来ましたので、作成。
+
+
+## 完成品
+image::/images/kohe/swiftFire1.0.gif[]
+
+
+## Firebase
+
+_https://firebase.google.com/docs/ios/setup?hl=ja_
+
+初期の設定は公式の通り行う。
+
+## Twitter Developer 登録
+
+image::/images/kohe/swiftFire2.0.png?[]
+
+Callback以外の情報を入力していく。
+Callbackの箇所はFirebaseを自身のアプリと連携した際に、
+表示されるので、それを取得後登録する。
+
+
+## FirebaseUI
+
+TwitterやGoogle,Mail,FBログインなどのUIを要してくれてFirebaseとつなげてくれるやつ。
+
+_https://github.com/firebase/FirebaseUI-iOS_
+
+基本公式のReadmeを読んでやろうとしたのですが、
+
+公式を見ただけでは全然できず、色々試行錯誤しました。
+
+詳細は後ほど。
+
+## Podfile
+
+Firebase を使うために  `pod 'Firebase/Core'` +
+FirebaseUIを使うために　`pod 'FirebaseUI', '~> 4.0'` +
+をインストール
+```
+# Uncomment the next line to define a global platform for your project
+# platform :ios, '9.0'
+
+target 'MyApp' do
+  # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
+  platform :ios, '8.0'
+  use_frameworks!
+
+  # Pods for ToWish
+  pod 'FirebaseUI', '~> 4.0'
+  pod 'Firebase/Core'
+end
+
+```
+
+## Swift 
+AppDelegateはFirebaseUIの公式に載っている通り、Twitter login用に設定する。
+
+### ViewController.swift
+```
+
+    
+import UIKit
+import Firebase
+import FirebaseAuthUI
+import FirebaseTwitterAuthUI
+import FirebaseDatabaseUI
+import TwitterKit
+    
+    
+    
+class ViewController: UIViewController {
+    var authUI: FUIAuth { get { return FUIAuth.defaultAuthUI()!}}
+
+    let providers: [FUIAuthProvider] = [FUITwitterAuth()]
+        
+    override func viewDidLoad() {
+        super.viewDidLoad()
+       
+    }
+        
+        
+    func authUI(_ authUI: FUIAuth, didSignInWith user: User?, error: Error?) {
+            // handle user and error as necessary
+    }
+        
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+            // Dispose of any resources that can be recreated.
+    }
+    
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        checkLoggedIn()
+    }
+}
+extension ViewController: FUIAuthDelegate {
+        
+    func checkLoggedIn() {
+            
+        self.setupLogin()
+        Auth.auth().addStateDidChangeListener{auth, user in
+            if user != nil{
+                print("success")
+            } else {
+                print("fail")
+                self.login()
+            }
+        }
+    }
+        
+    func setupLogin() {
+            
+        authUI.delegate = self
+        authUI.providers = providers
+        authUI.isSignInWithEmailHidden = true
+    }
+    
+    func login() {
+        
+        let authViewController = authUI.authViewController()
+        self.present(authViewController, animated: true, completion: nil)
+    }
+    
+}
+
+```
+
+そして、Twitter アカウント情報を入力して、ログインすると…
+
+Firebaseに情報が入ってますね。
+
+
+image::/images/kohe/swiftFire3.0.png?[]
+
+
+これをベースに様々なアプリをこれから作っていこうと思います。

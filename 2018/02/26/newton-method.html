@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>ニュートン法で学ぶプログラミングと数学の関連 - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="ニュートン法で学ぶプログラミングと数学の関連">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="ニュートン法で学ぶプログラミングと数学の関連">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/02/26/newton-method.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="ニュートン法で学ぶプログラミングと数学の関連" />
+    <meta property="og:description" content="はじめに どうも、bigenです。 最近ガイアックスさんが主催されているクローズドの数学勉強会に参加させてもらっていて、  統計学のための数学入門30講 を勉強しています。 輪講形式で進めているのですが、やっぱ大学のとき数学やっててよかったなー、と思いました。 大学時代はあんなに嫌になった数学が、実際にビジネスの世界に出てみると今は楽しくて、 やっぱり何のために勉強するのかが分かっていると良いなぁと思います。 先週の勉強会でニュートン法というアルゴリズムが出てきたのですが、 プログラムを色々書くようになってからみると新しい気持ちで学び直せたので、紹介さ..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/02/26/newton-method.html" />
+    <meta property="article:published_time" content="2018-02-25T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-03-06T00:08:05.470Z" />
+    <meta property="article:tag" content="bigen" />
+    <meta property="article:tag" content="mathmatics" />
+    <meta property="article:tag" content="programing" />
+    <meta property="article:tag" content="newton method" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="ニュートン法で学ぶプログラミングと数学の関連" />
+    <meta name="twitter:description" content="はじめに どうも、bigenです。 最近ガイアックスさんが主催されているクローズドの数学勉強会に参加させてもらっていて、  統計学のための数学入門30講 を勉強しています。 輪講形式で進めているのですが、やっぱ大学のとき数学やっててよかったなー、と思いました。 大学時代はあんなに嫌になった数学が、実際にビジネスの世界に出てみると今は楽しくて、 やっぱり何のために勉強するのかが分かっていると良いなぁと思います。 先週の勉強会でニュートン法というアルゴリズムが出てきたのですが、 プログラムを色々書くようになってからみると新しい気持ちで学び直せたので、紹介さ..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/02/26/newton-method.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars1.githubusercontent.com/u/23183770?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "ニュートン法で学ぶプログラミングと数学の関連",
+    "url": "http://tech.innovation.co.jp/2018/02/26/newton-method.html",
+    "datePublished": "2018-02-25T15:00:00.000Z",
+    "dateModified": "2018-03-06T00:08:05.470Z",
+    "keywords": "bigen,  mathmatics,  programing,  newton method",
+    "description": "はじめに どうも、bigenです。 最近ガイアックスさんが主催されているクローズドの数学勉強会に参加させてもらっていて、  統計学のための数学入門30講 を勉強しています。 輪講形式で進めているのですが、やっぱ大学のとき数学やっててよかったなー、と思いました。 大学時代はあんなに嫌になった数学が、実際にビジネスの世界に出てみると今は楽しくて、 やっぱり何のために勉強するのかが分かっていると良いなぁと思います。 先週の勉強会でニュートン法というアルゴリズムが出てきたのですが、 プログラムを色々書くようになってからみると新しい気持ちで学び直せたので、紹介さ..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-bigen tag-mathmatics tag-programing tag-newton-method no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="26 Feb 2018" class="post-meta__date date">26 Feb 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/bigen">bigen</a>, <a href="http://tech.innovation.co.jp/tag/mathmatics"> mathmatics</a>, <a href="http://tech.innovation.co.jp/tag/programing"> programing</a>, <a href="http://tech.innovation.co.jp/tag/newton-method"> newton method</a></span>
+        <span class="post-meta__author author"><img src="https://avatars1.githubusercontent.com/u/23183770?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">ニュートン法で学ぶプログラミングと数学の関連</h1>
+    </header>
+
+    <section class="post tag-bigen tag-mathmatics tag-programing tag-newton-method">
+      <div class="sect1">
+<h2 id="__">はじめに</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>どうも、bigenです。<br>
+最近ガイアックスさんが主催されているクローズドの数学勉強会に参加させてもらっていて、<br>
+ <a href="https://www.amazon.co.jp/%E7%B5%B1%E8%A8%88%E5%AD%A6%E3%81%AE%E3%81%9F%E3%82%81%E3%81%AE%E6%95%B0%E5%AD%A6%E5%85%A5%E9%96%8030%E8%AC%9B-%E7%A7%91%E5%AD%A6%E3%81%AE%E3%81%93%E3%81%A8%E3%81%B0%E3%81%A8%E3%81%97%E3%81%A6%E3%81%AE%E6%95%B0%E5%AD%A6-%E6%B0%B8%E7%94%B0-%E9%9D%96/dp/4254116330">統計学のための数学入門30講</a> を勉強しています。<br></p>
+</div>
+<div class="paragraph">
+<p>輪講形式で進めているのですが、やっぱ大学のとき数学やっててよかったなー、と思いました。<br>
+大学時代はあんなに嫌になった数学が、実際にビジネスの世界に出てみると今は楽しくて、<br>
+やっぱり何のために勉強するのかが分かっていると良いなぁと思います。<br>
+<br>
+先週の勉強会で<strong>ニュートン法</strong>というアルゴリズムが出てきたのですが、<br>
+プログラムを色々書くようになってからみると新しい気持ちで学び直せたので、紹介させてください。<br>
+すごいんですよ、<strong>ニュートン法</strong>。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__2">√2ってどうやって求めますか？</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>突然ですが、コンピュータで平方根ってどうやって求めますか？<br>
+例えば、<strong>√2</strong> とか。<br>
+<br>
+あっ、<code>sqrt()</code>はナシですよ！<br>
+今日はその裏側の話です。<br>
+<br>
+まず、前提として√2に関して知ってることって普通はあんまりないですよね。<br></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>1よりは大きそう</p>
+</li>
+<li>
+<p>2よりは小さそう</p>
+</li>
+<li>
+<p>2乗すると2になる</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>ぐらいでしょうか。<br>
+記憶力の良い人であれば「1.41421356&#8230;&#8203;.(人よ一夜に人見頃&#8230;&#8203;)ぐらいでしょ」<br>
+と暗記している人もいると思いますが、 これはどうやって求められたのでしょうか？<br>
+<br>
+今回は小数8桁の精度で√2を求めることを考えてみます。</p>
+</div>
+<div class="sect2">
+<h3 id="_1_brute_force_search">1.力任せ探索(Brute-force search)</h3>
+<div class="paragraph">
+<p>とにかく求めるだけであれば、片っ端から色んな答えを試してみるのも一手でしょう。<br>
+精度は小数8桁でいいので、</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>step1: 1.00000001はどうかな？　→　1.00000001 * 1.00000001 &lt; 2　→　もう少し大きくてもいけそう
+step2: 1.00000002はどうかな？　→　1.00000002 * 1.00000002 &lt; 2　→　もう少し大きくてもいけそう
+step3: 1.00000003はどうかな？　→　1.00000003 * 1.00000003 &lt; 2　→　もう少し大きくてもいけそう
+・
+・
+・
+step41421356: 1.41421356はどうかな？　→　1.41421356 * 1.41421356 &lt; 2　→　もう少し大きくてもいけそう
+step41421357: 1.41421357はどうかな？　→　1.41421357 * 1.41421357 &gt; 2　→　大きくしすぎた！</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>という感じでいつかは答えにたどり着きます。
+ソースコード等は省略しますが、4000万ステップの反復が必要になります。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_2_binary_search">2. 二分探索法(Binary search)</h3>
+<div class="paragraph">
+<p>二分探索法も発想としては難しくないですね。<br>
+片っ端から試さなくても、ざっくり半分に割って、どちらのグループに答えがあるか調べることで、<br>
+絞り込んでいこうというやつです。
+答えは1~2の間にあるので、</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>step1: 1.5はどうかな？　→　1.5 * 1.5 &gt; 2　→　大きすぎた。答えは1~1.5の間にある！
+step2:1.25はどうかな？→　1.25 * 1.25 &lt; 2　→　小さすぎた。答えは1.25~1.5の間にある！
+.
+.
+.
+step26:1.414213553071はどうかな？ → 小さすぎた！答えは 1.414213553071〜1.414213579722の間にある！
+step27:1.4142135605216はどうかな？　→　そろそろ計算終わり・・・</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>という感じです。<br>
+計算の結果、27ステップで答えが見つかりました。<br>
+実際に以下のコードを実行していただけると途中経過も見れます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-php" data-lang="php">&lt;?php
+// 二分探索法で√2を求める
+$upper = 2;
+$lower = 1;
+$next;
+$step = 0;
+
+while ( $upper - $lower &gt; 0.00000001) {
+	$step++;
+	$mid = ($upper + $lower) / 2;
+
+	if ( $mid*$mid &lt; 2) {
+		$lower = $mid;
+	} else {
+		$upper = $mid;
+	}
+
+	echo 'step' . $step . ': ' . $mid . PHP_EOL;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>力任せ探索に比べて爆発的に早く求まりましたね！<br></p>
+</div>
+<div class="paragraph">
+<p>当たり前ですが、力任せ探索は探索範囲が広ければ広いほど、反復回数が爆発的に増えます。<br>
+出発点が<strong>偶然</strong>答えに近い場合は早く終わりますが、最悪計算量は悲惨です。<br>
+数学的には<code>o(N)</code> (Nはデータの数)と表現し、Nが100倍になったら計算量も100倍、Nが10000倍になったら計算量も10000倍という意味です。<br></p>
+</div>
+<div class="paragraph">
+<p>二分探索法は一発アテにいくわけじゃないので、答えがどこにあっても、それなりの反復回数で解にたどり着けることが知られています。<br>
+数学的には<code>o(logN)</code>になり、Nが100倍になっても計算量は10倍、Nが10000倍になっても計算量は100倍くらいで済みます。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_3">3.ニュートン法</h3>
+<div class="paragraph">
+<p>最後に、数学的な知識を使って解くニュートン法をご紹介します。<br>
+アルゴリズムは、超簡単です。<br>
+適当にスタートの値<code>x[0]</code>を与えて、次のステップでの値を</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>x[n+1] = (x[n] + 2/x[n])/2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>として計算します。
+これが答えに十分近ければ終了、近くなければ同じ計算を繰り返すだけです。</p>
+</div>
+<div class="paragraph">
+<p>ソースコードは以下です。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>&lt;?php
+// ニュートン法を使って√2を求めてみます
+$step = 1;    // ステップ数
+$before = 2;  // 適当な初期値
+$after = next_val($before);  // 1ステップ目
+
+echo 'step1: ' . $after . "\n";
+
+while (abs($before - $after) &gt; 0.00000001) {
+	$step++;
+	$before = $after;
+	$after = next_val($before);
+
+	echo 'step' . $step . ': ' . $after . "\n";
+}
+
+echo 'result: ' . $after . "\n";
+
+
+
+function next_val($before) {
+	return ($before + 2/$before) / 2;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>結果はこちら</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>step1: 1.5
+step2: 1.4166666666667
+step3: 1.4142156862745
+step4: 1.4142135623747
+step5: 1.4142135623731
+result: 1.4142135623731</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>たった5ステップで8桁精度の答えが見つかった・・・・すごい！<br>
+<br>
+ニュートン法についての説明は <a href="https://ja.wikipedia.org/wiki/%E3%83%8B%E3%83%A5%E3%83%BC%E3%83%88%E3%83%B3%E6%B3%95">Wikipedia</a> を見ていただくのが確実ですが、
+理系の方なら懐かしい「微分」の概念を使って計算します。<br>
+収束速度は数学的に
+<code>|α-x[n+1]| = o(|α-x[n]|^2)</code>と表現され、<strong>２次収束</strong>と呼ばれます。<br>
+答えと次のステップの誤差は、前のステップの誤差の二乗になるという意味で、前のステップで誤差0.01ぐらいだったら次のステップは誤差0.0001ぐらいになるよ、ということです。<br>
+<br></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">もうまとめ</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>注目ポイントは、二分探索法とかは数学のこと知らなくても思い付けそうなんですが、
+ニュートン法は<strong>全く無理</strong>ですよね〜っていうところ。<br>
+「次のステップを、前のステップの値と2を前のステップで割ったものの平均を取る？意味わからん！」<br>
+って普通はなるわけですよ。バビロニア人を除くと。<br>
+（実は上記の手法はバビロニアン法とも呼ばれていて、紀元前数世紀に既に発見されている）<br>
+<br>
+微分をしっている人だけが思いつけるアルゴリズムで計算速度が何百倍も早くなるとすると、<br>
+やっぱ数学の勉強とエンジニアリングは切っても切り離せないなぁと思いました。<br>
+<br>
+少し短いですが今日はこのへんで。</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>

@@ -1,7 +1,7 @@
-# macのGNS3でNETWORK(CISCO CCNA)のお勉強？ 〜VPN〜
+# macのGNS3でNETWORK(CISCO CCNA)の勉強 〜②VPN〜
 :published_at: 2017-11-21
 :hp-alt-title: STUDY NETWORK FOR CISCO CCNA(VPN)
-:hp-tags: Network, GNS3, CISCO, CCNA, KTN, VPN
+:hp-tags: Study, Network, mac, GNS3, CISCO, CCNA, VPN
 
 KTNです +
 前回作ったGNS3の環境を使って、 +
