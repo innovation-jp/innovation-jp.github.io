@@ -169,6 +169,7 @@ image::/images/kotani/20180306/6.png[]
 
 
 続いてWebサーバにcurlしてみると +
+エラーになりました +
 
 ```
 ■gns3-centos7-1
@@ -212,7 +213,7 @@ gns3-centos7-1> curl 10.10.10.10
 ```
 
 という感じにHTMLが取得できました +
-パケットキャプチャしてみます +
+パケットキャプチャを見てみます +
 
 image::/images/kotani/20180306/7.png[]
 
@@ -222,28 +223,28 @@ Pro Inside global      Inside local       Outside local      Outside global
 tcp 8.8.8.8:43600      192.168.1.11:43600 10.10.10.10:80     10.10.10.10:80
 ```
 
-想定通り通信できました、一旦OKですね +
+想定通り通信できました！ +
 
 # ４．本社PCを増やしてもWebサイトを見れることを確認する +
 
-本社PCを増やしたいので、
-VirtualBoxで「gns3-centos7-1」をクローンして「gns3-centos7-1-2」を作り
-作った仮想マシンをGNS3に登録します
-R2との間にスイッチングハブを置いて、「gns3-centos7-1」と「gns3-centos7-1-2」を接続して
+本社PCを増やしたいので、 +
+VirtualBoxで「gns3-centos7-1」をクローンして「gns3-centos7-1-2」を作り +
+作った仮想マシンをGNS3に登録します +
+R2との間にスイッチングハブを置いて、「gns3-centos7-1」と「gns3-centos7-1-2」を接続します +
 
 image::/images/kotani/20180306/8.png[]
 
 IPアドレスを設定します
 
+```
 nmcli connection modify enp0s3 ipv4.method manual ipv4.addresses 192.168.1.12/24
 nmcli c down enp0s3; nmcli c up enp0s3
+```
 
-こんな感じになります
+「gns3-centos7-1」と「gns3-centos7-1-2」から、 +
+同時にWebサーバにcurlしてみます +
 
-
-
-「gns3-centos7-1」と「gns3-centos7-1-2」から、同時にWebサーバにcurlしてみます
-
+```
 ■gns3-centos7-1
 gns3-centos7-1> curl 10.10.10.10
 〜〜〜省略〜〜〜
@@ -257,16 +258,17 @@ gns3-centos7-1-2> curl 10.10.10.10
     </div>
   </div>
 </body></html>
-
-
+```
+```
 R2#show ip nat translations 
 Pro Inside global      Inside local       Outside local      Outside global
 tcp 8.8.8.8:59822      192.168.1.11:59822 10.10.10.10:80     10.10.10.10:80
 tcp 8.8.8.8:46572      192.168.1.12:46572 10.10.10.10:80     10.10.10.10:80
+```
 
 image::/images/kotani/20180306/9.png[]
 image::/images/kotani/20180306/10.png[]
 
-これで本社にPCが何台あっても、
-同時にインターネットを使うことが出来ますね
-今日はここまでにしたいと思います
+これで本社にPCが何台あっても、 +
+同時にインターネットを使うことが出来ますね +
+今日はここまでにしたいと思います +
