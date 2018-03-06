@@ -61,7 +61,7 @@ image::/images/kotani/20180306/11.jpg[]
 ※PATイメージ図
 
 そろそろ設定していきたいのですが、 +
-NATを設定していない現状で通信が出来ないことを確認します +
+NATを設定していない現状で通信が出来ないことを確認しておきます +
 
 本社PCから疎通確認してみます +
 ```
@@ -72,7 +72,7 @@ PING 10.10.10.10 (10.10.10.10) 56(84) bytes of data.
 5 packets transmitted, 0 received, 100%	 packet loss, time 4006ms
 ```
 
-結果は想定通りなのですが、念のためパケットを見て確認します +
+結果は想定通り通信出来ていないのですが、念のためパケットを見て確認します +
 GNS3の画面でパケットを見たい箇所を選択して「Start caputure」を選択します +
 今回は赤線の箇所をキャプチャします
 
@@ -117,7 +117,7 @@ C       10.10.10.0 is directly connected, FastEthernet1/0
 
 このパケットは次にR1ルータが受け取りますが、 +
 R1ルータは192.168.1.11というIPアドレスがどこにいるのか知りません +
-R1が知っているのは +
+R1ルータが知っているのは +
 　「8.8.8.0/24」 +
 　「9.9.9.0/24」 +
 　「10.10.10.0/24」 +
@@ -138,6 +138,32 @@ R2(config-if)#exit
 R2(config)#exit
 ```
 
+上記設定の意味
+```
+①
+access-list 1 permit 192.168.1.0 0.0.0.255
+→IPアドレスのリスト（グループ）を作成
+ NAT対象とする送信元アドレスとして利用します
+
+②
+ip nat inside source list 1 interface fastEthernet 0/1 overload
+→NAT変換を行う対象を定義します
+ inside source list 1：
+  NAT変換の対象とする送信元アドレスは ① を使うという意味
+ interface fastEthernet 0/1：
+  NAT変換の対象とする外部インタフェース
+
+③
+interface fastEthernet 0/0
+ip nat inside 
+ 「fastEthernet 0/0」が内部ネットワークであることを指定
+
+④
+interface fastEthernet 0/1
+R2(config-if)#ip nat outside
+ 「fastEthernet 0/0」が外部ネットワークであることを指定
+```
+
 設定できたので、再度通信してみます
 
 ```
@@ -156,21 +182,23 @@ rtt min/avg/max/mdev = 30.794/38.871/42.173/4.226 ms
 
 ```
 
-疎通確認出来ましたね！ +
-パケットキャプチャの結果を見てみます
-No.3の行を見てみます +
-Source：192.168.1.11　Destination：10.10.10.10　となっているので、 +
-本社PCからWebサイトの通信になります +
+疎通確認出来ましたね！
 
+image::/images/kotani/20180306/6.png[]
+
+パケットキャプチャのNo.2の行を見てみます +
+Source：8.8.8.8　Destination：10.10.10.10　と +
+SourceのIPアドレスが書き換えられてますね +
+これならR1ルータから通信が帰って来ます +
+
+下記コマンドでNATテーブルを見てみます
+R2でどんなNAT処理が行われたかわかります
 
 ```
 R2#show ip nat translations 
 Pro Inside global      Inside local       Outside local      Outside global
 icmp 8.8.8.8:1194      192.168.1.11:1194  10.10.10.10:1194   10.10.10.10:1194
 ```
-
-image::/images/kotani/20180306/6.png[]
-
 
 続いてWebサーバにcurlしてみると +
 エラーになりました +
@@ -205,7 +233,7 @@ gns3-centos7-3> systemctl status firewalld
    〜〜〜以下省略〜〜〜
 ```
 
-邪魔がいなくなったので、もう一回試してみます
+邪魔がいなくなったので、もう一回
 
 ```
 ■gns3-centos7-1
@@ -238,7 +266,7 @@ R2との間にスイッチングハブを置いて、「gns3-centos7-1」と「g
 
 image::/images/kotani/20180306/8.png[]
 
-IPアドレスを設定します
+続いてIPアドレスを設定します
 
 ```
 nmcli connection modify enp0s3 ipv4.method manual ipv4.addresses 192.168.1.12/24
@@ -263,15 +291,26 @@ gns3-centos7-1-2> curl 10.10.10.10
   </div>
 </body></html>
 ```
+
+本社PCの両方で通信出来てますね
+
+image::/images/kotani/20180306/9.png[]
+image::/images/kotani/20180306/10.png[]
+
+パケットキャプチャのNo.4の行を見ると Source：8.8.8.8　Destination：10.10.10.10 +
+パケットキャプチャのNo.19の行を見ると Source：8.8.8.8　Destination：10.10.10.10 +
+とSourceのIPアドレスが同じですが、
+通信のポート番号「59822」「46572」を見てR2が判断し +
+それぞれの本社PCに通信を返しています +
+
+NATテーブルを見て確認します
+
 ```
 R2#show ip nat translations 
 Pro Inside global      Inside local       Outside local      Outside global
 tcp 8.8.8.8:59822      192.168.1.11:59822 10.10.10.10:80     10.10.10.10:80
 tcp 8.8.8.8:46572      192.168.1.12:46572 10.10.10.10:80     10.10.10.10:80
 ```
-
-image::/images/kotani/20180306/9.png[]
-image::/images/kotani/20180306/10.png[]
 
 これで本社にPCが何台あっても、 +
 同時にインターネットを使うことが出来ますね +
