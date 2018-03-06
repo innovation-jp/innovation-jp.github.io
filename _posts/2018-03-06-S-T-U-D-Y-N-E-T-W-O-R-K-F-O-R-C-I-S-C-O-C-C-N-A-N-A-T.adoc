@@ -138,7 +138,7 @@ R2(config-if)#exit
 R2(config)#exit
 ```
 
-上記設定の意味
+上記設定の意味はこんな感じです
 ```
 ①
 access-list 1 permit 192.168.1.0 0.0.0.255
