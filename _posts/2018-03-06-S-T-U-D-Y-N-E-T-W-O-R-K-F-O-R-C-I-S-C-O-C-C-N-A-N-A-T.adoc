@@ -81,6 +81,8 @@ image::/images/kotani/20180306/2.png[]
 image::/images/kotani/20180306/5.png[]
 image::/images/kotani/20180306/3.png[]
 
+キャプチャが始まったので、もう一回通信してみます
+
 image::/images/kotani/20180306/4.png[]
 
 No.3の行を見てみます +
@@ -91,8 +93,6 @@ Source：192.168.1.11　Destination：10.10.10.10　となっているので、 
 Source：10.10.10.10　Destination：192.168.1.11 +
 となっているので、Webサイトから本社PCへの通信（No.3の応答）になります +
 問題なのは宛先のIPアドレスが「192.168.1.11」となっていることです +
-このパケットは次にR1ルータが受け取りますが、 +
-R1ルータは192.168.1.11というIPアドレスがどこにいるのか知りません +
 
 R1ルータのルーティングを確認します +
 ```
@@ -115,11 +115,13 @@ C       9.9.9.0 is directly connected, FastEthernet0/1
 C       10.10.10.0 is directly connected, FastEthernet1/0
 ```
 
+このパケットは次にR1ルータが受け取りますが、 +
+R1ルータは192.168.1.11というIPアドレスがどこにいるのか知りません +
 R1が知っているのは +
 　「8.8.8.0/24」 +
 　「9.9.9.0/24」 +
 　「10.10.10.0/24」 +
-の3つだけとなるのでパケットの行き先が見つからず、通信が出来ません +
+の3つのネットワークだけとなるので、パケットの行き先が見つからず破棄されます +
 
 R2にNATの設定を行います +
 
@@ -135,6 +137,8 @@ R2(config-if)#ip nat outside
 R2(config-if)#exit
 R2(config)#exit
 ```
+
+設定できたので、再度通信してみます
 
 ```
 ■gns3-centos7-1
@@ -152,6 +156,9 @@ rtt min/avg/max/mdev = 30.794/38.871/42.173/4.226 ms
 
 ```
 
+疎通確認出来ましたね！ +
+パケットキャプチャの結果は
+
 ```
 R2#show ip nat translations 
 Pro Inside global      Inside local       Outside local      Outside global
@@ -161,9 +168,7 @@ icmp 8.8.8.8:1194      192.168.1.11:1194  10.10.10.10:1194   10.10.10.10:1194
 image::/images/kotani/20180306/6.png[]
 
 
-
-疎通確認は出来ましたね！ +
-Webサーバにcurlしてみます +
+続いてWebサーバにcurlしてみると +
 
 ```
 ■gns3-centos7-1
