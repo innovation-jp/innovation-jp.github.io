@@ -1,0 +1,267 @@
+# macのGNS3でNETWORK(CISCO CCNA)の勉強　〜④NAT設定〜
+:published_at: 2018-03-06
+:hp-alt-title: STUDY NETWORK FOR CISCO CCNA(NAT)
+:hp-tags: Study, Network, mac, GNS3, CISCO, CCNA, NAT, CentOS
+
+KTNです +
+前回の続きで今度はNATの勉強をしていきたいと思います +
+
+## NATしてみます
+今回は本社PCから仮想インターネットに公開されているWebサイトを見れるよう +
+環境構築していきたいと思います +
+
+おおまかな手順は以下になります +
+１．GNS3の標準VPCSからCentOSに切り替える +
+２．Webサイトを用意する +
+３．本社ルータにNAT設定をする +
+４．本社PCを増やしてもWebサイトを見れることを確認する +
+※今回のブログでは３、４のみを記載しています + 
+　１、２については前回のブログで！ +
+
+## ３．本社ルータにNAT設定をする +
+NATについて軽く触れたいと思います +
+
+NATはざっくり3種類で +
+　・スタティックNAT + 
+　・ダイナミックNAT +
+　・PAT +
+
+スタティックNAT： +
+　1対1の変換エントリを設定しておくNAT +
+　「内部ローカルアドレス」と「内部グローバルアドレス」を1対1で定義しておくことで、 +
+　対象の「内部ローカルアドレス」を持ったPC等が外部と通信することが出来るようになります +
+　1つの設定で1台のPCのみが外部のネットワークと通信出来るようになります +
+　補足：「内部ローカルアドレス」と「内部グローバルアドレス」はCISCOの用語です +
+　　「内部ローカルアドレス」とは、内部ネットワークのホストに割り当てられるIPアドレス +
+　　前回作ったネットワークで言うと、「192.168.1.11」「192.168.11.11」が該当します +
+　　「内部グローバルアドレス」とは、外部ネットワークから見た、内部ネットワークのホストのIPアドレス +
+　　前回作ったネットワークで言うと、「8.8.8.8」「9.9.9.9」が該当します +
+
+ダイナミックNAT +
+　複数の変換エントリを設定しておくNAT +
+　NAT変換で使用するIPアドレスのプールを設定しておくことで、 +
+　外部への通信が発生した時にそのプール内のIPアドレスが1つ使用されます +
+　基本的にスタティックNATと仕組みが同じで、 +
+　「内部ローカルアドレス」と「内部グローバルアドレス」を1対1で紐付けるので、 +
+　10台のPCが同時に外部のネットワークと通信出来るようにするには、 +
+　10個の「内部グローバルアドレス」をプールに設定しておく必要があります +
+
+PAT +
+　1つのIPアドレスを複数のコンピュータで共有するNATです +
+　「スタティックNAT」「ダイナミックNAT」はIPアドレスベースで変換するため、 +
+　1つの「内部ローカルアドレス」あたり、1つの「内部グローバルアドレス」が必要となります +
+　「PAT」はIPアドレス＋ポートで変換するため、ポートを上手く使うことにより、 +
+　複数の「内部ローカルアドレス」が、1つの「内部グローバルアドレス」で通信可能となります +
+　補足：PATはCISCO用語で、一般的にはNAPT、またはIPマスカレードと呼ばれます +
+
+ということで、 +
+グローバルIPは潤沢にあるわけではないので、ほぼ「PAT」一択になるかと思います。 +
+
+image::/images/kotani/20180306/11.jpg[]
+※PATイメージ図
+
+そろそろ設定していきたいのですが、 +
+NATを設定していない現状で通信が出来ないことを確認します +
+
+本社PCから疎通確認してみます +
+```
+■gns3-centos7-1
+gns3-centos7-1> ping 10.10.10.10
+PING 10.10.10.10 (10.10.10.10) 56(84) bytes of data.
+--- 10.10.10.10 ping statistics ---
+5 packets transmitted, 0 received, 100%	 packet loss, time 4006ms
+```
+
+結果は想定通りなのですが、念のためパケットを見て確認します +
+GNS3の画面でパケットを見たい箇所を選択して「Start caputure」を選択します +
+今回は赤線の箇所をキャプチャします
+
+image::/images/kotani/20180306/1.png[]
+image::/images/kotani/20180306/2.png[]
+image::/images/kotani/20180306/5.png[]
+image::/images/kotani/20180306/3.png[]
+
+image::/images/kotani/20180306/4.png[]
+
+No.3の行を見てみます +
+Source：192.168.1.11　Destination：10.10.10.10　となっているので、 +
+本社PCからWebサイトの通信になります +
+
+次に、No.4の行を見てみます +
+Source：10.10.10.10　Destination：192.168.1.11 +
+となっているので、Webサイトから本社PCへの通信（No.3の応答）になります +
+問題なのは宛先のIPアドレスが「192.168.1.11」となっていることです +
+このパケットは次にR1ルータが受け取りますが、 +
+R1ルータは192.168.1.11というIPアドレスがどこにいるのか知りません +
+
+R1ルータのルーティングを確認します +
+```
+R1#show ip route 
+Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area 
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route
+
+Gateway of last resort is not set
+
+     8.0.0.0/24 is subnetted, 1 subnets
+C       8.8.8.0 is directly connected, FastEthernet0/0
+     9.0.0.0/24 is subnetted, 1 subnets
+C       9.9.9.0 is directly connected, FastEthernet0/1
+     10.0.0.0/24 is subnetted, 1 subnets
+C       10.10.10.0 is directly connected, FastEthernet1/0
+```
+
+R1が知っているのは +
+　「8.8.8.0/24」 +
+　「9.9.9.0/24」 +
+　「10.10.10.0/24」 +
+の3つだけとなるのでパケットの行き先が見つからず、通信が出来ません +
+
+R2にNATの設定を行います +
+
+```
+R2#configure terminal 
+R2(config)#access-list 1 permit 192.168.1.0 0.0.0.255
+R2(config)#ip nat inside source list 1 interface fastEthernet 0/1 overload
+R2(config)#interface fastEthernet 0/0
+R2(config-if)#ip nat inside 
+R2(config-if)#exit
+R2(config)#interface fastEthernet 0/1
+R2(config-if)#ip nat outside 
+R2(config-if)#exit
+R2(config)#exit
+```
+
+```
+■gns3-centos7-1
+gns3-centos7-1> ping 10.10.10.10
+PING 10.10.10.10 (10.10.10.10) 56(84) bytes of data.
+64 bytes from 10.10.10.10: icmp_seq=1 ttl=62 time=42.1 ms
+64 bytes from 10.10.10.10: icmp_seq=1 ttl=62 time=38.5 ms
+64 bytes from 10.10.10.10: icmp_seq=1 ttl=62 time=41.4 ms
+64 bytes from 10.10.10.10: icmp_seq=1 ttl=62 time=41.3 ms
+64 bytes from 10.10.10.10: icmp_seq=1 ttl=62 time=30.7 ms
+
+--- 10.10.10.10 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4011ms
+rtt min/avg/max/mdev = 30.794/38.871/42.173/4.226 ms
+
+```
+
+```
+R2#show ip nat translations 
+Pro Inside global      Inside local       Outside local      Outside global
+icmp 8.8.8.8:1194      192.168.1.11:1194  10.10.10.10:1194   10.10.10.10:1194
+```
+
+image::/images/kotani/20180306/6.png[]
+
+
+
+疎通確認は出来ましたね！ +
+Webサーバにcurlしてみます +
+
+```
+■gns3-centos7-1
+gns3-centos7-1> curl 10.10.10.10
+curl: (7) Failed connect to 10.10.10.10:80; No route to host
+```
+
+多分Webサーバのファイアウォールだと思うので確認します
+
+```
+■gns3-centos7-1
+gns3-centos7-3> systemctl status firewalld
+  firewalld.service - firewalld - dynamic firewall daemon
+   Loaded: loaded (/usr/lib/systemd/system/firewalld.service; enabled; vendor preset: enables)
+   Active: active (running) since Mon 2018-03-05 23:56:02 JST; 30min 3s ago
+   〜〜〜以下省略〜〜〜
+```
+
+「active (running)」となっているので、動いてますね +
+邪魔なので止めます +
+
+```
+■gns3-centos7-1
+gns3-centos7-3> systemctl stop firewalld
+gns3-centos7-3> systemctl status firewalld
+  firewalld.service - firewalld - dynamic firewall daemon
+   Loaded: loaded (/usr/lib/systemd/system/firewalld.service; enabled; vendor preset: enables)
+   Active: inactive (dead) since Tue 2018-03-06 00:02:46 JST; 4s ago
+   〜〜〜以下省略〜〜〜
+```
+
+邪魔がいなくなったので、もう一回試してみます
+
+```
+■gns3-centos7-1
+gns3-centos7-1> curl 10.10.10.10
+〜〜〜省略〜〜〜
+    </div>
+  </div>
+</body></html>
+```
+
+という感じにHTMLが取得できました +
+パケットキャプチャしてみます +
+
+image::/images/kotani/20180306/7.png[]
+
+```
+R2#show ip nat translations 
+Pro Inside global      Inside local       Outside local      Outside global
+tcp 8.8.8.8:43600      192.168.1.11:43600 10.10.10.10:80     10.10.10.10:80
+```
+
+想定通り通信できました、一旦OKですね +
+
+# ４．本社PCを増やしてもWebサイトを見れることを確認する +
+
+本社PCを増やしたいので、
+VirtualBoxで「gns3-centos7-1」をクローンして「gns3-centos7-1-2」を作り
+作った仮想マシンをGNS3に登録します
+R2との間にスイッチングハブを置いて、「gns3-centos7-1」と「gns3-centos7-1-2」を接続して
+
+image::/images/kotani/20180306/8.png[]
+
+IPアドレスを設定します
+
+nmcli connection modify enp0s3 ipv4.method manual ipv4.addresses 192.168.1.12/24
+nmcli c down enp0s3; nmcli c up enp0s3
+
+こんな感じになります
+
+
+
+「gns3-centos7-1」と「gns3-centos7-1-2」から、同時にWebサーバにcurlしてみます
+
+■gns3-centos7-1
+gns3-centos7-1> curl 10.10.10.10
+〜〜〜省略〜〜〜
+    </div>
+  </div>
+</body></html>
+
+■gns3-centos7-1-2
+gns3-centos7-1-2> curl 10.10.10.10
+〜〜〜省略〜〜〜
+    </div>
+  </div>
+</body></html>
+
+
+R2#show ip nat translations 
+Pro Inside global      Inside local       Outside local      Outside global
+tcp 8.8.8.8:59822      192.168.1.11:59822 10.10.10.10:80     10.10.10.10:80
+tcp 8.8.8.8:46572      192.168.1.12:46572 10.10.10.10:80     10.10.10.10:80
+
+image::/images/kotani/20180306/9.png[]
+image::/images/kotani/20180306/10.png[]
+
+これで本社にPCが何台あっても、
+同時にインターネットを使うことが出来ますね
+今日はここまでにしたいと思います
