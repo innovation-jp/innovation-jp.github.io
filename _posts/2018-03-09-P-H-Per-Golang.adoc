@@ -1,0 +1,71 @@
+# PHPerがGolangを試してみた 後編
+:published_at: 2018-03-09
+:hp-tags: PHP, PHPer, Golang, Go言語, Go
+
+## 概要
+私はPHPerなのですが、Golangを試してみました。 +
+難しいと思った点など書いていければと思います。
+
+前編の内容
+
+http://tech.innovation.co.jp/2017/12/19/P-H-Per-Golang.html
+
+* Hello World
+* コンパイル処理
+* パッケージ・関数定義
+* 変数
+* 定数
+* 真偽型
+* null値
+* 配列型
+* スライス型
+* マップ型
+* 条件分岐
+* ループ処理
+* 構造体
+* インターフェース型
+
+今回の後編の内容
+
+
+
+## Hello World
+
+Hello Worldに関しては、特に迷う部分はありませんでした。 +
+
+++++
+<pre style="font-family: Menlo, Courier">
+// vi helloworld.go
+
+// メイン処理のパッケージ名
+package main
+
+// fmtをインポートしています
+import "fmt"
+
+// メインの処理を記述していきます
+func main() {
+	// 文字列を標準出力します	
+	fmt.Println("HelloWorld")
+}
+</pre>
+++++
+
+fmt というパッケージを使わないと標準出力ができないのだな。 +
+と思ったくらいです。
+
+あとは Println は Java っぽいなとも思いました。
+
+## コンパイル処理
+
+コンパイル処理はPHPにはありませんが、 +
+Java のように行えばよく、特に迷うことはありませんでした。
+
+ // コンパイル
+ go build helloworld.go
+ // 実行
+ ./helloworld
+
+
+## 所感
+
