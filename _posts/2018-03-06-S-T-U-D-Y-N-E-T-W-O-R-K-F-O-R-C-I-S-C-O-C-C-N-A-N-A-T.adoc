@@ -16,7 +16,12 @@ KTNです +
 ３．本社ルータにNAT設定をする +
 ４．本社PCを増やしてもWebサイトを見れることを確認する +
 ※今回のブログでは３、４のみを記載しています + 
-　１、２については前回のブログで！ +
+　１、２については前回の記事「 http://tech.innovation.co.jp/2018/01/14/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-N-A-T.html[macのGNS3でNETWORK(CISCO CCNA)の勉強　〜③NAT準備〜] 」 を見て下さい！ +
+
+関連記事はこちら +
+http://tech.innovation.co.jp/2017/11/06/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A.html[macのGNS3でNETWORK(CISCO CCNA)の勉強　〜①GNS3導入〜] +
+http://tech.innovation.co.jp/2017/11/21/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-V-P-N.html[macのGNS3でNETWORK(CISCO CCNA)の勉強　〜②VPN〜] +
+http://tech.innovation.co.jp/2018/01/14/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-N-A-T.html[macのGNS3でNETWORK(CISCO CCNA)の勉強　〜③NAT準備〜]
 
 ## ３．本社ルータにNAT設定をする +
 NATについて軽く触れたいと思います +
