@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>macのGNS3でNETWORK(CISCO CCNA)の勉強　〜④NAT設定〜 - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="macのGNS3でNETWORK(CISCO CCNA)の勉強　〜④NAT設定〜">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="macのGNS3でNETWORK(CISCO CCNA)の勉強　〜④NAT設定〜">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/03/06/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-N-A-T.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="macのGNS3でNETWORK(CISCO CCNA)の勉強　〜④NAT設定〜" />
+    <meta property="og:description" content="KTNです 前回の続きで今度はNATの勉強をしていきたいと思います NATしてみます 今回は本社PCから仮想インターネットに公開されているWebサイトを見れるよう 環境構築していきたいと思います おおまかな手順は以下になります １．GNS3の標準VPCSからCentOSに切り替える ２．Webサイトを用意する ３．本社ルータにNAT設定をする ４．本社PCを増やしてもWebサイトを見れることを確認する ※今回のブログでは３、４のみを記載しています 　１、２については前回の記事「 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜③NAT..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/03/06/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-N-A-T.html" />
+    <meta property="article:published_time" content="2018-03-05T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-03-07T01:48:45.898Z" />
+    <meta property="article:tag" content="Study" />
+    <meta property="article:tag" content="Network" />
+    <meta property="article:tag" content="mac" />
+    <meta property="article:tag" content="GNS3" />
+    <meta property="article:tag" content="CISCO" />
+    <meta property="article:tag" content="CCNA" />
+    <meta property="article:tag" content="NAT" />
+    <meta property="article:tag" content="CentOS" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="macのGNS3でNETWORK(CISCO CCNA)の勉強　〜④NAT設定〜" />
+    <meta name="twitter:description" content="KTNです 前回の続きで今度はNATの勉強をしていきたいと思います NATしてみます 今回は本社PCから仮想インターネットに公開されているWebサイトを見れるよう 環境構築していきたいと思います おおまかな手順は以下になります １．GNS3の標準VPCSからCentOSに切り替える ２．Webサイトを用意する ３．本社ルータにNAT設定をする ４．本社PCを増やしてもWebサイトを見れることを確認する ※今回のブログでは３、４のみを記載しています 　１、２については前回の記事「 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜③NAT..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/03/06/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-N-A-T.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars0.githubusercontent.com/u/24905783?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "macのGNS3でNETWORK(CISCO CCNA)の勉強　〜④NAT設定〜",
+    "url": "http://tech.innovation.co.jp/2018/03/06/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-N-A-T.html",
+    "datePublished": "2018-03-05T15:00:00.000Z",
+    "dateModified": "2018-03-07T01:48:45.898Z",
+    "keywords": "Study,  Network,  mac,  GNS3,  CISCO,  CCNA,  NAT,  CentOS",
+    "description": "KTNです 前回の続きで今度はNATの勉強をしていきたいと思います NATしてみます 今回は本社PCから仮想インターネットに公開されているWebサイトを見れるよう 環境構築していきたいと思います おおまかな手順は以下になります １．GNS3の標準VPCSからCentOSに切り替える ２．Webサイトを用意する ３．本社ルータにNAT設定をする ４．本社PCを増やしてもWebサイトを見れることを確認する ※今回のブログでは３、４のみを記載しています 　１、２については前回の記事「 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜③NAT..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Study tag-Network tag-mac tag-G-N-S3 tag-C-I-S-C-O tag-C-C-N-A tag-N-A-T tag-Cent-O-S no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="06 Mar 2018" class="post-meta__date date">06 Mar 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Study">Study</a>, <a href="http://tech.innovation.co.jp/tag/Network"> Network</a>, <a href="http://tech.innovation.co.jp/tag/mac"> mac</a>, <a href="http://tech.innovation.co.jp/tag/G-N-S3"> GNS3</a>, <a href="http://tech.innovation.co.jp/tag/C-I-S-C-O"> CISCO</a>, <a href="http://tech.innovation.co.jp/tag/C-C-N-A"> CCNA</a>, <a href="http://tech.innovation.co.jp/tag/N-A-T"> NAT</a>, <a href="http://tech.innovation.co.jp/tag/Cent-O-S"> CentOS</a></span>
+        <span class="post-meta__author author"><img src="https://avatars0.githubusercontent.com/u/24905783?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">macのGNS3でNETWORK(CISCO CCNA)の勉強　〜④NAT設定〜</h1>
+    </header>
+
+    <section class="post tag-Study tag-Network tag-mac tag-G-N-S3 tag-C-I-S-C-O tag-C-C-N-A tag-N-A-T tag-Cent-O-S">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>KTNです<br>
+前回の続きで今度はNATの勉強をしていきたいと思います<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_nat">NATしてみます</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>今回は本社PCから仮想インターネットに公開されているWebサイトを見れるよう<br>
+環境構築していきたいと思います<br></p>
+</div>
+<div class="paragraph">
+<p>おおまかな手順は以下になります<br>
+１．GNS3の標準VPCSからCentOSに切り替える<br>
+２．Webサイトを用意する<br>
+３．本社ルータにNAT設定をする<br>
+４．本社PCを増やしてもWebサイトを見れることを確認する<br>
+※今回のブログでは３、４のみを記載しています<br>
+　１、２については前回の記事「 <a href="http://tech.innovation.co.jp/2018/01/14/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-N-A-T.html">macのGNS3でNETWORK(CISCO CCNA)の勉強　〜③NAT準備〜</a> 」 を見て下さい！<br></p>
+</div>
+<div class="paragraph">
+<p>関連記事はこちら<br>
+<a href="http://tech.innovation.co.jp/2017/11/06/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A.html">macのGNS3でNETWORK(CISCO CCNA)の勉強　〜①GNS3導入〜</a><br>
+<a href="http://tech.innovation.co.jp/2017/11/21/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-V-P-N.html">macのGNS3でNETWORK(CISCO CCNA)の勉強　〜②VPN〜</a><br>
+<a href="http://tech.innovation.co.jp/2018/01/14/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-N-A-T.html">macのGNS3でNETWORK(CISCO CCNA)の勉強　〜③NAT準備〜</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__nat_br">３．本社ルータにNAT設定をする<br></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>NATについて軽く触れたいと思います<br></p>
+</div>
+<div class="paragraph">
+<p>NATはざっくり3種類で<br>
+　・スタティックNAT<br>
+　・ダイナミックNAT<br>
+　・PAT<br></p>
+</div>
+<div class="paragraph">
+<p>スタティックNAT：<br>
+　1対1の変換エントリを設定しておくNAT<br>
+　「内部ローカルアドレス」と「内部グローバルアドレス」を1対1で定義しておくことで、<br>
+　対象の「内部ローカルアドレス」を持ったPC等が外部と通信することが出来るようになります<br>
+　1つの設定で1台のPCのみが外部のネットワークと通信出来るようになります<br>
+　補足：「内部ローカルアドレス」と「内部グローバルアドレス」はCISCOの用語です<br>
+　　「内部ローカルアドレス」とは、内部ネットワークのホストに割り当てられるIPアドレス<br>
+　　前回作ったネットワークで言うと、「192.168.1.11」「192.168.11.11」が該当します<br>
+　　「内部グローバルアドレス」とは、外部ネットワークから見た、内部ネットワークのホストのIPアドレス<br>
+　　前回作ったネットワークで言うと、「8.8.8.8」「9.9.9.9」が該当します<br></p>
+</div>
+<div class="paragraph">
+<p>ダイナミックNAT<br>
+　複数の変換エントリを設定しておくNAT<br>
+　NAT変換で使用するIPアドレスのプールを設定しておくことで、<br>
+　外部への通信が発生した時にそのプール内のIPアドレスが1つ使用されます<br>
+　基本的にスタティックNATと仕組みが同じで、<br>
+　「内部ローカルアドレス」と「内部グローバルアドレス」を1対1で紐付けるので、<br>
+　10台のPCが同時に外部のネットワークと通信出来るようにするには、<br>
+　10個の「内部グローバルアドレス」をプールに設定しておく必要があります<br></p>
+</div>
+<div class="paragraph">
+<p>PAT<br>
+　1つのIPアドレスを複数のコンピュータで共有するNATです<br>
+　「スタティックNAT」「ダイナミックNAT」はIPアドレスベースで変換するため、<br>
+　1つの「内部ローカルアドレス」あたり、1つの「内部グローバルアドレス」が必要となります<br>
+　「PAT」はIPアドレス＋ポートで変換するため、ポートを上手く使うことにより、<br>
+　複数の「内部ローカルアドレス」が、1つの「内部グローバルアドレス」で通信可能となります<br>
+　補足：PATはCISCO用語で、一般的にはNAPT、またはIPマスカレードと呼ばれます<br></p>
+</div>
+<div class="paragraph">
+<p>ということで、<br>
+グローバルIPは潤沢にあるわけではないので、ほぼ「PAT」一択になるかと思います<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180306/11.jpg" alt="11.jpg">
+</div>
+</div>
+<div class="paragraph">
+<p>※PATイメージ図</p>
+</div>
+<div class="paragraph">
+<p>そろそろ設定していきたいのですが、<br>
+NATを設定していない現状で通信が出来ないことを確認しておきます<br></p>
+</div>
+<div class="paragraph">
+<p>本社PCから疎通確認してみます<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>■gns3-centos7-1
+gns3-centos7-1&gt; ping 10.10.10.10
+PING 10.10.10.10 (10.10.10.10) 56(84) bytes of data.
+--- 10.10.10.10 ping statistics ---
+5 packets transmitted, 0 received, 100%	 packet loss, time 4006ms</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>結果は想定通り通信出来ていないのですが、念のためパケットを見て確認します<br>
+GNS3の画面でパケットを見たい箇所を選択して「Start caputure」を選択します<br>
+今回は赤線の箇所をキャプチャします</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180306/1.png" alt="1.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180306/2.png" alt="2.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180306/5.png" alt="5.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180306/3.png" alt="3.png">
+</div>
+</div>
+<div class="paragraph">
+<p>キャプチャが始まったので、もう一回通信してみます</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180306/4.png" alt="4.png">
+</div>
+</div>
+<div class="paragraph">
+<p>No.3の行を見てみます<br>
+Source：192.168.1.11　Destination：10.10.10.10　となっているので、<br>
+本社PCからWebサイトの通信になります<br></p>
+</div>
+<div class="paragraph">
+<p>次に、No.4の行を見てみます<br>
+Source：10.10.10.10　Destination：192.168.1.11<br>
+となっているので、Webサイトから本社PCへの通信（No.3の応答）になります<br>
+問題なのは宛先のIPアドレスが「192.168.1.11」となっていることです<br></p>
+</div>
+<div class="paragraph">
+<p>R1ルータのルーティングを確認します<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>R1#show ip route
+Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route
+
+Gateway of last resort is not set
+
+     8.0.0.0/24 is subnetted, 1 subnets
+C       8.8.8.0 is directly connected, FastEthernet0/0
+     9.0.0.0/24 is subnetted, 1 subnets
+C       9.9.9.0 is directly connected, FastEthernet0/1
+     10.0.0.0/24 is subnetted, 1 subnets
+C       10.10.10.0 is directly connected, FastEthernet1/0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>このパケットは次にR1ルータが受け取りますが、<br>
+R1ルータは192.168.1.11というIPアドレスがどこにいるのか知りません<br>
+R1ルータが知っているのは<br>
+　「8.8.8.0/24」<br>
+　「9.9.9.0/24」<br>
+　「10.10.10.0/24」<br>
+の3つのネットワークだけとなるので、パケットの行き先が見つからず破棄されます<br></p>
+</div>
+<div class="paragraph">
+<p>R2にNATの設定を行います<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>R2#configure terminal
+R2(config)#access-list 1 permit 192.168.1.0 0.0.0.255
+R2(config)#ip nat inside source list 1 interface fastEthernet 0/1 overload
+R2(config)#interface fastEthernet 0/0
+R2(config-if)#ip nat inside
+R2(config-if)#exit
+R2(config)#interface fastEthernet 0/1
+R2(config-if)#ip nat outside
+R2(config-if)#exit
+R2(config)#exit</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>上記設定の意味はこんな感じです</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>①
+access-list 1 permit 192.168.1.0 0.0.0.255
+→IPアドレスのリスト（グループ）を作成
+ NAT対象とする送信元アドレスとして利用します
+
+②
+ip nat inside source list 1 interface fastEthernet 0/1 overload
+→NAT変換を行う対象を定義します
+ inside source list 1：
+  NAT変換の対象とする送信元アドレスは ① を使うという意味
+ interface fastEthernet 0/1：
+  NAT変換の対象とする外部インタフェース
+
+③
+interface fastEthernet 0/0
+ip nat inside
+ 「fastEthernet 0/0」が内部ネットワークであることを指定
+
+④
+interface fastEthernet 0/1
+R2(config-if)#ip nat outside
+ 「fastEthernet 0/0」が外部ネットワークであることを指定</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>設定できたので、再度通信してみます</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>■gns3-centos7-1
+gns3-centos7-1&gt; ping 10.10.10.10
+PING 10.10.10.10 (10.10.10.10) 56(84) bytes of data.
+64 bytes from 10.10.10.10: icmp_seq=1 ttl=62 time=42.1 ms
+64 bytes from 10.10.10.10: icmp_seq=1 ttl=62 time=38.5 ms
+64 bytes from 10.10.10.10: icmp_seq=1 ttl=62 time=41.4 ms
+64 bytes from 10.10.10.10: icmp_seq=1 ttl=62 time=41.3 ms
+64 bytes from 10.10.10.10: icmp_seq=1 ttl=62 time=30.7 ms
+
+--- 10.10.10.10 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4011ms
+rtt min/avg/max/mdev = 30.794/38.871/42.173/4.226 ms</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>疎通確認出来ましたね！</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180306/6.png" alt="6.png">
+</div>
+</div>
+<div class="paragraph">
+<p>パケットキャプチャのNo.2の行を見てみます<br>
+Source：8.8.8.8　Destination：10.10.10.10　と<br>
+SourceのIPアドレスが書き換えられてますね<br>
+これならR1ルータから通信が帰って来ます<br></p>
+</div>
+<div class="paragraph">
+<p>下記コマンドでNATテーブルを見てみます
+R2でどんなNAT処理が行われたかわかります</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>R2#show ip nat translations
+Pro Inside global      Inside local       Outside local      Outside global
+icmp 8.8.8.8:1194      192.168.1.11:1194  10.10.10.10:1194   10.10.10.10:1194</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>続いてWebサーバにcurlしてみると<br>
+エラーになりました<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>■gns3-centos7-1
+gns3-centos7-1&gt; curl 10.10.10.10
+curl: (7) Failed connect to 10.10.10.10:80; No route to host</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>多分Webサーバのファイアウォールだと思うので確認します</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>■gns3-centos7-1
+gns3-centos7-3&gt; systemctl status firewalld
+  firewalld.service - firewalld - dynamic firewall daemon
+   Loaded: loaded (/usr/lib/systemd/system/firewalld.service; enabled; vendor preset: enables)
+   Active: active (running) since Mon 2018-03-05 23:56:02 JST; 30min 3s ago
+   〜〜〜以下省略〜〜〜</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>「active (running)」となっているので、動いてますね<br>
+邪魔なので止めます<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>■gns3-centos7-1
+gns3-centos7-3&gt; systemctl stop firewalld
+gns3-centos7-3&gt; systemctl status firewalld
+  firewalld.service - firewalld - dynamic firewall daemon
+   Loaded: loaded (/usr/lib/systemd/system/firewalld.service; enabled; vendor preset: enables)
+   Active: inactive (dead) since Tue 2018-03-06 00:02:46 JST; 4s ago
+   〜〜〜以下省略〜〜〜</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>邪魔がいなくなったので、もう一回</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>■gns3-centos7-1
+gns3-centos7-1&gt; curl 10.10.10.10
+〜〜〜省略〜〜〜
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;&lt;/html&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>という感じにHTMLが取得できました<br>
+パケットキャプチャを見てみます<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180306/7.png" alt="7.png">
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>R2#show ip nat translations
+Pro Inside global      Inside local       Outside local      Outside global
+tcp 8.8.8.8:43600      192.168.1.11:43600 10.10.10.10:80     10.10.10.10:80</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>想定通り通信できました！<br></p>
+</div>
+</div>
+</div>
+<h1 id="__pc_web_br" class="sect0">４．本社PCを増やしてもWebサイトを見れることを確認する<br></h1>
+<div class="paragraph">
+<p>本社PCを増やしたいので、<br>
+VirtualBoxで「gns3-centos7-1」をクローンして「gns3-centos7-1-2」を作り<br>
+作った仮想マシンをGNS3に登録します<br>
+R2との間にスイッチングハブを置いて、「gns3-centos7-1」と「gns3-centos7-1-2」を接続します<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180306/8.png" alt="8.png">
+</div>
+</div>
+<div class="paragraph">
+<p>続いてIPアドレスを設定します</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>nmcli connection modify enp0s3 ipv4.method manual ipv4.addresses 192.168.1.12/24
+nmcli c down enp0s3; nmcli c up enp0s3</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>「gns3-centos7-1」と「gns3-centos7-1-2」から、<br>
+同時にWebサーバにcurlしてみます<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>■gns3-centos7-1
+gns3-centos7-1&gt; curl 10.10.10.10
+〜〜〜省略〜〜〜
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;&lt;/html&gt;
+
+■gns3-centos7-1-2
+gns3-centos7-1-2&gt; curl 10.10.10.10
+〜〜〜省略〜〜〜
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;&lt;/html&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>本社PCの両方で通信出来てますね</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180306/9.png" alt="9.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180306/10.png" alt="10.png">
+</div>
+</div>
+<div class="paragraph">
+<p>パケットキャプチャのNo.4の行を見ると Source：8.8.8.8　Destination：10.10.10.10<br>
+パケットキャプチャのNo.19の行を見ると Source：8.8.8.8　Destination：10.10.10.10<br>
+とSourceのIPアドレスが同じですが、
+通信のポート番号「59822」「46572」を見てR2が判断し<br>
+それぞれの本社PCに通信を返しています<br></p>
+</div>
+<div class="paragraph">
+<p>NATテーブルを見て確認します</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>R2#show ip nat translations
+Pro Inside global      Inside local       Outside local      Outside global
+tcp 8.8.8.8:59822      192.168.1.11:59822 10.10.10.10:80     10.10.10.10:80
+tcp 8.8.8.8:46572      192.168.1.12:46572 10.10.10.10:80     10.10.10.10:80</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>これで本社にPCが何台あっても、<br>
+同時にインターネットを使うことが出来ますね<br>
+今日はここまでにしたいと思います<br></p>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
