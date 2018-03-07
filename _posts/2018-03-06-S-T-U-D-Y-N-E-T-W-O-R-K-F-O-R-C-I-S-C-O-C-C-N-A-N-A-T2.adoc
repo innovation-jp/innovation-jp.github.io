@@ -1,6 +1,6 @@
 # macのGNS3でNETWORK(CISCO CCNA)の勉強　〜④NAT設定〜
 :published_at: 2018-03-06
-:hp-alt-title: STUDY NETWORK FOR CISCO CCNA(NAT)
+:hp-alt-title: STUDY NETWORK FOR CISCO CCNA(NAT2)
 :hp-tags: Study, Network, mac, GNS3, CISCO, CCNA, NAT, CentOS
 
 KTNです +
