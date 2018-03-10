@@ -1,5 +1,208 @@
 = 執筆中
 :hp-alt-title: Azure 10
-:hp-tags: syoga, log, Azure, Azure Storage, Node.js, LINE, Azure Function
+:hp-tags: syoga, log, Azure, Azure Storage, Node.js, LINE, Azure Function, Computer Vision API
 
-かいています
+お久しぶりです、SRE チームの syoga です。
+
+今年の冬は激寒でしたが、やっと春の陽気を感じる季節になってきたなと思います、これからお花見等の行楽シーズンに入りますので、写真を取る機会も多くなるのではないでしょうか。
+
+そんな中、以前の http://tech.innovation.co.jp/2017/07/04/Azure-5.html[ブログ] で作成した LINE Bot を色々な人に使ってもらおうと思い、新機能を追加しましたので、今回はそちらについて記事にしたいと思います。
+
+※ 前回の http://tech.innovation.co.jp/2018/01/16/Azure-9.html[ブログ] で Go で DB にログを出力するのが遅い件は、ログ出力関数に DB コネクションを渡す事で改善できたので触れません！！
+
+## お金が…ない！！
+前回作った際に Repl-AI のユーザ ID や ぐるなび API に渡す検索料理名を、Azure Redis Chache に保存していましたが、使用していなくてもまぁまぁのお値段になっていました（3000円くらい）。
+
+それが理由ではないと思いますが、最近ランチもままなりません。
+
+という訳でお安い Azure Table Storage を利用しデータを保存するようにソースを改修をしました、
+汎用の Azure Storage をすでに作成しているの、Table ストレージを早速使っています。
+
+Table ストレージはその名の通り、テーブルとして利用できるストレージです。
+
+テーブルの中には PartitionKey 、RowKey、Timestamp という固定の項目が存在します、Repl-AI のユーザ ID 払出しのデータを登録する際には text という PartitionKey で RowKey は LINE のユーザ ID を登録し、Desc という項目を作成してユーザ ID を格納するようにしました、以下はソースの抜粋です。
+
+処理としては Redis Chache を利用していた時と同じです、line テーブルに対し PartitionKey 、RowKey で検索をして、すでにデータがあれば Repl-AI ユーザ登録済なのでお話をします。
+
+存在しなければ Repl-AI のユーザ ID を払出して Table Storage にユーザ ID を登録します、登録時にエラーが発生した場合はユーザにエラーLINE発生メッセージを送信します。
+
+```
+async.waterfall([
+    // Repl-AI のユーザID登録確認
+    function(callback) {
+        // Table Storage の検索
+        tableSvc.retrieveEntity('line', 'text', userId, function(error, result, response){
+            let replUserId = '';
+            if(response.statusCode == '200'){
+                replUserId = response.body.desc;
+            }
+            callback(null, replUserId);
+        });
+    },
+    // 未登録なら Repl-AI ユーザID登録
+    function(replUserId, callback) {
+        let initFlag = false;
+
+        if(replUserId == '') {
+            getReplAiUserid(context, function(result) {
+                let initFlag = true;
+                let insData = {
+                    PartitionKey  : 'text',
+                    RowKey        : userId,
+                    desc          : result
+                };
+
+                tableSvc.insertEntity('line', insData, function (error, result, response) {
+                    if(error){
+                        context.log('[Error] tableSvc.insertEntity', error);
+                        pushTexeMessage('アプリケーションエラーが発生したかな？', userId, context, function(result) {});
+                        context.done();
+                    }
+                });
+                callback(null, result, initFlag);
+            });
+        } else {
+            // 登録済ならお話
+            callback(null, replUserId, initFlag);  
+        } 
+    },
+
+```
+
+## OCR … したい！！
+Azure Computer Vision API を利用し画像解析していますが、次は OCR 機能（光学的文字認識）を追加したいと思います。
+
+しかし現在は画像を送ると画像解析をしてしまうので、文字認識をしたい場合は一度 「文字認識」 と送って貰う事にします、前回の ぐるなび API 呼出しと同じで手法です。
+
+```
+// メッセージが「文字解析」の場合
+        if(text.match(/文字認識/)) {
+            // 「文字認識」メッセージが送られているか履歴を検索
+            tableSvc.retrieveEntity('line', 'img', userId, function(error, result, response){
+                if(response.statusCode == '200'){
+                    pushTexeMessage('まだ文字の入った画像が送られていないかな？', userId, context, function(result) {});
+                } else {
+                    // 「文字認識」メッセージの履歴を登録
+                    let insData = {
+                        PartitionKey  : 'img',
+                        RowKey        : userId,
+                        desc          : ''
+                    }
+                    tableSvc.insertEntity('line', insData, function (error, result, response) {
+                        if(error){
+                            context.log('[Error] tableSvc.insertEntity', error);
+                            pushTexeMessage('アプリケーションエラーが発生したかな？', userId, context, function(result) {});
+                            context.done();
+                        }
+                        pushTexeMessage('文字の入った画像を送ってくれるかな？', userId, context, function(result) {});
+                    });
+                }
+            });
+        // メッセージが「文字認識」以外の場合
+        } else {
+        ・・・・　
+```
+こちらも Table Storage を利用し「文字認識」というメッセージが送信されているかを検索します。
+
+次に画像が送られてきた場合に、「文字認識」メッセージが存在すれば OCR 機能を呼び出します、存在しなければ今まで通りの画像解析です。
+```
+function(imageName, callback) {
+    // 「文字認識」のメッセージが送られているか
+    tableSvc.retrieveEntity('line', 'img', userId, function(error, result, response) {
+        let apiStatus = false;
+        
+        if(response.statusCode == '200') {
+            apiStatus = true;  
+        }
+        callback(null, imageName, apiStatus);
+    });
+},
+function(imageName, apiStatus, callback) {
+    // ComputerVisionAPI 呼出し
+    callMSComputerVisionAPI(imageName, apiStatus, context, function(result) {
+        callback(null, result, apiStatus);
+    });
+},
+function(cvResult, apiStatus, callback) {
+    if(apiStatus) {
+        // 文字認識結果送信
+        if(typeof(cvResult.regions) !== 'undefined') {
+
+            let line;
+            let text;
+            let lineCont = 0;                        
+            let message  = 'この画像には以下の文字が含まれていそうかな？\n\n';
+
+            cvResult.regions[0].lines.forEach(function(line) {
+                line.words.forEach(function(text) {
+                    if(cvResult.language == 'ja') {
+                        message +=　iconv.decode(text.text, 'utf-8');
+                    } else {
+                        message +=　iconv.decode(text.text, 'utf-8') + ' ';
+                    }
+                });
+                
+                lineCont++;
+                if(lineCont < cvResult.regions[0].lines.length) {
+                    message += '\n';
+                }       
+            });
+
+            let delData = {
+                PartitionKey: {'_':'img'},
+                RowKey: {'_': userId}
+            };
+
+            // 「文字認識」の登録履歴削除
+            tableSvc.deleteEntity('line', delData, function(error, response){
+                if(error) {
+                    context.log('[Error] tableSvc.deleteEntity', error);
+                    pushTexeMessage('アプリケーションエラーが発生したかな？', userId, context, function(result) {});
+                    context.done();
+                }
+            });
+
+            pushTexeMessage(message, userId, context, function(result) {
+                context.done();
+            });
+        } else{
+            pushTexeMessage('この画像には文字がないからもう一回送ってくれないかな？', userId, context, function(result) {
+                context.done();
+            });
+        }
+    } else {
+        // 顔画像解析結果送信
+    ・・・
+```
+文字認識結果を受信した後は文字列を結合して LINE にメッセージとして返却します、という訳で早速…
+
+## 使って…みたい！！
+弊社エンジニアチームの行動指針がカードになっていますので、こちらを使ってみます。
+
+*・行動指針のカード*
+
+
+image::/images/syoga/azure10/azure3.png[]
+
+
+*・認識結果*
+
+image::/images/syoga/azure10/azure2.png[]
+
+結果としては プ => ブ と認識されていましたが、この文字の大きさでは仕方ないのかなと擁護してみます、それ以外は全て認識できているようです（一番上の ◾も文字と認識しているようですが）。
+
+カードと同じ順番にメッセージが送られているのは、Computer Vision API が文字位置を含めた情報をレスポンスで返却してくれるためです。
+
+## 感想
+OCR 技術自体は以前から存在する物ですが、一昔前に比べて遥かに精度が上がっていると個人的に思います、スキャナももちろんの事、PDF ファイルをテキストに変換するサービス等も OCR が利用されています。
+
+リアルタイムでカメラで写している文字をテキスト化し翻訳できるよう
+
+## 最後に一押し機能！！
+これだけではございません、やっぱり使ってもらうなら楽しく使って欲しいので、最後にアップデートした人物画像解析を実施してみましょう。
+
+画像
+
+これで写真に写ってくれた人も満足してくれるのではないでしょうか。
+
+完
