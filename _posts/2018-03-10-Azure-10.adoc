@@ -181,14 +181,14 @@ function(cvResult, apiStatus, callback) {
 
 *・行動指針のカード*
 
-
 image::/images/syoga/azure10/azure3.png[]
 
-
+ 
 *・認識結果*
 
 image::/images/syoga/azure10/azure2.png[]
-
+ 
+ 
 結果としては プ => ブ と認識されていましたが、この文字の大きさでは仕方ないのかなと擁護してみます、それ以外は全て認識できているようです（一番上の ◾も文字と認識しているようですが）。
 
 カードと同じ順番にメッセージが送られているのは、Computer Vision API が文字位置を含めた情報をレスポンスで返却してくれるためです。
