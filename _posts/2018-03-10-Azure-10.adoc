@@ -4,7 +4,7 @@
 
 お久しぶりです、SRE チームの syoga です。
 
-今年の冬は激寒でしたが、やっと春の陽気を感じる季節になってきたなと思います、これからお花見等の行楽シーズンに入りますので、写真を取る機会も多くなるのではないでしょうか。
+今年の冬は激寒でしたが、やっと春の陽気を感じる季節になってきたなと思います、これからお花見等の行楽シーズンに突入しますので、写真を取る機会も多くなるのではないでしょうか。
 
 そんな中、以前の http://tech.innovation.co.jp/2017/07/04/Azure-5.html[ブログ] で作成した LINE Bot を色々な人に使ってもらおうと思い、新機能を追加しましたので、今回はそちらについて記事にしたいと思います。
 
@@ -16,15 +16,15 @@
 それが理由ではないと思いますが、最近ランチもままなりません。
 
 という訳でお安い Azure Table Storage を利用しデータを保存するようにソースを改修をしました、
-汎用の Azure Storage をすでに作成しているの、Table ストレージを早速使っています。
+汎用の Azure Storage をすでに前回作成しているの、Table ストレージを早速使っていきます。
 
-Table ストレージはその名の通り、テーブルとして利用できるストレージです。
+Table ストレージはその名の通り、テーブルとして利用できるストレージです、作成したテーブルの中には PartitionKey 、RowKey、Timestamp という固定の項目が存在します。
 
-テーブルの中には PartitionKey 、RowKey、Timestamp という固定の項目が存在します、Repl-AI のユーザ ID 払出しのデータを登録する際には text という PartitionKey で RowKey は LINE のユーザ ID を登録し、Desc という項目を作成してユーザ ID を格納するようにしました、以下はソースの抜粋です。
+Repl-AI のユーザ ID 払出しのデータを登録する際には text という PartitionKey で RowKey は LINE のユーザ ID を登録し、Desc という項目に Repl-AI のユーザ ID を格納するようにしました、以下はソースの抜粋です。
 
 処理としては Redis Chache を利用していた時と同じです、line テーブルに対し PartitionKey 、RowKey で検索をして、すでにデータがあれば Repl-AI ユーザ登録済なのでお話をします。
 
-存在しなければ Repl-AI のユーザ ID を払出して Table Storage にユーザ ID を登録します、登録時にエラーが発生した場合はユーザにエラーLINE発生メッセージを送信します。
+存在しなければ Repl-AI のユーザ ID を払出して Table Storage にユーザ ID を登録します、登録時にエラーが発生した場合はユーザにエラー発生メッセージを LINE で送信します。
 
 ```
 async.waterfall([
@@ -70,9 +70,9 @@ async.waterfall([
 ```
 
 ## OCR … したい！！
-Azure Computer Vision API を利用し画像解析していますが、次は OCR 機能（光学的文字認識）を追加したいと思います。
+Azure Computer Vision API を利用し人物解析していましたが、次は OCR 機能（光学的文字認識）を追加したいと思います。
 
-しかし現在は画像を送ると画像解析をしてしまうので、文字認識をしたい場合は一度 「文字認識」 と送って貰う事にします、前回の ぐるなび API 呼出しと同じで手法です。
+しかし現在は画像を送ると人物解析をしてしまうので、文字認識をしたい場合は一度 「文字認識」 と送って貰う事にします、前回の ぐるなび API 呼出しと同じで手法です。
 
 ```
 // メッセージが「文字解析」の場合
@@ -104,7 +104,7 @@ Azure Computer Vision API を利用し画像解析していますが、次は OC
 ```
 こちらも Table Storage を利用し「文字認識」というメッセージが送信されているかを検索します。
 
-次に画像が送られてきた場合に、「文字認識」メッセージが存在すれば OCR 機能を呼び出します、存在しなければ今まで通りの画像解析です。
+次に画像が送られてきた場合に、「文字認識」メッセージが存在すれば OCR 機能を呼び出します、存在しなければ今まで通りの人物解析を実行します。
 ```
 function(imageName, callback) {
     // 「文字認識」のメッセージが送られているか
@@ -174,10 +174,76 @@ function(cvResult, apiStatus, callback) {
         // 顔画像解析結果送信
     ・・・
 ```
-文字認識結果を受信した後は文字列を結合して LINE にメッセージとして返却します、という訳で早速…
+
+Azure Computer Vision API に実際にリクエストを投げる関数部分のソースです、「文字認識」が送られているかをフラグで判断し、処理を分岐させています。
+
+```
+// ComputerVisionAPI 呼出
+function callMSComputerVisionAPI(imageUrl, apiStatus, context, callback) {
+
+    context.log('==== Start:callMSComputerVisionAPI ====');
+
+    let params;
+    let urlObj;
+
+    // Strage 画像 URL
+    let urlImage = process.env.BLOB_HOST + imageUrl;
+
+    if(apiStatus) {
+        // ComputerVisionAPI OCR
+        // クエリパラメータ設定
+        params ='language=unk&detectOrientation=true';
+
+        // URL 作成
+        urlObj = {
+            protocol: 'https',
+            hostname: 'southeastasia.api.cognitive.microsoft.com',
+            pathname: 'vision/v1.0/ocr',
+            search  : params
+        };
+    } else {
+        // ComputerVisionAPI Analayze
+        // クエリパラメータ設定
+        params = 'visualFeatures=Categories, Tags, Description, Faces';
+
+        // URL 作成
+        urlObj = {
+            protocol: 'https',
+            hostname: 'southeastasia.api.cognitive.microsoft.com',
+            pathname: 'vision/v1.0/analyze',
+            search  : params
+        };
+    }
+    
+    // リクエストデータ設定
+    let optCva = {
+    	"headers"  : {
+    		"Content-Type": "application/json",
+    		"Ocp-Apim-Subscription-Key": "KEY"
+    	},
+    	"body"     : '{"url":"' + urlImage + '"}',
+    	"uri"      : url.format(urlObj),
+    	"method"   : "POST",
+    	"type"     : "POST",
+    	"encoding" : "binary"
+    };
+
+    // リクエスト送信
+    requestPromise(optCva).then(function(result) {
+        let cvResult  = JSON.parse(result);
+        callback(cvResult);
+    }).catch(function(e) {
+        context.log(e.stack);
+    }).done();
+
+    context.log('==== End  :callMSComputerVisionAPI ====');
+}
+```
+
+文字認識結果を受信した後は文字列を結合して LINE にメッセージを送信します、という訳で早速…
 
 ## 使って…みたい！！
-弊社エンジニアチームの行動指針がカードになっていますので、こちらを使ってみます。
+弊社エンジニアの行動指針が記載されたカードが手元にありましたので、こちらを使ってみます。
 
 *・行動指針のカード*
 
@@ -194,15 +260,17 @@ image::/images/syoga/azure10/azure2.png[]
 カードと同じ順番にメッセージが送られているのは、Computer Vision API が文字位置を含めた情報をレスポンスで返却してくれるためです。
 
 ## 感想
-OCR 技術自体は以前から存在する物ですが、一昔前に比べて遥かに精度が上がっていると個人的に思います、スキャナももちろんの事、PDF ファイルをテキストに変換するサービス等も OCR が利用されています。
+OCR 技術自体は以前から存在する物ですが、一昔前に比べて遥かに精度が上がっていると個人的に思います、スキャナはもちろんの事PDF ファイルをテキストに変換するサービス等も OCR が利用されています。
 
 リアルタイムでカメラで写している文字をテキスト化し翻訳できるような時代ですので、メガネに文字が表示されるのも時間の問題ですね。
 
 ## 最後に一押し機能！！
-これだけではございません、やっぱり使ってもらうなら楽しく使って欲しいので、最後にアップデートした人物画像解析を実施してみましょう。
+これだけではございません！！
 
-画像
+やっぱり使ってもらうなら楽しく使って欲しいと思い、アップデートした人物解析を情シスチームの皆様にご協力いただき実施してみました。
 
-これで写真に写ってくれた人も満足してくれるのではないでしょうか。
+image::/images/syoga/azure10/azure4.png[]
+
+以前との違いにお気付きになりましたか？ 忖度する事で写真撮影に協力してくれた方にも満足いただけるようになっています！！
 
 完
