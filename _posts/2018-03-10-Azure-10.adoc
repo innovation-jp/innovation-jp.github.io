@@ -11,20 +11,20 @@
 ※ 前回の http://tech.innovation.co.jp/2018/01/16/Azure-9.html[ブログ] で Go で DB にログを出力するのが遅い件は、ログ出力関数に DB コネクションを渡す事で改善できたので触れません！！
 
 ## お金が…ない！！
-前回作った際に Repl-AI のユーザ ID や ぐるなび API に渡す検索料理名を、Azure Redis Chache に保存していましたが、使用していなくてもまぁまぁのお値段になっていました（3000円くらい）。
+Line Bot では Repl-AI のユーザ ID や ぐるなび API に渡す検索料理名を、Azure Redis Cache に保存していましたが、Azure Redis Cache は起動しているだけで料金が発生するため、LINE Bot を利用していなくてもまぁまぁのお値段になっていました（3000円くらい）
 
 それが理由ではないと思いますが、最近ランチもままなりません。
 
 という訳でお安い Azure Table Storage を利用しデータを保存するようにソースを改修をしました、
-汎用の Azure Storage をすでに前回作成しているの、Table ストレージを早速使っていきます。
+汎用の Azure Storage を以前の http://tech.innovation.co.jp/2017/07/04/Azure-5.html[ブログ] で作成しているの、早速 Azure Table Storage 使っていきます。
 
-Table ストレージはその名の通り、テーブルとして利用できるストレージです、作成したテーブルの中には PartitionKey 、RowKey、Timestamp という固定の項目が存在します。
+Azure Table Storage はその名の通り、テーブルとして利用できる Azure Storage です、作成したテーブルの中には PartitionKey 、RowKey、Timestamp という固定の項目が存在します。
 
-Repl-AI のユーザ ID 払出しのデータを登録する際には text という PartitionKey で RowKey は LINE のユーザ ID を登録し、Desc という項目に Repl-AI のユーザ ID を格納するようにしました、以下はソースの抜粋です。
+Repl-AI のユーザ ID 払出しのデータを登録する際には text という PartitionKey で、 RowKey は LINE のユーザ ID を登録し、Desc という項目に Repl-AI のユーザ ID を格納するようにしました、以下はソースの抜粋です。
 
-処理としては Redis Chache を利用していた時と同じです、line テーブルに対し PartitionKey 、RowKey で検索をして、すでにデータがあれば Repl-AI ユーザ登録済なのでお話をします。
+処理としては Azure Redis Cache を利用していた時と同じです、上記の情報を格納する line テーブルを作成しているので、PartitionKey 、RowKey で検索した結果、すでにデータがあれば Repl-AI ユーザ登録済なので Repl-AI とお話をします。
 
-存在しなければ Repl-AI のユーザ ID を払出して Table Storage にユーザ ID を登録します、登録時にエラーが発生した場合はユーザにエラー発生メッセージを LINE で送信します。
+存在しなければ Repl-AI のユーザ ID を払出して Azure Table Storage にユーザ ID を登録します、登録時にエラーが発生した場合はユーザにエラー発生メッセージを LINE で送信します。
 
 ```
 async.waterfall([
@@ -70,9 +70,9 @@ async.waterfall([
 ```
 
 ## OCR … したい！！
-Azure Computer Vision API を利用し人物解析していましたが、次は OCR 機能（光学的文字認識）を追加したいと思います。
+以前の http://tech.innovation.co.jp/2017/07/04/Azure-5.html[ブログ] で、Azure Computer Vision API を利用し人物解析していましたが、次は OCR 機能（光学的文字認識）を追加したいと思います。
 
-しかし現在は画像を送ると人物解析をしてしまうので、文字認識をしたい場合は一度 「文字認識」 と送って貰う事にします、前回の ぐるなび API 呼出しと同じで手法です。
+しかしこのままでは画像を送ると人物解析をしてしまうので、文字認識をしたい場合は一度 「文字認識」 と送って貰う事にします、前回の ぐるなび API 呼出しと同じで手法です。
 
 ```
 // メッセージが「文字解析」の場合
@@ -102,7 +102,7 @@ Azure Computer Vision API を利用し人物解析していましたが、次は
         } else {
         ・・・・　
 ```
-こちらも Table Storage を利用し「文字認識」というメッセージが送信されているかを検索します。
+こちらも Azure Table Storage を利用し「文字認識」というメッセージが送信されているかを検索します。
 
 次に画像が送られてきた場合に、「文字認識」メッセージが存在すれば OCR 機能を呼び出します、存在しなければ今まで通りの人物解析を実行します。
 ```
