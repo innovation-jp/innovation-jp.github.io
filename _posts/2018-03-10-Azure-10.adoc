@@ -1,4 +1,4 @@
-= 執筆中
+= Azure Computer Vision API で OCR（光学的文字認識）をしてみた
 :hp-alt-title: Azure 10
 :hp-tags: syoga, log, Azure, Azure Storage, Node.js, LINE, Azure Function, Computer Vision API
 
