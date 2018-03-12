@@ -11,12 +11,12 @@
 ※ 前回の http://tech.innovation.co.jp/2018/01/16/Azure-9.html[ブログ] で Go で DB にログを出力するのが遅い件は、ログ出力関数に DB コネクションを渡す事で改善できたので触れません！！
 
 ## お金が…ない！！
-Line Bot では Repl-AI のユーザ ID や ぐるなび API に渡す検索料理名を、Azure Redis Cache に保存していましたが、Azure Redis Cache は起動しているだけで料金が発生するため、LINE Bot を利用していなくてもまぁまぁのお値段になっていました（3000円くらい）
+Line Bot では Repl-AI のユーザ ID や ぐるなび API に渡す検索料理名を、Azure Redis Cache に保存していましたが、Azure Redis Cache は起動しているだけで料金が発生するため、LINE Bot を利用していなくてもまぁまぁのお値段になっていました（3000円くらい）。
 
 それが理由ではないと思いますが、最近ランチもままなりません。
 
 という訳でお安い Azure Table Storage を利用しデータを保存するようにソースを改修をしました、
-汎用の Azure Storage を以前の http://tech.innovation.co.jp/2017/07/04/Azure-5.html[ブログ] で作成しているの、早速 Azure Table Storage 使っていきます。
+汎用の Azure Storage を以前の http://tech.innovation.co.jp/2017/07/04/Azure-5.html[ブログ] で作成しているので、早速 Azure Table Storage 使っていきます。
 
 Azure Table Storage はその名の通り、テーブルとして利用できる Azure Storage です、作成したテーブルの中には PartitionKey 、RowKey、Timestamp という固定の項目が存在します。
 
