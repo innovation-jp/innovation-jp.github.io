@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Azure Computer Vision API で OCR（光学的文字認識）をしてみた - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Azure Computer Vision API で OCR（光学的文字認識）をしてみた">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Azure Computer Vision API で OCR（光学的文字認識）をしてみた">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/03/10/Azure-10.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Azure Computer Vision API で OCR（光学的文字認識）をしてみた" />
+    <meta property="og:description" content="お久しぶりです、SRE チームの syoga です。 今年の冬は激寒でしたが、やっと春の陽気を感じる季節になってきたなと思います、これからお花見等の行楽シーズンに突入しますので、写真を取る機会も多くなるのではないでしょうか。 そんな中、以前の ブログ で作成した LINE Bot を色々な人に使ってもらおうと思い、新機能を追加しましたので、今回はそちらについて記事にしたいと思います。 ※ 前回の ブログ で Go で DB にログを出力するのが遅い件は、ログ出力関数に DB コネクションを渡す事で改善できたので触れません！！ お金が…ない！！ Line..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/03/10/Azure-10.html" />
+    <meta property="article:published_time" content="2018-03-09T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-03-13T09:37:06.031Z" />
+    <meta property="article:tag" content="syoga" />
+    <meta property="article:tag" content="log" />
+    <meta property="article:tag" content="Azure" />
+    <meta property="article:tag" content="Azure Storage" />
+    <meta property="article:tag" content="Node.js" />
+    <meta property="article:tag" content="LINE" />
+    <meta property="article:tag" content="Azure Function" />
+    <meta property="article:tag" content="Computer Vision API" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Azure Computer Vision API で OCR（光学的文字認識）をしてみた" />
+    <meta name="twitter:description" content="お久しぶりです、SRE チームの syoga です。 今年の冬は激寒でしたが、やっと春の陽気を感じる季節になってきたなと思います、これからお花見等の行楽シーズンに突入しますので、写真を取る機会も多くなるのではないでしょうか。 そんな中、以前の ブログ で作成した LINE Bot を色々な人に使ってもらおうと思い、新機能を追加しましたので、今回はそちらについて記事にしたいと思います。 ※ 前回の ブログ で Go で DB にログを出力するのが遅い件は、ログ出力関数に DB コネクションを渡す事で改善できたので触れません！！ お金が…ない！！ Line..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/03/10/Azure-10.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars3.githubusercontent.com/u/20530620?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "Azure Computer Vision API で OCR（光学的文字認識）をしてみた",
+    "url": "http://tech.innovation.co.jp/2018/03/10/Azure-10.html",
+    "datePublished": "2018-03-09T15:00:00.000Z",
+    "dateModified": "2018-03-13T09:37:06.031Z",
+    "keywords": "syoga,  log,  Azure,  Azure Storage,  Node.js,  LINE,  Azure Function,  Computer Vision API",
+    "description": "お久しぶりです、SRE チームの syoga です。 今年の冬は激寒でしたが、やっと春の陽気を感じる季節になってきたなと思います、これからお花見等の行楽シーズンに突入しますので、写真を取る機会も多くなるのではないでしょうか。 そんな中、以前の ブログ で作成した LINE Bot を色々な人に使ってもらおうと思い、新機能を追加しましたので、今回はそちらについて記事にしたいと思います。 ※ 前回の ブログ で Go で DB にログを出力するのが遅い件は、ログ出力関数に DB コネクションを渡す事で改善できたので触れません！！ お金が…ない！！ Line..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-syoga tag-log tag-Azure tag-Azure-Storage tag-Nodejs tag-L-I-N-E tag-Azure-Function tag-Computer-Vision-A-P-I no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="10 Mar 2018" class="post-meta__date date">10 Mar 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/syoga">syoga</a>, <a href="http://tech.innovation.co.jp/tag/log"> log</a>, <a href="http://tech.innovation.co.jp/tag/Azure"> Azure</a>, <a href="http://tech.innovation.co.jp/tag/Azure-Storage"> Azure Storage</a>, <a href="http://tech.innovation.co.jp/tag/Nodejs"> Node.js</a>, <a href="http://tech.innovation.co.jp/tag/L-I-N-E"> LINE</a>, <a href="http://tech.innovation.co.jp/tag/Azure-Function"> Azure Function</a>, <a href="http://tech.innovation.co.jp/tag/Computer-Vision-A-P-I"> Computer Vision API</a></span>
+        <span class="post-meta__author author"><img src="https://avatars3.githubusercontent.com/u/20530620?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">Azure Computer Vision API で OCR（光学的文字認識）をしてみた</h1>
+    </header>
+
+    <section class="post tag-syoga tag-log tag-Azure tag-Azure-Storage tag-Nodejs tag-L-I-N-E tag-Azure-Function tag-Computer-Vision-A-P-I">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>お久しぶりです、SRE チームの syoga です。</p>
+</div>
+<div class="paragraph">
+<p>今年の冬は激寒でしたが、やっと春の陽気を感じる季節になってきたなと思います、これからお花見等の行楽シーズンに突入しますので、写真を取る機会も多くなるのではないでしょうか。</p>
+</div>
+<div class="paragraph">
+<p>そんな中、以前の <a href="http://tech.innovation.co.jp/2017/07/04/Azure-5.html">ブログ</a> で作成した LINE Bot を色々な人に使ってもらおうと思い、新機能を追加しましたので、今回はそちらについて記事にしたいと思います。</p>
+</div>
+<div class="paragraph">
+<p>※ 前回の <a href="http://tech.innovation.co.jp/2018/01/16/Azure-9.html">ブログ</a> で Go で DB にログを出力するのが遅い件は、ログ出力関数に DB コネクションを渡す事で改善できたので触れません！！</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">お金が…ない！！</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Line Bot では Repl-AI のユーザ ID や ぐるなび API に渡す検索料理名を、Azure Redis Cache に保存していましたが、Azure Redis Cache は起動しているだけで料金が発生するため、LINE Bot を利用していなくてもまぁまぁのお値段になっていました（3000円くらい）。</p>
+</div>
+<div class="paragraph">
+<p>それが理由ではないと思いますが、最近ランチもままなりません。</p>
+</div>
+<div class="paragraph">
+<p>という訳でお安い Azure Table Storage を利用しデータを保存するようにソースを改修をしました、
+汎用の Azure Storage を以前の <a href="http://tech.innovation.co.jp/2017/07/04/Azure-5.html">ブログ</a> で作成しているので、早速 Azure Table Storage 使っていきます。</p>
+</div>
+<div class="paragraph">
+<p>Azure Table Storage はその名の通り、テーブルとして利用できる Azure Storage です、作成したテーブルの中には PartitionKey 、RowKey、Timestamp という固定の項目が存在します。</p>
+</div>
+<div class="paragraph">
+<p>Repl-AI のユーザ ID 払出しのデータを登録する際には text という PartitionKey で、 RowKey は LINE のユーザ ID を登録し、Desc という項目に Repl-AI のユーザ ID を格納するようにしました、以下はソースの抜粋です。</p>
+</div>
+<div class="paragraph">
+<p>処理としては Azure Redis Cache を利用していた時と同じです、上記の情報を格納する line テーブルを作成しているので、PartitionKey 、RowKey で検索した結果、すでにデータがあれば Repl-AI ユーザ登録済なので Repl-AI とお話をします。</p>
+</div>
+<div class="paragraph">
+<p>存在しなければ Repl-AI のユーザ ID を払出して Azure Table Storage にユーザ ID を登録します、登録時にエラーが発生した場合はユーザにエラー発生メッセージを LINE で送信します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>async.waterfall([
+    // Repl-AI のユーザID登録確認
+    function(callback) {
+        // Table Storage の検索
+        tableSvc.retrieveEntity('line', 'text', userId, function(error, result, response){
+            let replUserId = '';
+            if(response.statusCode == '200'){
+                replUserId = response.body.desc;
+            }
+            callback(null, replUserId);
+        });
+    },
+    // 未登録なら Repl-AI ユーザID登録
+    function(replUserId, callback) {
+        let initFlag = false;
+
+        if(replUserId == '') {
+            getReplAiUserid(context, function(result) {
+                let initFlag = true;
+                let insData = {
+                    PartitionKey  : 'text',
+                    RowKey        : userId,
+                    desc          : result
+                };
+
+                tableSvc.insertEntity('line', insData, function (error, result, response) {
+                    if(error){
+                        context.log('[Error] tableSvc.insertEntity', error);
+                        pushTexeMessage('アプリケーションエラーが発生したかな？', userId, context, function(result) {});
+                        context.done();
+                    }
+                });
+                callback(null, result, initFlag);
+            });
+        } else {
+            // 登録済ならお話
+            callback(null, replUserId, initFlag);
+        }
+    },</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ocr">OCR … したい！！</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>以前の <a href="http://tech.innovation.co.jp/2017/07/04/Azure-5.html">ブログ</a> で、Azure Computer Vision API を利用し人物解析していましたが、次は OCR 機能（光学的文字認識）を追加したいと思います。</p>
+</div>
+<div class="paragraph">
+<p>しかしこのままでは画像を送ると人物解析をしてしまうので、文字認識をしたい場合は一度 「文字認識」 と送って貰う事にします、前回の ぐるなび API 呼出しと同じで手法です。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// メッセージが「文字解析」の場合
+        if(text.match(/文字認識/)) {
+            // 「文字認識」メッセージが送られているか履歴を検索
+            tableSvc.retrieveEntity('line', 'img', userId, function(error, result, response){
+                if(response.statusCode == '200'){
+                    pushTexeMessage('まだ文字の入った画像が送られていないかな？', userId, context, function(result) {});
+                } else {
+                    // 「文字認識」メッセージの履歴を登録
+                    let insData = {
+                        PartitionKey  : 'img',
+                        RowKey        : userId,
+                        desc          : ''
+                    }
+                    tableSvc.insertEntity('line', insData, function (error, result, response) {
+                        if(error){
+                            context.log('[Error] tableSvc.insertEntity', error);
+                            pushTexeMessage('アプリケーションエラーが発生したかな？', userId, context, function(result) {});
+                            context.done();
+                        }
+                        pushTexeMessage('文字の入った画像を送ってくれるかな？', userId, context, function(result) {});
+                    });
+                }
+            });
+        // メッセージが「文字認識」以外の場合
+        } else {
+        ・・・・</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>こちらも Azure Table Storage を利用し「文字認識」というメッセージが送信されているかを検索します。</p>
+</div>
+<div class="paragraph">
+<p>次に画像が送られてきた場合に、「文字認識」メッセージが存在すれば OCR 機能を呼び出します、存在しなければ今まで通りの人物解析を実行します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>function(imageName, callback) {
+    // 「文字認識」のメッセージが送られているか
+    tableSvc.retrieveEntity('line', 'img', userId, function(error, result, response) {
+        let apiStatus = false;
+
+        if(response.statusCode == '200') {
+            apiStatus = true;
+        }
+        callback(null, imageName, apiStatus);
+    });
+},
+function(imageName, apiStatus, callback) {
+    // ComputerVisionAPI 呼出し
+    callMSComputerVisionAPI(imageName, apiStatus, context, function(result) {
+        callback(null, result, apiStatus);
+    });
+},
+function(cvResult, apiStatus, callback) {
+    if(apiStatus) {
+        // 文字認識結果送信
+        if(typeof(cvResult.regions) !== 'undefined') {
+
+            let line;
+            let text;
+            let lineCont = 0;
+            let message  = 'この画像には以下の文字が含まれていそうかな？\n\n';
+
+            cvResult.regions[0].lines.forEach(function(line) {
+                line.words.forEach(function(text) {
+                    if(cvResult.language == 'ja') {
+                        message +=　iconv.decode(text.text, 'utf-8');
+                    } else {
+                        message +=　iconv.decode(text.text, 'utf-8') + ' ';
+                    }
+                });
+
+                lineCont++;
+                if(lineCont &lt; cvResult.regions[0].lines.length) {
+                    message += '\n';
+                }
+            });
+
+            let delData = {
+                PartitionKey: {'_':'img'},
+                RowKey: {'_': userId}
+            };
+
+            // 「文字認識」の登録履歴削除
+            tableSvc.deleteEntity('line', delData, function(error, response){
+                if(error) {
+                    context.log('[Error] tableSvc.deleteEntity', error);
+                    pushTexeMessage('アプリケーションエラーが発生したかな？', userId, context, function(result) {});
+                    context.done();
+                }
+            });
+
+            pushTexeMessage(message, userId, context, function(result) {
+                context.done();
+            });
+        } else{
+            pushTexeMessage('この画像には文字がないからもう一回送ってくれないかな？', userId, context, function(result) {
+                context.done();
+            });
+        }
+    } else {
+        // 顔画像解析結果送信
+    ・・・</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Azure Computer Vision API に実際にリクエストを投げる関数部分のソースです、「文字認識」が送られているかをフラグで判断し、処理を分岐させています。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// ComputerVisionAPI 呼出
+function callMSComputerVisionAPI(imageUrl, apiStatus, context, callback) {
+
+    context.log('==== Start:callMSComputerVisionAPI ====');
+
+    let params;
+    let urlObj;
+
+    // Strage 画像 URL
+    let urlImage = process.env.BLOB_HOST + imageUrl;
+
+    if(apiStatus) {
+        // ComputerVisionAPI OCR
+        // クエリパラメータ設定
+        params ='language=unk&amp;detectOrientation=true';
+
+        // URL 作成
+        urlObj = {
+            protocol: 'https',
+            hostname: 'southeastasia.api.cognitive.microsoft.com',
+            pathname: 'vision/v1.0/ocr',
+            search  : params
+        };
+    } else {
+        // ComputerVisionAPI Analayze
+        // クエリパラメータ設定
+        params = 'visualFeatures=Categories, Tags, Description, Faces';
+
+        // URL 作成
+        urlObj = {
+            protocol: 'https',
+            hostname: 'southeastasia.api.cognitive.microsoft.com',
+            pathname: 'vision/v1.0/analyze',
+            search  : params
+        };
+    }
+
+    // リクエストデータ設定
+    let optCva = {
+    	"headers"  : {
+    		"Content-Type": "application/json",
+    		"Ocp-Apim-Subscription-Key": "KEY"
+    	},
+    	"body"     : '{"url":"' + urlImage + '"}',
+    	"uri"      : url.format(urlObj),
+    	"method"   : "POST",
+    	"type"     : "POST",
+    	"encoding" : "binary"
+    };
+
+    // リクエスト送信
+    requestPromise(optCva).then(function(result) {
+        let cvResult  = JSON.parse(result);
+        callback(cvResult);
+    }).catch(function(e) {
+        context.log(e.stack);
+    }).done();
+
+    context.log('==== End  :callMSComputerVisionAPI ====');
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>文字認識結果を受信した後は文字列を結合して LINE にメッセージを送信します、という訳で早速…</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">使って…みたい！！</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>弊社エンジニアの行動指針が記載されたカードが手元にありましたので、こちらを使ってみます。</p>
+</div>
+<div class="paragraph">
+<p><strong>・行動指針のカード</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/syoga/azure10/azure3.png" alt="azure3.png">
+</div>
+</div>
+<div class="paragraph">
+<p><strong>・認識結果</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/syoga/azure10/azure2.png" alt="azure2.png">
+</div>
+</div>
+<div class="paragraph">
+<p>結果としては プ &#8658; ブ と認識されていましたが、この文字の大きさでは仕方ないのかなと擁護してみます、それ以外は全て認識できているようです（一番上の ◾も文字と認識しているようですが）。</p>
+</div>
+<div class="paragraph">
+<p>カードと同じ順番にメッセージが送られているのは、Computer Vision API が文字位置を含めた情報をレスポンスで返却してくれるためです。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">感想</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>OCR 技術自体は以前から存在する物ですが、一昔前に比べて遥かに精度が上がっていると個人的に思います、スキャナはもちろんの事PDF ファイルをテキストに変換するサービス等も OCR が利用されています。</p>
+</div>
+<div class="paragraph">
+<p>リアルタイムでカメラで写している文字をテキスト化し翻訳できるような時代ですので、メガネに文字が表示されるのも時間の問題ですね。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___4">最後に一押し機能！！</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>これだけではございません！！</p>
+</div>
+<div class="paragraph">
+<p>やっぱり使ってもらうなら楽しく使って欲しいと思い、アップデートした人物解析を情シスチームの皆様にご協力いただき実施してみました。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/syoga/azure10/azure4.png" alt="azure4.png">
+</div>
+</div>
+<div class="paragraph">
+<p>以前との違いにお気付きになりましたか？ 忖度する事で写真撮影に協力してくれた方にも満足いただけるようになっています！！</p>
+</div>
+<div class="paragraph">
+<p>完</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
