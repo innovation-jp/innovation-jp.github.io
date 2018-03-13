@@ -26,7 +26,7 @@ PHPでは一番簡単に書くと以下のように無名関数を使えます�
 ++++
 <pre style="font-family: Menlo, Courier">
 $f = function(string $str) {
-    print($str);
+	print($str);
 };
 
 $f("hello");
@@ -37,14 +37,10 @@ $f("hello");
 
 ++++
 <pre style="font-family: Menlo, Courier">
-package main
-
-func main() {
-	f := func(str string) {
-		print(str)
-	}
-	f("hello")
+f := func(str string) {
+	print(str)
 }
+f("hello")
 </pre>
 ++++
 
@@ -127,11 +123,11 @@ PHP
 ++++
 <pre style="font-family: Menlo, Courier">
 function test() {
-	print($test);
+	print($test); // 何も表示されない
 }
 
 $test = "test";
-test(); // 何も表示されない
+test();
 </pre>
 ++++
 
