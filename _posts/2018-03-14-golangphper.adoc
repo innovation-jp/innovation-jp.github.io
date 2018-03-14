@@ -1,6 +1,5 @@
 # PHPerがGolangを試してみた 後編
 :hp-alt-title: golangphper
-:published_at: 2018-03-14
 :hp-tags: PHP, PHPer, Golang, Go言語, Go
 
 ## 概要
