@@ -1,0 +1,431 @@
+# PHPerがGolangを試してみた 後編
+:hp-alt-title: golanggolangphperphper
+:published_at: 2018-03-14
+:hp-tags: PHP, PHPer, Golang, Go言語, Go
+
+## 概要
+私はPHPerなのですが、Golangを試してみました。 +
+難しいと思った点など書いていければと思います。 +
+今回はその後編になります。 +
+前編の内容は以下をご覧ください。 +
+http://tech.innovation.co.jp/2017/12/19/P-H-Per-Golang.html
+
+
+### 後編(今回)の内容
+
+* 無名関数
+* クロージャ
+* スコープ
+* エラー
+* ゴルーチン
+* チャネル型
+
+## 無名関数
+
+PHPでは一番簡単に書くと以下のように無名関数を使えます。
+
+++++
+<pre style="font-family: Menlo, Courier">
+$f = function(string $str) {
+	print($str);
+};
+
+$f("hello");
+</pre>
+++++
+
+これをGolangで書いてみると、
+
+++++
+<pre style="font-family: Menlo, Courier">
+f := func(str string) {
+	print(str)
+}
+f("hello")
+</pre>
+++++
+
+ほとんど違和感なく書けました。 +
+無名関数に関しては意外なほど違和感ない印象です。
+
+## クロージャ
+
+無名関数からの繋がりでクロージャも調べました。 +
+PHP、Golang共に無名関数を使用してクロージャを実現できます。
+
+PHPで書いてみると
+
+++++
+<pre style="font-family: Menlo, Courier">
+function counter() {
+
+    $cnt = 0;
+
+    return function() use (&$cnt) {
+        $cnt++;
+        return $cnt;
+    };
+}
+
+$f = counter();
+
+print($f()); // 1
+print($f()); // 2
+print($f()); // 3
+</pre>
+++++
+
+このような感じでローカル変数 $cnt を保持できますが、 +
+Golangで書くと、
+
+++++
+<pre style="font-family: Menlo, Courier">
+package main
+
+func counter() func() int {
+
+	cnt := 0
+
+	return func() int {
+		cnt++
+		return cnt
+	}
+}
+
+func main() {
+
+	f := counter()
+
+	print(f()) // 1
+	print(f()) // 2
+	print(f()) // 3
+}
+</pre>
+++++
+
+こんな感じになりました。 +
+クロージャに関してもそこまで違和感なく使って行けるのかなと思いました。
+
+ただ、 +
+自分自身クロージャを使いたいシチュエーションを思い出すと、 +
+例えば何かのシステムのSDKなどを使用してプログラミングしなければならない際、 +
+そのビジネスロジックなどでその場限りでスコープの長い変数を使いたい時などに使うくらいで、 +
+PHPで駆使した経験はそんなにないです。
+
+ので参考程度にして頂ければと思います。
+
+## スコープ
+
+PHPとGolangのスコープは、 +
+関数宣言部分でスコープが変わる部分は同じです。
+
+PHP
+
+++++
+<pre style="font-family: Menlo, Courier">
+function test() {
+	print($test); // 何も表示されない
+}
+
+$test = "test";
+test();
+</pre>
+++++
+
+Golang
+
+++++
+<pre style="font-family: Menlo, Courier">
+package main
+
+func test() {
+	print(test); // 何も表示されない
+}
+
+func main(){
+	test := "test";
+	test()
+}
+</pre>
+++++
+
+GolangでPHPと違うなと感じた部分は以下のif文のスコープです。
+
+++++
+<pre style="font-family: Menlo, Courier">
+package main
+
+func main() {
+	n := 1
+	if true {
+		n = 2
+		print(n) // 2
+	}
+	print(n) // 2
+}
+</pre>
+++++
+
+上記は n という変数を main関数内でローカル宣言＆代入して、 +
+if文の中で 変数n に 2 を代入して、 +
+if文の中で print、if文を抜けて print しています。 +
+どちらも 2 を出力します。 +
+
+しかし、
+
+++++
+<pre style="font-family: Menlo, Courier">
+package main
+
+func main() {
+	n := 1
+	if true {
+		n := 2
+		print(n) // 2
+	}
+	print(n) // 1
+}
+</pre>
+++++
+
+上記のように 変数n に1を宣言＆代入し、 +
+if文の中で := を使用して ローカル変数n として2を宣言＆代入します。 +
+そうしますと、 +
+if文の中では 変数n は 2 を出力しますが、 +
+if文を抜けるとその上のスコープで代入していた 1 が返ります。
+
+PHPにはこのif文の中にはスコープが無いので、 +
+異なる点かと思います。
+
+## エラー
+
+エラーハンドリングはPHPとGolangでは大きな違いがあります。 +
+PHPにはJavaのような try-catch-finally がありますが、 +
+Golangには例外キャッチの機構がありません。
+
+替わりにエラーインターフェースなるものが用意されているようで、 +
+Golangでは関数において複数の戻り値を返却できますが、 +
+エラーオブジェクトを関数の戻り値の最後に付与して返却するのがお作法のようです。
+
+例えばどういうことかといいますと、
+
+++++
+<pre style="font-family: Menlo, Courier">
+result, err := Something()
+if err != nil {
+	log.Fatal(err)
+}
+</pre>
+++++
+
+こんなように、 +
+関数Somethingの返り値の一番最後を 変数err に格納して、 +
+それが nil かどうかで例外処理を行います。
+
+なので、 +
+独自関数を書く場合は、
+
+++++
+<pre style="font-family: Menlo, Courier">
+package main
+
+import (
+	"fmt"
+	"log"
+)
+
+func Something(flg bool) (bool, error) {
+
+	var err error
+
+	if flg == false {
+		err = fmt.Errorf("test error")
+	}
+
+	return flg, err
+}
+
+func main() {
+
+	flg, err := Something(false)
+	if err != nil {
+		log.Fatal(err)
+	}
+	print(flg)
+}
+</pre>
+++++
+
+このように return 部分の最後にエラーオブジェクトを返すようにするのが良いようです。
+
+## ゴルーチン
+
+ゴルーチンは関数処理を別プロセスで処理させることができる仕組みです。 +
+例えば
+
+++++
+<pre style="font-family: Menlo, Courier">
+package main
+
+import "time"
+
+func hello() {
+	time.Sleep(3 * time.Second)
+	print("hello")
+}
+
+func world() {
+	time.Sleep(1 * time.Second)
+	print("world")
+}
+
+func main() {
+
+	go hello()
+	go world()
+
+	time.Sleep(5 * time.Second)
+}
+</pre>
+++++
+
+このように書くと、 +
+main関数で実行される順番は +
+
+hello関数 +
+world関数
+
+の順番ですが、 +
+それぞれ実行されて即座に次の処理に向かいますので、
+
+hello関数は3秒待ってhelloを出力 +
+world関数は1秒待ってworldを出力
+
+しますので、 +
+標準出力は +
+
+worldhello
+
+となります。
+
+実際には約1秒ってworldだけ出力、 +
+3秒から1秒を引いた約2秒待ってhelloが出力
+
+という具合です。
+
+## チャネル型
+
+チャネル型は値を送信したり受信したりできる型で、 +
+先述のゴルーチンと組み合わせて使うことが多いようです。
+
+++++
+<pre style="font-family: Menlo, Courier">
+package main
+
+func test(c chan<- string) {
+	c <- "hello"
+	close(c)
+}
+
+func main() {
+	c := make(chan string)
+
+	go test(c)
+
+	ret := <-c
+	print(ret)
+}
+</pre>
+++++
+
+main関数の make関数でstring型のチャネルを生成して変数cに格納しています。 +
+その後、test関数の引数に作成したチャネル型を指定し、 +
+ゴルーチンとして実行します。 +
+実行されたtest関数の中でhelloという文字列をチャネル変数cに送信し、 +
+チャネル変数cをcloseしています。 +
+上記の送信した際にmain関数のc値受け取り部分で変数retに文字列が渡ります。 +
+その内容をprintしています。
+
+出力結果は hello と出力されるだけになりますが、 +
+ゴルーチンで処理した結果を非同期でmain関数で受け取ることができています。
+
+このチャネル型はGolang特有のもので、PHPに限らずJavaなどにも無い仕組みのようです。 +
+※もちろんJavaなら同じような実装を作成することはできるそうですが、 +
+初めからチャネル型のようなものは用意されていないようです。
+
+これらを踏まえて少しだけサンプルを発展させてみますと、
+
+++++
+<pre style="font-family: Menlo, Courier">
+package main
+
+import "time"
+
+func mysleep(c chan<- int) {
+	for i := 0; i < 10; i++ {
+		time.Sleep(time.Duration(i) * time.Second)
+		c <- i
+	}
+	close(c)
+}
+
+func main() {
+
+	c := make(chan int)
+
+	go mysleep(c)
+
+	for {
+		v, ok := <-c
+		if !ok {
+			break
+		}
+		print(v)
+	}
+}
+</pre>
+++++
+
+変数cに今度はint型のチャネルを作成して、 +
+それを引数としてmysleep関数をゴルーチンで実行します。 +
+mysleep関数内では、 +
+1〜10のintループの中で、 +
+変数i秒分だけスリープしてから、変数iをチャネルに送信しています。 +
+main関数の方ではfor文を使って無限ループを作成し、 +
+その中でチャネルcを受信してその値をprintしています。 +
+mysleep側でcloseした際、 +
+main関数側のチャネル受信時の最終引数（上記コードでは変数ok） +
+に、falseが返ってきますので、 +
+無限ループをbreakしてプログラムが終了します。
+
+最終的に出力は +
+0を即時に表示、 +
+1秒待って1を表示、 +
+2秒待って2を表示、 +
+3秒待って3を表示、 +
+. +
+. +
+. +
+9秒待って9を表示 +
+
+ということになるかと思います。
+
+## 所感
+Golang、私に取っては使いこなすのがかなり難しい内容と感じました。
+
+実際にGolangを学ぶ前に、C言語を勉強して、 +
+Golangに戻って来た背景があります。
+
+特にチャネル型とゴルーチンの部分は、 +
+まともにプログラミングできるようになるには、 +
+トライアンドエラーが必要と感じました。
+
+ただ、魅力的な言語ですので使いこなしてアプリなど作って行きたいです。
+
+網羅的に理解しようとするのではなくて、 +
+チャネル型を使ったアプリをひとまず作ってみるなどして、 +
+知識を深めていければと思いました。
+
+以上です。
+
+
