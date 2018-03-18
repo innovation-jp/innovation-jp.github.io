@@ -52,11 +52,11 @@ AWSを殆ど使ったことのない初心者な私でも、お話はどれも�
 
 リポジトリ名を入れたら
 
-[imageタグあとで入れる]
+image::/images/obata/try_ecr/ECR_1st_step.png[]
 
 できたー！！！
 
-[imageタグあとで入れる]
+image::/images/obata/try_ecr/ECR_2nd_step.png[]
 
 あとは、ページの説明に従ってやればおしまいですが・・・一応説明していきます！
 
