@@ -1,0 +1,114 @@
+# Docker Imageを使ってGoogle Compute Engineにデプロイしてみる
+:hp-alt-title:　Docker Imageを使ってGoogle Compute Engineにデプロイしてみる
+:hp-tags: Hasumin, google cloud platform, google compute engine
+
+こんにちは。 +
+新卒エンジニアのはすみんです。 +
+最近新・生活やら業務やらでバッッッタバタです。 +
+ある意味充実はしています。 +
+
+今回のブログは、Google Cloud Platform(以降GCP)のサービスのひとつである、 +
+「Google Compute Engine」(GCE)を使ってWebサービスをデプロイする方法をご紹介します。 +
+かな〜り簡単に使えて、無料クレジットとかもついているのでおすすめです。 +
+GCPにはGCE以外にも、最近流行りのKubernetesやBigdataを扱ったサービス、画像認識サービスなど豊富に取り揃えていますが、 +
+まずは基本的なWebサーバーの立ち上げ方を知っておくと役に立つかも！？です。 +
+
+## GCP
+GCPにアクセスすると画面はこんな感じで、個人的にスタイリッシュで好みです。 +
+image:hasumi/gcp/gcp-top.png[]
+
+GCPのコンソール画面はこんな感じです。 +
+色々なサービスがあるので、ワクワクしますね。 +
+image:hasumi/gcp/gcp-console.png[]
+
+## デプロイの流れ
+ざっくりとした流れです。 +
+1. プロジェクトの作成 +
+2. DockerのImageにタグを付与し、プッシュ +
+3. インスタンスの作成 +
+4. インスタンスグループの作成 +
+これだけの操作で簡単にWebサービスを公開することが出来ます！便利！！ +
+
+困ったことがあったら公式のドキュメントを参考にしてくださいね。 +
+https://cloud.google.com/compute/docs/instance-groups/deploying-docker-containers?hl=ja
+
+## プロジェクトの作成
+赤枠で囲まれたところからプロジェクトを作成してください。 +
+
+image:hasumi/gcp/gcp-make-project.png[]
+
+その際に、「Google Container Registry APIの有効化」を忘れずにしましょう。 +
+image:hasumi/gcp/gcp-gcr-allow.png[]
+
+## DockerのImageにタグを付与し、プッシュ
+デプロイしたいDocker Imageを用意します。 +
+自分で作成してもDocker Hubにあがっているものでもどちらでも構いません。 +
+今回はDocker HubにあがっているtutumさんのPublic Repositoryを使わせていただきました。 +
+https://hub.docker.com/r/tutum/wordpress/
+
+ビルドします。 +
+```
+docker build -t tutum/wordpress .
+```
+文末の「.」コンマは忘れやすいので注意してください。  +
+
+ビルドしたかどうかを確認したい場合は +
+```
+docker image ls
+```
+で確認することができます。 +
+
+### タグ付け
+ビルドしていることが確認できたらImageにタグを付けます。 +
+docker tag ~~でタグはつけることが出来ますが、GCPの場合は +
+```
+docker tag [image_name] gcr.io/[project_id]/[any_name]
+```
+とするだけで、Google Container Registryというコンテナイメージを管理してくれるサービスに紐付けてくれます。 +
+image_nameは先ほどのイメージ名を、project_idには作成したprojectのidを割り当ててください。 +
+
+### プッシュ
+タグ付けが完了したらプッシュしましょう。 +
+```
+gcloud docker -- push gcr.io/[project_id]/[any_name]
+```
+これでターミナルでの設定は終了！ +
+あとは画面上でポチポチやるのみです。 +
+
+## インスタンスの作成
+GCPのコンソール画面に戻ります。 +
+GCPでは仮想マシンである「Compute Engine」にサーバーをたてます。 +
+GCEのページを開き、「VMインスタンス」ページを開きます。 +
+インスタンスの作成を押下します。 +
+
+作成時の注意点です。 +
+・ゾーンは任意ですが、asia-northeastでいいと思います。 +
+・「この VM インスタンスにコンテナ イメージをデプロイします。」にチェックを入れます。 +
+→　コンテナ イメージに、先ほどpushしたイメージを配置します（タグ名） +
+・「HTTP トラフィックを許可する」にチェック +
+
+## インスタンスグループの作成
+最後にインスタンスグループの作成です。 +
+インスタンスグループを作成し、各インスタンスをいい感じに管理します。 +
+
+基本的に先ほどのインスタンスの作成と同じような流れです。 +
+注意点も同様です。 +
+・ゾーンは任意ですが、asia-northeastでいいと思います。 +
+・「この VM インスタンスにコンテナ イメージをデプロイします。」にチェックを入れます。 +
+→　コンテナ イメージに、先ほどpushしたイメージを配置します（タグ名） +
+・「HTTP トラフィックを許可する」にチェック +
+
+## アクセス
+さぁ、これで準備は出来ました！ +
+作成されたインスタンスグループに外部IPがあると思うので、アクセスしてみてください。 +
+wordpressの設定画面が表示されたでしょうか？ +
+image:hasumi/gcp/gcp-wordpress.png[]
+
+こんな簡単にデプロイ出来るなんて、DockerとGCPはめちゃくちゃ便利ですね〜〜 +
+
+## さいごに
+Webサービスを公開するのにレンタルIPを借りてとかしていた時代が遠い昔のように感じます。 +
+GCPやAWSのようにオートスケーリングしてくれて必要なときに必要な量だけ使えるのは、管理者目線でもありがたいです。 +
+こうやってテクノロジーは進化していくんだろうな〜〜 +
+
+ｄｏｎｅ
