@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Docker Imageを使ってGoogle Compute Engineにデプロイしてみる - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Docker Imageを使ってGoogle Compute Engineにデプロイしてみる">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Docker Imageを使ってGoogle Compute Engineにデプロイしてみる">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/03/19/Docker-Image-Google-Compute-Engine.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Docker Imageを使ってGoogle Compute Engineにデプロイしてみる" />
+    <meta property="og:description" content="こんにちは。 新卒エンジニアのはすみんです。 最近新生活やら業務やらでバッッッタバタです。 ある意味充実はしています。 今回のブログは、Google Cloud Platform(以降GCP)のサービスのひとつである、 「Google Compute Engine」(GCE)を使ってWebサービスをデプロイする方法をご紹介します。 普段AWSのECSを使われている方は多いと思いますが、GCPはまだ使ったことないという方それなりにいらっしゃるんじゃないでしょうか。 かな〜り簡単に使えて、無料クレジットとかもついているのでおすすめです。 GCPにはGCE以..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/03/19/Docker-Image-Google-Compute-Engine.html" />
+    <meta property="article:published_time" content="2018-03-18T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-03-19T10:42:26.364Z" />
+    <meta property="article:tag" content="Hasumin" />
+    <meta property="article:tag" content="google cloud platform" />
+    <meta property="article:tag" content="google compute engine" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Docker Imageを使ってGoogle Compute Engineにデプロイしてみる" />
+    <meta name="twitter:description" content="こんにちは。 新卒エンジニアのはすみんです。 最近新生活やら業務やらでバッッッタバタです。 ある意味充実はしています。 今回のブログは、Google Cloud Platform(以降GCP)のサービスのひとつである、 「Google Compute Engine」(GCE)を使ってWebサービスをデプロイする方法をご紹介します。 普段AWSのECSを使われている方は多いと思いますが、GCPはまだ使ったことないという方それなりにいらっしゃるんじゃないでしょうか。 かな〜り簡単に使えて、無料クレジットとかもついているのでおすすめです。 GCPにはGCE以..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/03/19/Docker-Image-Google-Compute-Engine.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "takuya hasumi",
+        "image": "https://avatars0.githubusercontent.com/u/22537034?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "Docker Imageを使ってGoogle Compute Engineにデプロイしてみる",
+    "url": "http://tech.innovation.co.jp/2018/03/19/Docker-Image-Google-Compute-Engine.html",
+    "datePublished": "2018-03-18T15:00:00.000Z",
+    "dateModified": "2018-03-19T10:42:26.364Z",
+    "keywords": "Hasumin,  google cloud platform,  google compute engine",
+    "description": "こんにちは。 新卒エンジニアのはすみんです。 最近新生活やら業務やらでバッッッタバタです。 ある意味充実はしています。 今回のブログは、Google Cloud Platform(以降GCP)のサービスのひとつである、 「Google Compute Engine」(GCE)を使ってWebサービスをデプロイする方法をご紹介します。 普段AWSのECSを使われている方は多いと思いますが、GCPはまだ使ったことないという方それなりにいらっしゃるんじゃないでしょうか。 かな〜り簡単に使えて、無料クレジットとかもついているのでおすすめです。 GCPにはGCE以..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Hasumin tag-google-cloud-platform tag-google-compute-engine no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="19 Mar 2018" class="post-meta__date date">19 Mar 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Hasumin">Hasumin</a>, <a href="http://tech.innovation.co.jp/tag/google-cloud-platform"> google cloud platform</a>, <a href="http://tech.innovation.co.jp/tag/google-compute-engine"> google compute engine</a></span>
+        <span class="post-meta__author author"><img src="https://avatars0.githubusercontent.com/u/22537034?v=4" alt="profile image for takuya hasumi" class="avatar post-meta__avatar" /> by takuya hasumi</span>
+      </div>
+      <h1 class="post-title">Docker Imageを使ってGoogle Compute Engineにデプロイしてみる</h1>
+    </header>
+
+    <section class="post tag-Hasumin tag-google-cloud-platform tag-google-compute-engine">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんにちは。<br>
+新卒エンジニアのはすみんです。<br>
+最近新生活やら業務やらでバッッッタバタです。<br>
+ある意味充実はしています。<br></p>
+</div>
+<div class="paragraph">
+<p>今回のブログは、Google Cloud Platform(以降GCP)のサービスのひとつである、<br>
+「Google Compute Engine」(GCE)を使ってWebサービスをデプロイする方法をご紹介します。<br>
+普段AWSのECSを使われている方は多いと思いますが、GCPはまだ使ったことないという方それなりにいらっしゃるんじゃないでしょうか。<br>
+かな〜り簡単に使えて、無料クレジットとかもついているのでおすすめです。<br>
+GCPにはGCE以外にも、最近流行りのKubernetesやBigdataを扱ったサービス、画像認識サービスなど豊富に取り揃えていますが、<br>
+まずは基本的なWebサーバーの立ち上げ方を知っておくと役に立つかも！？です。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_gcp">GCP</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>GCPにアクセスすると画面はこんな感じで、個人的にスタイリッシュで好みです。<br>
+<span class="image"><img src="/images/hasumi/gcp/gcp-top.png" alt="gcp-top.png"></span></p>
+</div>
+<div class="paragraph">
+<p>GCPのコンソール画面はこんな感じです。<br>
+色々なサービスがあるので、ワクワクしますね。<br>
+<span class="image"><img src="/images/hasumi/gcp/gcp-console.png" alt="gcp-console.png"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">デプロイの流れ</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ざっくりとした流れです。<br>
+1. プロジェクトの作成<br>
+2. DockerのImageにタグを付与し、プッシュ<br>
+3. インスタンスの作成<br>
+4. インスタンスグループの作成<br>
+これだけの操作で簡単にWebサービスを公開することが出来ます！便利！！<br></p>
+</div>
+<div class="paragraph">
+<p>困ったことがあったら公式のドキュメントを参考にしてくださいね。<br>
+<a href="https://cloud.google.com/compute/docs/instance-groups/deploying-docker-containers?hl=ja" class="bare">https://cloud.google.com/compute/docs/instance-groups/deploying-docker-containers?hl=ja</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">プロジェクトの作成</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>赤枠で囲まれたところからプロジェクトを作成してください。<br></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/hasumi/gcp/gcp-make-project.png" alt="gcp-make-project.png"></span></p>
+</div>
+<div class="paragraph">
+<p>その際に、「Google Container Registry APIの有効化」を忘れずにしましょう。<br>
+<span class="image"><img src="/images/hasumi/gcp/gcp-gcr-allow.png" alt="gcp-gcr-allow.png"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_docker_image">DockerのImageにタグを付与し、プッシュ</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>デプロイしたいDocker Imageを用意します。<br>
+自分で作成してもDocker Hubにあがっているものでもどちらでも構いません。<br>
+今回はDocker HubにあがっているtutumさんのPublic Repositoryを使わせていただきました。<br>
+<a href="https://hub.docker.com/r/tutum/wordpress/" class="bare">https://hub.docker.com/r/tutum/wordpress/</a></p>
+</div>
+<div class="paragraph">
+<p>ビルドします。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>docker build -t tutum/wordpress .</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>文末の「.」コンマは忘れやすいので注意してください。 <br></p>
+</div>
+<div class="paragraph">
+<p>ビルドしたかどうかを確認したい場合は<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>docker image ls</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>で確認することができます。<br></p>
+</div>
+<div class="sect2">
+<h3 id="___3">タグ付け</h3>
+<div class="paragraph">
+<p>ビルドしていることが確認できたらImageにタグを付けます。<br>
+docker tag ~~でタグはつけることが出来ますが、GCPの場合は<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>docker tag [image_name] gcr.io/[project_id]/[any_name]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>とするだけで、Google Container Registryというコンテナイメージを管理してくれるサービスに紐付けてくれます。<br>
+image_nameは先ほどのイメージ名を、project_idには作成したprojectのidを割り当ててください。<br></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___4">プッシュ</h3>
+<div class="paragraph">
+<p>タグ付けが完了したらプッシュしましょう。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>gcloud docker -- push gcr.io/[project_id]/[any_name]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>これでターミナルでの設定は終了！<br>
+あとは画面上でポチポチやるのみです。<br></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___5">インスタンスの作成</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>GCPのコンソール画面に戻ります。<br>
+GCPでは仮想マシンである「Compute Engine」にサーバーをたてます。<br>
+GCEのページを開き、「VMインスタンス」ページを開きます。<br>
+インスタンスの作成を押下します。<br></p>
+</div>
+<div class="paragraph">
+<p>作成時の注意点です。<br>
+・ゾーンは任意ですが、asia-northeastでいいと思います。<br>
+・「この VM インスタンスにコンテナ イメージをデプロイします。」にチェックを入れます。<br>
+→　コンテナ イメージに、先ほどpushしたイメージを配置します（タグ名）<br>
+・「HTTP トラフィックを許可する」にチェック<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___6">インスタンスグループの作成</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>最後にインスタンスグループの作成です。<br>
+インスタンスグループを作成し、各インスタンスをいい感じに管理します。<br></p>
+</div>
+<div class="paragraph">
+<p>基本的に先ほどのインスタンスの作成と同じような流れです。<br>
+注意点も同様です。<br>
+・ゾーンは任意ですが、asia-northeastでいいと思います。<br>
+・「この VM インスタンスにコンテナ イメージをデプロイします。」にチェックを入れます。<br>
+→　コンテナ イメージに、先ほどpushしたイメージを配置します（タグ名）<br>
+・「HTTP トラフィックを許可する」にチェック<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___7">アクセス</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>さぁ、これで準備は出来ました！<br>
+作成されたインスタンスグループに外部IPがあると思うので、アクセスしてみてください。<br>
+wordpressの設定画面が表示されたでしょうか？<br>
+<span class="image"><img src="/images/hasumi/gcp/gcp-wordpress.png" alt="gcp-wordpress.png"></span></p>
+</div>
+<div class="paragraph">
+<p>こんな簡単にデプロイ出来るなんて、DockerとGCPはめちゃくちゃ便利ですね〜〜<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___8">さいごに</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Webサービスを公開するのにレンタルIPを借りてとかしていた時代が遠い昔のように感じます。<br>
+GCPやAWSのようにオートスケーリングしてくれて必要なときに必要な量だけ使えるのは、管理者目線でもありがたいです。<br>
+こうやってテクノロジーは進化していくんだろうな〜〜<br></p>
+</div>
+<div class="paragraph">
+<p>ｄｏｎｅ</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
