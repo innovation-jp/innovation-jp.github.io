@@ -1,0 +1,402 @@
+# macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑤BGP〜
+:published_at: 2018-03-22
+:hp-alt-title: STUDY NETWORK FOR CISCO CCNA(BGP)
+:hp-tags: Study, Network, mac, GNS3, CISCO, CCNA, BGP
+
+KTNです +
+今回はBGPの勉強をしていきたいと思います +
+
+関連記事はこちら +
+http://tech.innovation.co.jp/2017/11/06/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A.html[macのGNS3でNETWORK(CISCO CCNA)の勉強　〜①GNS3導入〜] +
+http://tech.innovation.co.jp/2017/11/21/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-V-P-N.html[macのGNS3でNETWORK(CISCO CCNA)の勉強　〜②VPN〜] +
+http://tech.innovation.co.jp/2018/01/14/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-N-A-T.html[macのGNS3でNETWORK(CISCO CCNA)の勉強　〜③NAT準備〜] +
+http://tech.innovation.co.jp/2018/03/06/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-N-A-T2.html[macのGNS3でNETWORK(CISCO CCNA)の勉強　〜④NAT設定〜]
+
+# BGPって何？
+ルーティングプロトコルの1つです +
+
+ルーティングプロトコルは +
+ネットワーク機器が通信経路を選択するために必要なルーティング情報を +
+やり取りするためのプロトコルです +
+
+ルーティング情報の設定には以下2種類があります +
+・スタティックルーティング +
+　手動で経路情報を設定する方法で、小規模なネットワーク向けです +
+　ネットワークの状態に変化があった場合は手動で設定変更を行う必要があります +
+
+・ダイナミックルーティング +
+　他のルータと経路情報を交換しあう方法で、中規模ネットワーク以上向けです +
+　ネットワークの状態に変化があった場合、他に有効な宛先ルートがあれば自動的にそのルートに切り替わります +
+　ネットワーク経路の追加・変更等は他のルータに伝わります +
+
+そして、ダイナミックルーティングも以下2つに分けられます +
+・EGP(Exterior Gateway Protocol) +
+　AS間のルーティング情報交換 +
+　プロトコル：今回勉強するBGP、EGP +
+
+・IGP(Interior Gateway Protocol) +
+　AS内のルーティング情報交換 +
+　プロトコル：RIP、EIGRP、OSPF、IS-IS +
+
+ルーティングプロトコルは複数同時に設定できます +
+その場合経路が重複して登録されることもあるので、どの設定を優先で使うか順位が決まっています +
+各プロトコルにAD(アドミニストレーティブディスタンス)という値が決められていて、 +
+小さいものから優先的に利用されます +
+
+```
+AD(アドミニストレーティブディスタンス)一覧
+
+ルート情報			AD値
+直接接続ルート		0
+スタティックルート		1
+EIGRPサマリルート		5
+外部BGP				20	
+内部EIGRP			90	
+IGRP				100	
+OSPF				110	
+IS-IS				115	
+RIP					120	
+EGP					140	
+ODR					160
+外部EIGRP			170	
+内部BGP				200	
+```
+
+# BGPを設定してみる
+
+以下の図のような構成にしてみます +
+
+image::/images/kotani/20180322/1.png[]
+
+R1、R2、R3のルータは同一セグメントに接続してみました +
+実際は専用線などでつながるんだと思います +
+検証環境としてはどんな接続でも良いのでルータ同士がつながって、ルーティング情報を交換できればOKですね
+
+ルータにIPアドレス設定していきます
+
+```
+■R1
+R1#configure terminal
+R1(config)#interface fastEthernet 0/0
+R1(config-if)#ip address 1.1.1.1 255.255.255.0
+R1(config-if)#no shutdown
+R1(config-if)#exit
+R1(config)#interface fastEthernet 0/1
+R1(config-if)#ip address 8.8.8.1 255.255.255.0
+R1(config-if)#no shutdown 
+R3(config-if)#exit
+R1(config)#exit
+R1#
+
+■R2
+R2#configure terminal
+R2(config)#interface fastEthernet 0/0
+R2(config-if)#ip address 1.1.1.2 255.255.255.0
+R2(config-if)#no shutdown
+R2(config-if)#exit
+R2(config)#interface fastEthernet 0/1
+R2(config-if)#ip address 2.2.2.1 255.255.255.0
+R2(config-if)#no shutdown 
+R2(config-if)#exit
+R2(config)#exit
+R2#
+
+■R3
+R3#configure terminal
+R3(config)#interface fastEthernet 0/0
+R3(config-if)#ip address 1.1.1.3 255.255.255.0
+R3(config-if)#no shutdown
+R3(config-if)#exit
+R3(config)#interface fastEthernet 0/1
+R3(config-if)#ip address 3.3.3.1 255.255.255.0
+R3(config-if)#no shutdown
+R3(config-if)#exit
+R3(config)#exit
+R3#
+```
+
+続いてBGPの設定をしていきます
+
+```
+
+■R1
+R1#configure terminal
+R1(config)#router bgp 1
+R1(config-router)#neighbor 1.1.1.2 remote-as 2
+R1(config-router)#neighbor 1.1.1.3 remote-as 3
+R1(config-router)#network 8.8.8.0 mask 255.255.255.0
+R1(config-router)#exit
+R1(config)#exit
+R1#
+
+■R2
+R2#configure terminal
+R2(config)#router bgp 2
+R2(config-router)#neighbor 1.1.1.1 remote-as 1
+R2(config-router)#neighbor 1.1.1.3 remote-as 3
+R2(config-router)#network 2.2.2.0 mask 255.255.255.0
+R2(config-router)#exit
+R2(config)#exit
+R2#
+
+■R3
+R3#configure terminal
+R3(config)#router bgp 3
+R3(config-router)#neighbor 1.1.1.1 remote-as 1
+R3(config-router)#neighbor 1.1.1.2 remote-as 2
+R3(config-router)#network 3.3.3.0 mask 255.255.255.0
+R3(config-router)#exit
+R3(config)#exit
+R3#
+```
+
+上記設定の意味はこんな感じです
+```
+①
+R1(config)#router bgp 1
+→私のAS番号は1だよ
+　AS番号はBGPのグループの中で一意な値にする必要があります
+
+②
+R1(config-router)#neighbor 1.1.1.2 remote-as 2
+R1(config-router)#neighbor 1.1.1.3 remote-as 3
+→AS番号は2で、IPアドレスが1.1.1.2のルータは私の仲間
+　AS番号は3で、IPアドレスが1.1.1.3のルータも私の仲間
+
+③
+R1(config-router)#network 8.8.8.0 mask 255.255.255.0
+→8.8.8.0/24のネットワーク宛の通信は私に下さい
+```
+
+簡単ですね +
+設定後のルーティングテーブルを見てみます
+
+```
+■R1
+R1#show ip route 
+Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area 
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route
+
+Gateway of last resort is not set
+
+     1.0.0.0/24 is subnetted, 1 subnets
+C       1.1.1.0 is directly connected, FastEthernet0/0
+     2.0.0.0/24 is subnetted, 1 subnets
+B       2.2.2.0 [20/0] via 1.1.1.2, 00:04:14
+     3.0.0.0/24 is subnetted, 1 subnets
+B       3.3.3.0 [20/0] via 1.1.1.3, 00:00:11
+     8.0.0.0/24 is subnetted, 1 subnets
+C       8.8.8.0 is directly connected, FastEthernet0/1
+R1#
+
+■R2
+R2#show ip route
+Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area 
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route
+
+Gateway of last resort is not set
+
+     1.0.0.0/24 is subnetted, 1 subnets
+C       1.1.1.0 is directly connected, FastEthernet0/0
+     2.0.0.0/24 is subnetted, 1 subnets
+C       2.2.2.0 is directly connected, FastEthernet0/1
+     3.0.0.0/24 is subnetted, 1 subnets
+B       3.3.3.0 [20/0] via 1.1.1.3, 00:00:30
+     8.0.0.0/24 is subnetted, 1 subnets
+B       8.8.8.0 [20/0] via 1.1.1.1, 00:05:12
+R2#
+
+■R3
+R3#show ip route      
+Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area 
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route
+
+Gateway of last resort is not set
+
+     1.0.0.0/24 is subnetted, 1 subnets
+C       1.1.1.0 is directly connected, FastEthernet0/0
+     2.0.0.0/24 is subnetted, 1 subnets
+B       2.2.2.0 [20/0] via 1.1.1.2, 00:04:43
+     3.0.0.0/24 is subnetted, 1 subnets
+C       3.3.3.0 is directly connected, FastEthernet0/1
+     8.0.0.0/24 is subnetted, 1 subnets
+B       8.8.8.0 [20/0] via 1.1.1.1, 00:05:22
+R3#
+```
+
+上記ルーティングテーブルの意味はこんな感じです
+
+```
+①
+R1#show ip route 
+Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area 
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route
+
+Gateway of last resort is not set
+
+     1.0.0.0/24 is subnetted, 1 subnets
+C       1.1.1.0 is directly connected, FastEthernet0/0
+→Cはルータ自身のI/Fのネットワークという意味です
+　1.1.1.0/24のネットワークはR1のFastEthernet0/0インタフェースのネットワークです
+
+②
+     2.0.0.0/24 is subnetted, 1 subnets
+B       2.2.2.0 [20/0] via 1.1.1.2, 00:04:14
+→BはBGPで知ったネットワークという意味です
+　[20/0]の20はAD(アドミニストレーティブディスタンス)です
+　[20/0]の0はメトリックで、複数のルータから経路情報をもらった場合にどれを優先するかの判断に使います
+　2.2.2.0/24宛の通信は、1.1.1.2宛に投げます
+
+③
+     3.0.0.0/24 is subnetted, 1 subnets
+B       3.3.3.0 [20/0] via 1.1.1.3, 00:00:11
+→3.3.3.0/24宛の通信は、1.1.1.3宛に投げます
+
+④
+     8.0.0.0/24 is subnetted, 1 subnets
+C       8.8.8.0 is directly connected, FastEthernet0/1
+→8.8.8.0/24のネットワークはR1のFastEthernet0/1インタフェースのネットワークです
+
+```
+
+PCにもIPアドレスを設定します
+
+```
+■gns3-centos7-1
+gns3-centos7-1> nmcli connection modify enp0s3 ipv4.method manual ipv4.addresses 8.8.8.11/24
+gns3-centos7-1> nmcli connection modify enp0s3 ipv4.gateway 8.8.8.1
+gns3-centos7-1> service network restart
+
+■gns3-centos7-2
+gns3-centos7-2> nmcli connection modify enp0s3 ipv4.method manual ipv4.addresses 2.2.2.11/24
+gns3-centos7-2> nmcli connection modify enp0s3 ipv4.gateway 2.2.2.1
+gns3-centos7-2> service network restart
+
+■gns3-centos7-3
+gns3-centos7-3> nmcli connection modify enp0s3 ipv4.method manual ipv4.addresses 3.3.3.11/24
+gns3-centos7-3> nmcli connection modify enp0s3 ipv4.gateway 3.3.3.1
+gns3-centos7-3> service network restart
+```
+
+設定できたので疎通確認します
+
+```
+■gns3-centos7-1
+gns3-centos7-1> ping 2.2.2.11
+PING 2.2.2.11 (2.2.2.11) 56(84) bytes of data.
+64 bytes from 2.2.2.11: icmp_seq=1 ttl=62 time=39.2 ms
+64 bytes from 2.2.2.11: icmp_seq=1 ttl=62 time=25.3 ms
+64 bytes from 2.2.2.11: icmp_seq=1 ttl=62 time=34.7 ms
+64 bytes from 2.2.2.11: icmp_seq=1 ttl=62 time=45.6 ms
+64 bytes from 2.2.2.11: icmp_seq=1 ttl=62 time=39.5 ms
+
+--- 2.2.2.11 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4022ms
+rtt min/avg/max/mdev = 25.383/36.923/45.688/6.739 ms
+
+gns3-centos7-1> ping 3.3.3.11
+PING 3.3.3.11 (3.3.3.11) 56(84) bytes of data.
+64 bytes from 3.3.3.11: icmp_seq=1 ttl=62 time=42.0 ms
+64 bytes from 3.3.3.11: icmp_seq=1 ttl=62 time=31.3 ms
+64 bytes from 3.3.3.11: icmp_seq=1 ttl=62 time=47.0 ms
+64 bytes from 3.3.3.11: icmp_seq=1 ttl=62 time=26.6 ms
+64 bytes from 3.3.3.11: icmp_seq=1 ttl=62 time=31.9 ms
+
+--- 3.3.3.11 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4021ms
+rtt min/avg/max/mdev = 26.623/35.772/47.023/7.538 ms
+```
+
+疎通できたので、BGPの設定出来てますね！ +
+簡単でしたがこれでBGPの設定を行うことが出来ました
+
+# 実際にあった障害を再現してみる
+
+では最後に昨年発生したネットワーク障害に近いものを再現させてみようと思います +
+Googleさんが間違ったBGPルートを配布したことにより起こった不具合です +
+一部のネットワークへの通信がものすごい遠回りすることによって通信が遅かったり、最悪パケットロスが発生するというものでした +
+遅延は再現するのが大変なので、間違ったルート情報を配布して通信障害を起こすだけにしてみようと思います +
+
+R3からR2管理グローバルIPの一部を配布するように設定してみます +
+gns3-centos7-1からgns3-centos7-2の通信がR3に向いてしまい、通信が出来なくなるという想定です +
+もう一回構成図貼っておきます +
+
+image::/images/kotani/20180322/1.png[]
+
+```
+R3#configure terminal
+R3(config)#interface fastEthernet 0/1
+R3(config-if)#ip address 2.2.2.1 255.255.255.240
+R3(config-if)#exit
+R3(config)#router bgp 3
+R3(config-router)#network 2.2.2.0 mask 255.255.255.240
+R3(config-router)#exit
+R3(config)#exit
+R3#
+```
+R1のルーティングテーブルを見てみます
+
+```
+R1#show ip route
+Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area 
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route
+
+Gateway of last resort is not set
+
+     1.0.0.0/24 is subnetted, 1 subnets
+C       1.1.1.0 is directly connected, FastEthernet0/0
+     2.0.0.0/8 is variably subnetted, 2 subnets, 2 masks
+B       2.2.2.0/28 [20/0] via 1.1.1.3, 00:00:01
+B       2.2.2.0/24 [20/0] via 1.1.1.2, 00:45:45
+     8.0.0.0/24 is subnetted, 1 subnets
+C       8.8.8.0 is directly connected, FastEthernet0/1
+R1#
+```
+2.2.2.0/28のネットワーク宛の通信は1.1.1.3に向いていますね +
+疎通確認してみます
+
+```
+■gns3-centos7-1
+gns3-centos7-1> ping 2.2.2.11
+PING 2.2.2.11 (2.2.2.11) 56(84) bytes of data.
+
+--- 2.2.2.11 ping statistics ---
+5 packets transmitted, 0 received, 100% packet loss, time 4029ms
+```
+
+ということで、疎通出来なくなりました +
+
+実際のネットワークではルーティング情報は大量の機器とやり取りされているので、 +
+ちょっとした設定ミスも危ないですね +
+Googleさんの対応はすごく早くて8分以内に正しい情報に修正したとのことですが、 +
+その日はしばらくインターネットが不安定でした +
+
+障害の記事はこちら +
+http://tech.nikkeibp.co.jp/it/atcl/column/14/346926/083101108/
+
+こちらからは以上です
