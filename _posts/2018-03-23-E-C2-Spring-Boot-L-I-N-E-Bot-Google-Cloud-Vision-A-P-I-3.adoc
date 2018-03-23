@@ -50,13 +50,15 @@ VERY_UNLIKELY, UNLIKELY, POSSIBLE, LIKELY, VERY_LIKELYが指定されていま�
 
 まずは、「よろこび」を表現してもらいました。 +
 
-
-
-image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/1_yorokobi[]
+image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/1_yorokobi.png[]
 
 
 楽しそう？のところがVERY_LIKELYになってますねー + 
-その他は、VERY_UNLIKELYなので、この画像はVisionAPIの
+その他は、VERY_UNLIKELYなので、VisionAPIは画像からKTNさんの感情を”よろこんでそう”と判定したようです。
+いい笑顔ですねー +
+
+それでは次は、
+
 
 
 
