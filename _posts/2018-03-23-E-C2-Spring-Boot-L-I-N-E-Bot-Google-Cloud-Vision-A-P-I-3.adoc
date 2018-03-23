@@ -9,8 +9,12 @@
 
 今回、Google Cloud Vision APIを使ってみようと思います。色々な画像解析方法があるのですが、画像の中の顔を認識するFACE_DETECTIONを試してみようと思います。
 
-APIの詳細はこちら） +
-https://cloud.google.com/vision/docs/requests-and-responses?hl=ja
+
+
+===== Google Cloud Vision API って？
+APIに画像を送信すると、機械学習によって画像解析した結果を返してくれます。 +
+詳細はこちら） +
+https://cloud.google.com/vision/docs/?hl=ja
 
 
 
@@ -23,8 +27,10 @@ https://cloud.google.com/vision/docs/requests-and-responses?hl=ja
 
 Webサーバの設定や、Cloud Vision APIの設定については割愛します。
 
+
+
 ===== FACE_DETECTIONで使用する値について
-FACE_DETECTIONを指定して解析すると、認識した顔のパーツの位置情報や感情情報など、非常に多くの情報が返却されます。今回は以下の値を使用しました。
+FACE_DETECTIONを指定すると、認識した顔のパーツの位置情報や感情情報など、非常に多くの情報が返却されます。とっても多いので、今回は以下の値を使用しました。
 
 ・顔検出信頼度 +
 　　detectionConfidence
@@ -45,9 +51,12 @@ VERY_UNLIKELY, UNLIKELY, POSSIBLE, LIKELY, VERY_LIKELYが指定されていま�
 まずは、「よろこび」を表現してもらいました。 +
 
 
-image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/tanoshimi_2.png[]
+
+image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/1_yorokobi[]
 
 
+楽しそう？のところがVERY_LIKELYになってますねー + 
+その他は、VERY_UNLIKELYなので、この画像はVisionAPIの
 
 
 
