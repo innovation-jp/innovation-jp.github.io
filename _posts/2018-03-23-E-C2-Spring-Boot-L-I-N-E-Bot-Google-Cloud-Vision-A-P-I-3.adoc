@@ -40,9 +40,21 @@ VERY_UNLIKELY, UNLIKELY, POSSIBLE, LIKELY, VERY_LIKELYが指定されていま�
 
 ===== 実験
 
+プログラムは下に載せてありませす。早速動かしてみます。今回も弊社フリー素材のKTNさんにご協力頂きました。 +
+
+まずは、「よろこび」を表現してもらいました。 +
+
+
+image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/tanoshimi_2.png[]
+
+
+
+
+
 
 
 ===== 今回のプログラム +
+提供されているSDKを使っていないので若干長くなってますが、難しいことはしてません。 +
 LINEに送信した画像データを、Google Cloud Vision APIを使って画像解析するメソッド
 ++++
 <pre style="font-family: Menlo, Courier">
