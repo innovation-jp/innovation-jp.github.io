@@ -5,9 +5,12 @@
 こんにちは。
 エンジニアのNew塚本です。
 
-最近春らしくなってきましたね。
 
-今回、Google Cloud Vision APIを使ってみようと思います。色々な画像解析方法があるのですが、画像の中の顔を認識するFACE_DETECTIONを試してみようと思います。
+近頃はGolangでコーディングをしているので、久々にJavaで何かしたくなりました！ +
+私のまわりでは画像解析ブームが来ているようなので、その流れにのります。 +
+
+今回は、Google Cloud Vision APIを使ってみようと思います。 +
+画像の中の顔を認識するFACE_DETECTIONを試してみます。
 
 
 
@@ -42,26 +45,6 @@ FACE_DETECTIONを指定すると、認識した顔のパーツの位置情報や
 　　かなしみ：sorrowLikelihood +
 
 VERY_UNLIKELY, UNLIKELY, POSSIBLE, LIKELY, VERY_LIKELYが指定されています。
-
-
-===== 実験
-
-プログラムは下に載せてありませす。早速動かしてみます。今回も弊社フリー素材のKTNさんにご協力頂きました。 +
-
-まずは、「よろこび」を表現してもらいました。 +
-
-image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/1_yorokobi.png[]
-
-
-楽しそう？のところがVERY_LIKELYになってますねー + 
-その他は、VERY_UNLIKELYなので、VisionAPIは画像からKTNさんの感情を”よろこんでそう”と判定したようです。
-いい笑顔ですねー +
-
-それでは次は、
-
-
-
-
 
 
 ===== 今回のプログラム +
@@ -154,7 +137,55 @@ public List<String> googleVision(String msgId) {
 </pre>
 ++++
 
+===== 実験
+
+プログラムは下に載せてありませす。 +
+では、早速動かしてみましょう。今回も弊社フリー素材のKTNさんにご協力頂きました。 +
+ありがとうございます！
+
+まずは、「よろこび」から。 +
+
+image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/1_yorokobi.png[]
+
+
+楽しそう？のところがVERY_LIKELYになってますねー + 
+その他は、VERY_UNLIKELYなので、VisionAPIは画像からKTNさんの感情を”よろこんでそう”と判定したようです。
+いい笑顔ですねー。 +
+
+次は、「おどろき」を表現してもらいます。 + 
+
+image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/1_odoroki.png[]
+
+楽しそう？のところがVERY_LIKELYになってますねー + 
+・・・次！ +
+「いかり」はどうでしょう。 +
+
+image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/1_ikari_1.png[]
+・・・次！ +
+
+「かなしみ」です。 +
+
+image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/1_kanashimi_1.png[]
+
+・・・。
+
+表現変えてチャレンジ！ +
+
+image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/1_kanashimi_2.png[]
+
+顔認識なのに顔写ってないから、そりゃそうなりますよね。 +
+ごめんなさい。KTNさん。
+
+最後に弊社のPepper君はどうでしょうか？
+
+image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/1_pepper.png[]
+
+
+正解！
+
+
+
 ===== 感想
-すごいですね
+画像解析から感情を判定するのは凄いですね。今回はその画像を作るのが悪かったようです。
 
 おわり
