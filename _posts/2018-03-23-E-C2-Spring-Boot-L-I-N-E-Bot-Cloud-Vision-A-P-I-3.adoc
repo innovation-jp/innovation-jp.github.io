@@ -1,0 +1,85 @@
+# EC2 + SpringBoot でLINE@のBotアプリを作る（Cloud Vision API）　その3
+:hp-alt-title:　EC2 + SpringBoot でLINE@のBotアプリを作る　その3
+:hp-tags: NewTsukamoto, EC2, SpringBoot, Java8
+
+こんにちは。
+エンジニアのNew塚本です。
+
+最近、暖かい日が多くなり春らしなってきましたが、 皆さまは如何お過ごしでしょうか。
+
+さて、今回のお題は、前回ギブアップした「LINE@のボイスデータを音声解析してみる」のリベンジ編です。
+
+
+===== 改修したプログラム② +
+音声データをffmpegでflac形式に変換、音声解析API実行し返却値を解析するメソッド。
+++++
+<pre style="font-family: Menlo, Courier">
+private List<String> googleSpeech(String fileName) {
+
+  StringBuilder urlBuff = new StringBuilder();
+  urlBuff.append(appConfig.getGoogleCloudSpeechApi());
+  urlBuff.append(appConfig.getGoogleApiKey());
+
+  List<String> speechList = null;
+  URL url; 
+
+  try {
+    // LINEボイスデータ(aac形式)をflac形式に変換
+    <text style="color:red">Path filePath = Paths.get("/tmp/" + fileName + ".flac");
+    String cmd = "ffmpeg -i /tmp/" + fileName + ".aac" + " /tmp/" + fileName + ".flac";
+    Runtime runtime = Runtime.getRuntime();
+    Process process = runtime.exec(cmd);
+    process.waitFor();</text>
+    // GoogleCloudSpeechApiからの返却値を取得
+    <text style="color:red">url = new URL(urlBuff.toString());
+    URLConnection urlConnection = url.openConnection(); 
+    HttpsURLConnection httpConnection = (HttpsURLConnection) urlConnection; 
+    httpConnection.setRequestMethod("POST"); 
+    httpConnection.setRequestProperty("Content-Type", "audio/x-flac; rate=16000"); 
+    httpConnection.setDoOutput(true); 
+    DataOutputStream outStream = new DataOutputStream(httpConnection.getOutputStream());
+    outStream.write(Files.readAllBytes(filePath)); 
+    outStream.flush(); 
+    outStream.close();
+</text>
+    BufferedReader in = new BufferedReader(new InputStreamReader(httpConnection.getInputStream())); 
+    String inputLine; 
+
+    speechList = new ArrayList<String>();
+
+    // 音声解析データの変換
+    while ((inputLine = in.readLine()) != null) { 
+
+      // 返却されたjsonの中に解析結果がなければスルー
+      if (!inputLine.contains("alternative")) {
+      continue;
+      }
+
+      // jsonデータのデシリアライズ
+      RecieveData receivedata = new ObjectMapper().readValue(inputLine, RecieveData.class);
+      for (Result result : receivedata.getResult()) {
+        int limit = 1;
+        for (Alternative msg : result.getAlternative()) {
+          // 解析されたテキストデータを取得
+          speechList.add(msg.getTranscript());
+          limit++;
+          // 1回にLINEへ送信するメッセージの最大値
+          if (5 < limit) {
+          break;
+          }
+        }
+      }
+    }
+    in.close();
+  } catch (Exception e) { 
+  e.printStackTrace(); 
+  }
+  return speechList;
+}
+</pre>
+++++
+
+===== 感想
+音声データ（圧縮形式）は得意な領域ではないので、これが絡んだ問題にハマりました。今回、解決はしましたが、圧縮形式についてはイマイチ興味が湧きません。ハマって得た知識は少なかったのですが、新しい引き出しができたのは収穫です。
+
+おわり
