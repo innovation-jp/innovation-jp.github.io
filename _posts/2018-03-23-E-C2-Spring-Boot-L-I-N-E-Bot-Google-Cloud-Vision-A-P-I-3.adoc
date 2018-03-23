@@ -33,7 +33,8 @@ Webサーバの設定や、Cloud Vision APIの設定については割愛しま�
 
 
 ===== FACE_DETECTIONで使用する値について
-FACE_DETECTIONを指定すると、認識した顔のパーツの位置情報や感情情報など、非常に多くの情報が返却されます。とっても多いので、今回は以下の値を使用しました。
+FACE_DETECTIONを指定すると、認識した顔のパーツの位置情報や感情情報など、 +
+非常に多くの情報が返却されます。とっても多いので、今回は以下の値を使用しました。
 
 ・顔検出信頼度 +
 　　detectionConfidence
@@ -49,7 +50,6 @@ VERY_UNLIKELY, UNLIKELY, POSSIBLE, LIKELY, VERY_LIKELYが指定されていま�
 
 ===== 今回のプログラム +
 提供されているSDKを使っていないので若干長くなってますが、難しいことはしてません。 +
-LINEに送信した画像データを、Google Cloud Vision APIを使って画像解析するメソッド
 ++++
 <pre style="font-family: Menlo, Courier">
 public List<String> googleVision(String msgId) {
@@ -139,8 +139,9 @@ public List<String> googleVision(String msgId) {
 
 ===== 実験
 
-プログラムは下に載せてありませす。 +
-では、早速動かしてみましょう。今回も弊社フリー素材のKTNさんにご協力頂きました。 +
+では、早速動かしてみましょう。 +
+
+今回も弊社フリー素材のKTNさんにご協力頂きました。 +
 ありがとうございます！
 
 まずは、「よろこび」から。 +
@@ -150,18 +151,21 @@ image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/m
 
 楽しそう？のところがVERY_LIKELYになってますねー + 
 その他は、VERY_UNLIKELYなので、VisionAPIは画像からKTNさんの感情を”よろこんでそう”と判定したようです。
-いい笑顔ですねー。 +
+いやー。いい笑顔ですねー。 +
 
 次は、「おどろき」を表現してもらいます。 + 
 
 image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/1_odoroki.png[]
 
-楽しそう？のところがVERY_LIKELYになってますねー + 
-・・・次！ +
-「いかり」はどうでしょう。 +
+楽しそう？のところがLIKELYになってますねー + 
+驚きの判定はされていません。 +
+
+次！ 「いかり」はどうでしょう。 +
 
 image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/1_ikari_1.png[]
-・・・次！ +
+・・・ +
+
+次！ +
 
 「かなしみ」です。 +
 
@@ -181,7 +185,7 @@ image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/m
 image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/1_pepper.png[]
 
 
-正解！
+正解！!
 
 
 
