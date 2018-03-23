@@ -1,0 +1,137 @@
+# EC2 + SpringBoot でLINE@のBotアプリを作る（Google Cloud Vision API）　その3
+:hp-alt-title:　EC2 + SpringBoot でLINE@のBotアプリを作る　その3
+:hp-tags: NewTsukamoto, EC2, SpringBoot, Java8
+
+こんにちは。
+エンジニアのNew塚本です。
+
+最近春らしくなってきましたね。
+
+今回、Google Cloud Vision APIを使ってみようと思います。色々な画像解析方法があるのですが、画像の中の顔を認識するFACE_DETECTIONを試してみようと思います。
+
+APIの詳細はこちら） +
+https://cloud.google.com/vision/docs/requests-and-responses?hl=ja
+
+
+
+===== プログラムの流れ
+
+１. LINEへ画像を送信しWebサーバでメッセージを受信（Webhookの設定） + 
+２. Webサーバで受信したメッセージIDを指定して、LINEから画像データを取得 +
+3. 取得した画像データをBASE64にエンコードして、Google Cloud Vision APIへ送信 +
+4. Google Cloud Vision APIからの画像解析結果を編集し、LINEへメッセージ送信 +
+
+Webサーバの設定や、Cloud Vision APIの設定については割愛します。
+
+===== FACE_DETECTIONで使用する値について
+FACE_DETECTIONを指定して解析すると、認識した顔のパーツの位置情報や感情情報など、非常に多くの情報が返却されます。今回は以下の値を使用しました。
+
+・顔検出信頼度 +
+　　detectionConfidence
+
+・感情情報 +
+　　よろこび：joyLikelihood +
+　　おどろき：surpriseLikelihood +
+　　いかり：angerLikelihood +
+　　かなしみ：sorrowLikelihood +
+
+VERY_UNLIKELY, UNLIKELY, POSSIBLE, LIKELY, VERY_LIKELYが指定されています。
+
+
+===== 実験
+
+
+
+===== 今回のプログラム +
+LINEに送信した画像データを、Google Cloud Vision APIを使って画像解析するメソッド
+++++
+<pre style="font-family: Menlo, Courier">
+public List<String> googleVision(String msgId) {
+
+  // 返却用のメッセージリスト
+  ArrayList<String> speechList = new ArrayList<String>();
+  
+  // Lineから画像データを取得する
+  CloseableHttpClient httpClient = HttpClients.createDefault();
+  String targetUrl = appConfig.getContentsUrl().replace("{messageId}", msgId);			
+  HttpGet request = new HttpGet(targetUrl);
+  request.addHeader("Authorization", "Bearer {%s}".replace("%s", appConfig.getChannelAccessToken()));
+  CloseableHttpResponse response = null;
+  byte[] encodeImg = null;
+  try {
+    response = httpClient.execute(request);
+    HttpEntity entity = response.getEntity();
+    encodeImg = Base64.encodeBase64(EntityUtils.toByteArray(entity));				
+    httpClient.close();
+    EntityUtils.consume(entity);
+  } catch (Exception ex) {
+    ex.printStackTrace();
+  }
+
+  // GoogleVisionApiインタフェース
+  SendData sData = new SendData();
+  List<Requests> requestList = new ArrayList<Requests>();
+  Requests req = new Requests();
+  Image image = new Image();
+  try {
+    image.setContent(new String(encodeImg, "UTF-8"));
+    req.setImage(image);
+  } catch (UnsupportedEncodingException e1) {
+    e1.printStackTrace();
+  }		
+  List<Features> featuresList = new ArrayList<Features>();		
+  Features features = new Features();
+  features.setMaxResults("5");
+  features.setType("FACE_DETECTION");
+  featuresList.add(features);
+  req.setFeatures(featuresList);
+  requestList.add(req);
+  sData.setRequests(requestList);
+
+  // GoogleVisionApi　画像解析
+  try {
+    httpClient = HttpClients.createDefault();		
+    StringBuilder urlBuff = new StringBuilder();
+    urlBuff.append(appConfig.getGoogleVisionApi());
+    urlBuff.append(appConfig.getGoogleVisionApiKey());
+
+    HttpPost postReq = new HttpPost(urlBuff.toString());
+    postReq.addHeader("Content-type", "application/json; charset=UTF-8");
+    ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(Inclusion.NON_NULL);		
+    final String json = mapper.writeValueAsString(sData);
+    postReq.setEntity(new StringEntity(json, "UTF-8"));
+    String result = httpClient.execute(postReq, new ResponseHandler<String>(){
+      public String handleResponse(HttpResponse res) throws IOException{
+        String result = EntityUtils.toString(res.getEntity(), "UTF-8");
+        return result;
+      }
+    });
+
+    // 画像解析結果からLineへ送信するメッセージの構築
+    Result visionMessage = new ObjectMapper().readValue(result, Result.class);
+    for (Responses res : visionMessage.getResponses()){
+      if (null != res.getFaceAnnotations()) {
+        for (FaceAnnotations data : res.getFaceAnnotations()) {
+              StringBuilder sb = new StringBuilder();
+          sb.append("[顔検出信頼度] : " + data.getDetectionConfidence() + "\n");
+          sb.append("楽しそう？ : " + data.getJoyLikelihood() + "\n");
+          sb.append("驚いてる？ : " + data.getSurpriseLikelihood() + "\n");
+          sb.append("怒ってる？ : " + data.getAngerLikelihood() + "\n");
+          sb.append("悲しそう？ : " + data.getSorrowLikelihood());
+          speechList.add(sb.toString());
+        }
+      }
+    }
+    return speechList;
+  } catch (Exception e) {
+    e.printStackTrace();
+    throw new RuntimeException(e);
+  } 
+}
+</pre>
+++++
+
+===== 感想
+すごいですね
+
+おわり
