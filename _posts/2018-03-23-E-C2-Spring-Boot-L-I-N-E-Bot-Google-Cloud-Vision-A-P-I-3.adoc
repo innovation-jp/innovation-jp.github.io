@@ -23,12 +23,12 @@ https://cloud.google.com/vision/docs/?hl=ja
 
 ===== プログラムの流れ
 
-１. LINEへ画像を送信しWebサーバでメッセージを受信（Webhookの設定） + 
-２. Webサーバで受信したメッセージIDを指定して、LINEから画像データを取得 +
+1. LINEへ画像を送信し、Webサーバでメッセージを受信（Webhook） + 
+2. Webサーバで受信したメッセージIDを指定して、LINEから画像データを取得 +
 3. 取得した画像データをBASE64にエンコードして、Google Cloud Vision APIへ送信 +
-4. Google Cloud Vision APIからの画像解析結果を編集し、LINEへメッセージ送信 +
+4. Google Cloud Vision APIからの解析結果を編集し、LINEへメッセージ送信 +
 
-Webサーバの設定や、Cloud Vision APIの設定については割愛します。
+Webサーバの設定、Google Cloud Platform (GCP) の設定は、ここでは割愛します。
 
 
 
@@ -40,20 +40,37 @@ FACE_DETECTIONを指定すると、認識した顔のパーツの位置情報や
 　　detectionConfidence
 
 ・感情情報 +
-　　よろこび：joyLikelihood +
-　　おどろき：surpriseLikelihood +
-　　いかり：angerLikelihood +
-　　かなしみ：sorrowLikelihood +
+　　joyLikelihood（よろこび） +
+　　surpriseLikelihood（おどろき） +
+　　angerLikelihood（いかり） +
+　　sorrowLikelihood（かなしみ） +
 
+解析結果の感情情報には、 + 
 VERY_UNLIKELY, UNLIKELY, POSSIBLE, LIKELY, VERY_LIKELYが指定されています。
 
 
 ===== 今回のプログラム +
-提供されているSDKを使っていないので若干長くなってますが、難しいことはしてません。 +
 ++++
 <pre style="font-family: Menlo, Courier">
-public List<String> googleVision(String msgId) {
+// 呼び出し元
+msgId = event.getMessage().getId();
+List<String> visionMsg = ExternalSrv.googleVision(msgId);
+if (visionMsg.isEmpty()) {
+  sampleText = "顔認識できませんでした";
+  sendSrv.send(createSendObject(sampleText, event.getReplyToken(), true));						
+} else {
+  sendSrv.send(createSendObjectArray(visionMsg, event.getReplyToken()));						
+}
+</pre>
+++++
 
+
+
+++++
+<pre style="font-family: Menlo, Courier">
+// LINEから画像データを取得し、 Google Cloud Vision API で解析。
+// 解析結果をLINEへ送信するメッセージを作成
+public List<String> googleVision(String msgId) {
   // 返却用のメッセージリスト
   ArrayList<String> speechList = new ArrayList<String>();
   
@@ -141,7 +158,7 @@ public List<String> googleVision(String msgId) {
 
 では、早速動かしてみましょう。 +
 
-今回も弊社フリー素材のKTNさんにご協力頂きました。 +
+今回は、弊社フリー素材のKTNさんにご協力頂きました。 +
 ありがとうございます！
 
 まずは、「よろこび」から。 +
@@ -151,7 +168,7 @@ image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/m
 
 楽しそう？のところがVERY_LIKELYになってますねー + 
 その他は、VERY_UNLIKELYなので、VisionAPIは画像からKTNさんの感情を”よろこんでそう”と判定したようです。
-いやー。いい笑顔ですねー。 +
+いい笑顔？ですねー +
 
 次は、「おどろき」を表現してもらいます。 + 
 
@@ -177,7 +194,7 @@ image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/m
 
 image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/1_kanashimi_2.png[]
 
-顔認識なのに顔写ってないから、そりゃそうなりますよね。 +
+顔写ってないから、そりゃそうなりますよね。 +
 ごめんなさい。KTNさん。
 
 最後に弊社のPepper君はどうでしょうか？
@@ -190,6 +207,6 @@ image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/m
 
 
 ===== 感想
-画像解析から感情を判定するのは凄いですね。今回はその画像を作るのが悪かったようです。
+凄いですね。今回はその画像を作るのが悪かったようです。
 
 おわり
