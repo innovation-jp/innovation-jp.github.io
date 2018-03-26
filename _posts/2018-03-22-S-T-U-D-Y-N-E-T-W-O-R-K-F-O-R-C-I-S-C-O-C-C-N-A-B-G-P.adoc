@@ -47,17 +47,17 @@ http://tech.innovation.co.jp/2018/03/06/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-
 AD(アドミニストレーティブディスタンス)一覧
 
 ルート情報			AD値
-直接接続ルート		0
-スタティックルート		1
-EIGRPサマリルート		5
+直接接続ルート			0
+スタティックルート			1
+EIGRPサマリルート			5
 外部BGP				20	
 内部EIGRP			90	
 IGRP				100	
 OSPF				110	
 IS-IS				115	
-RIP					120	
-EGP					140	
-ODR					160
+RIP				120	
+EGP				140	
+ODR				160
 外部EIGRP			170	
 内部BGP				200	
 ```
