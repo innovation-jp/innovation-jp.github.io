@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑤BGP〜 - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑤BGP〜">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑤BGP〜">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/03/22/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-B-G-P.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑤BGP〜" />
+    <meta property="og:description" content="KTNです 今回はBGPの勉強をしていきたいと思います 関連記事はこちら macのGNS3でNETWORK(CISCO CCNA)の勉強　〜①GNS3導入〜 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜②VPN〜 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜③NAT準備〜 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜④NAT設定〜 BGPって何？ ルーティングプロトコルの1つです ルーティングプロトコルは ネットワーク機器が通信経路を選択するために必要なルーティング情報を やり取りするた..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/03/22/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-B-G-P.html" />
+    <meta property="article:published_time" content="2018-03-21T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-03-26T02:23:58.720Z" />
+    <meta property="article:tag" content="Study" />
+    <meta property="article:tag" content="Network" />
+    <meta property="article:tag" content="mac" />
+    <meta property="article:tag" content="GNS3" />
+    <meta property="article:tag" content="CISCO" />
+    <meta property="article:tag" content="CCNA" />
+    <meta property="article:tag" content="BGP" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑤BGP〜" />
+    <meta name="twitter:description" content="KTNです 今回はBGPの勉強をしていきたいと思います 関連記事はこちら macのGNS3でNETWORK(CISCO CCNA)の勉強　〜①GNS3導入〜 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜②VPN〜 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜③NAT準備〜 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜④NAT設定〜 BGPって何？ ルーティングプロトコルの1つです ルーティングプロトコルは ネットワーク機器が通信経路を選択するために必要なルーティング情報を やり取りするた..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/03/22/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-B-G-P.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars0.githubusercontent.com/u/24905783?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑤BGP〜",
+    "url": "http://tech.innovation.co.jp/2018/03/22/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-B-G-P.html",
+    "datePublished": "2018-03-21T15:00:00.000Z",
+    "dateModified": "2018-03-26T02:23:58.720Z",
+    "keywords": "Study,  Network,  mac,  GNS3,  CISCO,  CCNA,  BGP",
+    "description": "KTNです 今回はBGPの勉強をしていきたいと思います 関連記事はこちら macのGNS3でNETWORK(CISCO CCNA)の勉強　〜①GNS3導入〜 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜②VPN〜 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜③NAT準備〜 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜④NAT設定〜 BGPって何？ ルーティングプロトコルの1つです ルーティングプロトコルは ネットワーク機器が通信経路を選択するために必要なルーティング情報を やり取りするた..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Study tag-Network tag-mac tag-G-N-S3 tag-C-I-S-C-O tag-C-C-N-A tag-B-G-P no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="22 Mar 2018" class="post-meta__date date">22 Mar 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Study">Study</a>, <a href="http://tech.innovation.co.jp/tag/Network"> Network</a>, <a href="http://tech.innovation.co.jp/tag/mac"> mac</a>, <a href="http://tech.innovation.co.jp/tag/G-N-S3"> GNS3</a>, <a href="http://tech.innovation.co.jp/tag/C-I-S-C-O"> CISCO</a>, <a href="http://tech.innovation.co.jp/tag/C-C-N-A"> CCNA</a>, <a href="http://tech.innovation.co.jp/tag/B-G-P"> BGP</a></span>
+        <span class="post-meta__author author"><img src="https://avatars0.githubusercontent.com/u/24905783?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑤BGP〜</h1>
+    </header>
+
+    <section class="post tag-Study tag-Network tag-mac tag-G-N-S3 tag-C-I-S-C-O tag-C-C-N-A tag-B-G-P">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>KTNです<br>
+今回はBGPの勉強をしていきたいと思います<br></p>
+</div>
+<div class="paragraph">
+<p>関連記事はこちら<br>
+<a href="http://tech.innovation.co.jp/2017/11/06/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A.html">macのGNS3でNETWORK(CISCO CCNA)の勉強　〜①GNS3導入〜</a><br>
+<a href="http://tech.innovation.co.jp/2017/11/21/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-V-P-N.html">macのGNS3でNETWORK(CISCO CCNA)の勉強　〜②VPN〜</a><br>
+<a href="http://tech.innovation.co.jp/2018/01/14/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-N-A-T.html">macのGNS3でNETWORK(CISCO CCNA)の勉強　〜③NAT準備〜</a><br>
+<a href="http://tech.innovation.co.jp/2018/03/06/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-N-A-T2.html">macのGNS3でNETWORK(CISCO CCNA)の勉強　〜④NAT設定〜</a></p>
+</div>
+</div>
+</div>
+<h1 id="_bgp" class="sect0">BGPって何？</h1>
+<div class="paragraph">
+<p>ルーティングプロトコルの1つです<br></p>
+</div>
+<div class="paragraph">
+<p>ルーティングプロトコルは<br>
+ネットワーク機器が通信経路を選択するために必要なルーティング情報を<br>
+やり取りするためのプロトコルです<br></p>
+</div>
+<div class="paragraph">
+<p>ルーティング情報の設定には以下2種類があります<br>
+・スタティックルーティング<br>
+　手動で経路情報を設定する方法で、小規模なネットワーク向けです<br>
+　ネットワークの状態に変化があった場合は手動で設定変更を行う必要があります<br></p>
+</div>
+<div class="paragraph">
+<p>・ダイナミックルーティング<br>
+　他のルータと経路情報を交換しあう方法で、中規模ネットワーク以上向けです<br>
+　ネットワークの状態に変化があった場合、他に有効な宛先ルートがあれば自動的にそのルートに切り替わります<br>
+　ネットワーク経路の追加・変更等は他のルータに伝わります<br></p>
+</div>
+<div class="paragraph">
+<p>そして、ダイナミックルーティングも以下2つに分けられます<br>
+・EGP(Exterior Gateway Protocol)<br>
+　AS間のルーティング情報交換<br>
+　プロトコル：今回勉強するBGP、EGP<br></p>
+</div>
+<div class="paragraph">
+<p>・IGP(Interior Gateway Protocol)<br>
+　AS内のルーティング情報交換<br>
+　プロトコル：RIP、EIGRP、OSPF、IS-IS<br></p>
+</div>
+<div class="paragraph">
+<p>ルーティングプロトコルは複数同時に設定できます<br>
+その場合経路が重複して登録されることもあるので、どの設定を優先で使うか順位が決まっています<br>
+各プロトコルにAD(アドミニストレーティブディスタンス)という値が決められていて、<br>
+小さいものから優先的に利用されます<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>AD(アドミニストレーティブディスタンス)一覧
+
+ルート情報			AD値
+直接接続ルート		0
+スタティックルート		1
+EIGRPサマリルート		5
+外部BGP				20
+内部EIGRP			90
+IGRP				100
+OSPF				110
+IS-IS				115
+RIP					120
+EGP					140
+ODR					160
+外部EIGRP			170
+内部BGP				200</code></pre>
+</div>
+</div>
+<h1 id="_bgp_2" class="sect0">BGPを設定してみる</h1>
+<div class="paragraph">
+<p>以下の図のような構成にしてみます<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180322/1.png" alt="1.png">
+</div>
+</div>
+<div class="paragraph">
+<p>R1、R2、R3のルータは同一セグメントに接続してみました<br>
+実際は専用線などでつながるんだと思います<br>
+検証環境としてはどんな接続でも良いのでルータ同士がつながって、ルーティング情報を交換できればOKですね</p>
+</div>
+<div class="paragraph">
+<p>ルータにIPアドレス設定していきます</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>■R1
+R1#configure terminal
+R1(config)#interface fastEthernet 0/0
+R1(config-if)#ip address 1.1.1.1 255.255.255.0
+R1(config-if)#no shutdown
+R1(config-if)#exit
+R1(config)#interface fastEthernet 0/1
+R1(config-if)#ip address 8.8.8.1 255.255.255.0
+R1(config-if)#no shutdown
+R3(config-if)#exit
+R1(config)#exit
+R1#
+
+■R2
+R2#configure terminal
+R2(config)#interface fastEthernet 0/0
+R2(config-if)#ip address 1.1.1.2 255.255.255.0
+R2(config-if)#no shutdown
+R2(config-if)#exit
+R2(config)#interface fastEthernet 0/1
+R2(config-if)#ip address 2.2.2.1 255.255.255.0
+R2(config-if)#no shutdown
+R2(config-if)#exit
+R2(config)#exit
+R2#
+
+■R3
+R3#configure terminal
+R3(config)#interface fastEthernet 0/0
+R3(config-if)#ip address 1.1.1.3 255.255.255.0
+R3(config-if)#no shutdown
+R3(config-if)#exit
+R3(config)#interface fastEthernet 0/1
+R3(config-if)#ip address 3.3.3.1 255.255.255.0
+R3(config-if)#no shutdown
+R3(config-if)#exit
+R3(config)#exit
+R3#</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>続いてBGPの設定をしていきます</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>■R1
+R1#configure terminal
+R1(config)#router bgp 1
+R1(config-router)#neighbor 1.1.1.2 remote-as 2
+R1(config-router)#neighbor 1.1.1.3 remote-as 3
+R1(config-router)#network 8.8.8.0 mask 255.255.255.0
+R1(config-router)#exit
+R1(config)#exit
+R1#
+
+■R2
+R2#configure terminal
+R2(config)#router bgp 2
+R2(config-router)#neighbor 1.1.1.1 remote-as 1
+R2(config-router)#neighbor 1.1.1.3 remote-as 3
+R2(config-router)#network 2.2.2.0 mask 255.255.255.0
+R2(config-router)#exit
+R2(config)#exit
+R2#
+
+■R3
+R3#configure terminal
+R3(config)#router bgp 3
+R3(config-router)#neighbor 1.1.1.1 remote-as 1
+R3(config-router)#neighbor 1.1.1.2 remote-as 2
+R3(config-router)#network 3.3.3.0 mask 255.255.255.0
+R3(config-router)#exit
+R3(config)#exit
+R3#</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>上記設定の意味はこんな感じです</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>①
+R1(config)#router bgp 1
+→私のAS番号は1だよ
+　AS番号はBGPのグループの中で一意な値にする必要があります
+
+②
+R1(config-router)#neighbor 1.1.1.2 remote-as 2
+R1(config-router)#neighbor 1.1.1.3 remote-as 3
+→AS番号は2で、IPアドレスが1.1.1.2のルータは私の仲間
+　AS番号は3で、IPアドレスが1.1.1.3のルータも私の仲間
+
+③
+R1(config-router)#network 8.8.8.0 mask 255.255.255.0
+→8.8.8.0/24のネットワーク宛の通信は私に下さい</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>簡単ですね<br>
+設定後のルーティングテーブルを見てみます</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>■R1
+R1#show ip route
+Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route
+
+Gateway of last resort is not set
+
+     1.0.0.0/24 is subnetted, 1 subnets
+C       1.1.1.0 is directly connected, FastEthernet0/0
+     2.0.0.0/24 is subnetted, 1 subnets
+B       2.2.2.0 [20/0] via 1.1.1.2, 00:04:14
+     3.0.0.0/24 is subnetted, 1 subnets
+B       3.3.3.0 [20/0] via 1.1.1.3, 00:00:11
+     8.0.0.0/24 is subnetted, 1 subnets
+C       8.8.8.0 is directly connected, FastEthernet0/1
+R1#
+
+■R2
+R2#show ip route
+Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route
+
+Gateway of last resort is not set
+
+     1.0.0.0/24 is subnetted, 1 subnets
+C       1.1.1.0 is directly connected, FastEthernet0/0
+     2.0.0.0/24 is subnetted, 1 subnets
+C       2.2.2.0 is directly connected, FastEthernet0/1
+     3.0.0.0/24 is subnetted, 1 subnets
+B       3.3.3.0 [20/0] via 1.1.1.3, 00:00:30
+     8.0.0.0/24 is subnetted, 1 subnets
+B       8.8.8.0 [20/0] via 1.1.1.1, 00:05:12
+R2#
+
+■R3
+R3#show ip route
+Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route
+
+Gateway of last resort is not set
+
+     1.0.0.0/24 is subnetted, 1 subnets
+C       1.1.1.0 is directly connected, FastEthernet0/0
+     2.0.0.0/24 is subnetted, 1 subnets
+B       2.2.2.0 [20/0] via 1.1.1.2, 00:04:43
+     3.0.0.0/24 is subnetted, 1 subnets
+C       3.3.3.0 is directly connected, FastEthernet0/1
+     8.0.0.0/24 is subnetted, 1 subnets
+B       8.8.8.0 [20/0] via 1.1.1.1, 00:05:22
+R3#</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>上記ルーティングテーブルの意味はこんな感じです</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>①
+R1#show ip route
+Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route
+
+Gateway of last resort is not set
+
+     1.0.0.0/24 is subnetted, 1 subnets
+C       1.1.1.0 is directly connected, FastEthernet0/0
+→Cはルータ自身のI/Fのネットワークという意味です
+　1.1.1.0/24のネットワークはR1のFastEthernet0/0インタフェースのネットワークです
+
+②
+     2.0.0.0/24 is subnetted, 1 subnets
+B       2.2.2.0 [20/0] via 1.1.1.2, 00:04:14
+→BはBGPで知ったネットワークという意味です
+　[20/0]の20はAD(アドミニストレーティブディスタンス)です
+　[20/0]の0はメトリックで、複数のルータから経路情報をもらった場合にどれを優先するかの判断に使います
+　2.2.2.0/24宛の通信は、1.1.1.2宛に投げます
+
+③
+     3.0.0.0/24 is subnetted, 1 subnets
+B       3.3.3.0 [20/0] via 1.1.1.3, 00:00:11
+→3.3.3.0/24宛の通信は、1.1.1.3宛に投げます
+
+④
+     8.0.0.0/24 is subnetted, 1 subnets
+C       8.8.8.0 is directly connected, FastEthernet0/1
+→8.8.8.0/24のネットワークはR1のFastEthernet0/1インタフェースのネットワークです</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>PCにもIPアドレスを設定します</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>■gns3-centos7-1
+gns3-centos7-1&gt; nmcli connection modify enp0s3 ipv4.method manual ipv4.addresses 8.8.8.11/24
+gns3-centos7-1&gt; nmcli connection modify enp0s3 ipv4.gateway 8.8.8.1
+gns3-centos7-1&gt; service network restart
+
+■gns3-centos7-2
+gns3-centos7-2&gt; nmcli connection modify enp0s3 ipv4.method manual ipv4.addresses 2.2.2.11/24
+gns3-centos7-2&gt; nmcli connection modify enp0s3 ipv4.gateway 2.2.2.1
+gns3-centos7-2&gt; service network restart
+
+■gns3-centos7-3
+gns3-centos7-3&gt; nmcli connection modify enp0s3 ipv4.method manual ipv4.addresses 3.3.3.11/24
+gns3-centos7-3&gt; nmcli connection modify enp0s3 ipv4.gateway 3.3.3.1
+gns3-centos7-3&gt; service network restart</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>設定できたので疎通確認します</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>■gns3-centos7-1
+gns3-centos7-1&gt; ping 2.2.2.11
+PING 2.2.2.11 (2.2.2.11) 56(84) bytes of data.
+64 bytes from 2.2.2.11: icmp_seq=1 ttl=62 time=39.2 ms
+64 bytes from 2.2.2.11: icmp_seq=1 ttl=62 time=25.3 ms
+64 bytes from 2.2.2.11: icmp_seq=1 ttl=62 time=34.7 ms
+64 bytes from 2.2.2.11: icmp_seq=1 ttl=62 time=45.6 ms
+64 bytes from 2.2.2.11: icmp_seq=1 ttl=62 time=39.5 ms
+
+--- 2.2.2.11 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4022ms
+rtt min/avg/max/mdev = 25.383/36.923/45.688/6.739 ms
+
+gns3-centos7-1&gt; ping 3.3.3.11
+PING 3.3.3.11 (3.3.3.11) 56(84) bytes of data.
+64 bytes from 3.3.3.11: icmp_seq=1 ttl=62 time=42.0 ms
+64 bytes from 3.3.3.11: icmp_seq=1 ttl=62 time=31.3 ms
+64 bytes from 3.3.3.11: icmp_seq=1 ttl=62 time=47.0 ms
+64 bytes from 3.3.3.11: icmp_seq=1 ttl=62 time=26.6 ms
+64 bytes from 3.3.3.11: icmp_seq=1 ttl=62 time=31.9 ms
+
+--- 3.3.3.11 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4021ms
+rtt min/avg/max/mdev = 26.623/35.772/47.023/7.538 ms</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>疎通できたので、BGPの設定出来てますね！<br>
+簡単でしたがこれでBGPの設定を行うことが出来ました</p>
+</div>
+<h1 id="__" class="sect0">実際にあった障害を再現してみる</h1>
+<div class="paragraph">
+<p>では最後に昨年発生したネットワーク障害に近いものを再現させてみようと思います<br>
+Googleさんが間違ったBGPルートを配布したことにより起こった不具合です<br>
+一部のネットワークへの通信がものすごい遠回りすることによって通信が遅かったり、<br>
+最悪パケットロスが発生するというものでした<br>
+遅延は再現するのが大変なので、間違ったルート情報を配布して通信障害を起こすだけにしてみようと思います<br></p>
+</div>
+<div class="paragraph">
+<p>R3からR2管理グローバルIPの一部を配布するように設定してみます<br>
+gns3-centos7-1からgns3-centos7-2の通信がR3に向いてしまい、通信が出来なくなるという想定です<br>
+もう一回構成図貼っておきます<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180322/1.png" alt="1.png">
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>R3#configure terminal
+R3(config)#interface fastEthernet 0/1
+R3(config-if)#ip address 2.2.2.1 255.255.255.240
+R3(config-if)#exit
+R3(config)#router bgp 3
+R3(config-router)#network 2.2.2.0 mask 255.255.255.240
+R3(config-router)#exit
+R3(config)#exit
+R3#</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>R1のルーティングテーブルを見てみます</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>R1#show ip route
+Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route
+
+Gateway of last resort is not set
+
+     1.0.0.0/24 is subnetted, 1 subnets
+C       1.1.1.0 is directly connected, FastEthernet0/0
+     2.0.0.0/8 is variably subnetted, 2 subnets, 2 masks
+B       2.2.2.0/28 [20/0] via 1.1.1.3, 00:00:01
+B       2.2.2.0/24 [20/0] via 1.1.1.2, 00:45:45
+     8.0.0.0/24 is subnetted, 1 subnets
+C       8.8.8.0 is directly connected, FastEthernet0/1
+R1#</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>2.2.2.0/28のネットワーク宛の通信は1.1.1.3に向いていますね<br>
+疎通確認してみます</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>■gns3-centos7-1
+gns3-centos7-1&gt; ping 2.2.2.11
+PING 2.2.2.11 (2.2.2.11) 56(84) bytes of data.
+
+--- 2.2.2.11 ping statistics ---
+5 packets transmitted, 0 received, 100% packet loss, time 4029ms</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>ということで、疎通出来なくなりました<br>
+通信経路のR1、R2のルータの設定は変えていませんが、<br>
+R3から誤ったルーティング情報を受け取った事によって通信ができなくなってしまいました<br>
+gns3-centos7-1など利用者から見るとR1、R2のどちらかで不具合が起きたように見えます<br></p>
+</div>
+<div class="paragraph">
+<p>実際のネットワークではルーティング情報は大量の機器とやり取りされているので、<br>
+ちょっとした設定ミスも危ないですね<br>
+Googleさんの対応はすごく早くて8分以内に正しい情報に修正したとのことですが、<br>
+その日はしばらくインターネットが不安定でした<br></p>
+</div>
+<div class="paragraph">
+<p>障害の記事はこちら<br>
+<a href="http://tech.nikkeibp.co.jp/it/atcl/column/14/346926/083101108/" class="bare">http://tech.nikkeibp.co.jp/it/atcl/column/14/346926/083101108/</a></p>
+</div>
+<div class="paragraph">
+<p>こちらからは以上です</p>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
