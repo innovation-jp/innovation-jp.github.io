@@ -263,10 +263,13 @@ echo "ダンプデータ圧縮完了"
 
 ## Google Cloud Platformのコンソールで設定
 
-Google Cloud PlatformのコンソールのContainer Registryのトリガーとして、cloudbuild.yamlを設定します。
+Google Cloud PlatformのコンソールのContainer Registryのトリガーとして、cloudbuild.yamlを設定します。 +
 下記のようにすればOKです。
 
 設定後は、トリガー一覧や、各種ツールから実行すればOKです。
+
+
+image::kato/13/01.png[]
 
 
 
@@ -281,7 +284,7 @@ Google Cloud Container Builderを使い、 +
 今回、ビルドしたDockerイメージからダンプデータを作っておくことで、既に処理済みのデータをリストアすれば良いだけになりました。 +
 結果、リストア時間が5〜10分程度まで短縮する事ができました。
 
-環境の最適化は、優先度が低くなりがちですが、
+環境の最適化は、優先度が低くなりがちですが、 +
 やっておくと気分良く開発ができるようになって、良かったと思います。
 
 
