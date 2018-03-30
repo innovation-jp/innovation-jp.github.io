@@ -1,0 +1,305 @@
+# Google Cloud Container Builderで常に最新のデータが入ったDockerイメージ(MySQL)をビルドする
+:hp-alt-title: google-cloud-container-builder-with-docker-mysql
+:hp-tags: katoK, GoogleCloudContainerBuilder, Docker
+
+
+こんにちは、加藤です。
+
+サービスの開発をしていると「本番環境」「テスト環境」「開発環境」など、 +
+必要に応じて複数の環境を用意すると思いますが、 +
+下記のような状態になりがちではないでしょうか？
+
+
+* 「テスト環境」や「開発環境」は、古いデータが入っている
+* 手動で本番環境のデータを「テスト環境」や「開発環境」に反映している
+* 予算が取りづらい
+
+
+今回は、この状況を改善すべく、Google Cloud Container Builderを使って +
+Dockerイメージ(MySQL)の自動更新にチャレンジしたいと思います。
+
+目標は、次のとおりです。
+
+* Dockerイメージ(MySQL)には、最新のバックアップデータが入っている
+* ログなど開発に不要なデータは必要な量だけあり、余計なデータは入っていない
+* 個人情報はマスクされている
+* 処理は、Git管理されていて、誰でも再現可能かつ改良可能になっている
+* コストは出来るだけかけない
+
+
+## Google Cloud Container Builderとは？
+
+Google Cloud Container Builderは、Google Cloud Platform上でビルドを実行するサービスです。 +
+具体的には、Gitと連携し、docker、gradele、maven、bazel、gulp等のビルドツールを使う事が出来ます。 +
+また、コンテナをベースに作られているため、用意されていないビルドツールであっても、 +
+Dockerイメージを用意することで独自のビルドステップの作成も可能です。
+
+また、2018年3月29日現在、1日あたり最初の120ビルド分は無料となっています。 +
+https://cloud.google.com/container-builder/pricing?hl=ja
+
+
+## 今回やりたい事
+
+今回のGoogle Cloud Container Builder上で行いたい事は、下記のようになります。
+
+
+1. Google Cloud Storageに保存されている最新のバックアップデータを取得
+2. バックアップデータをリストアしたDockerイメージ(MySQL)を作成、不要データの削除や個人情報のマスクを行う
+3. Dockerイメージのレイヤーを削除し、容量削減
+4. 3でビルドしたDockerイメージのMySQLのデータをダンプし、Google Cloud Storageに保存
+5. Google Container RegistryにDockerイメージを保存
+
+
+弊社では、テスト環境などDocker化されていない環境もあるため、 +
+処理済みのデータのダンプも取るようにしました。 +
+
+
+
+## 作ったもの
+
+Google Cloud Container Builder上でビルドする場合、ビルド内容の記述したファイルをよういする必要があります。 +
+今回は、下記の様にyaml形式のファイルを用意しました。
+
+ポイントは、entrypointの書き換えができることです。 +
+entrypointの書き換えにより、シェルスクリプトを書くことが可能ですので、
+複雑な処理も記述可能です。
+
+
+### cloudbuild.yaml
+
+MySQLのDockerイメージは、Docker Hubのものをベースにしています。
+
+このイメージは、docker-entrypoint-initdb.dディレクトリ内に拡張子「.sh」「.sql」「.sql.gz」のファイルを入れておくと +
+初回起動時にリストアされる仕組みがあり、この仕組を利用します。
+
+また、ビルドしたイメージのレイヤーを結合する処理を入れています。 +
+弊社の開発環境では、必要なデータが1GB程度あります。 +
+結果として、レイヤーを結合してしまったほうが、ダウンロードが必要なイメージサイズが小さくなったため、
+この処理を入れています。
+
+データが入った状態を作るのは、Dockerの使い方としては適切ではないかもしれませんが、 +
+今のところ、このやり方が一番短い時間で環境構築できるため採用しています。
+
+
+```
+#mysqlコンテナ用
+
+# タイムアウトは4時間
+timeout: 14400s
+
+
+steps:
+
+# Google Storageから最新のバックアップを取得
+- name      : gcr.io/cloud-builders/gsutil
+  entrypoint: bash
+  args      :
+  - -cvx
+  -    targetfile=$(gsutil ls gs://[バックアップファイルパス]-* | sort -r | head -n 1)
+    && echo "[リストアファイル] ${targetfile}"
+    && gsutil cp ${targetfile} ./docker-entrypoint-initdb.d/sql/backup.sql.gz
+    && echo "解凍開始"
+    && gzip -f -d ./docker-entrypoint-initdb.d/sql/backup.sql.gz
+    && rm -f ./docker-entrypoint-initdb.d/sql/backup.sql.gz
+
+# ビルド(バックアップデータのリストア、個人情報のマスクなど)を行い、
+# 「masked-mysql」イメージとしてイメージを作成
+- name : gcr.io/cloud-builders/docker
+  args :
+  - build
+  - -f
+  - Dockerfile1
+  - --tag=masked-mysql
+  - .
+
+# レイヤーを結合
+- name      : gcr.io/cloud-builders/docker
+  entrypoint: bash
+  args      :
+  - -cvx
+  -    echo "コンテナのレイヤーを結合します"
+    && docker create --name masked-mysql masked-mysql
+    && docker export masked-mysql | docker import - masked-single-mysql
+    && docker rm --force masked-mysql
+
+# コマンド類を再追加
+- name : gcr.io/cloud-builders/docker
+  args :
+  - build
+  - -f
+  - Dockerfile2
+  - --tag=gcr.io/$PROJECT_ID/mysql
+  - --tag=gcr.io/$PROJECT_ID/mysql:$TAG_NAME$SHORT_SHA
+  - .
+
+# リストア済みイメージから、ダンプデータを取得
+- name      : gcr.io/cloud-builders/docker
+  entrypoint: bash
+  args      :
+  - -cvx
+  -    echo "ダンプデータを作成します"
+    && docker run -id --name local-mysql gcr.io/$PROJECT_ID/mysql
+    && docker exec -i local-mysql bash -c 'bash /dump.sh'
+    && docker cp local-mysql:/dump.sql.gz ./dump.sql.gz
+    && docker rm --force local-mysql
+
+# Google Storageにマスク済みダンプデータを保存
+- name      : gcr.io/cloud-builders/gsutil
+  entrypoint: bash
+  args      :
+  - -cvx
+  -    targetfile=$(gsutil ls gs://[バックアップファイルパス]-* | sort -r | head -n 1)
+    && targetfile=${targetfile//[バックアップファイル名]/masked-[バックアップファイル名]}
+    && echo "[マスク済みファイル] ${targetfile}"
+    && gsutil cp dump.sql.gz ${targetfile}
+    && echo "保存完了"
+
+
+images:
+- gcr.io/$PROJECT_ID/mysql
+- gcr.io/$PROJECT_ID/mysql:$SHORT_SHA
+
+```
+
+
+### Dockerfile1
+
+次項で説明する、 +
+init.sh(初回実行処理)、dump.sh(データのダンプ処理)をイメージ内にコピーしておきます。
+
+```
+FROM mysql:5.6
+
+ENV MYSQL_ROOT_PASSWORD password
+
+COPY init.sh                     /
+COPY dump.sh                     /
+COPY etc/                        /etc
+COPY docker-entrypoint-initdb.d/ /docker-entrypoint-initdb.d/
+
+RUN bash init.sh \
+ && rm -f /docker-entrypoint-initdb.d/sql/backup.sql
+
+CMD ["mysqld", "--datadir=/data"]
+```
+
+
+### Dockerfile2
+
+Dockerコンテナを、エクスポートすると、Dockerファイルの設定内容が消えてしまいます。
+そのため、再度各設定を行っています。
+
+
+```
+FROM masked-single-mysql
+
+ENV MYSQL_ROOT_PASSWORD password
+EXPOSE 3306
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["mysqld", "--datadir=/data"]
+```
+
+
+### init.sh
+
+下記のウェブサイトを参考に、ENTRYPOINTを実行するシェルを用意しました。
+ありがとうございます！
+
+
+*Thanks Driven Life* +
+*Docker Hub 公式 PostgreSQL イメージを用いて、データベースクラスタ作成済みコンテナイメージを作成する* +
+http://gongo.hatenablog.com/entry/2015/08/04/232650
+
+
+```
+#!/bin/bash
+
+# 起動して初期化、停止を行う
+
+PIPEFILE="pipefile"
+ENTRY_PID=""
+
+[[ -p "$PIPEFILE" ]] || mkfifo "$PIPEFILE"
+docker-entrypoint.sh mysqld --datadir=/data > "$PIPEFILE" & ENTRY_PID="$!"
+
+while read LINE ; do
+    echo $LINE
+
+    if [[ "$LINE" == *"Ready for start up"* ]] ; then
+        sleep 3
+        break
+    fi
+done < "$PIPEFILE"
+
+#mysqlサーバー停止
+kill -s TERM "$ENTRY_PID" && wait "$ENTRY_PID"
+```
+
+
+### dump.sh
+
+MySQLの起動確認後、ダンプを行うスクリプトです。
+
+```
+#!/bin/bash
+
+#mysqldの起動を確認し、ダンプデータを作成する
+
+while ! mysqladmin ping --silent; do
+    echo "mysqld 起動中..."
+    sleep 1
+done
+
+echo "ダンプデータ作成中..."
+mysqldump -uroot -ppassword [データをダンプするDB名] > /dump.sql
+echo "ダンプデータ作成完了"
+
+echo "ダンプデータ圧縮中"
+gzip dump.sql
+echo "ダンプデータ圧縮完了"
+```
+
+
+## Google Cloud Platformのコンソールで設定
+
+Google Cloud PlatformのコンソールのContainer Registryのトリガーとして、cloudbuild.yamlを設定します。
+下記のようにすればOKです。
+
+設定後は、トリガー一覧や、各種ツールから実行すればOKです。
+
+
+
+## まとめ
+
+
+Google Cloud Container Builderを使い、 +
+バックアップファイルから、Dockerイメージ(MySQL)のビルドが出来ました。 +
+これで、安心して開発やテストが出来ます。
+
+また弊社の場合、Dockerしていない環境もありますが、その環境のデータを更新するのはとても大変で、数時間かかる作業でした。 +
+今回、ビルドしたDockerイメージからダンプデータを作っておくことで、既に処理済みのデータをリストアすれば良いだけになりました。 +
+結果、リストア時間が5〜10分程度まで短縮する事ができました。
+
+環境の最適化は、優先度が低くなりがちですが、
+やっておくと気分良く開発ができるようになって、良かったと思います。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
