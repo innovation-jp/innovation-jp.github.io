@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Google Cloud Container Builderで常に最新のデータが入ったDockerイメージ(MySQL)をビルドする - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Google Cloud Container Builderで常に最新のデータが入ったDockerイメージ(MySQL)をビルドする">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Google Cloud Container Builderで常に最新のデータが入ったDockerイメージ(MySQL)をビルドする">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/03/30/google-cloud-container-builder-with-docker-mysql.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Google Cloud Container Builderで常に最新のデータが入ったDockerイメージ(MySQL)をビルドする" />
+    <meta property="og:description" content="こんにちは、加藤です。 サービスの開発をしていると「本番環境」「テスト環境」「開発環境」など、 必要に応じて複数の環境を用意すると思いますが、 下記のような状態になりがちではないでしょうか？ 「テスト環境」や「開発環境」は、古いデータが入っている 手動で本番環境のデータを「テスト環境」や「開発環境」に反映している 予算が取りづらい 今回は、この状況を改善すべく、Google Cloud Container Builderを使って Dockerイメージ(MySQL)の自動更新にチャレンジしたいと思います。 目標は、次のとおりです。 Dockerイメージ(..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/03/30/google-cloud-container-builder-with-docker-mysql.html" />
+    <meta property="article:published_time" content="2018-03-29T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-04-02T10:49:19.014Z" />
+    <meta property="article:tag" content="katoK" />
+    <meta property="article:tag" content="GoogleCloudContainerBuilder" />
+    <meta property="article:tag" content="Docker" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Google Cloud Container Builderで常に最新のデータが入ったDockerイメージ(MySQL)をビルドする" />
+    <meta name="twitter:description" content="こんにちは、加藤です。 サービスの開発をしていると「本番環境」「テスト環境」「開発環境」など、 必要に応じて複数の環境を用意すると思いますが、 下記のような状態になりがちではないでしょうか？ 「テスト環境」や「開発環境」は、古いデータが入っている 手動で本番環境のデータを「テスト環境」や「開発環境」に反映している 予算が取りづらい 今回は、この状況を改善すべく、Google Cloud Container Builderを使って Dockerイメージ(MySQL)の自動更新にチャレンジしたいと思います。 目標は、次のとおりです。 Dockerイメージ(..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/03/30/google-cloud-container-builder-with-docker-mysql.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "yuki ozasa",
+        "image": "https://avatars3.githubusercontent.com/u/8304640?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "Google Cloud Container Builderで常に最新のデータが入ったDockerイメージ(MySQL)をビルドする",
+    "url": "http://tech.innovation.co.jp/2018/03/30/google-cloud-container-builder-with-docker-mysql.html",
+    "datePublished": "2018-03-29T15:00:00.000Z",
+    "dateModified": "2018-04-02T10:49:19.014Z",
+    "keywords": "katoK,  GoogleCloudContainerBuilder,  Docker",
+    "description": "こんにちは、加藤です。 サービスの開発をしていると「本番環境」「テスト環境」「開発環境」など、 必要に応じて複数の環境を用意すると思いますが、 下記のような状態になりがちではないでしょうか？ 「テスト環境」や「開発環境」は、古いデータが入っている 手動で本番環境のデータを「テスト環境」や「開発環境」に反映している 予算が取りづらい 今回は、この状況を改善すべく、Google Cloud Container Builderを使って Dockerイメージ(MySQL)の自動更新にチャレンジしたいと思います。 目標は、次のとおりです。 Dockerイメージ(..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-kato-K tag-Google-Cloud-Container-Builder tag-Docker no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="30 Mar 2018" class="post-meta__date date">30 Mar 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/kato-K">katoK</a>, <a href="http://tech.innovation.co.jp/tag/Google-Cloud-Container-Builder"> GoogleCloudContainerBuilder</a>, <a href="http://tech.innovation.co.jp/tag/Docker"> Docker</a></span>
+        <span class="post-meta__author author"><img src="https://avatars3.githubusercontent.com/u/8304640?v=4" alt="profile image for yuki ozasa" class="avatar post-meta__avatar" /> by yuki ozasa</span>
+      </div>
+      <h1 class="post-title">Google Cloud Container Builderで常に最新のデータが入ったDockerイメージ(MySQL)をビルドする</h1>
+    </header>
+
+    <section class="post tag-kato-K tag-Google-Cloud-Container-Builder tag-Docker">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんにちは、加藤です。</p>
+</div>
+<div class="paragraph">
+<p>サービスの開発をしていると「本番環境」「テスト環境」「開発環境」など、<br>
+必要に応じて複数の環境を用意すると思いますが、<br>
+下記のような状態になりがちではないでしょうか？</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>「テスト環境」や「開発環境」は、古いデータが入っている</p>
+</li>
+<li>
+<p>手動で本番環境のデータを「テスト環境」や「開発環境」に反映している</p>
+</li>
+<li>
+<p>予算が取りづらい</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>今回は、この状況を改善すべく、Google Cloud Container Builderを使って<br>
+Dockerイメージ(MySQL)の自動更新にチャレンジしたいと思います。</p>
+</div>
+<div class="paragraph">
+<p>目標は、次のとおりです。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Dockerイメージ(MySQL)には、最新のバックアップデータが入っている</p>
+</li>
+<li>
+<p>ログなど開発に不要なデータは必要な量だけあり、余計なデータは入っていない</p>
+</li>
+<li>
+<p>個人情報はマスクされている</p>
+</li>
+<li>
+<p>処理は、Git管理されていて、誰でも再現可能かつ改良可能になっている</p>
+</li>
+<li>
+<p>コストは出来るだけかけない</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_google_cloud_container_builder">Google Cloud Container Builderとは？</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Google Cloud Container Builderは、Google Cloud Platform上でビルドを実行するサービスです。<br>
+具体的には、Gitと連携し、docker、gradele、maven、bazel、gulp等のビルドツールを使う事が出来ます。<br>
+また、コンテナをベースに作られているため、用意されていないビルドツールであっても、<br>
+Dockerイメージを用意することで独自のビルドステップの作成も可能です。</p>
+</div>
+<div class="paragraph">
+<p>また、2018年3月29日現在、1日あたり最初の120ビルド分は無料となっています。<br>
+<a href="https://cloud.google.com/container-builder/pricing?hl=ja" class="bare">https://cloud.google.com/container-builder/pricing?hl=ja</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">今回やりたい事</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>今回のGoogle Cloud Container Builder上で行いたい事は、下記のようになります。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Google Cloud Storageに保存されている最新のバックアップデータを取得</p>
+</li>
+<li>
+<p>バックアップデータをリストアしたDockerイメージ(MySQL)を作成、不要データの削除や個人情報のマスクを行う</p>
+</li>
+<li>
+<p>Dockerイメージのレイヤーを削除し、容量削減</p>
+</li>
+<li>
+<p>3でビルドしたDockerイメージのMySQLのデータをダンプし、Google Cloud Storageに保存</p>
+</li>
+<li>
+<p>Google Container RegistryにDockerイメージを保存</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>弊社では、テスト環境などDocker化されていない環境もあるため、<br>
+処理済みのデータのダンプも取るようにしました。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">作ったもの</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Google Cloud Container Builder上でビルドする場合、ビルド内容の記述したファイルをよういする必要があります。<br>
+今回は、下記の様にyaml形式のファイルを用意しました。</p>
+</div>
+<div class="paragraph">
+<p>ポイントは、entrypointの書き換えができることです。<br>
+entrypointの書き換えにより、シェルスクリプトを書くことが可能ですので、
+複雑な処理も記述可能です。</p>
+</div>
+<div class="sect2">
+<h3 id="_cloudbuild_yaml">cloudbuild.yaml</h3>
+<div class="paragraph">
+<p>MySQLのDockerイメージは、Docker Hubのものをベースにしています。</p>
+</div>
+<div class="paragraph">
+<p>このイメージは、docker-entrypoint-initdb.dディレクトリ内に拡張子「.sh」「.sql」「.sql.gz」のファイルを入れておくと<br>
+初回起動時にリストアされる仕組みがあり、この仕組を利用します。</p>
+</div>
+<div class="paragraph">
+<p>また、ビルドしたイメージのレイヤーを結合する処理を入れています。<br>
+弊社の開発環境では、必要なデータが1GB程度あります。<br>
+結果として、レイヤーを結合してしまったほうが、ダウンロードが必要なイメージサイズが小さくなったため、
+この処理を入れています。</p>
+</div>
+<div class="paragraph">
+<p>データが入った状態を作るのは、Dockerの使い方としては適切ではないかもしれませんが、<br>
+今のところ、このやり方が一番短い時間で環境構築できるため採用しています。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>#mysqlコンテナ用
+
+# タイムアウトは4時間
+timeout: 14400s
+
+
+steps:
+
+# Google Storageから最新のバックアップを取得
+- name      : gcr.io/cloud-builders/gsutil
+  entrypoint: bash
+  args      :
+  - -cvx
+  -    targetfile=$(gsutil ls gs://[バックアップファイルパス]-* | sort -r | head -n 1)
+    &amp;&amp; echo "[リストアファイル] ${targetfile}"
+    &amp;&amp; gsutil cp ${targetfile} ./docker-entrypoint-initdb.d/sql/backup.sql.gz
+    &amp;&amp; echo "解凍開始"
+    &amp;&amp; gzip -f -d ./docker-entrypoint-initdb.d/sql/backup.sql.gz
+    &amp;&amp; rm -f ./docker-entrypoint-initdb.d/sql/backup.sql.gz
+
+# ビルド(バックアップデータのリストア、個人情報のマスクなど)を行い、
+# 「masked-mysql」イメージとしてイメージを作成
+- name : gcr.io/cloud-builders/docker
+  args :
+  - build
+  - -f
+  - Dockerfile1
+  - --tag=masked-mysql
+  - .
+
+# レイヤーを結合
+- name      : gcr.io/cloud-builders/docker
+  entrypoint: bash
+  args      :
+  - -cvx
+  -    echo "コンテナのレイヤーを結合します"
+    &amp;&amp; docker create --name masked-mysql masked-mysql
+    &amp;&amp; docker export masked-mysql | docker import - masked-single-mysql
+    &amp;&amp; docker rm --force masked-mysql
+
+# コマンド類を再追加
+- name : gcr.io/cloud-builders/docker
+  args :
+  - build
+  - -f
+  - Dockerfile2
+  - --tag=gcr.io/$PROJECT_ID/mysql
+  - --tag=gcr.io/$PROJECT_ID/mysql:$TAG_NAME$SHORT_SHA
+  - .
+
+# リストア済みイメージから、ダンプデータを取得
+- name      : gcr.io/cloud-builders/docker
+  entrypoint: bash
+  args      :
+  - -cvx
+  -    echo "ダンプデータを作成します"
+    &amp;&amp; docker run -id --name local-mysql gcr.io/$PROJECT_ID/mysql
+    &amp;&amp; docker exec -i local-mysql bash -c 'bash /dump.sh'
+    &amp;&amp; docker cp local-mysql:/dump.sql.gz ./dump.sql.gz
+    &amp;&amp; docker rm --force local-mysql
+
+# Google Storageにマスク済みダンプデータを保存
+- name      : gcr.io/cloud-builders/gsutil
+  entrypoint: bash
+  args      :
+  - -cvx
+  -    targetfile=$(gsutil ls gs://[バックアップファイルパス]-* | sort -r | head -n 1)
+    &amp;&amp; targetfile=${targetfile//[バックアップファイル名]/masked-[バックアップファイル名]}
+    &amp;&amp; echo "[マスク済みファイル] ${targetfile}"
+    &amp;&amp; gsutil cp dump.sql.gz ${targetfile}
+    &amp;&amp; echo "保存完了"
+
+
+images:
+- gcr.io/$PROJECT_ID/mysql
+- gcr.io/$PROJECT_ID/mysql:$SHORT_SHA</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dockerfile1">Dockerfile1</h3>
+<div class="paragraph">
+<p>次項で説明する、<br>
+init.sh(初回実行処理)、dump.sh(データのダンプ処理)をイメージ内にコピーしておきます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>FROM mysql:5.6
+
+ENV MYSQL_ROOT_PASSWORD password
+
+COPY init.sh                     /
+COPY dump.sh                     /
+COPY etc/                        /etc
+COPY docker-entrypoint-initdb.d/ /docker-entrypoint-initdb.d/
+
+RUN bash init.sh \
+ &amp;&amp; rm -f /docker-entrypoint-initdb.d/sql/backup.sql
+
+CMD ["mysqld", "--datadir=/data"]</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dockerfile2">Dockerfile2</h3>
+<div class="paragraph">
+<p>Dockerコンテナを、エクスポートすると、Dockerファイルの設定内容が消えてしまいます。
+そのため、再度各設定を行っています。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>FROM masked-single-mysql
+
+ENV MYSQL_ROOT_PASSWORD password
+EXPOSE 3306
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["mysqld", "--datadir=/data"]</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_init_sh">init.sh</h3>
+<div class="paragraph">
+<p>下記のウェブサイトを参考に、ENTRYPOINTを実行するシェルを用意しました。
+ありがとうございます！</p>
+</div>
+<div class="paragraph">
+<p><strong>Thanks Driven Life</strong><br>
+<strong>Docker Hub 公式 PostgreSQL イメージを用いて、データベースクラスタ作成済みコンテナイメージを作成する</strong><br>
+<a href="http://gongo.hatenablog.com/entry/2015/08/04/232650" class="bare">http://gongo.hatenablog.com/entry/2015/08/04/232650</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>#!/bin/bash
+
+# 起動して初期化、停止を行う
+
+PIPEFILE="pipefile"
+ENTRY_PID=""
+
+[[ -p "$PIPEFILE" ]] || mkfifo "$PIPEFILE"
+docker-entrypoint.sh mysqld --datadir=/data &gt; "$PIPEFILE" &amp; ENTRY_PID="$!"
+
+while read LINE ; do
+    echo $LINE
+
+    if [[ "$LINE" == *"Ready for start up"* ]] ; then
+        sleep 3
+        break
+    fi
+done &lt; "$PIPEFILE"
+
+#mysqlサーバー停止
+kill -s TERM "$ENTRY_PID" &amp;&amp; wait "$ENTRY_PID"</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dump_sh">dump.sh</h3>
+<div class="paragraph">
+<p>MySQLの起動確認後、ダンプを行うスクリプトです。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>#!/bin/bash
+
+#mysqldの起動を確認し、ダンプデータを作成する
+
+while ! mysqladmin ping --silent; do
+    echo "mysqld 起動中..."
+    sleep 1
+done
+
+echo "ダンプデータ作成中..."
+mysqldump -uroot -ppassword [データをダンプするDB名] &gt; /dump.sql
+echo "ダンプデータ作成完了"
+
+echo "ダンプデータ圧縮中"
+gzip dump.sql
+echo "ダンプデータ圧縮完了"</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_google_cloud_platform">Google Cloud Platformのコンソールで設定</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Google Cloud PlatformのコンソールのContainer Registryのトリガーとして、cloudbuild.yamlを設定します。<br>
+下記のようにすればOKです。</p>
+</div>
+<div class="paragraph">
+<p>設定後は、トリガー一覧や、各種ツールから実行すればOKです。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kato/13/01.png" alt="01.png">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">まとめ</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Google Cloud Container Builderを使い、<br>
+バックアップファイルから、Dockerイメージ(MySQL)のビルドが出来ました。<br>
+これで、安心して開発やテストが出来ます。</p>
+</div>
+<div class="paragraph">
+<p>また弊社の場合、Dockerしていない環境もありますが、その環境のデータを更新するのはとても大変で、数時間かかる作業でした。<br>
+今回、ビルドしたDockerイメージからダンプデータを作っておくことで、既に処理済みのデータをリストアすれば良いだけになりました。<br>
+結果、リストア時間が5〜10分程度まで短縮する事ができました。</p>
+</div>
+<div class="paragraph">
+<p>環境の最適化は、優先度が低くなりがちですが、<br>
+やっておくと気分良く開発ができるようになって、良かったと思います。</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
