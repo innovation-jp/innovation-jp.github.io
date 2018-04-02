@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>開発組織こそ心理的安全性が肝になるのではと思っている話 - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="開発組織こそ心理的安全性が肝になるのではと思っている話">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="開発組織こそ心理的安全性が肝になるのではと思っている話">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/04/02/.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="開発組織こそ心理的安全性が肝になるのではと思っている話" />
+    <meta property="og:description" content="こんにちは。ozasaです。 最近はコードに触れる機会が多かった反面、 組織のことを考える時間が取れなかったので、 自分の頭を整理する意味でも改めて組織の話に向き合ってみました。 昨今「生産性向上」や「イノベーション」をキーワードに 労働環境を見直す動きが盛んであると思います。 また、同じような文脈でリモートワークを禁止とする企業も出てきており、 コミュニケーションやそれによるコラボレーションの改善などが 謳われるようになってきてます。 http://news.livedoor.com/article/detail/13101337/ そんな社会背景が..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/04/02/.html" />
+    <meta property="article:published_time" content="2018-04-01T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-04-02T10:44:00.203Z" />
+    <meta property="article:tag" content="psychological-safety" />
+    <meta property="article:tag" content="ozasa" />
+    <meta property="article:tag" content="development-organization" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="開発組織こそ心理的安全性が肝になるのではと思っている話" />
+    <meta name="twitter:description" content="こんにちは。ozasaです。 最近はコードに触れる機会が多かった反面、 組織のことを考える時間が取れなかったので、 自分の頭を整理する意味でも改めて組織の話に向き合ってみました。 昨今「生産性向上」や「イノベーション」をキーワードに 労働環境を見直す動きが盛んであると思います。 また、同じような文脈でリモートワークを禁止とする企業も出てきており、 コミュニケーションやそれによるコラボレーションの改善などが 謳われるようになってきてます。 http://news.livedoor.com/article/detail/13101337/ そんな社会背景が..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/04/02/.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "yuki ozasa",
+        "image": "https://avatars3.githubusercontent.com/u/8304640?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "開発組織こそ心理的安全性が肝になるのではと思っている話",
+    "url": "http://tech.innovation.co.jp/2018/04/02/.html",
+    "datePublished": "2018-04-01T15:00:00.000Z",
+    "dateModified": "2018-04-02T10:44:00.203Z",
+    "keywords": "psychological-safety,  ozasa,  development-organization",
+    "description": "こんにちは。ozasaです。 最近はコードに触れる機会が多かった反面、 組織のことを考える時間が取れなかったので、 自分の頭を整理する意味でも改めて組織の話に向き合ってみました。 昨今「生産性向上」や「イノベーション」をキーワードに 労働環境を見直す動きが盛んであると思います。 また、同じような文脈でリモートワークを禁止とする企業も出てきており、 コミュニケーションやそれによるコラボレーションの改善などが 謳われるようになってきてます。 http://news.livedoor.com/article/detail/13101337/ そんな社会背景が..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-psychological-safety tag-ozasa tag-development-organization no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="02 Apr 2018" class="post-meta__date date">02 Apr 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/psychological-safety">psychological-safety</a>, <a href="http://tech.innovation.co.jp/tag/ozasa"> ozasa</a>, <a href="http://tech.innovation.co.jp/tag/development-organization"> development-organization</a></span>
+        <span class="post-meta__author author"><img src="https://avatars3.githubusercontent.com/u/8304640?v=4" alt="profile image for yuki ozasa" class="avatar post-meta__avatar" /> by yuki ozasa</span>
+      </div>
+      <h1 class="post-title">開発組織こそ心理的安全性が肝になるのではと思っている話</h1>
+    </header>
+
+    <section class="post tag-psychological-safety tag-ozasa tag-development-organization">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんにちは。ozasaです。<br>
+最近はコードに触れる機会が多かった反面、<br>
+組織のことを考える時間が取れなかったので、<br>
+自分の頭を整理する意味でも改めて組織の話に向き合ってみました。</p>
+</div>
+<div class="paragraph">
+<p>昨今「生産性向上」や「イノベーション」をキーワードに<br>
+労働環境を見直す動きが盛んであると思います。</p>
+</div>
+<div class="paragraph">
+<p>また、同じような文脈でリモートワークを禁止とする企業も出てきており、<br>
+コミュニケーションやそれによるコラボレーションの改善などが<br>
+謳われるようになってきてます。</p>
+</div>
+<div class="paragraph">
+<p><a href="http://news.livedoor.com/article/detail/13101337/" class="bare">http://news.livedoor.com/article/detail/13101337/</a></p>
+</div>
+<div class="paragraph">
+<p>そんな社会背景があり、「心理的安全性」というキーワードが注目されてきています。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">心理的安全性とは</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>元はハーバードビジネススクールの教授である <a href="https://www.hbs.edu/faculty/Pages/profile.aspx?facId=6451">エドモンドソン氏</a> による
+『Psychological safety and learning behavior in work teams』(1999)が初出の言葉になりますが、
+Googleが2015年に <a href="https://rework.withgoogle.com/blog/five-keys-to-a-successful-google-team/">『re:Work』</a> で取り上げたことで注目を浴びています。</p>
+</div>
+<div class="paragraph">
+<p>Googleは心理的安全性について</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>Psychological safety was far and away the most important of the five dynamics we found&#8201;&#8212;&#8201;it’s the underpinning of the other four.</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>とし、Psychological safety、Dependability、Structure &amp; clarity、Meaning of work、Impact of workという
+組織が成功する鍵の中でもっとも重要であると言っています。</p>
+</div>
+<div class="paragraph">
+<p>また、その効果について</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>Individuals on teams with higher psychological safety are less likely to leave Google, they’re more likely to harness the power of diverse ideas from their teammates, they bring in more revenue, and they’re rated as effective twice as often by executives.</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>とし、生産性だけでなく離職率の低下についても効果があると触れています。</p>
+</div>
+<div class="paragraph">
+<p>ここで紹介した以外にも様々な効果が報告されている心理的安全性ですが、
+最近流行りだしたからなのかあまり日本語の"論文"は出てきていないようです。
+※CiNiiで「心理的安全性」と検索した結果です</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">開発組織にこそ必要だと思う理由</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>当然ですが、エンジニアリング行為のほとんどは自分だけでは完結しないものが多いです。<br>
+プロダクトバックログによるコミュニケーション、<br>
+スプリントプランニングやスプリントレトロスペクティブもありますし、<br>
+設計やコードレビューも他者とのコミュニケーションが必須です。</p>
+</div>
+<div class="paragraph">
+<p>チームで開発を進める上で心理的安全性の有無はどのような差を生むことになるのか、
+考察してみました。</p>
+</div>
+<div class="paragraph">
+<p>以下はスクラム開発において、
+上記の条件を想像して書いてみたものになります。
+あくまで個人的な意見ですが参考になれば幸いです。</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 33%;">
+<col style="width: 33%;">
+<col style="width: 33%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">スクラムイベント</th>
+<th class="tableblock halign-left valign-top">心理的安全性あり</th>
+<th class="tableblock halign-left valign-top">心理的安全性なし</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">プロダクトバックログリファインメント</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">バックログで理解できていない部分に関して質問をすることができ要件のすり合わせができる</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">理解力がないと思われることを恐れ、理解しないまま実装に入る</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">デイリースクラム</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">進捗を明確にした上で自分の作業の阻害になっていることを報告できる</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">できないと終われることを恐れ、進捗を曖昧に表現してしまう。阻害の報告もしない</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">スプリントプランニング(キックオフ)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">プランニングポーカーで見積もりが合わない時妥協せず話し合う</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">できないと思われることを恐れ、他の人の出方を伺いプランニングする。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">スプリントレトロスペクティブ</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">課題を様々上げることができ、なおかつそれを解決するための議論ができる</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">衝突することを恐れ課題をあげない。または自分に関わる課題のみをあげる。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">コードレビュー</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">疑問/質問をぶつけたり、書き方の修正を依頼できる。</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">特に意見せずレビューを終える。その後気になる部分は自分で修正してしまう。</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>極端な例にはなってしまいますが、恐れや遠慮はチームの能力に影響があるように思えます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">心理的安全性を高めるには</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>心理的安全性という言葉が使われている訳ではありませんが、
+チームの信頼醸成として『あなたのチームは、機能してますか(2003.パトリック・レンシーオ著.伊豆原弓編.株式会社翔泳社発行)』の中では</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>長期間にわたって経験を共有し、なんども約束を守って信用を高め、ここのメンバーの特徴を十分に理解する必要がある</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>とされています。</p>
+</div>
+<div class="paragraph">
+<p>チームで働くからこそお互いを知ることはまず第一に必須ということですね。
+<strong>お互いの価値観や考えを肯定し合う必要は決してありませんが、</strong>
+少なくともその違いを知り、<strong>認め合うことは必要</strong>なのではないでしょうか。</p>
+</div>
+<div class="sect2">
+<h3 id="___4">終わりに</h3>
+<div class="paragraph">
+<p>いかがでしょうか？</p>
+</div>
+<div class="paragraph">
+<p>難しいのは心理的安全性を担保しつつも、
+様々なことにコミットメントをしていくこと(ある種の厳しさ)、そのバランスを取るだと思います。</p>
+</div>
+<div class="paragraph">
+<p>それすらもチームの中で解が出せるとするならば、きっと良いチームなのでしょう。<br>
+色々書きましたが、良いプロダクトを作っていくためにも良いチームを作っていくことが重要だと考えます。</p>
+</div>
+<div class="paragraph">
+<p>良いエンジニアライフを！</p>
+</div>
+<div class="paragraph">
+<p><strong>余談</strong></p>
+</div>
+<div class="paragraph">
+<p>コードレビューにおいて
+typoを指摘したつもりで
+「typpですかね？」とコメントしたことがあり、
+逆にそれを指摘された恥ずかしい思い出が蘇ったのでここで晒しておきます。</p>
+</div>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
