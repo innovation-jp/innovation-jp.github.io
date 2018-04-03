@@ -1,7 +1,6 @@
 # 開発組織こそ心理的安全性が肝になるのではと思っている話
-:hp-alt-title:　A-story-that-I-think-is-a-psychological-safety-will-be-the-key-to-a-development-organization
+:hp-alt-title:　a-story-that-I-think-is-a-psychological-safety-will-be-the-key-to-a-development-organization
 :hp-tags: psychological-safety, ozasa, development-organization
-
 
 こんにちは。ozasaです。 +
 最近はコードに触れる機会が多かった反面、 +
