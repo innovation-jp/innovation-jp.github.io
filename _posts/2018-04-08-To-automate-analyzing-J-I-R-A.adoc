@@ -1,0 +1,163 @@
+# JIRA SoftwareのAPIを使用してJIRAの分析作業を自動化する
+:hp-alt-title:  To automate analyzing JIRA 
+:hp-tags: JIRA,Laravel,PHP
+
+こんにちは、小柳津です。 +
+
+突然ですが、スクラム開発をやっていて振り返りの準備が面倒だと思った経験はありませんか?? +
+
+私はスクラムマスターをやっていて、スプリントの振り返りの度にJIRAからデータを抽出する作業をやっています。 +
+この作業がJIRAからCSVを落としてきて、データを整形するなどまあまあ大変。 +
+しかも振り返りが2週間ごとに訪れるので、結構面倒です。 +
+ですが、チームが成長しているかといったこと測る上では結構重要なので、やらないわけには行きません。 +
+
+なのでタイトルの通りにその作業をJIRAから提供されるAPIを用いて自動する試みをしてみました。 +
+
+## 今回使用したもの
+
+- Laravel5.6
+- guzzlehttp/guzzle
+
+Laravelのプロジェクトにguzzleをcomposerでインストールしました。 +
+
+## できあがったもの
+
+image::/images/oyaizu/jira_analyzer.png?0[]
+
+かなり粗く作ったので後々整えようと思うのですが、現段階では以下の用になっています。 +
+
+.web.phpに以下を追加
+```
+Route::any('jira', 'JiraContoller@index');
+```
+
+.App\Http\Controllers\JiraController.phpを以下のように作成
+```
+<?php
+
+namespace App\Http\Controllers;
+
+use GuzzleHttp\Client;
+use Illuminate\Http\Request;
+
+class JiraContoller extends Controller
+{
+    //使用しているJIRAのホスト名
+    private $jira_url = 'https://xxxxxxxxxxxxxx/rest/api/2/search';
+    //ユーザー名
+    private $user_name = 'xxxxxxxxxxxxxx;
+   //パスワード
+    private $password = 'xxxxxxxxxxxxxx';
+
+    public function index(Request $request)
+    {
+        $epics = [];
+        $issues = [];
+        $input = $request->input('keys');
+        $keys = str_replace(["\r\n", "\r", "\n"], ', ', $input);
+
+        if ($keys) {
+            $epics = $this->fetchEpics($keys);
+
+            foreach ($epics as $epic) {
+                $issues[$epic['key']] = $this->fetchIssuesRelatedEpic($epic['key']);
+            }
+        }
+
+        return view('jira', compact('epics', 'issues', 'input'));
+    }
+
+
+    /**
+     * @param String $key
+     * @return array
+     * EPICのを取得する
+     */
+    private function fetchEpics(String $key): array
+    {
+        $jql = [
+            'issueType = "エピック"',
+            'key IN ' . "($key)",
+            'project = ITTREND',
+        ];
+
+        return $this->fetchIssues($jql);
+    }
+
+
+    /**
+     * @param String $key
+     * @return array
+     * EPICに紐付いた課題を取得する
+     */
+    private function fetchIssuesRelatedEpic(String $key): array
+    {
+        $jql = [
+            '"epic link" = ' . $key,
+            'project = ITTREND',
+        ];
+
+        return $this->fetchIssues($jql);
+    }
+
+
+    /**
+     * @param array $jql
+     * @return array
+     * JIRAから課題の情報を取得する
+     */
+    private function fetchIssues(Array $jql): array
+    {
+        $client = new Client();
+        $response = $client->request('POST', $this->jira_url, [
+            'auth' => [$this->user_name, $this->password],
+            'headers' => [
+                'Content-Type' => 'application/json'
+            ],
+            'json' => [
+                "jql" => implode(' AND ', $jql),
+                "startAt" => 0,
+                "maxResults" => 50,
+                "fields" => [
+                    "status",
+                    'aggregatetimeoriginalestimate',
+                    'aggregatetimespent',
+                ],
+                "fieldsByKeys" => false
+            ],
+        ]);
+        return json_decode($response->getBody(), true)['issues'];
+    }
+}
+
+```
+
+
+ポイントは `fetchIssues()` の関数の中でfieldsを以下のよう指定してる点です。
+```
+                "fields" => [
+                    "status",
+                    'aggregatetimeoriginalestimate',
+                    'aggregatetimespent',
+                ],
+```
+
+各fieldsの値の意味は以下になります。 +
+
+- status
+    * ステータス
+- aggregatetimeoriginalestimate
+	* 合計初期見積時間
+- aggregatetimespent
+	* 作業ログの合計時間
+
+上記をfieldsの値を用いて、見積に対してどのくらいの作業時間を使っているのか、あと何時間くらいの作業が残っているかとう値を割り出しています。 +
+
+Viewファイルの中身は割愛しますが、今回は　https://getuikit.com/[UIKit] というフロントフレームワークを使用しました。 +
+Class名をドキュメントにそって追加していけば、自分でCSSをほとんど書かなくてもある程度の見た目が出来上がったので、とても便利でした +
+
+今回は慣れているLaravelを使ってサッと書いてしまったのですが、PHPのライブラリーとして独立したファイルやクラスで書いてみたり、サーバーレスでも動かせるようにNode.jsで書いてみたりをしてみようと思います。 +
+
+今回はここで失礼します。 +
+
+
