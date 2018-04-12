@@ -1,0 +1,124 @@
+= Amazon Echoから簡単に家電を操作してみる（赤外線ver）
+:hp-tags: nakamura,Amazon Echo,alexa,eRemote,LinkJapan
+
+さて前回alexaから電源タップのON/OFFを操作する紹介をしました。我が家ではバリバリ稼働してくれていますが、今回はそれよりももっと便利だな〜と感じている「赤外線」の操作方法をご紹介します。
+
+
+
+=== alexaには赤外線出力が無い
+
+そうなんです。無いんです。。。
+
+ちなみにLINEのWAVEには付いてました。ただこちらも対応している機器が限られていたので、これからに期待って感じでした。
+
+ではどうするか？
+
+alexa対応している赤外線学習&操作が可能な機器と連動させましょう！
+
+今回はこちらを実現するために、「eRemote mini」という商品を使ってみました。
+
+
+=== 必要なもの
+
+- eRemote mini
+- Amazon Echo
+
+=== eRemote mini
+
+eRemote miniは赤外線リモコンを学習することができ、スマートフォンにて一元管理できるという商品です。
+
+image::/images/nakamura/eRemote/01.png[]
+
+サイズはかなり小さいです。上から見るとこんな感じ。
+
+image::/images/nakamura/eRemote/02.png[]
+
+サイズは小さめでいいんですが、電源（microUSB）を差し込むと本体が傾いたりします（笑） 
+
+
+
+image::/images/nakamura/eRemote/03.png[]
+
+
+=== eRemote miniの設定
+
+image::/images/nakamura/eRemote/05.png[width="250"]
+
+手順は以下を参考に進めてください。 +
+http://linkjapan.co.jp/question/eremote
+
+簡単に流れだけ説明すると、
+
+1. 「eHome」アプリをダウンロード
+2. アプリを起動してアカウントを作成
+3. デバイス（今回はeRemote mini）の追加
+4. 動作させたい家電の設定
+
+こんな感じです。
+
+家電の設定が無事終了できると、アプリから操作可能になります。 +
+
+なんと、外からでも操作可能！ +
+帰宅前にエアコンをアプリから操作することも可能なので、とても便利なんです！！
+
+。。。といいつつ、今回はalexaのお話なので次に進みますね（笑）
+
+
+
+=== alexaの設定
+
+最後にalexaの設定をしていきます。
+
+image::/images/nakamura/eRemote/20.png[width="250"]
+alexaのアプリを開いて、スキルを「link japan」で検索します。
+
+
+image::/images/nakamura/eRemote/14.png[width="250"]
+こちらのスキルが出てきますので、スキルを有効にしてください。
+
+image::/images/nakamura/eRemote/15.png[width="250"]
+無事にスキルを有効にできました。
+
+
+image::/images/nakamura/eRemote/16.png[width="250"]
+続いてこちらの画面が出ると思いますので、「端末の検出」をタップしてください。
+
+image::/images/nakamura/eRemote/17.png[width="250"]
+「テレビ」alexaのスマートホームに追加されました！
+
+無事音声でテレビがON/OFFできましたでしょうか？
+
+
+=== 照明・エアコン・テレビ以外の設定
+
+実は先ほど設定したスキルでは「照明・エアコン・テレビ」のみ対応しており、その他の家電は未対応となっています。
+
+しかしご安心を！以下の手順で設定すれば、alexa連携することが可能です。
+
+1. eHome（アプリ）で照明として家電を追加
+2. alexaのアプリから「有効なスマートホームスキル」をタップ
+
+こんな感じで登録しておくと、alexa連携することができます。
+
+image::/images/nakamura/eRemote/21.png[width="250"]
+
+
+
+++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/CzA5qK8zIns" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+++++
+
+
+=== 最後に
+
+赤外線リモコンで操作する家電って結構多いと思います。
+今回のやり方でかなりスマートホーム化できるのではないでしょうか。
+ぜひ試してみてください！
+
+そして早く赤外線入力/出力できるAmazon Echoが出て欲しいです（笑）
+
+おしまい！
+
+
+
+
