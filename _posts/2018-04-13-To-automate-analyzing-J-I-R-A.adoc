@@ -1,6 +1,7 @@
 # JIRA SoftwareのAPIを使用してJIRAの分析作業を自動化する
 :hp-alt-title:  To automate analyzing JIRA 
 :hp-tags: JIRA,Laravel,PHP
+:published_at: 2018-04-13
 
 こんにちは、小柳津です。 +
 
