@@ -103,9 +103,12 @@ image::/images/nakamura/eRemote/17.png[width="250"]
 image::/images/nakamura/eRemote/21.png[width="250"]
 
 
+ちなみに我が家にはお掃除ロボット「eufy（Anker製）」がいるのですが、読み方が分からないのと「掃除機」だとalexaが認識してくれなかったので、「ルンバ」で登録してあります。（笑）
+
+TVとルンバ（偽）をalexaから操作してみました〜
 
 ++++
-<iframe width="560" height="315" src="https://www.youtube.com/embed/CzA5qK8zIns" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/jPCvsNDWer0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 ++++
 
 
