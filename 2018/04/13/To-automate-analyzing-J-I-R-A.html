@@ -55,7 +55,7 @@ var _trackingid = 'LFT-10003-1';
     <meta property="og:description" content="こんにちは、小柳津です。 突然ですが、スクラム開発をやっていて振り返りの準備が面倒だと思った経験はありませんか?? 私はスクラムマスターをやっていて、スプリントの振り返りの度にJIRAからデータを抽出する作業をやっています。 この作業がJIRAからCSVを落としてきて、データを整形するなどまあまあ大変。 しかも振り返りが2週間ごとに訪れるので、結構面倒です。 ですが、チームが成長しているかといったこと測る上では結構重要なので、やらないわけには行きません。 なのでタイトルの通りにその作業をJIRAから提供されるAPIを用いて自動する試みをしてみました。..." />
     <meta property="og:url" content="http://tech.innovation.co.jp/2018/04/13/To-automate-analyzing-J-I-R-A.html" />
     <meta property="article:published_time" content="2018-04-12T15:00:00.000Z" />
-    <meta property="article:modified_time" content="2018-04-13T03:11:56.356Z" />
+    <meta property="article:modified_time" content="2018-04-13T05:05:16.634Z" />
     <meta property="article:tag" content="JIRA" />
     <meta property="article:tag" content="Laravel" />
     <meta property="article:tag" content="PHP" />
@@ -80,7 +80,7 @@ var _trackingid = 'LFT-10003-1';
     "headline": "JIRA SoftwareのAPIを使用してJIRAの分析作業を自動化する",
     "url": "http://tech.innovation.co.jp/2018/04/13/To-automate-analyzing-J-I-R-A.html",
     "datePublished": "2018-04-12T15:00:00.000Z",
-    "dateModified": "2018-04-13T03:11:56.356Z",
+    "dateModified": "2018-04-13T05:05:16.634Z",
     "keywords": "JIRA, Laravel, PHP",
     "description": "こんにちは、小柳津です。 突然ですが、スクラム開発をやっていて振り返りの準備が面倒だと思った経験はありませんか?? 私はスクラムマスターをやっていて、スプリントの振り返りの度にJIRAからデータを抽出する作業をやっています。 この作業がJIRAからCSVを落としてきて、データを整形するなどまあまあ大変。 しかも振り返りが2週間ごとに訪れるので、結構面倒です。 ですが、チームが成長しているかといったこと測る上では結構重要なので、やらないわけには行きません。 なのでタイトルの通りにその作業をJIRAから提供されるAPIを用いて自動する試みをしてみました。..."
 }
@@ -324,7 +324,7 @@ class JiraContoller extends Controller
     //使用しているJIRAのホスト名
     private $jira_url = 'https://xxxxxxxxxxxxxx/rest/api/2/search';
     //ユーザー名
-    private $user_name = 'xxxxxxxxxxxxxx;
+    private $user_name = 'xxxxxxxxxxxxxx';
    //パスワード
     private $password = 'xxxxxxxxxxxxxx';
 
