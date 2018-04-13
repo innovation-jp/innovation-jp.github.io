@@ -46,7 +46,7 @@ class JiraContoller extends Controller
     //使用しているJIRAのホスト名
     private $jira_url = 'https://xxxxxxxxxxxxxx/rest/api/2/search';
     //ユーザー名
-    private $user_name = 'xxxxxxxxxxxxxx;
+    private $user_name = 'xxxxxxxxxxxxxx';
    //パスワード
     private $password = 'xxxxxxxxxxxxxx';
 
