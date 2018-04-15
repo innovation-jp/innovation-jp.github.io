@@ -98,3 +98,82 @@ spec:
         emptyDir: {}
 
 ```
+
+## PHP Service 
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: php
+  labels:
+    app: php
+spec:
+  ports:
+  - port: 9000
+    targetPort: 9000
+    protocol: TCP
+    name: php
+  type: ClusterIP
+
+  selector:
+    app: php
+
+```
+
+## Nginx Deployment
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ginee-nginx
+  labels:
+    app: ginee-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ginee-nginx
+  template:
+    metadata:
+      labels:
+        app: ginee-nginx
+    spec:
+      volumes:
+        - name: srcdata
+          emptyDir: {}
+      containers:
+      - name: nginx
+        image: gcr.io/practice-gke-195901/ginee/nginx:v1
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 80
+        volumeMounts:
+          - mountPath: /var/www
+            name: srcdata
+      - name: busybox
+        image: gcr.io/practice-gke-195901/ginee/srcbusybox:v1
+        imagePullPolicy: Always
+        command: ["/bin/sh","-c"]
+        args: ["cp -rf /var/www/laravel /opt && tail -f /dev/null"]
+        volumeMounts:
+        - name: srcdata
+          mountPath: /opt
+
+```
+
+## 確認
+ 
+`kubectl port-forward [nginx podname] 8080:80` +
+をうち、 `localhost:8080`にアクセス！
+
+ログイン画面がでてれば成功！
+
+##　次やること
+
+- busyboxをgit-syncに変える
+- cloud sqlを使う
+- Horizontal pod scaleの設定をする。
+
+
