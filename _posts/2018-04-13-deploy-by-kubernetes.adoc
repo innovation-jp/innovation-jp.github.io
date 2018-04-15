@@ -6,12 +6,95 @@
 皆様こんばんはこへです。 +
 そろそろk8sを使って色々やっていきたい時期が来ましたので作成。
 
+http://tech.innovation.co.jp/2018/02/26/make-book-manage-App.html
+以前作った↑のアプリをk8sでデプロイしていきます。
 
 
 ## 準備
 
+GCRに *Nginx* と *Busybox*と*PHP-FPM*のimageをぶち込む
+
+image::/images/kohe/k8s20.png[]
+
+
+
 今回は *GKE* を使用。
+
 
 image::/images/kohe/k8s10.png[]
 
 
+こ～んな感じで指定していく
+
+- お金を掛けたくないのでmicroインスタンスを使用
+
+-  nodeのスケールは3~6に指定
+
+- なんとなくus-westリージョン
+
+
+## Pod デザインパターン
+https://kubernetes.io/blog/2015/06/the-distributed-system-toolkit-patterns
+
+↑にある *Side Car もどき* で作っていきます。 +
+※本来はgit-syncを使って、連携したいところですが今回は時間の関係でbusyboxを使い、連携。
+
+image:https://3.bp.blogspot.com/-IVsNKDqS0jE/WRnPX21pxEI/AAAAAAAABJg/lAj3NIFwhPwvJYrmCdVbq1bqNq3E4AkhwCLcB/s1600/Example%2B%25231-%2BSidecar%2Bcontainers%2B.png[]
+
+
+## ConfigMap
+```
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: laravelconfig
+data:
+APP_NAME: ####
+…
+
+```
+
+## php-fpm Deployment
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: php
+  labels:
+    app: php
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: php
+  template:
+    metadata:
+      labels:
+        app: php
+    spec:
+      containers:
+        - name: php-fpm
+          image: gcr.io/practice-gke-195901/ginee/phpfpm:v1
+          imagePullPolicy: Always
+          envFrom:  # env ではなく envFrom
+          - configMapRef:
+              name: laravelconfig
+          ports:
+            - containerPort: 9000
+          volumeMounts:
+          - mountPath: /var/www
+            name: src-data
+        - name: busybox
+          image: gcr.io/practice-gke-195901/ginee/srcbusybox:v2
+          imagePullPolicy: Always
+          command: ["/bin/sh","-c"]
+          args: ["cp -rf /var/www/laravel /opt && tail -f /dev/null"]
+          volumeMounts:
+          - name: src-data
+            mountPath: /opt
+      volumes:
+      - name: src-data
+        emptyDir: {}
+
+```
