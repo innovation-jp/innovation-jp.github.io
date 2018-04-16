@@ -7,6 +7,8 @@
 そろそろk8sを使って色々やっていきたい時期が来ましたので作成。
 
 http://tech.innovation.co.jp/2018/02/26/make-book-manage-App.html
+
+
 以前作った↑のアプリをk8sでデプロイしていきます。
 
 
