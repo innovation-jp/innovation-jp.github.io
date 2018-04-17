@@ -35,11 +35,11 @@ image::/images/kohe/k8s10.png[]
 
 こ～んな感じで指定していく
 
-- #お金を掛けたくない#のでmicroインスタンスを使用
+<1> #お金を掛けたくない#のでmicroインスタンスを使用
 
--  nodeのスケールは3~6に指定
+<2>  nodeのスケールは3~6に指定
 
-- なんとなくus-westリージョン
+<3> なんとなくus-westリージョン
 
 
 ## Pod デザインパターン
@@ -181,8 +181,8 @@ spec:
 
 ## 次やること
 
-- busyboxをgit-syncに変える
-- cloud sqlを使う
-- Horizontal pod scaleの設定をする。
+<1> busyboxをgit-syncに変える
+<2> cloud sqlを使う
+<3> Horizontal pod scaleの設定をする。
 
 
