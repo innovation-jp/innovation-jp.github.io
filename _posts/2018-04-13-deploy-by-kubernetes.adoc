@@ -177,7 +177,7 @@ spec:
 
 ログイン画面がでてれば成功！
 
-##　次やること
+## 次やること
 
 - busyboxをgit-syncに変える
 - cloud sqlを使う
