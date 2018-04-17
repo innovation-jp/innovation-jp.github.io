@@ -12,6 +12,11 @@ http://tech.innovation.co.jp/2018/02/26/make-book-manage-App.html
 以前作った↑のアプリをk8sでデプロイしていきます。
 
 
+ 
+## 構成
+++++
+<script async class="speakerdeck-embed" data-id="f9f02b3a5cde4afe8a30585f3027468b" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+++++
 ## 準備
 
 GCRに *Nginx* と *Busybox*と*PHP-FPM*のimageをぶち込む
