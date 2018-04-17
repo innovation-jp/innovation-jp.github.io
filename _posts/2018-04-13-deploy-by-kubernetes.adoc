@@ -25,7 +25,7 @@ image::/images/kohe/k8s20.png[]
 
 
 
-今回は *GKE* を使用。
+今回は #*GKE*# を使用。
 
 
 image::/images/kohe/k8s10.png[]
