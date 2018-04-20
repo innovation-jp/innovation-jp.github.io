@@ -1,6 +1,7 @@
 # kubernets でNginx php-fpm コンテナをデプロイする
 :hp-alt-title:  deploy by kubernetes
 :hp-tags: k8s,Laravel,kohe,Nginx,GKE
+:published_at:
 
 ****
 皆様こんばんはこへです。 +
