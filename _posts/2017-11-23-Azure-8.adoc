@@ -59,7 +59,6 @@ $ az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/サブ�
 
 *・基本情報* +
 クラスターの名称やリソースグループを入力します、今回は akstest という名称にしました。 +
-image:syoga/aml8/1.png[]
 
 *・コンフィグ* +
 先程のサービスプリンシパルの情報や、SSH の情報、クラスターのノード数等を入力していきます、今回はノード数を 3 つにします、先程メモメモした `appId` と `password` はここで利用します。
