@@ -1,0 +1,6 @@
+= 執筆中
+:hp-alt-title: Azure 11
+:hp-tags: syoga, log, Azure, Circl CI, Azure Web Apps, Docker
+
+お久しぶりです、SRE チームの syoga です。
+
