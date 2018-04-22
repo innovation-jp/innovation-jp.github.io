@@ -1,6 +1,6 @@
 = CryptoZombiesで、イーサリアムのスマートコントラクト開発を学ぶ
 :published_at: 2018-04-23
-:hp-tags: Yagasaki,Ethereum,SmartContract
+:hp-tags: Yagasaki,Ethereum,SmartContract,CryptoZombies
 
 こんにちは！ +
 いやいやいや〜暑いですね〜 +
