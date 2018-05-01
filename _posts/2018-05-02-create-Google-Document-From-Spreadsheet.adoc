@@ -1,0 +1,162 @@
+# GASで業務効率化 ~スプレッドシートからGoogleドキュメントを作成する~
+:hp-alt-title:  create GoogleDocument From Spreadsheet
+:hp-tags: GAS,GoogleAppsScript,GoogleDocument,Spreadsheet,AMI
+:published_at: 2018-05-02
+
+
+こんにちは、亜美です。 +
+ +
+会社で一二を争うハンサム風男子である、Mさんからこんなご相談をいただきました +
+ +
+・タスクをスプレッドシートで一覧化し、管理している +
+・一つずつ内容をコピペしながら、作業用のGoogleドキュメントを作成している +
+・非常にしんどいからこういうやつをつくってほしい +
+ +
+図 +
+
+image::/images/ami/20180502/1.png[]
+
+①スプレッドシートの変更点を取得 +
+②Googleドキュメントを作成し、スプレッドシートから取得した内容を書き込む +
+③作成したGoogleドキュメントのURLを取得 +
+④スプレッドシートにURLを書き込む +
+
+イメージ +
+
+image::/images/ami/20180502/2.png[]
+
+担当者が入力されたのをきっかけに、ドキュメントが生成されるようなイメージです +
+ +
+コードの全体像は以下です +
+
+```
+function createDocumentForWork() {
+  //スプレッドシートを取得、シートを取得
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = spreadsheet.getActiveSheet();
+
+  //編集されたCell情報を取得
+  var activeCell = sheet.getActiveCell();
+  var activeCellValue = activeCell.getValue();
+  var activeRow = activeCell.getRow();
+  var activeColumn = activeCell.getColumn();
+
+  //アクティブセル（編集されたセル）が担当者の列意外の場合はスクリプトを終了
+  //※[列番号]は、A列なら1、Bなら2・・・という具合です
+  if (activeColumn != [列番号]) {
+    return;
+  }
+  //アクティブセルが空欄の場合はスクリプトを終了
+  if (activeCellValue == "") {
+    return;
+  }
+
+  //各列の必要な情報を取得する
+  var detail = sheet.getRange(activeRow, 2).getValue();
+  var date   = Utilities.formatDate(sheet.getRange(activeRow, 6).getValue(), "JST", "yyyy/MM/dd HH:mm:ss");
+  
+  //ドキュメントのタイトルと内容
+  var timeStamp = Utilities.formatDate(new Date(), "JST", "yyyy/MM/dd HH:mm:ss");
+  var docName = "作業シート" + timeStamp;
+  var contents = "■作業シート\n\n" +
+  "【開始日】" + date + "\n\n" +
+  "【詳細】" + detail + "\n\n" +
+  "【担当者】" + activeCellValue;
+  
+  // ドキュメント作成、contentsを書き込む
+  var document = DocumentApp.create(docName);
+  document.getBody().setText(contents);
+
+  //ドキュメントを格納するフォルダを取得
+  var targetFolder = DriveApp.getFolderById("xxxxxxxxxxxxxxxxxxxxx");
+
+  //指定したフォルダに所属（移動）させる
+  var docFile = DriveApp.getFileById(document.getId());
+  targetFolder.addFile(docFile);
+  
+  //作成したドキュメントURLを取得
+  var documentUrl = document.getUrl();
+
+  //シートにURLを書き込む
+  sheet.getRange(activeRow, [書き込みたい列番号]).setValue(documentUrl);
+}
+
+```
+
+
+## 編集されたセルがどこか調べる
+
+こちらのサイトがとてもわかり易く参考にさせていただきました +
+https://tonari-it.com/gas-trigger-changed/ +
+getActiveCellメソッドで、編集されたセルを取得することができます。 +
+
+```
+//スプレッドシートを取得、シートを取得
+var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+var sheet = spreadsheet.getActiveSheet();
+
+//編集されたCell情報を取得
+var activeCell = sheet.getActiveCell();
+```
+
+## ドキュメントの作成と、指定のフォルダへの格納
+
+ドキュメントの作成は`DocumentApp`クラスの`create`メソッドで実行できます。 +
+引数にタイトルを渡すと空白のGoogleドキュメントが*マイドライブの直下に*作成されます。 +
+
+```
+//マイドライブ直下にドキュメントが作成されます
+var document = DocumentApp.create("新しいGoogleドキュメント");
+```
+
+指定のフォルダに格納したい場合は、フォルダのIDを指定し、移動させる必要があります。 +
+フォルダの移動はGoogleドライブの管轄のため、documentオブジェクトからfileオブジェクトに +
+変換する必要があります +
+
+```
+//指定したフォルダに所属させる
+var docFile = DriveApp.getFileById(document.getId());
+```
+
+フォルダIDで移動するフォルダを指定します。 +
+フォルダIDは、URLから確認することができます +
+`https://drive.google.com/drive/folders/{この部分がフォルダID}
+
+```
+//ドキュメントを格納するフォルダを取得
+//フォルダはGoogleドライブの管轄なので、DriveAppを使う
+var targetFolder = DriveApp.getFolderById("xxxxxxxxxxxxxxxxxxxxx");
+
+//指定したフォルダに所属（移動）させる
+//フォルダの移動もGoogleドライブの管轄なので、documentオブジェクトをfileオブジェクトに変換する
+var docFile = DriveApp.getFileById(document.getId());
+targetFolder.addFile(docFile);
+
+//作成したドキュメントURLを取得
+//getUrlメソッドはdocumentオブジェクトとfileオブジェクト両方にある
+var documentUrl = document.getUrl();
+
+```
+
+## 作成したdocumentに書き込みをする
+
+```
+ var contents = "■作業シート\n\n" +
+  "【開始日】" + date + "\n\n" +
+  "【詳細】" + detail + "\n\n" +
+  "【担当者】" + activeCellValue;
+
+document.getBody().setText(contents);
+```
+
+contents内は`\n`で改行することができました！ +
+
+
+## まとめ
+
+GAS大好きの私ですが、DriveAppやDocumentAppはほとんど使ったことがなく +
+新鮮で面白かったです！ +
+DocumentとDriveでfileの書き込みやメソッドが違う部分に苦戦しました +
+(自分が今documentを使っているのか、fileを使っているのか「？」になり混乱しました) +
+ハンサムのMさんがよろこんでくれたらうれしいです！ +
+おわり +
