@@ -3,7 +3,6 @@
 :hp-tags: syoga, log, Azure, Circl CI, Azure Web Apps, Docker
 
 
-
 はじめまして！未経験中途の新人、すももです。 +
 初ブログでいろいろ困ってますが、GAS好きの亜美さんから教えてもらって、GASをちょろちょろイジってみたので初めての方向けに発表したいと思います！
  +
