@@ -3,6 +3,7 @@
 :hp-tags: syoga, log, Azure, Circl CI, Azure Web Apps, Docker
 
 
+
 はじめまして！未経験中途の新人、すももです。 +
 初ブログでいろいろ困ってますが、GAS好きの亜美さんから教えてもらって、GASをちょろちょろイジってみたので初めての方向けに発表したいと思います！
  +
@@ -104,4 +105,85 @@ var range = sheet.getRange('C1');
 var date = today.getFullYear() + '年' + (today.getMonth() + 1) + '月' + today.getDate() + '日';
 
 ```
+
+
+*①-2.スプレッドシート編集時に今日の日付を書き込む*
+
+```
+// 日付を書き込む関数を作る（トリガーをスプレッドシート編集時に実行するよう設定）
+function input_date() {
+  // date(今日の日付)をrange(C1)に入れる
+  range.setValue(date);
+}
+
+```
+
+
+*②-1.指定した時間に、シートに書き込まれている日付をチェックする（準備）*
+
+```
+// range(C1)にセットされている値(日付)を取ってくる
+var value = range.getValue();
+```
+
+
+*③-1.書き込まれている日付が今日の日付でなければslackを送る（準備）*
+
+```
+// slackのトークンを入れておく
+var token = 'xoxp-XXXXXXXX-XXXXXXXX-XXXXX';
+
+// slackAppインスタンスを取得
+var slackApp = SlackApp.create(token);
+
+// slackのユーザー名を入れておく（slackの表示名ではなくユーザー名の方！）
+var my_slackbot = '@XXXX';
+
+// slack送信時のタイトルを入れておく
+var bot_title = 'すももよりお知らせ';
+
+// slack送信時の画像URLを入れておく（「FLAT ICON DESIGN」さんの画像をアイコンとして利用しています）
+var icon_url = "アイコンのURL";
+
+```
+
+Slackへの通知に関しては、以下サイトを参考にGASのライブラリを使用いたしました +
+https://qiita.com/soundTricker/items/43267609a870fc9c7453 +
+ライブラリの登録はメニューにある「リソース」→「ライブラリ」→「ライブラリを追加」から行えます +
+
+* 注意点！ +
+slackのユーザー名は、いつも見ている表示名とは違う場合があります +
+「プロフィール＆アカウント」→「アカウント設定」→「ユーザー名」→「開く」から確認できます！ +
+この事に気付くまで、「slack送れる人と送れない人がいる！なんで？？」となりました...
+
+
+*②-2.指定した時間に、シートに書き込まれている日付をチェックする* +
+*③-2.書き込まれている日付が今日の日付でなければslackを送る*
+
+```
+// slackを送る関数を作る（トリガーから実行時間を指定）
+function send_slack() {
+  // もしvalue(入力されてる日付)がdate(今日の日付)と違っていたら
+  if (value !== date) {
+    // my_slackbot(すもものslackbot)にメッセージを送信する
+    slackApp.postMessage(my_slackbot, "まだBLチェックやってないよー！",
+                         {
+                           username : bot_title,
+                           icon_url : icon_url
+                         });
+  }
+}
+
+```
+
+
+##### 終わりに
+
+GAS大好きの私ですが、DriveAppやDocumentAppはほとんど使ったことがなく +
+新鮮で面白かったです！ +
+DocumentとDriveでfileの書き込みやメソッドが違う部分に苦戦しました +
+(自分が今documentを使っているのか、fileを使っているのか「？」になり混乱しました) +
+ハンサムのMさんがよろこんでくれたらうれしいです！ +
+おわり +
+
 
