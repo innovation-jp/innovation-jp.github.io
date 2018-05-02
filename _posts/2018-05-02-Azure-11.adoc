@@ -83,4 +83,25 @@ function test() {
 　②指定した時間に、シートに書き込まれている日付をチェックする +
 　③書き込まれている日付が今日の日付でなければslackを送る +
 　④送信先のslackbotにお知らせが届く +
- 
+
+
+*①-1.スプレッドシート編集時に今日の日付を書き込む（準備）*
+
+```
+// 現在の日時を取ってくる
+var today = new Date();
+
+// 紐づいているファイル自体をとってくる！
+var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+// getSheetByNameで指定した名前のシートをとってくる
+var sheet = ss.getSheetByName(today.getFullYear() + '年' + (today.getMonth() + 1) + '月');
+
+// 指定したセルそのものを取ってくる！
+var range = sheet.getRange('C1');
+
+// 日付のみ入れる(2018年5月1日というような感じで)
+var date = today.getFullYear() + '年' + (today.getMonth() + 1) + '月' + today.getDate() + '日';
+
+```
+
