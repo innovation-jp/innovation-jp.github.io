@@ -1,6 +1,6 @@
 = あああ執筆中
 :hp-alt-title: Azure 11
-:hp-tags: syoga, log, Azure, Circl CI, Azure Web Apps, Docker
+:hp-tags: sumomo, GAS, Azure, Circl CI, Azure Web Apps, Docker
 
 
 はじめまして！未経験中途の新人、すももです。 +
