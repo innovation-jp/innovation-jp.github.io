@@ -1,4 +1,4 @@
-= あああ執筆中
+= GAS入門 (シートに日付入力〜Slack通知までやってみた)
 :hp-alt-title: Azure 11
 :hp-tags: sumomo, GAS, GoogleAppsScript, Spreadsheet, slack
 
@@ -19,7 +19,7 @@
 
 image::/images/sumomo/20180502/1.png[]
 
-よし、開いたぞ！ +
+よし、スクリプトエディタが開いたぞ！ +
  +
  
 #*2.コードの編集*# 
@@ -28,6 +28,7 @@ image::/images/sumomo/20180502/1.png[]
 
 ```
 function test() {
+  // スプレッドシートを開いた時にメッセージダイアログを表示する
   Browser.msgBox('テスト');
 }
 
@@ -38,7 +39,7 @@ function test() {
 （編集が保存されてない時は「コード.gs」の前に赤いアスタリスクマークが出ます）
 
 
-#*3.では、試しに実行してみよう！*#
+#*3.試しに実行してみよう！*#
 
 ・スクリプトエディタのメニューからプルダウンで関数名選ぶ + 
 （コード保存すると勝手に関数名のプルダウンに反映する） +
@@ -57,8 +58,6 @@ image::/images/sumomo/20180502/2.png[]
 
 わーい、実行できたー！ +
  +
- +
- 
 
 ##### GAS実行の準備ができたので +
 ##### さっそく作ってみよう！
@@ -88,7 +87,7 @@ var ss = SpreadsheetApp.getActiveSpreadsheet();
 var sheet = ss.getSheetByName(today.getFullYear() + '年' + (today.getMonth() + 1) + '月');
 
 // 指定したセルそのものを取ってくる！
-var range = sheet.getRange('C1');
+var cell = sheet.getRange('C1');
 
 // 日付のみ入れる(2018年5月1日というような感じで)
 var date = today.getFullYear() + '年' + (today.getMonth() + 1) + '月' + today.getDate() + '日';
@@ -101,8 +100,8 @@ var date = today.getFullYear() + '年' + (today.getMonth() + 1) + '月' + today.
 ```
 // 日付を書き込む関数を作る（トリガーをスプレッドシート編集時に実行するよう設定）
 function input_date() {
-  // date(今日の日付)をrange(C1)に入れる
-  range.setValue(date);
+  // date(今日の日付)をcell(C1)に入れる
+  cell.setValue(date);
 }
 
 ```
@@ -111,6 +110,8 @@ function input_date() {
 
 image::/images/sumomo/20180502/3.png[]
 
+シートを編集したら日付が入力された！ +
+ +
 
 *②-1.指定した時間に、シートに書き込まれている日付をチェックする（準備）*
 
