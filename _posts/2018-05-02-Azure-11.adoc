@@ -17,7 +17,7 @@
 ・スプレッドシートを開いたら、メニューにある「ツール」をクリック +
 ・上から２番目「スクリプトエディタ」という表示があるのでクリック +
 
-image::/images/sumomo/20180502/sumo.png[]
+image::/images/sumomo/20180502/1.png[]
 
 よし、開いたぞ！ +
  +
@@ -53,7 +53,7 @@ function test() {
  +
 最後に「許可」をクリックすると承認される +
 
-image::/images/ami/20180502/1.png[]
+image::/images/sumomo/20180502/2.png[]
 
 わーい、GAS実行できたー！ +
  +
