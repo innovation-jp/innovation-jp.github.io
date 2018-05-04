@@ -84,7 +84,7 @@ var today = new Date();
 // 紐づいているファイル自体をとってくる！
 var ss = SpreadsheetApp.getActiveSpreadsheet();
 
-// getSheetByNameで指定した名前のシートをとってくる
+// 指定した名前のシートをとってくる(今回欲しいのは「2018年5月」という名前のシート)
 var sheet = ss.getSheetByName(today.getFullYear() + '年' + (today.getMonth() + 1) + '月');
 
 // 指定したセルそのものを取ってくる！
@@ -117,8 +117,8 @@ image::/images/sumomo/20180502/3.png[]
 *②-1.指定した時間に、シートに書き込まれている日付をチェックする（準備）*
 
 ```
-// range(C1)にセットされている値(日付)を取ってくる
-var value = range.getValue();
+// cell(C1)にセットされている値(日付)を取ってくる
+var value = cell.getValue();
 ```
 
 
@@ -138,7 +138,7 @@ var my_slackbot = '@XXXX';
 var bot_title = 'すももよりお知らせ';
 
 // slack送信時の画像URLを入れておく（「FLAT ICON DESIGN」さんの画像をアイコンとして利用しています）
-var icon_url = "アイコンのURL";
+var icon_url = 'アイコンのURL';
 
 ```
 
