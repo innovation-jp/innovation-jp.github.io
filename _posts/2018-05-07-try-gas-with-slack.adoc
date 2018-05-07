@@ -1,5 +1,5 @@
 = GASでslackにランダムなメッセージbotを作ってみよう
-:hp-alt-title: study_gas_with_slack
+:hp-alt-title: try_gas_with_slack
 :hp-tags: obata, slack, gas
 
 ## 新しいことやりたくなりました。
@@ -45,7 +45,12 @@ https://api.slack.com/apps
 ここにアクセスすると、create an appというボタンが見えると思うので、作成します。 +
 今後はこの作成したappから投稿がされますので、画像とかいい感じに設定してあげてくださいね！ +
 
+image::/images/obata/try_gas/slackapp.png[]
+
 ### 1.2.slackAppにIncoming Webhooksを追加し、URLを取得
+
+image::/images/obata/try_gas/incoming.png[]
+
 画面右側、Features→Incoming Webhooksを選択。
 
 無効から有効に変えてあげると、画面下部に`Add new Webhook to Workspace`があるので選択。
@@ -81,14 +86,16 @@ function postSlack(text)
 
 ```
 
-あとは、コードを保存して画面上の三角マークからmorningMessageを動かせばOK。
+あとは、コードを保存して画面上の三角マークからmorningMessageを動かせばOK。
 
 ## 2. 投稿を定期的にする
 1. 投稿用のfunction作る
 2. 編集→現在のプロジェクトのトリガーを選択
 3. 投稿したい時間を設定する
 
-実際に動いているか確かめるには、
+image::/images/obata/try_gas/trigger.png[]
+
+実際に動いているか確かめるには、
 
 1. 公開→ウェブアプリケーションとして導入
 2. 次のユーザーとしてアプリケーションを実行:を自分にして公開
@@ -102,7 +109,7 @@ function postSlack(text)
 ### 3.1.スプレッドシートを読み込む
 スプレッドシートを読み込むのは3通り
 
-1. GASファイルを作る時に、スプレッドシートと紐付けて作る
+1. GASファイルを作る時に、スプレッドシートと紐付けて作る
 2. URLを利用して読み込む
 3. IDを指定して読み込む
 
@@ -130,7 +137,7 @@ function readSpreadSheet()
 
 補足）
 
-1. URLでやる場合は、openById(id)をopenByUrl(url)に
+1. URLでやる場合は、openById(id)をopenByUrl(url)に
 2. getRangeで(A3:A5)で範囲指定した時は、getValueはgetValuesに
 3. getValuesは、複数セルの値取得、getValueは単数セルの値取得
 
