@@ -41,7 +41,7 @@ function createDocumentForWork() {
   var activeRow = activeCell.getRow();
   var activeColumn = activeCell.getColumn();
 
-  //アクティブセル（編集されたセル）が担当者の列意外の場合はスクリプトを終了
+  //アクティブセル（編集されたセル）が担当者の列以外の場合はスクリプトを終了
   //※[列番号]は、A列なら1、Bなら2・・・という具合です
   if (activeColumn != [列番号]) {
     return;
@@ -120,7 +120,7 @@ var docFile = DriveApp.getFileById(document.getId());
 
 フォルダIDで移動するフォルダを指定します。 +
 フォルダIDは、URLから確認することができます +
-`https://drive.google.com/drive/folders/{この部分がフォルダID}
+`https://drive.google.com/drive/folders/{この部分がフォルダID}`
 
 ```
 //ドキュメントを格納するフォルダを取得
