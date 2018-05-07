@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>GASで業務効率化 ~スプレッドシートからGoogleドキュメントを作成する~ - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="GASで業務効率化 ~スプレッドシートからGoogleドキュメントを作成する~">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="GASで業務効率化 ~スプレッドシートからGoogleドキュメントを作成する~">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/05/02/create-Google-Document-From-Spreadsheet.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="GASで業務効率化 ~スプレッドシートからGoogleドキュメントを作成する~" />
+    <meta property="og:description" content="こんにちは、亜美です。 会社で一二を争うハンサム風男子である、Mさんからこんなご相談をいただきました ・タスクをスプレッドシートで一覧化し、管理している ・一つずつ内容をコピペしながら、作業用のGoogleドキュメントを作成している ・非常にしんどいからこういうやつをつくってほしい 図 ①スプレッドシートの変更点を取得 ②Googleドキュメントを作成し、スプレッドシートから取得した内容を書き込む ③作成したGoogleドキュメントのURLを取得 ④スプレッドシートにURLを書き込む イメージ 担当者が入力されたのをきっかけに、ドキュメントが生成される..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/05/02/create-Google-Document-From-Spreadsheet.html" />
+    <meta property="article:published_time" content="2018-05-01T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-05-07T01:03:15.742Z" />
+    <meta property="article:tag" content="GAS" />
+    <meta property="article:tag" content="GoogleAppsScript" />
+    <meta property="article:tag" content="GoogleDocument" />
+    <meta property="article:tag" content="Spreadsheet" />
+    <meta property="article:tag" content="AMI" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="GASで業務効率化 ~スプレッドシートからGoogleドキュメントを作成する~" />
+    <meta name="twitter:description" content="こんにちは、亜美です。 会社で一二を争うハンサム風男子である、Mさんからこんなご相談をいただきました ・タスクをスプレッドシートで一覧化し、管理している ・一つずつ内容をコピペしながら、作業用のGoogleドキュメントを作成している ・非常にしんどいからこういうやつをつくってほしい 図 ①スプレッドシートの変更点を取得 ②Googleドキュメントを作成し、スプレッドシートから取得した内容を書き込む ③作成したGoogleドキュメントのURLを取得 ④スプレッドシートにURLを書き込む イメージ 担当者が入力されたのをきっかけに、ドキュメントが生成される..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/05/02/create-Google-Document-From-Spreadsheet.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "AMI",
+        "image": "https://avatars2.githubusercontent.com/u/17684148?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "GASで業務効率化 ~スプレッドシートからGoogleドキュメントを作成する~",
+    "url": "http://tech.innovation.co.jp/2018/05/02/create-Google-Document-From-Spreadsheet.html",
+    "datePublished": "2018-05-01T15:00:00.000Z",
+    "dateModified": "2018-05-07T01:03:15.742Z",
+    "keywords": "GAS, GoogleAppsScript, GoogleDocument, Spreadsheet, AMI",
+    "description": "こんにちは、亜美です。 会社で一二を争うハンサム風男子である、Mさんからこんなご相談をいただきました ・タスクをスプレッドシートで一覧化し、管理している ・一つずつ内容をコピペしながら、作業用のGoogleドキュメントを作成している ・非常にしんどいからこういうやつをつくってほしい 図 ①スプレッドシートの変更点を取得 ②Googleドキュメントを作成し、スプレッドシートから取得した内容を書き込む ③作成したGoogleドキュメントのURLを取得 ④スプレッドシートにURLを書き込む イメージ 担当者が入力されたのをきっかけに、ドキュメントが生成される..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-G-A-S tag-Google-Apps-Script tag-Google-Document tag-Spreadsheet tag-A-M-I no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="02 May 2018" class="post-meta__date date">02 May 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/G-A-S">GAS</a>, <a href="http://tech.innovation.co.jp/tag/Google-Apps-Script">GoogleAppsScript</a>, <a href="http://tech.innovation.co.jp/tag/Google-Document">GoogleDocument</a>, <a href="http://tech.innovation.co.jp/tag/Spreadsheet">Spreadsheet</a>, <a href="http://tech.innovation.co.jp/tag/A-M-I">AMI</a></span>
+        <span class="post-meta__author author"><img src="https://avatars2.githubusercontent.com/u/17684148?v=4" alt="profile image for AMI" class="avatar post-meta__avatar" /> by AMI</span>
+      </div>
+      <h1 class="post-title">GASで業務効率化 ~スプレッドシートからGoogleドキュメントを作成する~</h1>
+    </header>
+
+    <section class="post tag-G-A-S tag-Google-Apps-Script tag-Google-Document tag-Spreadsheet tag-A-M-I">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんにちは、亜美です。<br>
+<br>
+会社で一二を争うハンサム風男子である、Mさんからこんなご相談をいただきました<br>
+<br>
+・タスクをスプレッドシートで一覧化し、管理している<br>
+・一つずつ内容をコピペしながら、作業用のGoogleドキュメントを作成している<br>
+・非常にしんどいからこういうやつをつくってほしい<br>
+<br>
+図<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/ami/20180502/1.png" alt="1.png">
+</div>
+</div>
+<div class="paragraph">
+<p>①スプレッドシートの変更点を取得<br>
+②Googleドキュメントを作成し、スプレッドシートから取得した内容を書き込む<br>
+③作成したGoogleドキュメントのURLを取得<br>
+④スプレッドシートにURLを書き込む<br></p>
+</div>
+<div class="paragraph">
+<p>イメージ<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/ami/20180502/2.png" alt="2.png">
+</div>
+</div>
+<div class="paragraph">
+<p>担当者が入力されたのをきっかけに、ドキュメントが生成されるようなイメージです<br>
+<br>
+コードの全体像は以下です<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>function createDocumentForWork() {
+  //スプレッドシートを取得、シートを取得
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = spreadsheet.getActiveSheet();
+
+  //編集されたCell情報を取得
+  var activeCell = sheet.getActiveCell();
+  var activeCellValue = activeCell.getValue();
+  var activeRow = activeCell.getRow();
+  var activeColumn = activeCell.getColumn();
+
+  //アクティブセル（編集されたセル）が担当者の列以外の場合はスクリプトを終了
+  //※[列番号]は、A列なら1、Bなら2・・・という具合です
+  if (activeColumn != [列番号]) {
+    return;
+  }
+  //アクティブセルが空欄の場合はスクリプトを終了
+  if (activeCellValue == "") {
+    return;
+  }
+
+  //各列の必要な情報を取得する
+  var detail = sheet.getRange(activeRow, 2).getValue();
+  var date   = Utilities.formatDate(sheet.getRange(activeRow, 6).getValue(), "JST", "yyyy/MM/dd HH:mm:ss");
+
+  //ドキュメントのタイトルと内容
+  var timeStamp = Utilities.formatDate(new Date(), "JST", "yyyy/MM/dd HH:mm:ss");
+  var docName = "作業シート" + timeStamp;
+  var contents = "■作業シート\n\n" +
+  "【開始日】" + date + "\n\n" +
+  "【詳細】" + detail + "\n\n" +
+  "【担当者】" + activeCellValue;
+
+  // ドキュメント作成、contentsを書き込む
+  var document = DocumentApp.create(docName);
+  document.getBody().setText(contents);
+
+  //ドキュメントを格納するフォルダを取得
+  var targetFolder = DriveApp.getFolderById("xxxxxxxxxxxxxxxxxxxxx");
+
+  //指定したフォルダに所属（移動）させる
+  var docFile = DriveApp.getFileById(document.getId());
+  targetFolder.addFile(docFile);
+
+  //作成したドキュメントURLを取得
+  var documentUrl = document.getUrl();
+
+  //シートにURLを書き込む
+  sheet.getRange(activeRow, [書き込みたい列番号]).setValue(documentUrl);
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">編集されたセルがどこか調べる</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>こちらのサイトがとてもわかり易く参考にさせていただきました<br>
+<a href="https://tonari-it.com/gas-trigger-changed/" class="bare">https://tonari-it.com/gas-trigger-changed/</a><br>
+getActiveCellメソッドで、編集されたセルを取得することができます。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>//スプレッドシートを取得、シートを取得
+var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+var sheet = spreadsheet.getActiveSheet();
+
+//編集されたCell情報を取得
+var activeCell = sheet.getActiveCell();</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">ドキュメントの作成と、指定のフォルダへの格納</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ドキュメントの作成は<code>DocumentApp</code>クラスの<code>create</code>メソッドで実行できます。<br>
+引数にタイトルを渡すと空白のGoogleドキュメントが<strong>マイドライブの直下に</strong>作成されます。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>//マイドライブ直下にドキュメントが作成されます
+var document = DocumentApp.create("新しいGoogleドキュメント");</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>指定のフォルダに格納したい場合は、フォルダのIDを指定し、移動させる必要があります。<br>
+フォルダの移動はGoogleドライブの管轄のため、documentオブジェクトからfileオブジェクトに<br>
+変換する必要があります<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>//指定したフォルダに所属させる
+var docFile = DriveApp.getFileById(document.getId());</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>フォルダIDで移動するフォルダを指定します。<br>
+フォルダIDは、URLから確認することができます<br>
+<code><a href="https://drive.google.com/drive/folders/{この部分がフォルダID}" class="bare">https://drive.google.com/drive/folders/{この部分がフォルダID}</a></code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>//ドキュメントを格納するフォルダを取得
+//フォルダはGoogleドライブの管轄なので、DriveAppを使う
+var targetFolder = DriveApp.getFolderById("xxxxxxxxxxxxxxxxxxxxx");
+
+//指定したフォルダに所属（移動）させる
+//フォルダの移動もGoogleドライブの管轄なので、documentオブジェクトをfileオブジェクトに変換する
+var docFile = DriveApp.getFileById(document.getId());
+targetFolder.addFile(docFile);
+
+//作成したドキュメントURLを取得
+//getUrlメソッドはdocumentオブジェクトとfileオブジェクト両方にある
+var documentUrl = document.getUrl();</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__document">作成したdocumentに書き込みをする</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code> var contents = "■作業シート\n\n" +
+  "【開始日】" + date + "\n\n" +
+  "【詳細】" + detail + "\n\n" +
+  "【担当者】" + activeCellValue;
+
+document.getBody().setText(contents);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>contents内は<code>\n</code>で改行することができました！<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">まとめ</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>GAS大好きの私ですが、DriveAppやDocumentAppはほとんど使ったことがなく<br>
+新鮮で面白かったです！<br>
+DocumentとDriveでfileの書き込みやメソッドが違う部分に苦戦しました<br>
+(自分が今documentを使っているのか、fileを使っているのか「？」になり混乱しました)<br>
+ハンサムのMさんがよろこんでくれたらうれしいです！<br>
+おわり<br></p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
