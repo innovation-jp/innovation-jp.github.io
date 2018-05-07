@@ -1,4 +1,4 @@
-= GASでslackにランダムなメッセージbotを作ってみよう
+= GASでSlackにランダムなメッセージbotを作ってみよう
 :hp-alt-title: try_gas_with_slack
 :hp-tags: obata, slack, gas
 
@@ -7,47 +7,47 @@
 新人とか言えなくなりました、ひえっ。
 
 ってことで、新しい挑戦をしてなかったのでGASに今更手を出します。 +
-ついでにslackにランダムでメッセージ送れるbotにしちゃいましょう。
+ついでにSlackにランダムでメッセージ送れるbotにしちゃいましょう。
 
 あれ？似た記事最近見た？
 
-なので、前の記事とは『別な方法』で、slackと連携させていきます。
+なので、前の記事とは『別な方法』で、Slackと連携させていきます。
 
 ## やったこと
-1. GASでslack投稿
+1. GASでSlack投稿
 2. 投稿を定期的にする
 3. スプレッドシートに書かれているメッセージをランダムに送る
 
-## 1.GASでslack投稿
+## 1.GASでSlack投稿
 投稿までの手順は次の4つ。
 
-1. slackApp作成
-2. slackAppにIncoming Webhooksを追加し、URLを取得
+1. SlackAPIのSlackApp作成
+2. SlackAppにIncoming Webhooksを追加し、URLを取得
 3. 指定したURLにPOST
 
-ちなみに、GASがslackに接続するやり方は2つ程あって、 +
+ちなみに、GASがSlackに接続するやり方は2つ程あって、 +
 
-1. `SlackApp`という便利なライブラリーを使う
-2. slackが提供している `slackAPI`と `Incoming Webhooks`を組み合わせる
+1. GAS用の`SlackApp`という便利なライブラリーを使う
+2. Slackが提供している `SlackAPI`と `Incoming Webhooks`を組み合わせる
 
 今回は2を紹介いたします。 +
-1に関しては、すももさんが書いたこちらの記事を参照してみてください。
+1に関しては、弊社のすももさんが書いたこちらの記事を参照してみてください。
 
-1.のやり方参考記事: +
-URL
+1.のやり方参考記事:GAS入門 (シートに日付入力〜Slack通知までやってみた) +
+http://tech.innovation.co.jp/2018/05/02/Azure-11.html
 
 2.のやり方参考記事:slack botをGASでつくる方法で一番楽そうなやつ +
 http://vaaaaaanquish.hatenablog.com/entry/2017/09/27/184352
 
-### 1.1.slackApp作成
+### 1.1.SlackApp作成
 https://api.slack.com/apps
 
 ここにアクセスすると、create an appというボタンが見えると思うので、作成します。 +
 今後はこの作成したappから投稿がされますので、画像とかいい感じに設定してあげてくださいね！ +
 
-image::/images/obata/try_gas/slackapp.png[]
+image::/images/obata/try_gas/create_app.png[]
 
-### 1.2.slackAppにIncoming Webhooksを追加し、URLを取得
+### 1.2.SlackAppにIncoming Webhooksを追加し、URLを取得
 
 image::/images/obata/try_gas/incoming.png[]
 
