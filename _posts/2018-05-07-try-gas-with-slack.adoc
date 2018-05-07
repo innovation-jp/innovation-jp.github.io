@@ -49,7 +49,7 @@ image::/images/obata/try_gas/create_app.png[]
 
 ### 1.2.SlackAppにIncoming Webhooksを追加し、URLを取得
 
-image::/images/obata/try_gas/incoming.png[]
+image::/images/obata/try_gas/incoming_hook.png[]
 
 画面右側、Features→Incoming Webhooksを選択。
 
