@@ -34,7 +34,7 @@
 1に関しては、弊社のすももさんが書いたこちらの記事を参照してみてください。
 
 1.のやり方参考記事:GAS入門 (シートに日付入力〜Slack通知までやってみた) +
-http://tech.innovation.co.jp/2018/05/02/Azure-11.html
+http://tech.innovation.co.jp/2018/05/02/G-A-S-Slack.html
 
 2.のやり方参考記事:slack botをGASでつくる方法で一番楽そうなやつ +
 http://vaaaaaanquish.hatenablog.com/entry/2017/09/27/184352
