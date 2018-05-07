@@ -1,5 +1,4 @@
 = GAS入門 (シートに日付入力〜Slack通知までやってみた)
-:hp-alt-title: Azure 11
 :hp-tags: sumomo, GAS, GoogleAppsScript, Spreadsheet, slack
 
 
