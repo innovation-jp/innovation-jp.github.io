@@ -42,7 +42,7 @@ http://vaaaaaanquish.hatenablog.com/entry/2017/09/27/184352
 ### 1.1.SlackApp作成
 https://api.slack.com/apps
 
-ここにアクセスすると、create an appというボタンが見えると思うので、作成します。 +
+ここにアクセスすると、Create an Appというボタンが見えると思うので、作成します。 +
 今後はこの作成したappから投稿がされますので、画像とかいい感じに設定してあげてくださいね！ +
 
 image::/images/obata/try_gas/create_app.png[]
@@ -181,7 +181,7 @@ function dropNullItemFromArray(array)
 
 これで、スプレッドシートに書かれた文字を、ランダムでslackに投稿するbotが出来ました！わーい！
 
-## 黒歴史投稿botが作れるよ！
+## 感想
 ということで、スプレッドシートに書かれた文字を、ランダムで投稿出来るbotが作れました！
 
 ここまで出来るといろいろ応用が出来まして。
