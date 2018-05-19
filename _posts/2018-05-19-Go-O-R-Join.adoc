@@ -29,8 +29,8 @@ db.Table("users")　->　usersテーブルを基礎表に設定 +
 ++++
 <pre style="font-family: Menlo, Courier">
 type Results struct {
-	Name　string　  // name
-	Email　string   // email
+　Name　string　  // name
+　Email　string   // email
 }
 </pre> 
 ++++
@@ -73,5 +73,39 @@ Joins("left join emails on emails.user_id = users.id").
 ++++
 
 
+問題解決には、一緒に開発をしているこへくんが色々調べてくれましたー。
+
+まず、Golangの構造体の埋め込みが使えそうな事がわかりました。
+Golangは他の言語の様な継承の概念がありまん。ただし、構造体の中に構造体を定義する事で似た様な事ができます。
+
+例えば、Results構造体は、string型の変数を2つ定義しています。
+++++
+<pre style="font-family: Menlo, Courier">
+type Results struct {
+　Name　string　  // name
+　Email　string   // email
+}
+</pre> 
+++++
+
+これに他に構造体を定義して追加してみます。
+++++
+<pre style="font-family: Menlo, Courier">
+type Sample struct {
+　Id　string　  
+　Typel　string
+}
+</pre> 
+++++
+
+++++
+<pre style="font-family: Menlo, Courier">
+type Results struct {
+　<text style="color:red">Sample</text>
+　Name　string　  // name
+　Email　string   // email
+}
+</pre> 
+++++
 
 
