@@ -61,3 +61,17 @@ usersテーブル、emailsテーブル用に、テーブル定義ファイルが
 データベースに存在しないカラム（別名を設定）を取得するために、テーブル定義ファイルの構造体に追加したくない。無秩序に追加され混沌としそうな気がする！
 
 
+
+====== 解決に向けて
+まず、問題①については、Scan関数に指定する構造体をどうにかすれば良さそうです。
+++++
+<pre style="font-family: Menlo, Courier">
+db.Table("users").Select("users.name, emails.email").
+Joins("left join emails on emails.user_id = users.id").
+<text style="color:red">Scan(&results)</text>
+</pre> 
+++++
+
+
+
+
