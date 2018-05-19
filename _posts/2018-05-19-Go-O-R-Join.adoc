@@ -20,12 +20,37 @@ db.Table("users").Select("users.name, emails.email").Joins("left join emails on 
 </pre> 
 ++++
 
-内容はざっくりこんな感じです。もっと詳しい内容はgormのドキュメントを確認してください。 +
-
 前の方から、 +
 db.Table("users")　->　usersテーブルを基礎表に設定 + 
 .Select　->　取得する項目（SQLのselect句）を設定 + 
 .Joins　->　結合するテーブルと条件設定 + 
-.Scan　->　取得する値を設定するポインタを設定 + 
+.Scan　->　取得する値を設定する構造体のポインタを設定 + 
 
-今回、
+++++
+<pre style="font-family: Menlo, Courier">
+type Results struct {
+	Name　string　  // name
+	Email　string   // email
+}
+</pre> 
+++++
+
+gormは、Scan関数のパラメタに設定しているポインタに、データベースから取得した値（Select関数で設定）をバインドしてくれます。この仕組みでデータベースから値が取得できるわけです。 +
+内容はざっくりこんな感じです。チェインしている詳しい内容はgormのドキュメントを確認してください。 +
+
+これ自体は納得しているのですが・・・
+
+====== 問題①　SQL毎（select句が異なる場合）に取得用の構造体が必要？
+こ
+
+
+
+
+
+
+====== 問題②　selectする項目に別名（select name as otherNameとか）をつけた場合に取得用の構造体はどうなる？
+
+
+
+
+
