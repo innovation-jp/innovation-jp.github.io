@@ -73,7 +73,7 @@ Joins("left join emails on emails.user_id = users.id").
 ++++
 
 
-問題解決には、一緒に開発をしているこへくんが色々調べてくれましたー。
+問題解決には、一緒に開発をしているこへくんが色々調べてくれましたー
 
 まず、Golangの構造体の埋め込みが使えそうな事がわかりました。
 Golangは他の言語の様な継承の概念がありまん。ただし、構造体の中に構造体を定義する事で似た様な事ができます。
@@ -88,17 +88,14 @@ type Results struct {
 </pre> 
 ++++
 
-これに他に構造体を定義して追加してみます。
+これに他に構造体を定義してResultsに追加してみます。
 ++++
 <pre style="font-family: Menlo, Courier">
 type Sample struct {
 　Id　string　  
-　Typel　string
+　Type　string
 }
 </pre> 
-++++
-
-++++
 <pre style="font-family: Menlo, Courier">
 type Results struct {
 　<text style="color:red">Sample</text>
@@ -107,5 +104,18 @@ type Results struct {
 }
 </pre> 
 ++++
+埋め込んだSample構造体の変数にはこの様にアクセスできます。
+Results.Sample.Type +
+また、Results構造体全体でユニークとなる変数については、Results.Typeとしてアクセスできます。 +
+これで、問題①については解決です。
+
+問題②については、gormのドキュメントに書いて書いてありました。 
+++++
+<pre style="font-family: Menlo, Courier">
+db.Table("users").
+<text style="color:red">Select("users.name, emails.email")</text>.Joins("left join emails on emails.user_id = users.id").Scan(&results)
+</pre> 
+++++
+
 
 
