@@ -6,13 +6,13 @@
 エンジニアのNew塚本です。
 
 現在、Golangでバッチ処理をゴリゴリ製造しています。 + 
-ORマッパーはgormを使用しているのですが、Joinした場合のデータのとり方でハマりましたので +
+ORマッパーはgormを使用しているのですが、Joinしたデータのとり方でハマりましたので +
 そのお話をのせたいと思います。
 
 
 ====== その前に
 
-gormのドキュメントのJoinについて確認してみます。 +
+gormドキュメントのJoinについて確認してみます。 +
 引用）http://doc.gorm.io/crud.html#query
 ++++
 <pre style="font-family: Menlo, Courier">
@@ -23,10 +23,11 @@ db.Table("users").Select("users.name, emails.email").Joins("left join emails on 
 前の方から、 +
 db.Table("users")　->　usersテーブルを基礎表に設定 + 
 .Select　->　取得する項目（SQLのselect句）を設定 + 
-.Joins　->　結合するテーブルと条件設定 + 
-.Scan　->　取得する値を設定する構造体のポインタを設定 + 
+.Joins　->　結合するテーブルと条件を設定 + 
+.Scan　->　SQLの結果を格納する構造体のポインタを設定 + 
 
 ++++
+SQLの結果を格納する構造体
 <pre style="font-family: Menlo, Courier">
 type Results struct {
 　Name　string　  // name
@@ -35,8 +36,8 @@ type Results struct {
 </pre> 
 ++++
 
-gormは、Scan関数のパラメタに設定しているポインタに、データベースから取得した値（Select関数で設定）をバインドしてくれます。この仕組みでデータベースから値が取得できるわけです。 +
-内容はざっくりこんな感じです。チェインしている詳しい内容はgormのドキュメントを確認してください。 +
+Scan関数のパラメタに設定しているポインタに、データベースから取得した値（Select関数で設定）をバインドしてくれます。この仕組みでデータベースから値が取得できるわけです。 +
+内容はざっくりこんな感じです。メソッドチェインしている詳しい内容はgormのドキュメントを確認してください。 +
 
 これ自体は納得しているのですが・・・
 
@@ -75,8 +76,8 @@ Joins("left join emails on emails.user_id = users.id").
 
 問題解決には、一緒に開発をしているこへくんが色々調べてくれましたー
 
-まず、Golangの構造体の埋め込みが使えそうな事がわかりました。
-Golangは他の言語の様な継承の概念がありまん。ただし、構造体の中に構造体を定義する事で似た様な事ができます。
+まず、構造体の埋め込みが使えそうな事がわかりました。
+Golangは他の言語にある継承はありまん。ただし、構造体の中に構造体を定義する事で似た様な事ができます。
 
 例えば、Results構造体は、string型の変数を2つ定義しています。
 ++++
@@ -88,7 +89,7 @@ type Results struct {
 </pre> 
 ++++
 
-これに他に構造体を定義してResultsに追加してみます。
+これに、他の構造体を定義してResultsに追加してみます。
 ++++
 <pre style="font-family: Menlo, Courier">
 type Sample struct {
@@ -113,12 +114,12 @@ Results.Sample.Type +
 ++++
 <pre style="font-family: Menlo, Courier">
 db.Table("users").
-<text style="color:red">Select("users.name, emails.email")</text>.Joins("left join emails on emails.user_id = users.id").Scan(&results)
+Select(<text style="color:red">"users.name, emails.email"</text>).Joins("left join emails on emails.user_id = users.id").Scan(&results)
 </pre> 
 ++++
 
-Select関数のパラメタに指定する値（sqlのselect句）は、取得するテーブルを指定します。 +
-別名の指定については、Select関数はこんな感じで書き、構造体に追加します。
+Select関数のパラメタに指定する値（SQLのselect句）は、取得するテーブルまで指定します。 +
+SQLの別名についてはこんな感じで書けばよく、後は、構造体に追加します。
 ++++
 <pre style="font-family: Menlo, Courier">
 Select("users.name, emails.email <text style="color:red">as \"otherName\"</text> ")
@@ -159,7 +160,7 @@ type Emails struct {
 　Email　string   // email
 }
 </pre> 
-・Results用の構造体（sqlの結果を格納） sqlで別名を指定した変数はここに定義
+・Results用の構造体　SQLで別名を指定した変数はここに定義
 <pre style="font-family: Menlo, Courier">
 type Results struct {
  Users
