@@ -109,13 +109,65 @@ Results.Sample.Type +
 また、Results構造体全体でユニークとなる変数については、Results.Typeとしてアクセスできます。 +
 これで、問題①については解決です。
 
-問題②については、gormのドキュメントに書いて書いてありました。 
+問題②については、gormのドキュメントに書いてありました。 
 ++++
 <pre style="font-family: Menlo, Courier">
 db.Table("users").
 <text style="color:red">Select("users.name, emails.email")</text>.Joins("left join emails on emails.user_id = users.id").Scan(&results)
 </pre> 
 ++++
+
+Select関数のパラメタに指定する値（sqlのselect句）は、取得するテーブルを指定します。 +
+別名の指定については、Select関数はこんな感じで書き、構造体に追加します。
+++++
+<pre style="font-family: Menlo, Courier">
+Select("users.name, emails.email <text style="color:red">as \"otherName\"</text> ")
+</pre> 
+</pre> 
+<pre style="font-family: Menlo, Courier">
+type Results struct {
+　<text style="color:red">Sample</text>
+　Name　string　  // name
+　Email　string   // email
+　<text style="color:red">OtherName string</text>
+}
+</pre> 
+++++
+
+====== まとめ
+問題①、②を解決するためはこんな感じになりました。
+
+++++
+<pre style="font-family: Menlo, Courier">
+db.Table("users").
+Select("users.name, users.name as \"otherName\", emails.email").
+Joins("left join emails on emails.user_id = users.id").
+Scan(&results)
+</pre> 
+++++
+
+++++
+<pre style="font-family: Menlo, Courier">
+type Users struct {
+　Name　string　  // name
+}
+</pre> 
+<pre style="font-family: Menlo, Courier">
+type Emails struct {
+　Email　string   // email
+}
+</pre> 
+<pre style="font-family: Menlo, Courier">
+type Results struct {
+ Users
+ Emails
+ OtherName string
+}
+</pre> 
+
+++++
+
+
 
 
 
