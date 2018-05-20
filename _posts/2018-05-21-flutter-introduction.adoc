@@ -1,0 +1,183 @@
+# FlutterとDartを使ってみる
+:hp-alt-title:　FlutterとDartを使ってみる
+:hp-tags: Hasumin, flutter, dart, android, ios
+
+こんにちは。はすみんです。 +
+Google I/O 2018、みなさん見てましたか？ +
+AIによる美容室の予約など、新しい機能が続々発表されていて楽しかったですね。 +
+生でいつか聞きたいな〜〜 +
+
+さて、今回ブログのテーマにしたのは一部界隈で噂のFlutter（Dart）です。 +
+AndroidでもiOSでも動く！？と聞いたときはなんだそれは！と食いついてしまいました。 +
+とはいっても環境構築と簡単なアプリ作成くらいしかやっておらず本格的な記事は書けませんが、 +
+興味ある人に導入編として環境構築とアプリの起動まで紹介したいと思います。 +
+
+## その前にFlutterって？
+FlutterはiOSとAndroidで動くアプリケーションを開発することができるフレームワークです。 +
+両方のOSに対応していることからクロスプラットフォームと呼ばれています。 +
+Googleが提供しており、オープンソースでフリーに開発できます。 +
+https://flutter.io/
+
+## Flutterの特徴
+・iOS/Androidで動くクロスプラットフォーム +
+・Dartで書かれている +
+・Material DesignのUIライブラリが豊富 +
+・Intellijのプラグインが豊富 +
+こんな感じでしょうか。 +
+クロスプラットフォームとして有名なものにReact NativeやXamarinなどがありますが、 +
+開発言語は、 +
+Flutter：Dart +
+React Native：Javascript +
+Xamarin：C# +
+でそれぞれ構成されており、UIライブラリの豊富さではFlutterが特に充実しているようです。 +
+
+## Dartについて
+Flutterの言語はDartですが、Flutterを知るまでDartの存在は知りませんでした… +
+DartはGoogleが開発したプログラミング言語でJavaやJavascriptにシンタックスが似ている動的型付け言語です。 +
+JavaやJavascriptを使ったことがある人はとっつきやすい言語となっています。 +
+Google社内の開発でも頻繁に使われているそうで、一時期Google社内でもっとも開発に使われていることもあるそうです。 +
+
+ここまでFlutterとDartの特徴について書いてきましたが、早速FlutterとDartを動かしてみましょう。 +
+
+## Dartのインストール
+Flutterを使うためにまずDartをインストールしましょう。（Mac環境） +
+https://webdev-dartlang-org-dev.firebaseapp.com/tools/sdk#install
+
+brewコマンドでインストールするので、brewコマンドを使えるようにしておいてくださいね。 +
+
+```
+$ brew tap dart-lang/dart
+$ brew install dart
+```
+
+PATHを通したのちに +
+
+```
+$ dart --help
+```
+
+をしてoption一覧が表示されたら成功です。 +
+
+## Flutterのインストール
+続いてFlutterをインストールします。 +
+git cloneコマンドをしてインストールする方法もあるようです。 +
+https://github.com/flutter/flutter
+
+今回は公式のチュートリアルに沿ってやってみたいと思います。 +
+https://flutter.io/setup-macos/
+
+まず、公式サイトにある「Get the Flutter SDK」のzipファイルをダウンロードしてください。 +
+続いて任意のディレクトリを作成し、zipファイルを解答します。（2018/05/21現在v0.3.2） +
+
+```
+$ mkdir flutter-test
+$ cd flutter-test
+$ unzip ~/Downloads/flutter_macos_v0.3.2-beta.zip
+```
+
+次に現在のディレクトリに対してPATHを通します。 +
+
+```
+$ export PATH=`pwd`/flutter/bin:$PATH
+```
+
+これでFlutterが使える状態になりました。 +
+
+```
+$ flutter doctor
+```
+
+はFlutterの状態を知るコマンドなのですが、これをやるとターミナルが以下のように色々吐いてくれます。 +
+
+```
+[✓] Flutter (Channel beta, v0.3.2, on Mac OS X 10.13.4 17E202, locale ja-JP)
+[✓] Android toolchain - develop for Android devices (Android SDK 27.0.3)
+[✓] iOS toolchain - develop for iOS devices (Xcode 9.3.1)
+[✓] Android Studio (version 3.1)
+    ✗ Flutter plugin not installed; this adds Flutter specific functionality.
+    ✗ Dart plugin not installed; this adds Dart specific functionality.
+[✓] IntelliJ IDEA Ultimate Edition (version 2018.1.2)
+[!] VS Code (version 1.23.1)
+[!] Connected devices
+    ! No devices available
+```
+
+などなど。ざっくりいうと +
+・Flutterの状態 +
+・Android環境での使用可能状況 +
+・iOS環境での使用可能状況 +
+・各エディタにおける使用可能状況 +
+です。 +
+最初にインストールした状態だとiOSであれが足りないとか、Android StudioにSDK入れろだとか言われるので、 +
+ひとつひとつ忠実に沿って入れていきましょう。 +
+それぞれ対応したらflutter doctorコマンドを都度叩いて使えるようにしていきましょう。 +
+
+エラーを吐かなくなったらFlutterの準備OKです。 +
+
+## Flutterでアプリを立ち上げてみる
+Flutterの環境が整ったので、アプリを作っていきましょう。 +
+Flutterのプロジェクト名はアンダースコアでつなぐことに注意してください。 +
+
+```
+$ flutter create test_app
+Creating project test_app...
+  test_app/ios/Runner.xcworkspace/contents.xcworkspacedata (created)
+  ...
+```
+
+プロジェクトの作成にするとこんな感じのアナウンスが表示されます。 +
+また、ご親切にもターミナルの下部に +
+
+```
+$ cd test_app
+$ flutter run
+```
+
+とログが表示されるので、それ通りに実行すると +
+
+```
+No connected devices.
+
+To run on a simulator, launch it first: open -a Simulator.app
+  ...
+```
+
+エミュレータを起動してくれ〜と言われるので、openします。（先に言ってくれ〜〜） +
+image:hasumi/flutter/emulator.png[]
+
+エミュレータが起動後、flutter runコマンドをします。 +
+
+```
+$ flutter run
+Launching lib/main.dart on iPhone X in debug mode...
+Skipping compilation. Fingerprint match.
+Running Xcode clean...                                       0.8s
+Starting Xcode build...
+ ├─Assembling Flutter resources...                    1.3s
+ └─Compiling, linking and signing...                  2.3s
+Xcode build done.                                            4.8s
+Syncing files to device iPhone X...                          2.1s
+
+🔥  To hot reload your app on the fly, press "r". To restart the app entirely, press "R".
+An Observatory debugger and profiler on iPhone X is available at: http://127.0.0.1:8100/
+For a more detailed help message, press "h". To quit, press "q".
+```
+
+こんな感じのダイアログが出たら成功です。 +
+エミュレータを確認すると下の画像のようになっていましたか？ +
+image:hasumi/flutter/success.png[]
+
+これでFlutterのアプリの起動は完了しました。 +
+簡単でしたか？ +
+どんどんアプリを作ってみてください〜 +
+
+```
+参考サイト：
+https://adwd.github.io/dart-flutter-slide/#/
+http://konifar.hatenablog.com/entry/2018/02/01/015601
+```
+
+## おわりに 
+Flutterについて色々調べてましたが、React Nativeも楽しそうだったのはここだけの話。 +
+
+done +
