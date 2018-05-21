@@ -172,7 +172,7 @@ image:hasumi/flutter/success.png[]
 どんどんアプリを作ってみてください〜 +
 
 参考サイト：
-https://adwd.github.io/dart-flutter-slide/#/
+https://adwd.github.io/dart-flutter-slide/#/ +
 http://konifar.hatenablog.com/entry/2018/02/01/015601
 
 ## おわりに
