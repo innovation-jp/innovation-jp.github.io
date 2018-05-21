@@ -1,5 +1,5 @@
 # GoのORマッパーでJoinデータのとり方を学ぶ！
-:hp-alt-title:　golangMapperUsed2
+:hp-alt-title:　golanggolanggolang
 :hp-tags: NewTsukamoto, mac, Golang, gorm
 
 こんにちは。
