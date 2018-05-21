@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>GoのORマッパーでJoinデータのとり方を学ぶ！ - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="GoのORマッパーでJoinデータのとり方を学ぶ！">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="GoのORマッパーでJoinデータのとり方を学ぶ！">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/05/19/Go-O-R-Join.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="GoのORマッパーでJoinデータのとり方を学ぶ！" />
+    <meta property="og:description" content="こんにちは。 エンジニアのNew塚本です。 現在、Golangでバッチをゴリゴリ製造しています。 ORマッパーはgormを使用しているのですが、Joinしたデータのとり方でハマりましたので そのお話をのせたいと思います。 その前に gormドキュメントのJoinについて確認してみます。 引用）http://doc.gorm.io/crud.html#query db.Table(&quot;users&quot;).Select(&quot;users.name, emails.email&quot;).Joins(&quot;left join emails on emails.user_id =..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/05/19/Go-O-R-Join.html" />
+    <meta property="article:published_time" content="2018-05-18T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-05-21T04:24:36.572Z" />
+    <meta property="article:tag" content="NewTsukamoto" />
+    <meta property="article:tag" content="mac" />
+    <meta property="article:tag" content="Golang" />
+    <meta property="article:tag" content="gorm" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="GoのORマッパーでJoinデータのとり方を学ぶ！" />
+    <meta name="twitter:description" content="こんにちは。 エンジニアのNew塚本です。 現在、Golangでバッチをゴリゴリ製造しています。 ORマッパーはgormを使用しているのですが、Joinしたデータのとり方でハマりましたので そのお話をのせたいと思います。 その前に gormドキュメントのJoinについて確認してみます。 引用）http://doc.gorm.io/crud.html#query db.Table(&quot;users&quot;).Select(&quot;users.name, emails.email&quot;).Joins(&quot;left join emails on emails.user_id =..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/05/19/Go-O-R-Join.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars2.githubusercontent.com/u/29852256?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "GoのORマッパーでJoinデータのとり方を学ぶ！",
+    "url": "http://tech.innovation.co.jp/2018/05/19/Go-O-R-Join.html",
+    "datePublished": "2018-05-18T15:00:00.000Z",
+    "dateModified": "2018-05-21T04:24:36.572Z",
+    "keywords": "NewTsukamoto,  mac,  Golang,  gorm",
+    "description": "こんにちは。 エンジニアのNew塚本です。 現在、Golangでバッチをゴリゴリ製造しています。 ORマッパーはgormを使用しているのですが、Joinしたデータのとり方でハマりましたので そのお話をのせたいと思います。 その前に gormドキュメントのJoinについて確認してみます。 引用）http://doc.gorm.io/crud.html#query db.Table(&quot;users&quot;).Select(&quot;users.name, emails.email&quot;).Joins(&quot;left join emails on emails.user_id =..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-New-Tsukamoto tag-mac tag-Golang tag-gorm no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="19 May 2018" class="post-meta__date date">19 May 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/New-Tsukamoto">NewTsukamoto</a>, <a href="http://tech.innovation.co.jp/tag/mac"> mac</a>, <a href="http://tech.innovation.co.jp/tag/Golang"> Golang</a>, <a href="http://tech.innovation.co.jp/tag/gorm"> gorm</a></span>
+        <span class="post-meta__author author"><img src="https://avatars2.githubusercontent.com/u/29852256?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">GoのORマッパーでJoinデータのとり方を学ぶ！</h1>
+    </header>
+
+    <section class="post tag-New-Tsukamoto tag-mac tag-Golang tag-gorm">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんにちは。
+エンジニアのNew塚本です。</p>
+</div>
+<div class="paragraph">
+<p>現在、Golangでバッチをゴリゴリ製造しています。<br>
+ORマッパーはgormを使用しているのですが、Joinしたデータのとり方でハマりましたので<br>
+そのお話をのせたいと思います。</p>
+</div>
+</div>
+</div>
+<div class="sect5">
+<h6 id="__">その前に</h6>
+<div class="paragraph">
+<p>gormドキュメントのJoinについて確認してみます。<br>
+引用）http://doc.gorm.io/crud.html#query</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+db.Table("users").Select("users.name, emails.email").Joins("left join emails on emails.user_id = users.id").Scan(&results)
+</pre>
+<div class="paragraph">
+<p>前の方から、<br>
+db.Table("users")　&#8594;　usersテーブルを基礎表に設定<br>
+.Select　&#8594;　取得する項目（SQLのselect句）を設定<br>
+.Joins　&#8594;　結合するテーブルと条件を設定<br>
+.Scan　&#8594;　SQLの結果を格納する構造体のポインタを設定<br></p>
+</div>
+SQLの結果を格納する構造体
+<pre style="font-family: Menlo, Courier">
+type Results struct {
+　Name　string　  // name
+　Email　string   // email
+}
+</pre>
+<div class="paragraph">
+<p>Scan関数のパラメタに設定しているポインタに、データベースから取得した値（Select関数で設定）をバインドしてくれます。この仕組みでデータベースから値が取得できるわけです。<br>
+内容はざっくりこんな感じです。メソッドチェインしている詳しい内容はgormのドキュメントを確認してください。<br></p>
+</div>
+<div class="paragraph">
+<p>これ自体は納得しているのですが・・・</p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="___2">前提</h6>
+<div class="paragraph">
+<p>現在製造しているバッチは、データベースのテーブル単位で構造体を定義し１ファイルとしています。<br>
+以降、テーブル定義ファイルと言います。</p>
+</div>
+<div class="paragraph">
+<p>「その前に」で示した例でいうと、<br>
+usersテーブル、emailsテーブル用に、テーブル定義ファイルが２ファイルあります。</p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="__sql_select">問題①　SQL毎（select句が異なる場合）に取得用の構造体が必要？</h6>
+<div class="paragraph">
+<p>データベースから取得する項目と、構造体のメンバ変数は一致している必要があります。<br>
+これって、SQL毎に構造体が必要になるのか？ だとすると、Resultsみたいな構造体が増えていくのはメンテナンス性も悪いし、そもそもイヤだ！</p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="__select_select_name_as_othername">問題②　selectする項目に別名（select name as otherNameとか）をつけた場合に取得用の構造体はどうなる？</h6>
+<div class="paragraph">
+<p>問題①にも関連しますが、データベースから取得する項目と、構造体のメンバ変数は一致している必要があります。
+ただし、テーブル定義ファイルにある構造体はデータベースのカラムと一致させてます。<br></p>
+</div>
+<div class="paragraph">
+<p>データベースに存在しないカラム（別名を設定）を取得するために、テーブル定義ファイルの構造体にその変数を追加したくない。無秩序になり混沌としそうな気がする！</p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="___3">解決に向けて</h6>
+<div class="paragraph">
+<p>まず、問題①については、Scan関数に指定する構造体をどうにかすれば良さそうです。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+db.Table("users").Select("users.name, emails.email").
+Joins("left join emails on emails.user_id = users.id").
+<text style="color:red">Scan(&results)</text>
+</pre>
+<div class="paragraph">
+<p>一緒に開発をしているこへくんが色々調べてくれましたー<br>
+頼りになります！</p>
+</div>
+<div class="paragraph">
+<p>まず、構造体の埋め込みが使えそうな事がわかりました。
+Golangは他の言語のように継承はありまん。ただし、構造体の中に構造体を定義する事で似た様な事ができます。</p>
+</div>
+<div class="paragraph">
+<p>例えば、Results構造体は、string型の変数を2つ定義しています。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+type Results struct {
+　Name　string　  // name
+　Email　string   // email
+}
+</pre>
+<div class="paragraph">
+<p>これに、他の構造体（Sample）を定義してResultsに追加してみます。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+type Sample struct {
+　Id　string
+　Type　string
+}
+</pre>
+<pre style="font-family: Menlo, Courier">
+type Results struct {
+　<text style="color:red">Sample</text>
+　Name　string　  // name
+　Email　string   // email
+}
+</pre>
+<div class="paragraph">
+<p>埋め込んだSample構造体の変数にはこの様にアクセスできます。
+Results.Sample.Type<br>
+また、Results構造体全体でユニークとなる変数については、Results.Typeとしてアクセスできます。<br>
+これで、問題①については解決です。</p>
+</div>
+<div class="paragraph">
+<p>問題②については、gormのドキュメントに書いてありました。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+db.Table("users").
+Select(<text style="color:red">"users.name, emails.email"</text>).Joins("left join emails on emails.user_id = users.id").Scan(&results)
+</pre>
+<div class="paragraph">
+<p>Select関数のパラメタに指定する値（SQLのselect句）は、取得するテーブルまで指定します。<br>
+SQLの別名についてはこんな感じで書けばよく、後は、構造体に追加します。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+Select("users.name, emails.email <text style="color:red">as \"otherName\"</text> ")
+</pre>
+</pre>
+<pre style="font-family: Menlo, Courier">
+type Results struct {
+　<text style="color:red">Sample</text>
+　Name　string　  // name
+　Email　string   // email
+　<text style="color:red">OtherName string</text>
+}
+</pre>
+</div>
+<div class="sect5">
+<h6 id="___4">まとめ</h6>
+<div class="paragraph">
+<p>問題①、②を解決するためには、こんな感じになりました。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+db.Table("users").
+Select("users.name, users.name as \"otherName\", emails.email").
+Joins("left join emails on emails.user_id = users.id").
+Scan(&results)
+</pre>
+・Usersテーブルの構造体
+<pre style="font-family: Menlo, Courier">
+type Users struct {
+　Name　string　  // name
+}
+</pre>
+・Emailsテーブルの構造体
+<pre style="font-family: Menlo, Courier">
+type Emails struct {
+　Email　string   // email
+}
+</pre>
+・Resultsの構造体　SQLで別名を指定した変数はここに定義
+<pre style="font-family: Menlo, Courier">
+type Results struct {
+ Users
+ Emails
+ OtherName string
+}
+</pre>
+<div class="paragraph">
+<p>おわり。</p>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
