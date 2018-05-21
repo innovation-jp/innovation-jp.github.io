@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>FlutterとDartを使ってみる - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="FlutterとDartを使ってみる">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="FlutterとDartを使ってみる">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/05/21/Flutter-Dart.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="FlutterとDartを使ってみる" />
+    <meta property="og:description" content="こんにちは。はすみんです。 Google I/O 2018、みなさん見てましたか？ AIによる美容室の予約など、新しい機能が続々発表されていて楽しかったですね。 生でいつか聞きたいな〜〜 さて、今回ブログのテーマにしたのは一部界隈で噂のFlutter（Dart）です。 AndroidでもiOSでも動く！？と聞いたときはなんだそれは！と食いついてしまいました。 とはいっても環境構築と簡単なアプリ作成くらいしかやっておらず本格的な記事は書けませんが、 興味ある人に導入編として環境構築とアプリの起動まで紹介したいと思います。 その前にFlutterって？ F..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/05/21/Flutter-Dart.html" />
+    <meta property="article:published_time" content="2018-05-20T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-05-21T10:12:15.664Z" />
+    <meta property="article:tag" content="Hasumin" />
+    <meta property="article:tag" content="flutter" />
+    <meta property="article:tag" content="dart" />
+    <meta property="article:tag" content="android" />
+    <meta property="article:tag" content="ios" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="FlutterとDartを使ってみる" />
+    <meta name="twitter:description" content="こんにちは。はすみんです。 Google I/O 2018、みなさん見てましたか？ AIによる美容室の予約など、新しい機能が続々発表されていて楽しかったですね。 生でいつか聞きたいな〜〜 さて、今回ブログのテーマにしたのは一部界隈で噂のFlutter（Dart）です。 AndroidでもiOSでも動く！？と聞いたときはなんだそれは！と食いついてしまいました。 とはいっても環境構築と簡単なアプリ作成くらいしかやっておらず本格的な記事は書けませんが、 興味ある人に導入編として環境構築とアプリの起動まで紹介したいと思います。 その前にFlutterって？ F..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/05/21/Flutter-Dart.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "takuya hasumi",
+        "image": "https://avatars0.githubusercontent.com/u/22537034?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "FlutterとDartを使ってみる",
+    "url": "http://tech.innovation.co.jp/2018/05/21/Flutter-Dart.html",
+    "datePublished": "2018-05-20T15:00:00.000Z",
+    "dateModified": "2018-05-21T10:12:15.664Z",
+    "keywords": "Hasumin,  flutter,  dart,  android,  ios",
+    "description": "こんにちは。はすみんです。 Google I/O 2018、みなさん見てましたか？ AIによる美容室の予約など、新しい機能が続々発表されていて楽しかったですね。 生でいつか聞きたいな〜〜 さて、今回ブログのテーマにしたのは一部界隈で噂のFlutter（Dart）です。 AndroidでもiOSでも動く！？と聞いたときはなんだそれは！と食いついてしまいました。 とはいっても環境構築と簡単なアプリ作成くらいしかやっておらず本格的な記事は書けませんが、 興味ある人に導入編として環境構築とアプリの起動まで紹介したいと思います。 その前にFlutterって？ F..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Hasumin tag-flutter tag-dart tag-android tag-ios no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="21 May 2018" class="post-meta__date date">21 May 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Hasumin">Hasumin</a>, <a href="http://tech.innovation.co.jp/tag/flutter"> flutter</a>, <a href="http://tech.innovation.co.jp/tag/dart"> dart</a>, <a href="http://tech.innovation.co.jp/tag/android"> android</a>, <a href="http://tech.innovation.co.jp/tag/ios"> ios</a></span>
+        <span class="post-meta__author author"><img src="https://avatars0.githubusercontent.com/u/22537034?v=4" alt="profile image for takuya hasumi" class="avatar post-meta__avatar" /> by takuya hasumi</span>
+      </div>
+      <h1 class="post-title">FlutterとDartを使ってみる</h1>
+    </header>
+
+    <section class="post tag-Hasumin tag-flutter tag-dart tag-android tag-ios">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんにちは。はすみんです。<br>
+Google I/O 2018、みなさん見てましたか？<br>
+AIによる美容室の予約など、新しい機能が続々発表されていて楽しかったですね。<br>
+生でいつか聞きたいな〜〜<br></p>
+</div>
+<div class="paragraph">
+<p>さて、今回ブログのテーマにしたのは一部界隈で噂のFlutter（Dart）です。<br>
+AndroidでもiOSでも動く！？と聞いたときはなんだそれは！と食いついてしまいました。<br>
+とはいっても環境構築と簡単なアプリ作成くらいしかやっておらず本格的な記事は書けませんが、<br>
+興味ある人に導入編として環境構築とアプリの起動まで紹介したいと思います。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__flutter">その前にFlutterって？</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>FlutterはiOSとAndroidで動くアプリケーションを開発することができるフレームワークです。<br>
+両方のOSに対応していることからクロスプラットフォームと呼ばれています。<br>
+Googleが提供しており、オープンソースでフリーに開発できます。<br>
+<a href="https://flutter.io/" class="bare">https://flutter.io/</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_flutter">Flutterの特徴</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>・iOS/Androidで動くクロスプラットフォーム<br>
+・Dartで書かれている<br>
+・Material DesignのUIライブラリが豊富<br>
+・Intellijのプラグインが豊富<br>
+こんな感じでしょうか。<br>
+クロスプラットフォームとして有名なものにReact NativeやXamarinなどがありますが、<br>
+開発言語は、<br>
+Flutter：Dart<br>
+React Native：JavaScript<br>
+Xamarin：C#<br>
+でそれぞれ構成されており、UIライブラリの豊富さではFlutterが特に充実しているようです。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dart">Dartについて</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Flutterの言語はDartですが、Flutterを知るまでDartの存在は知りませんでした…<br>
+DartはGoogleが開発したプログラミング言語でJavaやJavaScriptにシンタックスが似ている動的/静的型付け言語です。<br>
+JavaやJavaScriptを使ったことがある人はとっつきやすい言語となっています。<br>
+Google社内の開発でも頻繁に使われているそうで、一時期Google社内でもっとも開発に使われていることもあるそうです。<br></p>
+</div>
+<div class="paragraph">
+<p>ここまでFlutterとDartの特徴について書いてきましたが、早速FlutterとDartを動かしてみましょう。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dart_2">Dartのインストール</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Flutterを使うためにまずDartをインストールしましょう。（Mac環境）<br>
+<a href="https://webdev-dartlang-org-dev.firebaseapp.com/tools/sdk#install" class="bare">https://webdev-dartlang-org-dev.firebaseapp.com/tools/sdk#install</a></p>
+</div>
+<div class="paragraph">
+<p>brewコマンドでインストールするので、brewコマンドを使えるようにしておいてくださいね。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ brew tap dart-lang/dart
+$ brew install dart</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>PATHを通したのちに<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ dart --help</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>をしてoption一覧が表示されたら成功です。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_flutter_2">Flutterのインストール</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>続いてFlutterをインストールします。<br>
+git cloneコマンドをしてインストールする方法もあるようです。<br>
+<a href="https://github.com/flutter/flutter" class="bare">https://github.com/flutter/flutter</a></p>
+</div>
+<div class="paragraph">
+<p>今回は公式のチュートリアルに沿ってやってみたいと思います。<br>
+<a href="https://flutter.io/setup-macos/" class="bare">https://flutter.io/setup-macos/</a></p>
+</div>
+<div class="paragraph">
+<p>まず、公式サイトにある「Get the Flutter SDK」のzipファイルをダウンロードしてください。<br>
+続いて任意のディレクトリを作成し、zipファイルを解凍します。（2018/05/21現在v0.3.2）<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ mkdir flutter-test
+$ cd flutter-test
+$ unzip ~/Downloads/flutter_macos_v0.3.2-beta.zip</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>次に現在のディレクトリに対してPATHを通します。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ export PATH=`pwd`/flutter/bin:$PATH</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>これでFlutterが使える状態になりました。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ flutter doctor</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>はFlutterの状態を知るコマンドなのですが、これをやるとターミナルが以下のように色々吐いてくれます。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>[✓] Flutter (Channel beta, v0.3.2, on Mac OS X 10.13.4 17E202, locale ja-JP)
+[✓] Android toolchain - develop for Android devices (Android SDK 27.0.3)
+[✓] iOS toolchain - develop for iOS devices (Xcode 9.3.1)
+[✓] Android Studio (version 3.1)
+    ✗ Flutter plugin not installed; this adds Flutter specific functionality.
+    ✗ Dart plugin not installed; this adds Dart specific functionality.
+[✓] IntelliJ IDEA Ultimate Edition (version 2018.1.2)
+[!] VS Code (version 1.23.1)
+[!] Connected devices
+    ! No devices available</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>などなど。ざっくりいうと<br>
+・Flutterの状態<br>
+・Android環境での使用可能状況<br>
+・iOS環境での使用可能状況<br>
+・各エディタにおける使用可能状況<br>
+です。<br>
+最初にインストールした状態だとiOSであれが足りないとか、Android StudioにSDK入れろだとか言われるので、<br>
+出力されたメッセージに沿って入れていきましょう。<br>
+それぞれ対応したらflutter doctorコマンドを都度叩いて使えるようにしていきましょう。<br></p>
+</div>
+<div class="paragraph">
+<p>エラーを吐かなくなったらFlutterの準備OKです。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_flutter_3">Flutterでアプリを立ち上げてみる</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Flutterの環境が整ったので、アプリを作っていきましょう。<br>
+Flutterのプロジェクト名はアンダースコアでつなぐことに注意してください。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ flutter create test_app
+Creating project test_app...
+  test_app/ios/Runner.xcworkspace/contents.xcworkspacedata (created)
+  ...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>プロジェクトの作成にするとこんな感じのアナウンスが表示されます。<br>
+また、ご親切にもターミナルの下部に<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ cd test_app
+$ flutter run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>とログが表示されるので、それ通りに実行すると<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>No connected devices.
+
+To run on a simulator, launch it first: open -a Simulator.app
+  ...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>エミュレータを起動してくれ〜と言われるので、openします。（先に言ってくれ〜〜）<br></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/hasumi/flutter/emulator.png" alt="emulator.png"></span></p>
+</div>
+<div class="paragraph">
+<p>エミュレータが起動後、flutter runコマンドをします。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ flutter run
+Launching lib/main.dart on iPhone X in debug mode...
+Skipping compilation. Fingerprint match.
+Running Xcode clean...                                       0.8s
+Starting Xcode build...
+ ├─Assembling Flutter resources...                    1.3s
+ └─Compiling, linking and signing...                  2.3s
+Xcode build done.                                            4.8s
+Syncing files to device iPhone X...                          2.1s
+
+🔥  To hot reload your app on the fly, press "r". To restart the app entirely, press "R".
+An Observatory debugger and profiler on iPhone X is available at: http://127.0.0.1:8100/
+For a more detailed help message, press "h". To quit, press "q".</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>こんな感じのダイアログが出たら成功です。<br>
+エミュレータを確認すると下の画像のようになっていましたか？<br></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/hasumi/flutter/success.png" alt="success.png"></span></p>
+</div>
+<div class="paragraph">
+<p>これでFlutterのアプリの起動は完了しました。<br>
+簡単でしたか？<br>
+どんどんアプリを作ってみてください〜<br></p>
+</div>
+<div class="paragraph">
+<p>参考サイト：<br>
+<a href="https://adwd.github.io/dart-flutter-slide/#/" class="bare">https://adwd.github.io/dart-flutter-slide/#/</a><br>
+<a href="http://konifar.hatenablog.com/entry/2018/02/01/015601" class="bare">http://konifar.hatenablog.com/entry/2018/02/01/015601</a><br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">おわりに</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Flutterについて色々調べてましたが、React Nativeも楽しそうだったのはここだけの話。<br></p>
+</div>
+<div class="paragraph">
+<p>done<br></p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
