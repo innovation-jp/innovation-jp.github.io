@@ -171,9 +171,9 @@ image:hasumi/flutter/success.png[]
 簡単でしたか？ +
 どんどんアプリを作ってみてください〜 +
 
-参考サイト：
+参考サイト： +
 https://adwd.github.io/dart-flutter-slide/#/ +
-http://konifar.hatenablog.com/entry/2018/02/01/015601
+http://konifar.hatenablog.com/entry/2018/02/01/015601 +
 
 ## おわりに
 Flutterについて色々調べてましたが、React Nativeも楽しそうだったのはここだけの話。 +
