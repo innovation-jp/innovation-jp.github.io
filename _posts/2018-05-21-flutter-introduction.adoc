@@ -27,14 +27,14 @@ https://flutter.io/
 クロスプラットフォームとして有名なものにReact NativeやXamarinなどがありますが、 +
 開発言語は、 +
 Flutter：Dart +
-React Native：Javascript +
+React Native：JavaScript +
 Xamarin：C# +
 でそれぞれ構成されており、UIライブラリの豊富さではFlutterが特に充実しているようです。 +
 
 ## Dartについて
 Flutterの言語はDartですが、Flutterを知るまでDartの存在は知りませんでした… +
-DartはGoogleが開発したプログラミング言語でJavaやJavascriptにシンタックスが似ている動的型付け言語です。 +
-JavaやJavascriptを使ったことがある人はとっつきやすい言語となっています。 +
+DartはGoogleが開発したプログラミング言語でJavaやJavaScriptにシンタックスが似ている動的/静的型付け言語です。 +
+JavaやJavaScriptを使ったことがある人はとっつきやすい言語となっています。 +
 Google社内の開発でも頻繁に使われているそうで、一時期Google社内でもっとも開発に使われていることもあるそうです。 +
 
 ここまでFlutterとDartの特徴について書いてきましたが、早速FlutterとDartを動かしてみましょう。 +
@@ -67,7 +67,7 @@ https://github.com/flutter/flutter
 https://flutter.io/setup-macos/
 
 まず、公式サイトにある「Get the Flutter SDK」のzipファイルをダウンロードしてください。 +
-続いて任意のディレクトリを作成し、zipファイルを解答します。（2018/05/21現在v0.3.2） +
+続いて任意のディレクトリを作成し、zipファイルを解凍します。（2018/05/21現在v0.3.2） +
 
 ```
 $ mkdir flutter-test
@@ -109,7 +109,7 @@ $ flutter doctor
 ・各エディタにおける使用可能状況 +
 です。 +
 最初にインストールした状態だとiOSであれが足りないとか、Android StudioにSDK入れろだとか言われるので、 +
-ひとつひとつ忠実に沿って入れていきましょう。 +
+出力されたメッセージに沿って入れていきましょう。 +
 それぞれ対応したらflutter doctorコマンドを都度叩いて使えるようにしていきましょう。 +
 
 エラーを吐かなくなったらFlutterの準備OKです。 +
@@ -177,7 +177,7 @@ https://adwd.github.io/dart-flutter-slide/#/
 http://konifar.hatenablog.com/entry/2018/02/01/015601
 ```
 
-## おわりに 
+## おわりに
 Flutterについて色々調べてましたが、React Nativeも楽しそうだったのはここだけの話。 +
 
 done +
