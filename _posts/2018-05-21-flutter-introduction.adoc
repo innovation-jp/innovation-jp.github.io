@@ -143,7 +143,7 @@ To run on a simulator, launch it first: open -a Simulator.app
 ```
 
 エミュレータを起動してくれ〜と言われるので、openします。（先に言ってくれ〜〜） +
-image:hasumi/flutter/emulator.png[]
+image:/images/hasumi/flutter/emulator.png[]
 
 エミュレータが起動後、flutter runコマンドをします。 +
 
@@ -165,7 +165,7 @@ For a more detailed help message, press "h". To quit, press "q".
 
 こんな感じのダイアログが出たら成功です。 +
 エミュレータを確認すると下の画像のようになっていましたか？ +
-image:hasumi/flutter/success.png[]
+image:/images/hasumi/flutter/success.png[]
 
 これでFlutterのアプリの起動は完了しました。 +
 簡単でしたか？ +
