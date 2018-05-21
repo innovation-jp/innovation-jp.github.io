@@ -4,27 +4,27 @@
 
 こんにちは。はすみんです。 +
 Google I/O 2018、みなさん見てましたか？ +
-AIによる美容室の予約など、新しい機能が続々発表されていて楽しかったですね。 +
+AIによる美容室の予約など、新しい機能が続々発表されていて楽しかったですね。 +
 生でいつか聞きたいな〜〜 +
 
 さて、今回ブログのテーマにしたのは一部界隈で噂のFlutter（Dart）です。 +
-AndroidでもiOSでも動く！？と聞いたときはなんだそれは！と食いついてしまいました。 +
-とはいっても環境構築と簡単なアプリ作成くらいしかやっておらず本格的な記事は書けませんが、 +
+AndroidでもiOSでも動く！？と聞いたときはなんだそれは！と食いついてしまいました。 +
+とはいっても環境構築と簡単なアプリ作成くらいしかやっておらず本格的な記事は書けませんが、 +
 興味ある人に導入編として環境構築とアプリの起動まで紹介したいと思います。 +
 
 ## その前にFlutterって？
 FlutterはiOSとAndroidで動くアプリケーションを開発することができるフレームワークです。 +
-両方のOSに対応していることからクロスプラットフォームと呼ばれています。 +
+両方のOSに対応していることからクロスプラットフォームと呼ばれています。 +
 Googleが提供しており、オープンソースでフリーに開発できます。 +
 https://flutter.io/
 
 ## Flutterの特徴
-・iOS/Androidで動くクロスプラットフォーム +
+・iOS/Androidで動くクロスプラットフォーム +
 ・Dartで書かれている +
-・Material DesignのUIライブラリが豊富 +
-・Intellijのプラグインが豊富 +
+・Material DesignのUIライブラリが豊富 +
+・Intellijのプラグインが豊富 +
 こんな感じでしょうか。 +
-クロスプラットフォームとして有名なものにReact NativeやXamarinなどがありますが、 +
+クロスプラットフォームとして有名なものにReact NativeやXamarinなどがありますが、 +
 開発言語は、 +
 Flutter：Dart +
 React Native：JavaScript +
@@ -35,12 +35,12 @@ Xamarin：C# +
 Flutterの言語はDartですが、Flutterを知るまでDartの存在は知りませんでした… +
 DartはGoogleが開発したプログラミング言語でJavaやJavaScriptにシンタックスが似ている動的/静的型付け言語です。 +
 JavaやJavaScriptを使ったことがある人はとっつきやすい言語となっています。 +
-Google社内の開発でも頻繁に使われているそうで、一時期Google社内でもっとも開発に使われていることもあるそうです。 +
+Google社内の開発でも頻繁に使われているそうで、一時期Google社内でもっとも開発に使われていることもあるそうです。 +
 
 ここまでFlutterとDartの特徴について書いてきましたが、早速FlutterとDartを動かしてみましょう。 +
 
 ## Dartのインストール
-Flutterを使うためにまずDartをインストールしましょう。（Mac環境） +
+Flutterを使うためにまずDartをインストールしましょう。（Mac環境） +
 https://webdev-dartlang-org-dev.firebaseapp.com/tools/sdk#install
 
 brewコマンドでインストールするので、brewコマンドを使えるようにしておいてくださいね。 +
@@ -66,7 +66,7 @@ https://github.com/flutter/flutter
 今回は公式のチュートリアルに沿ってやってみたいと思います。 +
 https://flutter.io/setup-macos/
 
-まず、公式サイトにある「Get the Flutter SDK」のzipファイルをダウンロードしてください。 +
+まず、公式サイトにある「Get the Flutter SDK」のzipファイルをダウンロードしてください。 +
 続いて任意のディレクトリを作成し、zipファイルを解凍します。（2018/05/21現在v0.3.2） +
 
 ```
@@ -104,19 +104,19 @@ $ flutter doctor
 
 などなど。ざっくりいうと +
 ・Flutterの状態 +
-・Android環境での使用可能状況 +
-・iOS環境での使用可能状況 +
+・Android環境での使用可能状況 +
+・iOS環境での使用可能状況 +
 ・各エディタにおける使用可能状況 +
 です。 +
-最初にインストールした状態だとiOSであれが足りないとか、Android StudioにSDK入れろだとか言われるので、 +
+最初にインストールした状態だとiOSであれが足りないとか、Android StudioにSDK入れろだとか言われるので、 +
 出力されたメッセージに沿って入れていきましょう。 +
-それぞれ対応したらflutter doctorコマンドを都度叩いて使えるようにしていきましょう。 +
+それぞれ対応したらflutter doctorコマンドを都度叩いて使えるようにしていきましょう。 +
 
 エラーを吐かなくなったらFlutterの準備OKです。 +
 
 ## Flutterでアプリを立ち上げてみる
-Flutterの環境が整ったので、アプリを作っていきましょう。 +
-Flutterのプロジェクト名はアンダースコアでつなぐことに注意してください。 +
+Flutterの環境が整ったので、アプリを作っていきましょう。 +
+Flutterのプロジェクト名はアンダースコアでつなぐことに注意してください。 +
 
 ```
 $ flutter create test_app
@@ -142,10 +142,10 @@ To run on a simulator, launch it first: open -a Simulator.app
   ...
 ```
 
-エミュレータを起動してくれ〜と言われるので、openします。（先に言ってくれ〜〜） +
+エミュレータを起動してくれ〜と言われるので、openします。（先に言ってくれ〜〜） +
 image:hasumi/flutter/emulator.png[]
 
-エミュレータが起動後、flutter runコマンドをします。 +
+エミュレータが起動後、flutter runコマンドをします。 +
 
 ```
 $ flutter run
@@ -177,7 +177,7 @@ https://adwd.github.io/dart-flutter-slide/#/
 http://konifar.hatenablog.com/entry/2018/02/01/015601
 ```
 
-## おわりに
-Flutterについて色々調べてましたが、React Nativeも楽しそうだったのはここだけの話。 +
+## おわりに
+Flutterについて色々調べてましたが、React Nativeも楽しそうだったのはここだけの話。 +
 
 done +
