@@ -169,13 +169,11 @@ image:hasumi/flutter/success.png[]
 
 これでFlutterのアプリの起動は完了しました。 +
 簡単でしたか？ +
-どんどんアプリを作ってみてください〜 +
+どんどんアプリを作ってみてください〜 +
 
-```
 参考サイト：
 https://adwd.github.io/dart-flutter-slide/#/
 http://konifar.hatenablog.com/entry/2018/02/01/015601
-```
 
 ## おわりに
 Flutterについて色々調べてましたが、React Nativeも楽しそうだったのはここだけの話。 +
