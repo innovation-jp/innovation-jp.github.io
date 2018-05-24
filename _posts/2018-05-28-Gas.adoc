@@ -1,0 +1,12 @@
+= Gasの節約が大事
+:published_at: 2018-05-28
+:hp-tags: Yagasaki,Ethereum,Gas,SmartContract
+
+こんばんは。(TZ=JST-9)
+矢ヶ崎です。
+
+最近、このブログではGASの記事が多い雰囲気になってきております。 +
+GASブログ感がだいぶ出てきているので、わたしも便乗してGasの記事を書きたいと思います。
+
+GasはGasでも、EthereumのGasですいません。
+
