@@ -178,11 +178,97 @@ truffle(ropsten)> con.thanks("0x3FE91f1A3cF9697DFbC41bEEB0b1d4F71F56d0F4", "あ�
 gasUsed: 85837,
 ```
 
-Gas Priceが、MyEtherWalletのデフォルト値である41Gweiだったとすると、
+Gas Priceが、MyEtherWalletのデフォルト値である +
+41Gwei +
+だったとすると、 +
+0.003519317Ether +
+だけ手数料がかかるということになります。 +
+1Etherが昨今の価格から安く見積もっても、 +
+50,000円 +
+だったとすると、このトランザクションは、 +
+約176円 +
+かかるということになります！
 
+「ありがとうございます！！！！！」をブロックチェーンに書いて伝えるだけでも、なかなかのお金がかかりますね。
 
+では、もうちょっと感謝を言葉に込めて送ってみます。
+```
+truffle(ropsten)> con.thanks("0x3FE91f1A3cF9697DFbC41bEEB0b1d4F71F56d0F4", "このたびは、ほんとうに、まじで、ガチで、ありがとうございます！！！！！");
+{ tx: '0xd97dcf1b25c7a5d08d7c42ef1f732b008dbf4648ec58b227be4ee217ece76f1c',
+  receipt: 
+   { blockHash: '0x7d7f0250fb1413c098ea48f644262417bc8eccaf0e32bee4cafbc7d05c9ebfae',
+     blockNumber: 3300082,
+     contractAddress: null,
+     cumulativeGasUsed: 100085,
+     from: '0x3fe91f1a3cf9697dfbc41beeb0b1d4f71f56d0f4',
+     gasUsed: 100085,
+     logs: [ [Object] ],
+     logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040400000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000010000000000000000000000000000008000000000000000000000000000000000000000000000800000002000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000',
+     status: '0x1',
+     to: '0xfc9ebc55d9b192c455a27883d1fb0ef2e4462fb2',
+     transactionHash: '0xd97dcf1b25c7a5d08d7c42ef1f732b008dbf4648ec58b227be4ee217ece76f1c',
+     transactionIndex: 0 },
+  logs: 
+   [ { address: '0xfc9ebc55d9b192c455a27883d1fb0ef2e4462fb2',
+       blockNumber: 3300082,
+       transactionHash: '0xd97dcf1b25c7a5d08d7c42ef1f732b008dbf4648ec58b227be4ee217ece76f1c',
+       transactionIndex: 0,
+       blockHash: '0x7d7f0250fb1413c098ea48f644262417bc8eccaf0e32bee4cafbc7d05c9ebfae',
+       logIndex: 0,
+       removed: false,
+       event: 'Transfer',
+       args: [Object] } ] }
+```
+やはり、さらに高くなりました。
+```
+     gasUsed: 100085,
+```
+200円オーバーですね。。。
+
+これだと、気軽に文章なんて送れません。。。どうしよう。。。
 
 ==== 送る前にいくらかかるのか知りたくない？
 
+これって、前もっていくらくらいかかるかわかっていないと、正直ビビって送れないですよね。
 
+では、メソッド単位ですが、いくらくらいかかるのかを見てみましょう。 +
+estimateGas というのを使います。
 
+```
+truffle(ropsten)> con.thanks.estimateGas("0x3FE91f1A3cF9697DFbC41bEEB0b1d4F71F56d0F4", "ガチで、ありがとうございます！！！！！");
+86605
+```
+雑な説明をすると、このように実際に呼ぶやつのカッコの前の最後に、estimateGasをはさむといい感じに出してくれます。 +
+ほかにもやってみます。
+```
+truffle(ropsten)> con.thanks.estimateGas("0x3FE91f1A3cF9697DFbC41bEEB0b1d4F71F56d0F4", "あああ");
+48283
+truffle(ropsten)> con.thanks.estimateGas("0x3FE91f1A3cF9697DFbC41bEEB0b1d4F71F56d0F4", "ああ");
+48091
+truffle(ropsten)> con.thanks.estimateGas("0x3FE91f1A3cF9697DFbC41bEEB0b1d4F71F56d0F4", "あ");
+47899
+```
+ここでは、全角１文字増えるごとに、192Gas増えているように見えます。
+
+では、実際に処理を動かしてみます。
+```
+※gasUsedの行以外は省略
+truffle(ropsten)> con.thanks("0x3FE91f1A3cF9697DFbC41bEEB0b1d4F71F56d0F4", "あああ");
+     gasUsed: 48283,
+truffle(ropsten)> con.thanks("0x3FE91f1A3cF9697DFbC41bEEB0b1d4F71F56d0F4", "ああ");
+     gasUsed: 48091,
+truffle(ropsten)> con.thanks("0x3FE91f1A3cF9697DFbC41bEEB0b1d4F71F56d0F4", "あ");
+     gasUsed: 47899,
+```
+ぴったりあっちゃいましたね。
+
+=== 時代を感じる
+
+このように、スマートコントラクトのプログラミングは、Gasをいかに節約できるかが課題になる部分があったりなかったりします。 +
+例えば？！配列の中身をソートするとか、頻繁にブロックチェーン上のストレージとしてのデータを書き換える処理なんて書いちゃったりした日には、そりゃ死亡確認(結局生きてるやつ)になっちゃうわけです。すぐにGas Limit到達！みたいな感じになっちゃいます。
+
+メインメモリが8KBみたいなPCでプログラミングをしていて、メモリ容量との戦いを繰り広げていたことを思い出して、懐かしみつつ最新の技術を触るということをやっており、とっても楽しいですのでおすすめです！
+
+== Gasも大切にね！
+
+こちらからは以上です。
