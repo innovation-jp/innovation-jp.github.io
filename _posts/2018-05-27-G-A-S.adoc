@@ -1,0 +1,125 @@
+# GASを使ってシステムオールグリーンって言いたい
+:hp-alt-title:　I-want-to-say-system-All-Green
+:hp-tags: ozasa, systemAllGreen, GAS
+
+こんにちは。ozasaです。 +
+いかがお過ごしでしょうか。
+
+いきなりですが、 +
+皆さんはお仕事の中でどんなことを楽しみにしていますか？
+
+やらなきゃいけないことも自らご褒美や細やかなお楽しみを設けることで +
+ポジティブに取り組めたりするものですよね、きっと。
+
+ということで今回は +
+Googleのスプレッドシートに新たに追加された「チェックボックス」機能を使って、 +
+何かしらのチェック作業が楽しいものになれば良いなという発想でGoogleAppsScript(GAS)を書いてみました。
+
+やりたいこととしては +
+「チェックが完了したら何か実行できるようにする」というそれだけです。 +
+イメージ的には「システムオールグリーン！いけます！」っていう感じです。
+
+**そういうの熱いですよね？**
+
+作業するスプレッドシートとしてはこんなイメージです。
+
+image:/images/ozasa/systemAllGreen1.png[]
+
+チェックボックスは「挿入」メニューから選択できます。 +
+**NEW**と書いてあるので分かりやすいです。
+
+image:/images/ozasa/systemAllGreen2.png[]
+
+見た目こそチェックボックスですが、値としてはTRUE/FALSEになっているようです。
+
+image:/images/ozasa/systemAllGreen4.png[]
+
+image:/images/ozasa/systemAllGreen3.png[]
+
+これをトリガーに値がTRUEだったらセルが緑色になるように
+「条件付き書式」を設定します。
+これだけでもちょっと楽しい。
+
+image:/images/ozasa/systemAllGreen5.png[]
+
+さすれば、値をチェックするGASを書きます。 +
+マジックナンバー使っている感が否めないとしても！
+
+[source, rust]
+----
+var spreadSheet = SpreadsheetApp.getActiveSpreadsheet();
+
+function systemAllGreen() {
+  var sheet = SpreadsheetApp.getActiveSheet();
+  var startRow   = sheet.getActiveCell().getRow();
+  // C　列からチェックしたいので3を指定
+  var startColumn = 3;
+  // チェックは1行で良いため1を指定
+  var numRows = 1;
+  // ほにゃららシステムにおけるチェック対象は7つなので7を指定
+  var numColumns = 7;
+
+  var itemsOfTwoDimensionalArray = sheet.getRange(startRow,startColumn,numRows,numColumns).getValues();
+  
+  // getValuesで取得した値は二次元配列になっているため一次元の配列に変換する
+  var items = convertingTwoDimensionalArrayToOneDimensionalArray(itemsOfTwoDimensionalArray);
+
+  // every関数を使い全ての結果がtrueじゃないと処理をしないようにする
+  var result = items.every(isTrue);
+  if(result){
+    // システムオールグリーン時の処理
+    allowExecution(startRow);
+  } else {
+    disallowExecution();
+  }
+}
+
+function convertingTwoDimensionalArrayToOneDimensionalArray(itemsOfTwoDimensionalArray) {
+  var temp = [];
+  for(var i=0;i<itemsOfTwoDimensionalArray.length;i=i+1){
+    for(var j=0;j<itemsOfTwoDimensionalArray[i].length;j=j+1){
+      temp.push(itemsOfTwoDimensionalArray[i][j]);
+    }
+  }
+  return temp;
+}
+
+function allowExecution() {
+  var menuEntries = [{name: '実行!!!', functionName: 'doSomething'}];
+  spreadSheet.addMenu("実行メニュー", menuEntries);
+}
+
+function disallowExecution() {
+  spreadSheet.removeMenu("実行メニュー");
+}
+
+function isTrue(currentValue) {
+  return currentValue == true;
+}
+
+function doSomething() {
+  var pass = Browser.inputBox("合言葉は？");
+  if (pass == 'システムオールグリーン') {
+    Browser.msgBox("はい");
+  } else {
+    Browser.msgBox("違います");
+  }
+}
+----
+
+
+今回はこんな感じにしました。 +
+値が変更される度に実行されるようにトリガーの設定をしてみます。
+
+これでチェックを入れてその列が**システムオールグリーン**ならカスタムメニューが表示されるようになりました。
+
+image:/images/ozasa/systemAllGreen6.png[]
+
+熱い！ +
+そして思ったより楽しくて無駄にチェックしたくなりました！(良いのか？)
+
+実行メニューの中身はSlackへの通知でも何かしら外部のAPIを叩いて本当に何かしらを起動するでもなんでも良いかと思います。可能性は無限大です。 +
+これでチェック作業が楽しいものになりそうです！ +
+皆さんも業務をハックして良いエンジニアリングライフを！
+
+こちらからは以上です。
