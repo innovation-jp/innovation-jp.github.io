@@ -15,10 +15,15 @@ Swift +
 Xcode +
 Firestore
 
+構成はこんな感じ↓
+
+image:/images/kohe/toyama_swift_3.png[]
+
 完成はこんな感じ↓
 
 
 image:/images/kohe/toyama_swift_g.gif[]
+
 
 
 == 下準備
