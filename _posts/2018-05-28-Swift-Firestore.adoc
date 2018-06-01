@@ -15,12 +15,20 @@ Swift +
 Xcode +
 Firestore
 
-構成はこんな感じ↓
+
+- サーバの管理が不要
+- ある程度無料で使える
+- リアルタイムに更新される
+- 従来のFirebaseと違ってデータの型が指定できる
+
+ということで、Firestoreを使うことにしました。
+
+
+*構成はこんな感じ↓*
 
 image:/images/kohe/toyama_swift_3.png[]
 
-完成はこんな感じ↓
-
+*完成はこんな感じ↓*
 
 image:/images/kohe/toyama_swift_g.gif[]
 
