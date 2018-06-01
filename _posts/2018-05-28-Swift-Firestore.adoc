@@ -6,11 +6,11 @@
 ということで、簡単なものですが、この間作ったチャットアプリについてまとめてみたいと思います。
 
 
-# 作りたいあぷり
+== 作りたいあぷり
 
 今回、名前とメッセージを入力して送信すると、リアルタイムで更新・表示されるiPhoneのチャットアプリを作ります。
 
-使うもの： +
+*使うもの：* +
 Xcode +
 Swift +
 Firestore
@@ -21,7 +21,7 @@ Firestore
 ★gif★★
 
 
-# 下準備
+== 下準備
 
 使用する外部ライブラリを、podfileを作成し、追加しましょう。
 
@@ -34,17 +34,17 @@ pod installできたら準備完了です。
 
 
 
-いざ実践
+== いざ実践
 
-１．画面を構成する
+==== １．画面を構成する
 
-外部ライブラリをインストールしたら、さっそく作っていきましょう。
-まずは画面の構成から。今回はStoryBoardでレイアウトして作ります。
+外部ライブラリをインストールしたら、さっそく作っていきましょう。 +
+まずは画面の構成から。今回はStoryBoardでレイアウトして作ります。 +
 用意するのは、「名前とメッセージが表示されるTextView」と、「名前を入力するTextfFeld」、「メッセージを入力するTextField」の3つ。
 
 
 
-レイアウトが終わったら、びよーーんとViewcotrollerに紐付ければ完了！
+レイアウトが終わったら、びよーーんとViewcotrollerに紐付ければ完了！ +
 このびよーーんの作業、好きだなぁ。
 
 ```
@@ -54,7 +54,7 @@ pod installできたら準備完了です。
 ```
 
 
-２．TextFieldの処理を書くために、クラスを拡張する
+==== ２．TextFieldの処理を書くために、クラスを拡張する
 
 レイアウトが終わったら、次はコードを書いていきましょう。
 
@@ -75,15 +75,14 @@ extension ViewController:UITextFieldDelegate {
 }
 ```
 
-
-３．入力した名前とメッセージをFirestoreに送信する
+==== ３．入力した名前とメッセージをFirestoreに送信する
 
 TextFieldの処理を書くためのクラスが準備できたので、次は入力したデータをFirestoreに送信する部分を作っていきます。
 
 名前とメッセージ両方のTextFieldにテキストを入力してreturnkeyを押した時に、Firestoreにデータを送信するようにしたいと思います。じゃんじゃん書いていきましょう。
 
 
-Firestoreへのコネクションを張る
+====== Firestoreへのコネクションを張る
 
 TextFieldの処理を書いていく前に、まずはFirestoreへのコネクションをviewDidLoadを読み込んだ時に張っておきます。
 
@@ -92,11 +91,11 @@ TextFieldの処理を書いていく前に、まずはFirestoreへのコネク�
         defaultstore = Firestore.firestore()
 ```
 
-Firestoreのデータを取得し、表示する
+====== Firestoreのデータを取得し、表示する
 
-viewDidLoadを読み込んだ時に、Firestore内のデータを取得し、チャット内容をTextViewに表示します。
-今回は、"chat"という名前のコレクションにデータを保存していきます。
-※Firestoreの設定などは、後ほどまとめて説明します。
+viewDidLoadを読み込んだ時に、Firestore内のデータを取得し、チャット内容をTextViewに表示します。 +
+今回は、"chat"という名前のコレクションにデータを保存していきます。 +
+
 
 addSnapshotListenerを使って、起動時はFirestoreのデータをすべて読み込み、その後はFirestoreの更新を監視し、更新があるたびに実行されるようにします。
 
@@ -106,7 +105,7 @@ addSnapshotListenerを使って、起動時はFirestoreのデータをすべて�
         }
 ```
 
-中を書いていきましょう。
+中を書いていきましょう。 +
 Firestoreの"chat"コレクション内のデータがあるかどうか確認し、無ければreturnを返します。
 
 ```
@@ -141,7 +140,7 @@ Firestoreにデータが追加された時に、TextViewの内容を更新しま
 
 
 
-returnkeyが押された時の処理
+====== returnkeyが押された時の処理
 
 Firestoreのコネクションとデータの取得＆表示ができたら、次にreturnkeyが押された時の処理を書いていきます。
 
@@ -155,7 +154,7 @@ Firestoreのコネクションとデータの取得＆表示ができたら、�
 まずはこれで、TextFieldでreturnkeyを押した時に、「returnkeyが押されたよ」って出てきたらOKです。
 
 
-returnkeyが押されたらキーボードを閉じる
+====== returnkeyが押されたらキーボードを閉じる
 
 今のままだとreturnkeyを押してもキーボードが閉じないので、閉じる処理を追加。
 
@@ -164,7 +163,7 @@ returnkeyが押されたらキーボードを閉じる
         textField.resignFirstResponder()
 ```
 
-TextFieldに入力されたテキストを変数に入れる
+====== TextFieldに入力されたテキストを変数に入れる
 
 nameとmessageそれぞれのTextFieldに入力された値を変数に入れます
 
@@ -203,7 +202,7 @@ nameとmessageのTextFieldは空欄の場合があるので、guard文を書い�
 ```
 
 
-入力されたテキストを配列に入れる
+====== 入力されたテキストを配列に入れる
 
 入力されたテキストを配列に格納します。
 
@@ -213,7 +212,7 @@ nameとmessageのTextFieldは空欄の場合があるので、guard文を書い�
 ```
 
 
-Firestoreに送信する
+====== Firestoreに送信する
 
 配列の内容を、Firestoreに送信します。
 
@@ -231,7 +230,7 @@ nameのTextFieldにカーソルがあるときにも送信しないようにす�
 
 まずは、現在のTextFieldがどれかを判定をするために、TextFieldにtagを設定します。
 
-nametextfield = 1
+nametextfield = 1 +
 messagetextfield = 2
 
 
@@ -258,7 +257,7 @@ tagだと数字でわかりにくいので、enumを活用します。
 ※この記述は、入力した文字を変数に入れる処理の前に入れましょう。
 
 
-messageのTextFieldを空にする
+===== messageのTextFieldを空にする
 
 送信後、messageのtextfieldを空欄にします。
 
