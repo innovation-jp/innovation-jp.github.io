@@ -1,4 +1,4 @@
-= SwiftとFirestoreを使いリアルタイムチャットアプリを作ってみた
+= SwiftとFirestoreを使って、リアルタイムチャットアプリを作ってみた
 :published_at: 2018-05-28
 :hp-tags: Chat,Firesotre,Swift4.0
 
@@ -11,8 +11,8 @@
 今回、名前とメッセージを入力して送信すると、リアルタイムで更新・表示されるiPhoneのチャットアプリを作ります。
 
 *使うもの：* +
-Xcode +
 Swift +
+Xcode +
 Firestore
 
 完成はこんな感じ↓
@@ -39,7 +39,7 @@ pod installできたら準備完了です。
 ==== １．画面を構成する
 
 外部ライブラリをインストールしたら、さっそく作っていきましょう。 +
-まずは画面の構成から。今回はStoryBoardでレイアウトして作ります。 +
+まずは画面の構成から。今回はXcodeのStoryBoardでレイアウトして作ります。 +
 用意するのは、「名前とメッセージが表示されるTextView」と、「名前を入力するTextfFeld」、「メッセージを入力するTextField」の3つ。
 
 
