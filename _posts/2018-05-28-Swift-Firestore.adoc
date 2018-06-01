@@ -18,7 +18,7 @@ Firestore
 完成はこんな感じ↓
 
 
-★gif★★
+image:/images/kohe/toyama_swift_g.gif[]
 
 
 == 下準備
@@ -42,6 +42,7 @@ pod installできたら準備完了です。
 まずは画面の構成から。今回はXcodeのStoryBoardでレイアウトして作ります。 +
 用意するのは、「名前とメッセージが表示されるTextView」と、「名前を入力するTextfFeld」、「メッセージを入力するTextField」の3つ。
 
+image:/images/kohe/toyama_swift_1.png[]
 
 
 レイアウトが終わったら、びよーーんとViewcotrollerに紐付ければ完了！ +
@@ -233,7 +234,7 @@ nameのTextFieldにカーソルがあるときにも送信しないようにす�
 nametextfield = 1 +
 messagetextfield = 2
 
-
+image:/images/kohe/toyama_swift_2.png[]
 
 tagだと数字でわかりにくいので、enumを活用します。
 
