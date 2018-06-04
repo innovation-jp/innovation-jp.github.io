@@ -156,7 +156,7 @@ image::/images/nakamura/phpDocumentor/01.png[width="250"]
 
 対象ファイルのドキュメントはこんな感じ。
 
-image::/images/nakamura/phpDocumentor/02.png[width="250"]
+image::/images/nakamura/phpDocumentor/02.png[]
 
 === メソッドを追加してみる
 
@@ -196,7 +196,7 @@ $ php vendor/bin/phpDocumentor.phar -f app/User.php -t public/phpdoc
 
 生成されたドキュメントがこちら。
 
-image::/images/nakamura/phpDocumentor/03.png[width="250"]
+image::/images/nakamura/phpDocumentor/03.png[]
 
 ちゃんとメソッドが追加されてますね！
 
