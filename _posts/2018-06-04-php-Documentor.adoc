@@ -29,10 +29,10 @@ https://en.wikipedia.org/wiki/PHPDoc
 
 === テスト用環境
 
-Laravel 5.6
-PHP 7.1.4
-Composer 1.4.1
-nginx 1.13.12
+Laravel 5.6 +
+PHP 7.1.4 +
+Composer 1.4.1 +
+nginx 1.13.12 +
 
 ※laradockを使用して環境構築しました
 
@@ -95,24 +95,117 @@ $ wget http://phpdoc.org/phpDocumentor.phar
 
 それでは早速phpDocumentorを使ってドキュメントを生成していきたいと思います。
 
-使用するファイルはApp/User.php（Laravelを導入した時にデフォで入っているサンプルファイル）です。
+使用するファイルはapp/User.php（Laravelを導入した時にデフォで入っているサンプルファイル）です。
 
-コマンドとしては以下のようになります。
+
+▪️app/User.php
 
 ```
-$ php vendor/bin/phpDocumentor.phar {オプション}
+<?php
+
+namespace App;
+
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
+class User extends Authenticatable
+{
+    use Notifiable;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name', 'email', 'password',
+    ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
+}
 ```
 
 
 
+ドキュメントを生成するコマンドは、以下のようになります。
 
-image::/images/nakamura/eRemote/05.png[width="250"]
+```
+$ php vendor/bin/phpDocumentor.phar -d {対象ディレクトリーのパス} -t {ドキュメント生成先のパス}
+```
+
+-d {対象ディレクトリーのパス} の代わりに -f {対象ファイルのパス}　という使い方もできます。 +
+今回は1ファイルだけなのでそちらのオプションを使いました。
 
 
+```
+$ php vendor/bin/phpDocumentor.phar -f app/User.php -t public/phpdoc
+```
+
+このようなファイルが生成されます。
+
+image::/images/nakamura/phpDocumentor/01.png[width="250"]
+
+対象ファイルのドキュメントはこんな感じ。
+
+image::/images/nakamura/phpDocumentor/02.png[width="250"]
+
+=== メソッドを追加してみる
+
+何かコードを追加して、再度ドキュメント生成した時にどんな感じになるのかみてみましょう。
+
+以下のコードを追加してみました。（Laravelの公式サイトより）
+
+```
+    /**
+     * 人気のあるユーザだけに限定するクエリスコープ
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopePopular($query)
+    {
+        return $query->where('votes', '>', 100);
+    }
+
+    /**
+     * アクティブなユーザだけに限定するクエリスコープ
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('active', 1);
+    }
+```
+
+保存後に、以下コマンドを再度実行してみます。
+
+```
+$ php vendor/bin/phpDocumentor.phar -f app/User.php -t public/phpdoc
+```
+
+生成されたドキュメントがこちら。
+
+image::/images/nakamura/phpDocumentor/03.png[width="250"]
+
+ちゃんとメソッドが追加されてますね！
 
 
+=== 感想
+
+- composerでインストールができなかったので再挑戦したい
+- git hookにドキュメント生成コマンドを仕込むなどすると、チームメンバー間でドキュメントが常に最新の状態にすることができそう
+- とはいえ、エンジニア向けのドキュメントでしかない
 
 
+今後現在のプロジェクトにも導入していきたいと思いますので、またそちらの感想などもあれば追記しておきます。
 
-
-
+おしまい！
