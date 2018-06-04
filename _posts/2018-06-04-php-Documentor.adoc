@@ -1,0 +1,97 @@
+= phpDocumentorを使ってみた
+:hp-tags: nakamura,phpDocumentor,phpDoc
+
+
+
+
+
+
+=== テスト用環境
+
+Laravel 5.6
+PHP 7.1.4
+Composer 1.4.1
+nginx 1.13.12
+
+※laradockを使用して環境構築しました
+
+
+=== 導入編
+
+composerを使って導入しましょう。
+以下コマンドになります。
+
+```
+$ composer require --dev phpdocumentor/phpdocumentor
+```
+
+。。。とはいかず、以下のようなエラーが発生しました。
+
+```
+Using version ^2.9 for phpdocumentor/phpdocumentor
+./composer.json has been updated
+Loading composer repositories with package information
+Updating dependencies (including require-dev)
+Your requirements could not be resolved to an installable set of packages.
+
+  Problem 1
+    - Installation request for phpdocumentor/phpdocumentor ^2.9 -> satisfiable by phpdocumentor/phpdocumentor[v2.9.0].
+    - Conclusion: remove nikic/php-parser v4.0.2
+    - phpdocumentor/phpdocumentor v2.9.0 requires phpdocumentor/reflection ^3.0 -> satisfiable by phpdocumentor/reflection[3.0.0, 3.0.1, 3.0.x-dev].
+    - phpdocumentor/reflection 3.0.0 requires nikic/php-parser ^1.0 -> satisfiable by nikic/php-parser[1.x-dev, v1.0.0, v1.0.0beta1, v1.0.0beta2, v1.0.1, v1.0.2, v1.1.0, v1.2.0, v1.2.1, v1.2.2, v1.3.0, v1.4.0, v1.4.1].
+    - phpdocumentor/reflection 3.0.1 requires nikic/php-parser ^1.0 -> satisfiable by nikic/php-parser[1.x-dev, v1.0.0, v1.0.0beta1, v1.0.0beta2, v1.0.1, v1.0.2, v1.1.0, v1.2.0, v1.2.1, v1.2.2, v1.3.0, v1.4.0, v1.4.1].
+    - phpdocumentor/reflection 3.0.x-dev requires nikic/php-parser ^1.0 -> satisfiable by nikic/php-parser[1.x-dev, v1.0.0, v1.0.0beta1, v1.0.0beta2, v1.0.1, v1.0.2, v1.1.0, v1.2.0, v1.2.1, v1.2.2, v1.3.0, v1.4.0, v1.4.1].
+    - Can only install one of: nikic/php-parser[v4.0.2, 1.x-dev].
+    - Can only install one of: nikic/php-parser[v4.0.2, v1.3.0].
+    - Can only install one of: nikic/php-parser[v4.0.2, v1.4.0].
+    - Can only install one of: nikic/php-parser[v4.0.2, v1.4.1].
+    - Can only install one of: nikic/php-parser[v4.0.2, v1.0.0].
+    - Can only install one of: nikic/php-parser[v4.0.2, v1.0.0beta1].
+    - Can only install one of: nikic/php-parser[v4.0.2, v1.0.0beta2].
+    - Can only install one of: nikic/php-parser[v4.0.2, v1.0.1].
+    - Can only install one of: nikic/php-parser[v4.0.2, v1.0.2].
+    - Can only install one of: nikic/php-parser[v4.0.2, v1.1.0].
+    - Can only install one of: nikic/php-parser[v4.0.2, v1.2.0].
+    - Can only install one of: nikic/php-parser[v4.0.2, v1.2.1].
+    - Can only install one of: nikic/php-parser[v4.0.2, v1.2.2].
+    - Installation request for nikic/php-parser (installed at v4.0.2) -> satisfiable by nikic/php-parser[v4.0.2].
+
+
+Installation failed, reverting ./composer.json to its original content.
+```
+
+composerで上手くいかないので、pharでやることに。
+
+```
+$ cd vendor/bin
+$ wget http://phpdoc.org/phpDocumentor.phar
+
+```
+
+
+
+=== ドキュメント生成
+
+それでは早速phpDocumentorを使ってドキュメントを生成していきたいと思います。
+
+使用するファイルはApp/User.php（Laravelを導入した時にデフォで入っているサンプルファイル）です。
+
+コマンドとしては以下のようになります。
+
+```
+$ php vendor/bin/phpDocumentor.phar {オプション}
+```
+
+
+
+
+image::/images/nakamura/eRemote/05.png[width="250"]
+
+
+
+
+
+
+
+
+
