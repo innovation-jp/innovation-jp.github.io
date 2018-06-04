@@ -1,5 +1,5 @@
 = もうメンテナンスは怖くない！phpDocumentorを使ってみた
-:hp-tags: nakamura,phpDocumentor,phpDoc
+:hp-tags: nakamura,phpDocumentor,PHPDoc
 
 お久しぶりです。中村です。
 
@@ -13,7 +13,10 @@
 
 PHPDocという記述形式でコメントを書いておくと、コメント部分をまとめてドキュメント生成してくれるというツールです。
 
-※PHPDocについてはこちら
+※phpDocumentorについてはこちら +
+https://docs.phpdoc.org/
+
+※PHPDocについてはこちら +
 https://en.wikipedia.org/wiki/PHPDoc
 
 通常のドキュメントと異なりコメントから自動生成してくれるため、
@@ -32,7 +35,6 @@ https://en.wikipedia.org/wiki/PHPDoc
 Laravel 5.6 +
 PHP 7.1.4 +
 Composer 1.4.1 +
-nginx 1.13.12 +
 
 ※laradockを使用して環境構築しました
 
