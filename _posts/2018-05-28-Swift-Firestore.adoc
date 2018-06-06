@@ -23,12 +23,15 @@ Firestore
 
 ということで、Firestoreを使うことにしました。
 
+※Firestoreの使い方は、以下のガイドを参考にしてください。 +
+https://firebase.google.com/docs/firestore/?hl=ja[Firestoreのガイド]
 
-*構成はこんな感じ↓*
+
+*ちなみに構成はこんな感じ↓*
 
 image:/images/kohe/toyama_swift_3.png[]
 
-*完成はこんな感じ↓*
+*完成したアプリはこんな感じ↓*
 
 image:/images/kohe/toyama_swift_g.gif[]
 
