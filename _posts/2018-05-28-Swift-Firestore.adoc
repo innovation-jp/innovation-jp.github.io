@@ -11,8 +11,8 @@
 今回、名前とメッセージを入力して送信すると、リアルタイムで更新・表示されるiPhoneのチャットアプリを作ります。
 
 *使うもの：* +
-Swift +
-Xcode +
+Swift4.0 +
+Xcode9.2 +
 Firestore
 
 
@@ -179,22 +179,12 @@ Firestoreのコネクションとデータの取得＆表示ができたら、�
 
 ====== TextFieldに入力されたテキストを変数に入れる
 
-nameとmessageそれぞれのTextFieldに入力された値を変数に入れます
-
-```
-        //nameに入力されたテキストを変数に入れる。
-        let name = nameTextField.text
-        //messageに入力されたテキストを変数に入れる。
-        guard let message = messageTextField.text
-```
-
-
-nameとmessageのTextFieldは空欄の場合があるので、guard文を書いてはじきます。
+nameとmessageそれぞれのTextFieldに入力された値を変数に入れます。 +
+nameとmessageのTextFieldがnilの可能性があるので、guard文を書いてはじきます。
 また、TextFieldの値がnilもしくは空欄の場合はFirestoreへ送信する処理をしないようにします。
 
 ```
-        }
-        //nameに入力されたテキストを変数に入れる。nameTextFieldが空の場合は　Firestoreへ行く処理をしない
+        //nameに入力されたテキストを変数に入れる。nilの場合はFirestoreへ行く処理をしない
         guard let name = nameTextField.text else {
             return true
         }
@@ -204,7 +194,7 @@ nameとmessageのTextFieldは空欄の場合があるので、guard文を書い�
             return true
         }
 
-        //messageに入力されたテキストを変数に入れる。messageTextFieldが空の場合は　Firestoreへ行く処理をしない
+        //messageに入力されたテキストを変数に入れる。nilの場合はFirestoreへ行く処理をしない
         guard let message = messageTextField.text else {
             return true
         }
@@ -312,7 +302,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         messageTextField.delegate = self
         nameTextField.delegate = self
-        //Firestoreへのコネクションを定義する
+        //Firestoreへのコネクションを張る
         defaultstore = Firestore.firestore()
         
         
@@ -324,7 +314,9 @@ class ViewController: UIViewController {
             }
             
             value.documentChanges.forEach{diff in
+            //更新内容が追加だったときの処理
                 if diff.type == .added {
+                	//追加データを変数に入れる
                     let chatDataOp = diff.document.data() as? Dictionary<String, String>
                     print(diff.document.data())
                     guard let chatData = chatDataOp else {
@@ -336,6 +328,7 @@ class ViewController: UIViewController {
                     guard let name = chatData["name"] else {
                         return
                     }
+                    //TextViewの一番下に新しいメッセージ内容を追加する
                     self.textView.text =  "\(self.textView.text!)\n\(name) : \(message)"
                 }
             }
@@ -351,7 +344,7 @@ class ViewController: UIViewController {
 
 extension ViewController:UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        print("returnが押されました")
+        print("returnが押されたよ")
         
         //キーボードを閉じる
         textField.resignFirstResponder()
@@ -360,7 +353,7 @@ extension ViewController:UITextFieldDelegate {
         if textField.tag == textFieldKind.name.rawValue {
             return true
         }
-        //nameに入力されたテキストを変数に入れる。nameTextFieldが空の場合は　Firestoreへ行く処理をしない
+        //nameに入力されたテキストを変数に入れる。nilの場合はFirestoreへ行く処理をしない
         guard let name = nameTextField.text else {
             return true
         }
@@ -370,7 +363,7 @@ extension ViewController:UITextFieldDelegate {
             return true
         }
 
-        //messageに入力されたテキストを変数に入れる。messageTextFieldが空の場合は　Firestoreへ行く処理をしない
+        //messageに入力されたテキストを変数に入れる。nilの場合はFirestoreへ行く処理をしない
         guard let message = messageTextField.text else {
             return true
         }
