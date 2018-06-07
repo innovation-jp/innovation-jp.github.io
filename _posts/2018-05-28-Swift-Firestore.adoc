@@ -25,13 +25,13 @@ Firestore
 - リアルタイムに更新される
 - 従来のFirebaseと違ってデータの型が指定できる
 
-っていう理由からデータベースにFirestoreを使うことにしました。
+っていう理由から、データベースにFirestoreを使うことにしました。
 
 ※Firestoreの使い方は、ガイドを参考にしてくださいねー。 +
 https://firebase.google.com/docs/firestore/?hl=ja[Firestoreのガイド]
 
-※Firestoreを使うための初期設定方法はこちらです。
-https://firebase.google.com/docs/ios/setup?hl=ja [初期設定ガイド]
+※Firestoreを使うための初期設定方法はこちらです。 +
+https://firebase.google.com/docs/ios/setup?hl=ja[初期設定ガイド]
 
 *ちなみに構成はこんな感じです↓*
 
