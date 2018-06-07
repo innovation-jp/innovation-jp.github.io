@@ -30,6 +30,8 @@ Firestore
 ※Firestoreの使い方は、ガイドを参考にしてくださいねー。 +
 https://firebase.google.com/docs/firestore/?hl=ja[Firestoreのガイド]
 
+※Firestoreを使うための初期設定方法はこちらです。
+https://firebase.google.com/docs/ios/setup?hl=ja [初期設定ガイド]
 
 *ちなみに構成はこんな感じです↓*
 
@@ -237,7 +239,7 @@ nameとmessageのTextFieldがnilの可能性があるので、guard文を書い�
 
 nameのTextFieldにカーソルがあるときにも送信しないようにする
 
-ユーザーが意図せず送信してしまわないよう、nameのTextFieldにカーソルがあるときにも送信しないようにします。
+このままだと、returnkeyを押すたびにデータを送信してしまうので、nameのTextFieldにカーソルがあるときには送信しないようにします。
 
 まずは、現在のTextFieldがどれかを判定をするために、TextFieldにtagを設定します。
 
