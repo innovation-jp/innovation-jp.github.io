@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>もうメンテナンスは怖くない！JSDoc 3を使ってみた - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="もうメンテナンスは怖くない！JSDoc 3を使ってみた">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="もうメンテナンスは怖くない！JSDoc 3を使ってみた">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/06/08/I-tried-to-use-J-S-Doc3.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="もうメンテナンスは怖くない！JSDoc 3を使ってみた" />
+    <meta property="og:description" content="こんにちは！小柳津です。 今回はJavaScriptのファイルから自動でドキュメントを生成するJSDoc 3というライブラリーの導入方法を調べたので、ブログを書いていきます。 JSDoc 3とは JSDoc 3とは、JavaScript用のドキュメントジェネレータでJSDocの形式で書かれたコメントを解析して自動でドキュメントを生成してくれるライブラリーです。 以下が公式のドキュメントになります。 Use JSDoc 全て英語で書かれていますが、JSDoc 3(以下JSDoc)のインストールから設定の方法だけでなく、JSDoc形式のコメントの書き方が詳..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/06/08/I-tried-to-use-J-S-Doc3.html" />
+    <meta property="article:published_time" content="2018-06-07T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-06-08T04:06:29.393Z" />
+    <meta property="article:tag" content="JSDoc3" />
+    <meta property="article:tag" content="Node.js" />
+    <meta property="article:tag" content="npm" />
+    <meta property="article:tag" content="JavaScript" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="もうメンテナンスは怖くない！JSDoc 3を使ってみた" />
+    <meta name="twitter:description" content="こんにちは！小柳津です。 今回はJavaScriptのファイルから自動でドキュメントを生成するJSDoc 3というライブラリーの導入方法を調べたので、ブログを書いていきます。 JSDoc 3とは JSDoc 3とは、JavaScript用のドキュメントジェネレータでJSDocの形式で書かれたコメントを解析して自動でドキュメントを生成してくれるライブラリーです。 以下が公式のドキュメントになります。 Use JSDoc 全て英語で書かれていますが、JSDoc 3(以下JSDoc)のインストールから設定の方法だけでなく、JSDoc形式のコメントの書き方が詳..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/06/08/I-tried-to-use-J-S-Doc3.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars3.githubusercontent.com/u/16201452?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "もうメンテナンスは怖くない！JSDoc 3を使ってみた",
+    "url": "http://tech.innovation.co.jp/2018/06/08/I-tried-to-use-J-S-Doc3.html",
+    "datePublished": "2018-06-07T15:00:00.000Z",
+    "dateModified": "2018-06-08T04:06:29.393Z",
+    "keywords": "JSDoc3, Node.js, npm, JavaScript",
+    "description": "こんにちは！小柳津です。 今回はJavaScriptのファイルから自動でドキュメントを生成するJSDoc 3というライブラリーの導入方法を調べたので、ブログを書いていきます。 JSDoc 3とは JSDoc 3とは、JavaScript用のドキュメントジェネレータでJSDocの形式で書かれたコメントを解析して自動でドキュメントを生成してくれるライブラリーです。 以下が公式のドキュメントになります。 Use JSDoc 全て英語で書かれていますが、JSDoc 3(以下JSDoc)のインストールから設定の方法だけでなく、JSDoc形式のコメントの書き方が詳..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-J-S-Doc3 tag-Nodejs tag-npm tag-Java-Script no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="08 Jun 2018" class="post-meta__date date">08 Jun 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/J-S-Doc3">JSDoc3</a>, <a href="http://tech.innovation.co.jp/tag/Nodejs">Node.js</a>, <a href="http://tech.innovation.co.jp/tag/npm">npm</a>, <a href="http://tech.innovation.co.jp/tag/Java-Script">JavaScript</a></span>
+        <span class="post-meta__author author"><img src="https://avatars3.githubusercontent.com/u/16201452?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">もうメンテナンスは怖くない！JSDoc 3を使ってみた</h1>
+    </header>
+
+    <section class="post tag-J-S-Doc3 tag-Nodejs tag-npm tag-Java-Script">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんにちは！小柳津です。<br></p>
+</div>
+<div class="paragraph">
+<p>今回はJavaScriptのファイルから自動でドキュメントを生成するJSDoc 3というライブラリーの導入方法を調べたので、ブログを書いていきます。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_jsdoc_3">JSDoc 3とは</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>JSDoc 3とは、JavaScript用のドキュメントジェネレータでJSDocの形式で書かれたコメントを解析して自動でドキュメントを生成してくれるライブラリーです。<br>
+以下が公式のドキュメントになります。<br></p>
+</div>
+<div class="paragraph">
+<p><a href="http://usejsdoc.org/">Use JSDoc</a><br></p>
+</div>
+<div class="paragraph">
+<p>全て英語で書かれていますが、JSDoc 3(以下JSDoc)のインストールから設定の方法だけでなく、JSDoc形式のコメントの書き方が詳細に載っていたのでとても参考になりました。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">動作環境</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>以下がJSDocを試した環境です。<br></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Node.js: <code>8.11.2</code></p>
+</li>
+<li>
+<p>npm: <code>5.6.0</code></p>
+</li>
+<li>
+<p>JSDoc: <code>3.5.5</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">インストール手順</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>npmでインストールをしていきます。<br>
+JSDocはアプリケーションを動かすのには必要ないものなので <code>--save-dev</code> オプションをつけてインストールをします。<br>
+今回はチーム開発を想定しているので、ローカルでのインストールを行います。なので <code>package.json</code> があるディレクトリで作業を行ってください。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code># package.jsonがあるディレクトリにJSDocをインストール
+npm install --save-dev jsdoc
+
+
+# 以下は省略形
+npm i -D jsdoc</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>インストールができたら、以下のコマンドで挙動を確認しましょう<br>
+インストールされたJSDocのバージョンが出力されれば成功です。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>./node_modules/.bin/jsdoc -v</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>2018年6月4日時点では <code>3.5.5</code> がインストールされるようです。<br></p>
+</div>
+<div class="paragraph">
+<p>試しにドキュメントを生成してみます。以下のようなディレクトリ構成で挙動を確認します。<br>
+<code>public/js</code> のディレクトリ配下に <code>a.js</code> <code>b.js</code> というファイルを作成してください。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>|--node_modules
+|--package.json
+|--public
+|  |--js
+|  |  |--a.js
+|  |  |--b.js</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>a.jsのファイル</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-JavaScript" data-lang="JavaScript">/**
+ * @file JSDocによってドキュメント化されるか試すJS
+ * 1つめ
+ */
+
+/**
+ * @namespace
+ */
+A = {
+  /**
+   * おはようっていう関数
+   * @return {void} - コンソールに表示
+   */
+  sayHello: function () {
+    console.log('Hello');
+  },
+
+  /**
+   * 何回かおはようっていう関数
+   * @param {int} times - おはようの回数
+   * @return {void} - コンソールに表示
+   * @example
+   *  sayHelloSeveralTimes(4);
+   */
+  sayHelloSeveralTimes: function (times) {
+    for (var i = 1; i &lt; times; i++) {
+      this.sayHello();
+    }
+  },
+
+  /**
+   * めっちゃおはようっていう関数
+   * @return {void} - コンソールに表示
+   */
+  sayHelloManyTimes: function () {
+    this.sayHelloSeveralTimes(100);
+  }
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>b.jsのファイル</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>/**
+ * @file JSDocによってドキュメント化されるか試すJS
+ * 2つめ
+ */
+
+/**
+ * @namespace
+ */
+B = {
+  /**
+   * テストのための関数
+   * @return {void} - コンソールに表示
+   */
+  execute: function () {
+    console.log('test');
+  }
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>ファイルが作成し終わったら以下のコマンドを実行<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>./node_modules/.bin/jsdoc ./public/js</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>実行すると <code>out</code> というディレクトリを自動で生成されていると思います。<br>
+その中の <code>index.html</code> というファイルをブラウザで開いてみましょう。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/blog_document.png" alt="blog document.png">
+</div>
+</div>
+<div class="paragraph">
+<p>上記の画像のようにドキュメントが自動生成されました！<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">設定手順</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>インストールが完成したので設定をしていきましょう。<br>
+JSDocはデフォルトの設定があります。具体例は以下のようなものです。<br></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>_</code> (アンダーバー)がついているディレクトリの配下のファイルのドキュメントは生成しない</p>
+</li>
+<li>
+<p><code>_</code> (アンダーバー)がついているファイルのドキュメントは生成しない</p>
+</li>
+<li>
+<p><code>out</code> というディレクトリにドキュメントを吐き出す</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>このようなデフォルトの設定はJSONファイルで変えることができます。<br>
+ファイル名は <code>conf.json</code> で、 <code>package.json</code> と同じ階層に設置します。<br>
+私の場合は以下のように設定しました。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>{
+  "source": {
+    "include": ["./public/js", "./resources/assets/js"],
+    "excludePattern": "(^|\\/)libraries\\/"
+  },
+  "opts": {
+    "destination": "./jsdoc/"
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>上記の設定で以下のように変更できます。<br></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>public/js</code> <code>resources/assets/js</code> 配下のJSファイルからドキュメントを生成する</p>
+</li>
+<li>
+<p><code>libraries</code> というディレクトリの配下のJSファイルからはドキュメントを生成しない</p>
+</li>
+<li>
+<p>ドキュメントの吐き出し先は <code>jsdoc</code> というディレクトリにする</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code>-c</code> オプションをコマンドに追加すると設定を変更してドキュメントを生成できます。<br>
+コマンドは以下です。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>./node_modules/.bin/jsdoc -c conf.json</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>設定が効いているか確認しましょう。<br>
+先程のディレクトリ・ファイル構成を以下のように変更します。<br></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>public/js</code> 配下に <code>libraries</code> ディレクトリを追加して、その下に <code>c.js</code> を作成<br></p>
+</li>
+<li>
+<p><code>resources/assets/js</code> という階層でディレクトリを追加して、その下に <code>d.js</code> を作成<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>|--node_modules
+|--package.json
+|--public
+|  |--js
+|  |  |--a.js
+|  |  |--b.js
+|  |--libraries
+|  |  |--c.js
+|--resources
+|  |--assets
+|  |  |--js
+|  |  |  |--d.js</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>c.jsのファイル</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>/**
+ * @file libraries配下でJSDocの対象外になるJS
+ * 3つめ
+ */
+
+/**
+ * @namespace
+ */
+C = {
+  /**
+   * テストのための関数
+   * @return {void} - コンソールに表示
+   */
+  execute: function () {
+    console.log('test');
+  }
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>d.jsのファイル</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>/**
+ * @file JSDocによってドキュメント化されるか試すJS
+ * 4つめ
+ */
+
+/**
+ * @namespace
+ */
+D = {
+  /**
+   * テストのための関数
+   * @return {void} - コンソールに表示
+   */
+  execute: function () {
+    console.log('test');
+  }
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>変更を加えたあとに、先程のコマンドを実行すると以下のようになります。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/blog_document2.png" alt="blog document2.png">
+</div>
+</div>
+<div class="paragraph">
+<p>そして最後に <code>npm run jsdoc</code> で実行できるように <code>package.json</code> を以下の記述を追加しましょう。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>{
+    "scripts": {
+        "jsdoc": "./node_modules/.bin/jsdoc -c ./conf.json"
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>これにて設定が完了です。<br>
+設定を変更したい場合は以下、公式のドキュメントを参考すると良いです。<br></p>
+</div>
+<div class="paragraph">
+<p><a href="http://usejsdoc.org/about-configuring-jsdoc.html">Configuring JSDoc with a configuration file</a><br></p>
+</div>
+<div class="paragraph">
+<p>英語ですが、設定項目自体はそんなに多くはないので、読み切れる量だと思います。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___4">まとめ</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ドキュメントはメンテナンスしていくのが大変ですが、自動で生成されるようであればコストがかからず運用できそうな気がしますよね！<br>
+あとは必ずJSDoc形式のコメントを書く文化がチームに浸透するように、規約で縛ったりコードレビューで書かれていなかったら弾くようにするという運用が必要になります。<br>
+またそこらへんのナレッジが溜まっていけば、ブログを書いてみようと思います！<br></p>
+</div>
+<div class="paragraph">
+<p>今回はここで失礼します。</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
