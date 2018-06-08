@@ -3,11 +3,14 @@
 :hp-tags: Chat,Firesotre,Swift4.0
 
 はじめまして、マーケ兼広報担当の遠山です。 +
-ひょんなことから、エンジニアブログを書くことになりました。 +
-定期的に記事とかブログって書いてるんですけど・・・エンジニアブログとなると緊張しますね（ﾄﾞｷﾄﾞｷ +
+ひょんなことから、エンジニアブログを書くことになりました。
+
+定期的に記事とかブログって書いてるんですけど +
+・・・エンジニアブログとなると緊張しますね（ﾄﾞｷﾄﾞｷ +
 でも、頑張って書いてみようと思います。 +
 
 ということで記念すべき初ブログは、この間作ったチャットアプリについてです。
+
 
 
 == 作りたいあぷり
@@ -63,7 +66,7 @@ pod installできたら準備完了です。
 まずは画面の構成から。今回はXcodeのStoryBoardでレイアウトして作ります。 +
 用意するのは、「名前とメッセージが表示されるTextView」と、「名前を入力するTextfFeld」、「メッセージを入力するTextField」の3つ。
 
-image:/images/kohe/toyama_swift_1_1.png[width="300"]
+image:/images/kohe/toyama_swift_1_1.png[width="400px"]
 
 
 レイアウトが終わったら、びよーーんとViewcotrollerに紐付ければ完了！ +
@@ -245,7 +248,7 @@ nameのTextFieldにカーソルがあるときにも送信しないようにす�
 nametextfield = 1 +
 messagetextfield = 2
 
-image:/images/kohe/toyama_swift_2.png[width="250"]
+image:/images/kohe/toyama_swift_2.png[width="300px"]
 
 tagだと数字でわかりにくいので、enumを活用します。
 
