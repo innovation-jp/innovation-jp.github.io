@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>SwiftとFirestoreを使って、リアルタイムチャットアプリを作ってみた - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="SwiftとFirestoreを使って、リアルタイムチャットアプリを作ってみた">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="SwiftとFirestoreを使って、リアルタイムチャットアプリを作ってみた">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/05/28/Swift-Firestore.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="SwiftとFirestoreを使って、リアルタイムチャットアプリを作ってみた" />
+    <meta property="og:description" content="はじめまして、マーケ兼広報担当の遠山です。 ひょんなことから、エンジニアブログを書くことになりました。 定期的に記事とかブログって書いてるんですけど・・・エンジニアブログとなると緊張しますね（ﾄﾞｷﾄﾞｷ でも、頑張ります！ ということで記念すべき初ブログは、この間作ったチャットアプリについてまとめてみたいと思います。 作りたいあぷり 今回は、名前とメッセージを入力して送信すると、リアルタイムで更新・表示されるiPhone向けののシンプルなチャットアプリを作ります。 使うもの： Swift4.0 Xcode9.2 Firestore サーバの管理が不要..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/05/28/Swift-Firestore.html" />
+    <meta property="article:published_time" content="2018-05-27T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-06-08T04:26:26.174Z" />
+    <meta property="article:tag" content="Chat" />
+    <meta property="article:tag" content="Firesotre" />
+    <meta property="article:tag" content="Swift4.0" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="SwiftとFirestoreを使って、リアルタイムチャットアプリを作ってみた" />
+    <meta name="twitter:description" content="はじめまして、マーケ兼広報担当の遠山です。 ひょんなことから、エンジニアブログを書くことになりました。 定期的に記事とかブログって書いてるんですけど・・・エンジニアブログとなると緊張しますね（ﾄﾞｷﾄﾞｷ でも、頑張ります！ ということで記念すべき初ブログは、この間作ったチャットアプリについてまとめてみたいと思います。 作りたいあぷり 今回は、名前とメッセージを入力して送信すると、リアルタイムで更新・表示されるiPhone向けののシンプルなチャットアプリを作ります。 使うもの： Swift4.0 Xcode9.2 Firestore サーバの管理が不要..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/05/28/Swift-Firestore.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars0.githubusercontent.com/u/34260087?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "SwiftとFirestoreを使って、リアルタイムチャットアプリを作ってみた",
+    "url": "http://tech.innovation.co.jp/2018/05/28/Swift-Firestore.html",
+    "datePublished": "2018-05-27T15:00:00.000Z",
+    "dateModified": "2018-06-08T04:26:26.174Z",
+    "keywords": "Chat, Firesotre, Swift4.0",
+    "description": "はじめまして、マーケ兼広報担当の遠山です。 ひょんなことから、エンジニアブログを書くことになりました。 定期的に記事とかブログって書いてるんですけど・・・エンジニアブログとなると緊張しますね（ﾄﾞｷﾄﾞｷ でも、頑張ります！ ということで記念すべき初ブログは、この間作ったチャットアプリについてまとめてみたいと思います。 作りたいあぷり 今回は、名前とメッセージを入力して送信すると、リアルタイムで更新・表示されるiPhone向けののシンプルなチャットアプリを作ります。 使うもの： Swift4.0 Xcode9.2 Firestore サーバの管理が不要..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Chat tag-Firesotre tag-Swift40 no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="28 May 2018" class="post-meta__date date">28 May 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Chat">Chat</a>, <a href="http://tech.innovation.co.jp/tag/Firesotre">Firesotre</a>, <a href="http://tech.innovation.co.jp/tag/Swift40">Swift4.0</a></span>
+        <span class="post-meta__author author"><img src="https://avatars0.githubusercontent.com/u/34260087?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">SwiftとFirestoreを使って、リアルタイムチャットアプリを作ってみた</h1>
+    </header>
+
+    <section class="post tag-Chat tag-Firesotre tag-Swift40">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>はじめまして、マーケ兼広報担当の遠山です。<br>
+ひょんなことから、エンジニアブログを書くことになりました。<br>
+定期的に記事とかブログって書いてるんですけど・・・エンジニアブログとなると緊張しますね（ﾄﾞｷﾄﾞｷ<br>
+でも、頑張ります！<br></p>
+</div>
+<div class="paragraph">
+<p>ということで記念すべき初ブログは、この間作ったチャットアプリについてまとめてみたいと思います。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">作りたいあぷり</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>今回は、名前とメッセージを入力して送信すると、リアルタイムで更新・表示されるiPhone向けののシンプルなチャットアプリを作ります。</p>
+</div>
+<div class="paragraph">
+<p><strong>使うもの：</strong><br>
+Swift4.0<br>
+Xcode9.2<br>
+Firestore</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>サーバの管理が不要</p>
+</li>
+<li>
+<p>ある程度無料で使える</p>
+</li>
+<li>
+<p>リアルタイムに更新される</p>
+</li>
+<li>
+<p>従来のFirebaseと違ってデータの型が指定できる</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>っていう理由から、データベースにFirestoreを使うことにしました。</p>
+</div>
+<div class="paragraph">
+<p>※Firestoreの使い方は、ガイドを参考にしてくださいねー。<br>
+<a href="https://firebase.google.com/docs/firestore/?hl=ja">Firestoreのガイド</a></p>
+</div>
+<div class="paragraph">
+<p>※Firestoreを使うための初期設定方法はこちらです。<br>
+<a href="https://firebase.google.com/docs/ios/setup?hl=ja">初期設定ガイド</a></p>
+</div>
+<div class="paragraph">
+<p><strong>ちなみに構成はこんな感じです↓</strong></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/kohe/toyama_swift_3.png" alt="toyama_swift_3.png"></span></p>
+</div>
+<div class="paragraph">
+<p><strong>完成したアプリはこんな感じになります↓</strong></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/kohe/toyama_swift_gif.gif" alt="toyama_swift_gif.gif"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">まずは下準備</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>使用する外部ライブラリを、podfileを作成し、追加しましょう。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>  pod 'Firebase/Core'
+  pod 'Firebase/Firestore'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>pod installできたら準備完了です。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">いざ作成</h2>
+<div class="sectionbody">
+<div class="sect3">
+<h4 id="___4">１．画面を構成する</h4>
+<div class="paragraph">
+<p>外部ライブラリをインストールしたら、さっそく作っていきましょう。<br>
+まずは画面の構成から。今回はXcodeのStoryBoardでレイアウトして作ります。<br>
+用意するのは、「名前とメッセージが表示されるTextView」と、「名前を入力するTextfFeld」、「メッセージを入力するTextField」の3つ。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/kohe/toyama_swift_1_1.png" alt="toyama_swift_1_1.png"></span></p>
+</div>
+<div class="paragraph">
+<p>レイアウトが終わったら、びよーーんとViewcotrollerに紐付ければ完了！<br>
+このびよーーんの作業、好きだなぁ。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>    @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak var nameTextField: UITextField!
+    @IBOutlet weak var messageTextField: UITextField!</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__textfield">２．TextFieldの処理を書くために、クラスを拡張する</h4>
+<div class="paragraph">
+<p>レイアウトが終わったら、次はコードを書いていきましょう。</p>
+</div>
+<div class="paragraph">
+<p>TextFieldの入力時に出てくるキーボードのreturnKeyを押した際に入力内容を送信できるよう、delegateを使い処理をViewControllerClassに委任します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>    override func viewDidLoad() {
+        super.viewDidLoad()
+        messageTextField.delegate = self
+        nameTextField.delegate = self
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>今回は、TextFieldの処理をメインのViewcontrollerのclassとは別で書くために、extensionでクラスを拡張していきUITextFieldDelegateプロコトルを継承します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>extension ViewController:UITextFieldDelegate {
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__firestore">３．入力した内容の取得し、Firestoreへ送信する</h4>
+<div class="paragraph">
+<p>TextFieldの処理を書くためのクラスが準備できたので、次は入力したデータをFirestoreに送信する部分を作っていきます。</p>
+</div>
+<div class="paragraph">
+<p>名前とメッセージ両方のTextFieldにテキストを入力してreturnkeyを押した時に、Firestoreにデータを送信するようにしたいと思います。じゃんじゃん書いていきましょう。</p>
+</div>
+<div class="sect5">
+<h6 id="_firestore">Firestoreへのコネクションを張る</h6>
+<div class="paragraph">
+<p>TextFieldの処理を書いていく前に、まずはFirestoreへのコネクションをviewDidLoadを読み込んだ時に張っておきます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>        //Firestoreへのコネクションを張る
+        defaultstore = Firestore.firestore()</code></pre>
+</div>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_firestore_2">Firestoreのデータを取得し、表示する</h6>
+<div class="paragraph">
+<p>viewDidLoadを読み込んだ時に、Firestore内のデータを取得し、チャット内容をTextViewに表示します。<br>
+今回は、"chat"という名前のコレクションにデータを保存していきます。<br></p>
+</div>
+<div class="paragraph">
+<p>addSnapshotListenerを使って、起動時はFirestoreのデータをすべて読み込み、その後はFirestoreの更新を監視し、更新があるたびに実行されるようにします。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>        defaultstore.collection("chat").addSnapshotListener { (snapShot, error) in
+
+        }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>中を書いていきましょう。<br>
+Firestoreの"chat"コレクション内のデータがあるかどうか確認し、無ければreturnを返します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>            guard let value = snapShot else {
+                print("snapShot is nil")
+                return
+            }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Firestoreにデータが追加された時に、TextViewの内容を更新します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>            value.documentChanges.forEach{diff in
+	    //更新内容が追加だったときの処理
+                if diff.type == .added {
+                    //追加データを変数に入れる
+                    let chatDataOp = diff.document.data() as? Dictionary&lt;String, String&gt;
+                    guard let chatData = chatDataOp else {
+                        return
+                    }
+                    guard let message = chatData["message"] else {
+                        return
+                    }
+                    guard let name = chatData["name"] else {
+                        return
+                    }
+                    //TextViewの一番下に新しいメッセージ内容を追加する
+                    self.textView.text =  "\(self.textView.text!)\n\(name) : \(message)"
+                }
+            }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_returnkey">returnkeyが押された時の処理</h6>
+<div class="paragraph">
+<p>Firestoreのコネクションとデータの取得＆表示ができたら、次にreturnkeyが押された時の処理を書いていきます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>    func textFieldShouldReturn(_ textField: UITextField) -&gt; Bool {
+        print("returnが押されたよ")
+        return true
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>まずはこれで、TextFieldでreturnkeyを押した時に、「returnkeyが押されたよ」って出てきたらOKです。</p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_returnkey_2">returnkeyが押されたらキーボードを閉じる</h6>
+<div class="paragraph">
+<p>今のままだとreturnkeyを押してもキーボードが閉じないので、閉じる処理を追加。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>        //キーボードを閉じる
+        textField.resignFirstResponder()</code></pre>
+</div>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_textfield">TextFieldに入力されたテキストを変数に入れる</h6>
+<div class="paragraph">
+<p>nameとmessageそれぞれのTextFieldに入力された値を変数に入れます。<br>
+nameとmessageのTextFieldがnilの可能性があるので、guard文を書いてはじきます。
+また、TextFieldの値がnilもしくは空欄の場合はFirestoreへ送信する処理をしないようにします。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>        //nameに入力されたテキストを変数に入れる。nilの場合はFirestoreへ行く処理をしない
+        guard let name = nameTextField.text else {
+            return true
+        }
+
+        //nameが空欄の場合はFirestoreへ行く処理をしない
+        if nameTextField.text == "" {
+            return true
+        }
+
+        //messageに入力されたテキストを変数に入れる。nilの場合はFirestoreへ行く処理をしない
+        guard let message = messageTextField.text else {
+            return true
+        }
+
+        //messageが空欄の場合はFirestoreへ行く処理をしない
+        if messageTextField.text == "" {
+            return true
+        }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect5">
+<h6 id="___5">入力されたテキストを配列に入れる</h6>
+<div class="paragraph">
+<p>入力されたテキストを配列に格納します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>        //入力された値を配列に入れる
+        let messageData: [String: String] = ["name":name, "message":message]</code></pre>
+</div>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_firestore_3">Firestoreに送信する</h6>
+<div class="paragraph">
+<p>配列の内容を、Firestoreに送信します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>        //Firestoreに送信する
+        defaultstore.collection("chat").addDocument(data: messageData)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>nameのTextFieldにカーソルがあるときにも送信しないようにする</p>
+</div>
+<div class="paragraph">
+<p>このままだと、returnkeyを押すたびにデータを送信してしまうので、nameのTextFieldにカーソルがあるときには送信しないようにします。</p>
+</div>
+<div class="paragraph">
+<p>まずは、現在のTextFieldがどれかを判定をするために、TextFieldにtagを設定します。</p>
+</div>
+<div class="paragraph">
+<p>nametextfield = 1<br>
+messagetextfield = 2</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/kohe/toyama_swift_2.png" alt="toyama_swift_2.png"></span></p>
+</div>
+<div class="paragraph">
+<p>tagだと数字でわかりにくいので、enumを活用します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>    enum textFieldKind:Int {
+        case name = 1
+        case message = 2
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>先程作ったenumで、TextFieldの判定をし、nameのTextFieldにカーソルがあるときには送信しないようにします。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>        //nameTextFieldの場合は　returnを押してもFirestoreへ行く処理をしない
+        if textField.tag == textFieldKind.name.rawValue {
+            return true
+        }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>※この記述は、入力した文字を変数に入れる処理の前に入れましょう。</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_message_textfield">messageのTextFieldを空にする</h5>
+<div class="paragraph">
+<p>送信後、messageのtextfieldを空欄にします。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>        //メッセージの中身を空にする
+        messageTextField.text = ""</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>これで完成です！
+とってもとってもシンプルですが、リアルタイムで更新されるチャットアプリができました。</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___6">さいごに</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>一応アプリはできましたが、このままだとアプリを起動した時に、すでにデータベースに保存されているチャットの内容がランダムで表示されてしまいました。<br>
+なので、時系列で並ぶように、投稿時間なども保存して意図した順番に並べる必要がありそうですね。まだまだ改善の余地がありそうです。</p>
+</div>
+<div class="paragraph">
+<p>このチャットアプリを改善しつつ、引き続き別のアプリも作っていこうと思います。<br>
+ということで、もしまたブログを書く機会があったらお目にかかりましょう。</p>
+</div>
+<div class="paragraph">
+<p>ソースコード全体はこちら↓</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import UIKit
+import Firebase
+
+class ViewController: UIViewController {
+
+    @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak var nameTextField: UITextField!
+    @IBOutlet weak var messageTextField: UITextField!
+
+    enum textFieldKind:Int {
+        case name = 1
+        case message = 2
+    }
+
+    var defaultstore:Firestore!
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        messageTextField.delegate = self
+        nameTextField.delegate = self
+        //Firestoreへのコネクションを張る
+        defaultstore = Firestore.firestore()
+
+
+        //Firestoreからデータを取得し、TextViewに表示する
+        defaultstore.collection("chat").addSnapshotListener { (snapShot, error) in
+            guard let value = snapShot else {
+                print("snapShot is nil")
+                return
+            }
+
+            value.documentChanges.forEach{diff in
+            //更新内容が追加だったときの処理
+                if diff.type == .added {
+                	//追加データを変数に入れる
+                    let chatDataOp = diff.document.data() as? Dictionary&lt;String, String&gt;
+                    print(diff.document.data())
+                    guard let chatData = chatDataOp else {
+                        return
+                    }
+                    guard let message = chatData["message"] else {
+                        return
+                    }
+                    guard let name = chatData["name"] else {
+                        return
+                    }
+                    //TextViewの一番下に新しいメッセージ内容を追加する
+                    self.textView.text =  "\(self.textView.text!)\n\(name) : \(message)"
+                }
+            }
+        }
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+
+
+}
+
+extension ViewController:UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -&gt; Bool {
+        print("returnが押されたよ")
+
+        //キーボードを閉じる
+        textField.resignFirstResponder()
+
+        //nameTextFieldの場合は　returnを押してもFirestoreへ行く処理をしない
+        if textField.tag == textFieldKind.name.rawValue {
+            return true
+        }
+        //nameに入力されたテキストを変数に入れる。nilの場合はFirestoreへ行く処理をしない
+        guard let name = nameTextField.text else {
+            return true
+        }
+
+        //nameが空欄の場合はFirestoreへ行く処理をしない
+        if nameTextField.text == "" {
+            return true
+        }
+
+        //messageに入力されたテキストを変数に入れる。nilの場合はFirestoreへ行く処理をしない
+        guard let message = messageTextField.text else {
+            return true
+        }
+
+        //messageが空欄の場合はFirestoreへ行く処理をしない
+        if messageTextField.text == "" {
+            return true
+        }
+
+        //入力された値を配列に入れる
+        let messageData: [String: String] = ["name":name, "message":message]
+
+        //Firestoreに送信する
+        defaultstore.collection("chat").addDocument(data: messageData)
+
+        //メッセージの中身を空にする
+        messageTextField.text = ""
+
+        return true
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
