@@ -83,7 +83,7 @@ image:/images/kohe/toyama_swift_1_1.png[width="400px"]
 
 レイアウトが終わったら、次はコードを書いていきましょう。
 
-TextFieldの入力時に出てくるキーボードのreturnKeyを押した際に入力内容を送信できるよう、delegateを使い処理をViewControllerClassに委任します。
+TextFieldの入力時の処理を、delegateを使い処理をViewControllerClassに委任します。
 
 ```
     override func viewDidLoad() {
