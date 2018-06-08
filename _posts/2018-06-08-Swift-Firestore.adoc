@@ -63,7 +63,7 @@ pod installできたら準備完了です。
 まずは画面の構成から。今回はXcodeのStoryBoardでレイアウトして作ります。 +
 用意するのは、「名前とメッセージが表示されるTextView」と、「名前を入力するTextfFeld」、「メッセージを入力するTextField」の3つ。
 
-image:/images/kohe/toyama_swift_1_1.png[]
+image:/images/kohe/toyama_swift_1_1.png[width="300"]
 
 
 レイアウトが終わったら、びよーーんとViewcotrollerに紐付ければ完了！ +
@@ -245,7 +245,7 @@ nameのTextFieldにカーソルがあるときにも送信しないようにす�
 nametextfield = 1 +
 messagetextfield = 2
 
-image:/images/kohe/toyama_swift_2.png[]
+image:/images/kohe/toyama_swift_2.png[width="250"]
 
 tagだと数字でわかりにくいので、enumを活用します。
 
