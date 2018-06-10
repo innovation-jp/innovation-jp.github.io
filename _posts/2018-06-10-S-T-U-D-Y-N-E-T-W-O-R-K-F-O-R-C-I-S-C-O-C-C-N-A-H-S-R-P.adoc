@@ -1,0 +1,319 @@
+# macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑥HSRP〜
+:published_at: 2018-06-10
+:hp-alt-title: STUDY NETWORK FOR CISCO CCNA(HSRP)
+:hp-tags: Study, Network, mac, GNS3, CISCO, CCNA, HSRP
+
+KTNです +
+今回はHSRPの勉強をしていきたいと思います +
+
+関連記事はこちら +
+http://tech.innovation.co.jp/2017/11/06/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A.html[macのGNS3でNETWORK(CISCO CCNA)の勉強　〜①GNS3導入〜] +
+http://tech.innovation.co.jp/2017/11/21/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-V-P-N.html[macのGNS3でNETWORK(CISCO CCNA)の勉強　〜②VPN〜] +
+http://tech.innovation.co.jp/2018/01/14/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-N-A-T.html[macのGNS3でNETWORK(CISCO CCNA)の勉強　〜③NAT準備〜] +
+http://tech.innovation.co.jp/2018/03/06/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-N-A-T2.html[macのGNS3でNETWORK(CISCO CCNA)の勉強　〜④NAT設定〜] +
+http://tech.innovation.co.jp/2018/03/22/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-B-G-P.html[macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑤BGP〜] +
+
+# HSRPって何？
+
+ゲートウェイを冗長化するプロトコルの1つです +
+ゲートウェイはわかりますよね？ +
+ネットワークとネットワークを繋ぐ境目のやーつですね +
+
+今回はHSRPを使って回線の冗長化をしてみようと思います +
+拠点間にネットワークが2回線引かれている想定で、 +
+主としているネットワークに障害が発生しても副回線に切り替えて通信が継続できる構成にしたいと思います +
+回線はインターネットVPN、IP-VPN、専用線とかの想定です +
+
+以下の図のような構成にしてみました +
+R5とR6にHSRPを設定して、 +
+仮想専用線A（R1〜R2）に障害が発生した場合に、 +
+仮想専用線B（R3〜R4）を使うように設定してみます +
+
+# HSRPの前準備
+
+HSRPを設定していく前に、 +
+本社のPCと支店のPCが通信出来るところまでは設定しちゃいます +
+各ルータにスタティックルーティングで設定していきます +
+前回もやっているような設定ですが一応コマンド書いておきました +
+
+```
+R5#configure terminal 
+R5(config)#interface FastEthernet0/0
+R5(config-if)#ip address 172.29.1.11 255.255.255.0
+R5(config-if)#no shutdown
+R5(config-if)#exit
+R5(config)#interface FastEthernet0/1
+R5(config-if)#ip address 192.168.1.1 255.255.255.0
+R5(config-if)#no shutdown
+R5(config-if)#exit
+R5(config)ip route 192.168.11.0 255.255.255.0 172.29.1.1
+R5(config)exit
+
+R6#configure terminal 
+R6(config)#interface FastEthernet0/0
+R6(config-if)#ip address 172.29.11.11 255.255.255.0
+R6(config-if)#no shutdown
+R6(config-if)#exit
+R6(config)#interface FastEthernet0/1
+R6(config-if)#ip address 192.168.11.1 255.255.255.0
+R6(config-if)#no shutdown
+R6(config-if)#exit
+R6(config)#ip route 192.168.1.0 255.255.255.0 172.29.11.1
+R6(config)#exit
+
+R1#configure terminal 
+R1(config)#interface FastEthernet0/0
+R1(config-if)#ip address 10.0.1.1 255.255.255.0
+R1(config-if)#no shutdown
+R1(config-if)#exit
+R1(config)#interface FastEthernet0/1
+R1(config-if)#ip address 172.29.1.1 255.255.255.0
+R1(config-if)#no shutdown
+R1(config-if)#exit
+R1(config)#ip route 192.168.1.0 255.255.255.0 172.29.1.11
+R1(config)#ip route 192.168.11.0 255.255.255.0 10.0.1.2
+R1(config)#exit
+
+R2#configure terminal 
+R2(config)#interface FastEthernet0/0
+R2(config-if)#ip address 10.0.1.2 255.255.255.0
+R2(config-if)#no shutdown
+R2(config-if)#exit
+R2(config)#interface FastEthernet0/1
+R2(config-if)#ip address 172.29.11.1 255.255.255.0
+R2(config-if)#no shutdown
+R2(config-if)#exit
+R2(config)#ip route 192.168.1.0 255.255.255.0 10.0.1.1
+R2(config)#ip route 192.168.11.0 255.255.255.0 172.29.11.11
+R2(config)#exit
+```
+
+各ルータにスタティックでルーティング設定しています +
+行き先の方向にあるお隣さん（ルータ）を設定していきます +
+終わったら、本社のPCから支店のPCにトレースルートしてみます +
+
+```
+[root@gns3-centos6-1 ~]# traceroute 192.168.11.11
+traceroute to 192.168.11.11 (192.168.11.11), 30 hops max, 60 byte packets
+ 1  192.168.1.1 (192.168.1.1)  12.059 ms
+ 2  172.29.1.1 (172.29.1.1)  34.604 ms
+ 3  10.0.1.2 (10.0.1.2)  34.218 ms
+ 4  172.29.11.11 (172.29.11.11)  44.181 ms
+ 5  192.168.11.11 (192.168.11.11) 55.025 ms
+```
+
+仮想専用線A（R1〜R2）を使って通信していることを確認出来ました +
+仮想専用線B（R3〜R4）の方も使えるように設定しておきます +
+
+```
+R3#configure terminal 
+R3(config)#interface FastEthernet0/0
+R3(config-if)#ip address 10.0.2.1 255.255.255.0
+R3(config-if)#no shutdown
+R3(config-if)#exit
+R3(config)#interface FastEthernet0/1
+R3(config-if)#ip address 172.29.1.2 255.255.255.0
+R3(config-if)#no shutdown
+R3(config-if)#exit
+R3(config)#ip route 192.168.1.0 255.255.255.0 172.29.1.11
+R3(config)#ip route 192.168.11.0 255.255.255.0 10.0.2.2
+R3(config)#exit
+
+R4#configure terminal 
+R4(config)#interface FastEthernet0/0
+R4(config-if)#ip address 10.0.2.2 255.255.255.0
+R4(config-if)#no shutdown
+R4(config-if)#exit
+R4(config)#interface FastEthernet0/1
+R4(config-if)#ip address 172.29.11.2 255.255.255.0
+R4(config-if)#no shutdown
+R4(config-if)#exit
+R4(config)#ip route 192.168.1.0 255.255.255.0 10.0.2.1
+R4(config)#ip route 192.168.11.0 255.255.255.0 172.29.11.11
+R4(config)#exit
+
+R5#configure terminal 
+R5(config)no ip route 192.168.11.0 255.255.255.0 172.29.1.1
+R5(config)ip route 192.168.11.0 255.255.255.0 172.29.1.2
+R5(config)exit
+
+R6#configure terminal 
+R6(config)#no ip route 192.168.1.0 255.255.255.0 172.29.11.1
+R6(config)#ip route 192.168.1.0 255.255.255.0 172.29.11.2
+R6(config)#exit
+```
+
+終わったら、本社のPCから支店のPCにトレースルートしてみます +
+
+```
+[root@gns3-centos6-1 ~]# traceroute 192.168.11.11
+traceroute to 192.168.11.11 (192.168.11.11), 30 hops max, 60 byte packets
+ 1  192.168.1.1 (192.168.1.1)  10.411 ms
+ 2  172.29.1.2 (172.29.1.1)  33.711 ms
+ 3  10.0.2.2 (10.0.1.2)  43.742 ms
+ 4  172.29.11.11 (172.29.11.11)  45.291 ms
+ 5  192.168.11.11 (192.168.11.11) 67.156 ms
+```
+
+仮想専用線B（R3〜R4）を使って通信していることを確認出来ました +
+前準備はこれでOKです +
+
+# HSRPを設定する
+
+HSRPを設定すると、物理的には2台あるルータを論理的に1台のルータとすることが出来ます +
+今回は2箇所にHSRPの設定を行います +
+■１つ目のHSRP +
+　R1ルータのf0/1インタフェース +
+　R3ルータのf0/1インタフェース +
+
+■2つ目のHSRP +
+　R2ルータのf0/1インタフェース +
+　R4ルータのf0/1インタフェース +
+
+HSRPを設定する時に仮想IPアドレスが作成されます +
+この仮想IPアドレスをゲートウェイのIPアドレスに設定することになります +
+では設定してきます +
+まず、R1とR3の設定です +
+
+```
+R1#configure terminal 
+R1(config)#interface FastEthernet0/1
+R1(config-if)#standby 1 ip 172.29.1.3
+R1(config-if)#standby 1 priority 255
+R1(config-if)#standby 1 preempt
+
+R3#configure terminal 
+R3(config)#interface FastEthernet0/1
+R3(config-if)#standby 1 ip 172.29.1.3
+```
+
+設定が出来たのでSHOWコマンドで状態を見てみます +
+State欄とVirtual IP欄を見てみます +
+
+```
+R1#show standby brief 
+                     P indicates configured to preempt.
+                     |
+Interface   Grp Prio P State    Active          Standby         Virtual IP     
+Fa0/1       1   255  P Active   local           172.29.1.2      172.29.1.3     
+
+R3#show standby brief 
+                     P indicates configured to preempt.
+                     |
+Interface   Grp Prio P State    Active          Standby         Virtual IP     
+Fa0/1       1   100    Standby  172.29.1.1      local           172.29.1.3     
+```
+
+R1とR3がグルーピングされてますね +
+R1がアクティブで仮想IPは172.29.1.3になってますね +
+設定内容についてですが、 +
+　・standbyの後ろに書いてある数字（1）はグループIDになり任意に設定するものです +
+　　R1のFa0/1とR3のFa0/1で同じにする必要があります +
+　・ipは見たままですが、仮想IPアドレスを設定します +
+　・priorityはどちらのルータを優先とするかに使用します（大きいほうが優先） +
+　　今回の設定だとR1が優先となります +
+　・preemptを設定するとR1ルータの存在が確認できた時点で、R1をアクティブに切り替える処理が動くようになります +
+
+次にR2とR4の設定です +
+
+```
+R2#configure terminal 
+R2(config)#interface FastEthernet0/1
+R2(config-if)#standby 11 ip 172.29.11.3
+R2(config-if)#standby 11 priority 255
+R2(config-if)#standby 11 preempt
+
+R4#configure terminal 
+R4(config)#interface FastEthernet0/1
+R4(config-if)#standby 11 ip 172.29.11.3
+```
+
+同じく設定が出来たのでSHOWコマンドで状態を見てみます
+
+```
+R2#show standby brief 
+                     P indicates configured to preempt.
+                     |
+Interface   Grp Prio P State    Active          Standby         Virtual IP     
+Fa0/1       11  255  P Active   local           172.29.11.2     172.29.11.3    
+
+R4#show standby brief 
+                     P indicates configured to preempt.
+                     |
+Interface   Grp Prio P State    Active          Standby         Virtual IP     
+Fa0/1       11  100    Standby  172.29.11.1     local           172.29.11.3    
+```
+
+こっちもOKですね +
+最後にR5とR6のゲートウェイ設定を変更して、HSRPの仮想IPアドレスに向けます +
+
+```
+R5#configure terminal 
+R5(config)no ip route 192.168.11.0 255.255.255.0 172.29.1.2
+R5(config)ip route 192.168.11.0 255.255.255.0 172.29.1.3
+R5(config)exit
+
+R6#configure terminal 
+R6(config)#no ip route 192.168.1.0 255.255.255.0 172.29.11.2
+R6(config)#ip route 192.168.1.0 255.255.255.0 172.29.11.3
+R6(config)#exit
+```
+
+全部設定できたので、疎通確認します +
+
+```
+[root@gns3-centos6-1 ~]# traceroute 192.168.11.11
+traceroute to 192.168.11.11 (192.168.11.11), 30 hops max, 60 byte packets
+ 1  192.168.1.1 (192.168.1.1)  7.458 ms
+ 2  172.29.1.1 (172.29.1.1)  18.825 ms
+ 3  10.0.1.2 (10.0.1.2)  29.860 ms
+ 4  172.29.11.11 (172.29.11.11)  40.883 ms
+ 5  192.168.11.11 (192.168.11.11) 52.958 ms
+```
+
+疎通確認できました！！ +
+あと、障害パターンのテストをしてみます +
+R1とR3で障害が発生したテストとして2台をシャットダウンします +
+
+もう一回疎通確認してみます +
+
+```
+[root@gns3-centos6-1 ~]# traceroute 192.168.11.11
+traceroute to 192.168.11.11 (192.168.11.11), 30 hops max, 60 byte packets
+ 1  192.168.1.1 (192.168.1.1)  10.411 ms
+ 2  172.29.1.2 (172.29.1.1)  33.711 ms
+ 3  10.0.2.2 (10.0.1.2)  43.742 ms
+ 4  172.29.11.11 (172.29.11.11)  45.291 ms
+ 5  192.168.11.11 (192.168.11.11) 67.156 ms
+```
+
+自動的に仮想専用線B（R3〜R4）を使って通信していることを確認出来ました +
+テストはこれでOKですね +
+ルータの状態も確認しておきます +
+
+```
+R3#show standby brief 
+                     P indicates configured to preempt.
+                     |
+Interface   Grp Prio P State    Active          Standby         Virtual IP     
+Fa0/1       1   100    Active   local           unknown         172.29.1.3     
+R3#
+
+R4#show standby brief 
+                     P indicates configured to preempt.
+                     |
+Interface   Grp Prio P State    Active          Standby         Virtual IP     
+Fa0/1       11  100    Active   local           unknown         172.29.11.3    
+R4#
+```
+
+R3とR4がアクティブになっていることが確認できました +
+
+# 最後に
+
+今回設定したネットワークですが実は大きな不具合があります +
+次回のお楽しみとしてそのままにしておきました、どんな不具合かわかりましたか！？ +
+
+こちらからは以上です +
+
+
