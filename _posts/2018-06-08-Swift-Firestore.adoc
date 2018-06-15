@@ -107,7 +107,7 @@ TextFieldの処理を書くためのクラスが準備できたので、次は�
 名前とメッセージ両方のTextFieldにテキストを入力してreturnkeyを押した時に、Firestoreにデータを送信するようにしたいと思います。じゃんじゃん書いていきましょう。
 
 
-====== Firestoreへのコネクションを張る
+===== Firestoreへのコネクションを張る
 
 TextFieldの処理を書いていく前に、まずはFirestoreへのコネクションをviewDidLoadを読み込んだ時に張っておきます。
 
@@ -116,7 +116,7 @@ TextFieldの処理を書いていく前に、まずはFirestoreへのコネク�
         defaultstore = Firestore.firestore()
 ```
 
-====== Firestoreのデータを取得し、表示する
+===== Firestoreのデータを取得し、表示する
 
 viewDidLoadを読み込んだ時に、Firestore内のデータを取得し、チャット内容をTextViewに表示します。 +
 今回は、"chat"という名前のコレクションにデータを保存していきます。 +
@@ -165,7 +165,7 @@ Firestoreにデータが追加された時に、TextViewの内容を更新しま
 
 
 
-====== returnkeyが押された時の処理
+===== returnkeyが押された時の処理
 
 Firestoreのコネクションとデータの取得＆表示ができたら、次にreturnkeyが押された時の処理を書いていきます。
 
@@ -179,7 +179,7 @@ Firestoreのコネクションとデータの取得＆表示ができたら、�
 まずはこれで、TextFieldでreturnkeyを押した時に、「returnkeyが押されたよ」って出てきたらOKです。
 
 
-====== returnkeyが押されたらキーボードを閉じる
+===== returnkeyが押されたらキーボードを閉じる
 
 今のままだとreturnkeyを押してもキーボードが閉じないので、閉じる処理を追加。
 
@@ -188,7 +188,7 @@ Firestoreのコネクションとデータの取得＆表示ができたら、�
         textField.resignFirstResponder()
 ```
 
-====== TextFieldに入力されたテキストを変数に入れる
+===== TextFieldに入力されたテキストを変数に入れる
 
 nameとmessageそれぞれのTextFieldに入力された値を変数に入れます。 +
 nameとmessageのTextFieldがnilの可能性があるので、guard文を書いてはじきます。
@@ -217,7 +217,7 @@ nameとmessageのTextFieldがnilの可能性があるので、guard文を書い�
 ```
 
 
-====== 入力されたテキストを配列に入れる
+===== 入力されたテキストを配列に入れる
 
 入力されたテキストを配列に格納します。
 
@@ -227,7 +227,7 @@ nameとmessageのTextFieldがnilの可能性があるので、guard文を書い�
 ```
 
 
-====== Firestoreに送信する
+===== Firestoreに送信する
 
 配列の内容を、Firestoreに送信します。
 
@@ -272,7 +272,7 @@ tagだと数字でわかりにくいので、enumを活用します。
 ※この記述は、入力した文字を変数に入れる処理の前に入れましょう。
 
 
-===== messageのTextFieldを空にする
+==== messageのTextFieldを空にする
 
 送信後、messageのtextfieldを空欄にします。
 
