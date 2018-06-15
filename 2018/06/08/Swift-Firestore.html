@@ -55,7 +55,7 @@ var _trackingid = 'LFT-10003-1';
     <meta property="og:description" content="はじめまして、マーケ兼広報担当の遠山です。 ひょんなことから、エンジニアブログを書くことになりました。 定期的に記事とかブログって書いてるんですけど ・・・エンジニアブログとなると緊張しますね（ﾄﾞｷﾄﾞｷ でも、頑張って書いてみようと思います。 ということで記念すべき初ブログは、この間作ったチャットアプリについてです。 作りたいあぷり 今回は、名前とメッセージを入力して送信すると、リアルタイムで更新・表示されるiPhone向けののシンプルなチャットアプリを作ります。 使うもの： Swift4.0 Xcode9.2 Firestore ・サーバの管理が..." />
     <meta property="og:url" content="http://tech.innovation.co.jp/2018/06/08/Swift-Firestore.html" />
     <meta property="article:published_time" content="2018-06-07T15:00:00.000Z" />
-    <meta property="article:modified_time" content="2018-06-15T03:27:03.892Z" />
+    <meta property="article:modified_time" content="2018-06-15T03:30:09.340Z" />
     <meta property="article:tag" content="Chat" />
     <meta property="article:tag" content="Firesotre" />
     <meta property="article:tag" content="Swift4.0" />
@@ -80,7 +80,7 @@ var _trackingid = 'LFT-10003-1';
     "headline": "SwiftとFirestoreを使って、リアルタイムチャットアプリを作ってみた",
     "url": "http://tech.innovation.co.jp/2018/06/08/Swift-Firestore.html",
     "datePublished": "2018-06-07T15:00:00.000Z",
-    "dateModified": "2018-06-15T03:27:03.892Z",
+    "dateModified": "2018-06-15T03:30:09.340Z",
     "keywords": "Chat, Firesotre, Swift4.0",
     "description": "はじめまして、マーケ兼広報担当の遠山です。 ひょんなことから、エンジニアブログを書くことになりました。 定期的に記事とかブログって書いてるんですけど ・・・エンジニアブログとなると緊張しますね（ﾄﾞｷﾄﾞｷ でも、頑張って書いてみようと思います。 ということで記念すべき初ブログは、この間作ったチャットアプリについてです。 作りたいあぷり 今回は、名前とメッセージを入力して送信すると、リアルタイムで更新・表示されるiPhone向けののシンプルなチャットアプリを作ります。 使うもの： Swift4.0 Xcode9.2 Firestore ・サーバの管理が..."
 }
@@ -391,8 +391,8 @@ Firestore</p>
 <div class="paragraph">
 <p>名前とメッセージ両方のTextFieldにテキストを入力してreturnkeyを押した時に、Firestoreにデータを送信するようにしたいと思います。じゃんじゃん書いていきましょう。</p>
 </div>
-<div class="sect5">
-<h6 id="_firestore">Firestoreへのコネクションを張る</h6>
+<div class="sect4">
+<h5 id="_firestore">Firestoreへのコネクションを張る</h5>
 <div class="paragraph">
 <p>TextFieldの処理を書いていく前に、まずはFirestoreへのコネクションをviewDidLoadを読み込んだ時に張っておきます。</p>
 </div>
@@ -403,8 +403,8 @@ Firestore</p>
 </div>
 </div>
 </div>
-<div class="sect5">
-<h6 id="_firestore_2">Firestoreのデータを取得し、表示する</h6>
+<div class="sect4">
+<h5 id="_firestore_2">Firestoreのデータを取得し、表示する</h5>
 <div class="paragraph">
 <p>viewDidLoadを読み込んだ時に、Firestore内のデータを取得し、チャット内容をTextViewに表示します。<br>
 今回は、"chat"という名前のコレクションにデータを保存していきます。<br></p>
@@ -457,8 +457,8 @@ Firestoreの"chat"コレクション内のデータがあるかどうか確認�
 </div>
 </div>
 </div>
-<div class="sect5">
-<h6 id="_returnkey">returnkeyが押された時の処理</h6>
+<div class="sect4">
+<h5 id="_returnkey">returnkeyが押された時の処理</h5>
 <div class="paragraph">
 <p>Firestoreのコネクションとデータの取得＆表示ができたら、次にreturnkeyが押された時の処理を書いていきます。</p>
 </div>
@@ -474,8 +474,8 @@ Firestoreの"chat"コレクション内のデータがあるかどうか確認�
 <p>まずはこれで、TextFieldでreturnkeyを押した時に、「returnkeyが押されたよ」って出てきたらOKです。</p>
 </div>
 </div>
-<div class="sect5">
-<h6 id="_returnkey_2">returnkeyが押されたらキーボードを閉じる</h6>
+<div class="sect4">
+<h5 id="_returnkey_2">returnkeyが押されたらキーボードを閉じる</h5>
 <div class="paragraph">
 <p>今のままだとreturnkeyを押してもキーボードが閉じないので、閉じる処理を追加。</p>
 </div>
@@ -486,8 +486,8 @@ Firestoreの"chat"コレクション内のデータがあるかどうか確認�
 </div>
 </div>
 </div>
-<div class="sect5">
-<h6 id="_textfield">TextFieldに入力されたテキストを変数に入れる</h6>
+<div class="sect4">
+<h5 id="_textfield">TextFieldに入力されたテキストを変数に入れる</h5>
 <div class="paragraph">
 <p>nameとmessageそれぞれのTextFieldに入力された値を変数に入れます。<br>
 nameとmessageのTextFieldがnilの可能性があるので、guard文を書いてはじきます。
@@ -517,8 +517,8 @@ nameとmessageのTextFieldがnilの可能性があるので、guard文を書い�
 </div>
 </div>
 </div>
-<div class="sect5">
-<h6 id="___5">入力されたテキストを配列に入れる</h6>
+<div class="sect4">
+<h5 id="___5">入力されたテキストを配列に入れる</h5>
 <div class="paragraph">
 <p>入力されたテキストを配列に格納します。</p>
 </div>
@@ -529,8 +529,8 @@ nameとmessageのTextFieldがnilの可能性があるので、guard文を書い�
 </div>
 </div>
 </div>
-<div class="sect5">
-<h6 id="_firestore_3">Firestoreに送信する</h6>
+<div class="sect4">
+<h5 id="_firestore_3">Firestoreに送信する</h5>
 <div class="paragraph">
 <p>配列の内容を、Firestoreに送信します。</p>
 </div>
@@ -582,8 +582,9 @@ messagetextfield = 2</p>
 <p>※この記述は、入力した文字を変数に入れる処理の前に入れましょう。</p>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_message_textfield">messageのTextFieldを空にする</h5>
+</div>
+<div class="sect3">
+<h4 id="_message_textfield">messageのTextFieldを空にする</h4>
 <div class="paragraph">
 <p>送信後、messageのtextfieldを空欄にします。</p>
 </div>
@@ -596,7 +597,6 @@ messagetextfield = 2</p>
 <div class="paragraph">
 <p>これで完成です！
 とってもとってもシンプルですが、リアルタイムで更新されるチャットアプリができました。</p>
-</div>
 </div>
 </div>
 </div>
