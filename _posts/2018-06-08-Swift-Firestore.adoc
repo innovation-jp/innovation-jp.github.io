@@ -239,7 +239,7 @@ nameとmessageのTextFieldがnilの可能性があるので、guard文を書い�
 
 
 
-nameのTextFieldにカーソルがあるときにも送信しないようにする
+===== nameのTextFieldにカーソルがあるときにも送信しないようにする
 
 このままだと、returnkeyを押すたびにデータを送信してしまうので、nameのTextFieldにカーソルがあるときには送信しないようにします。
 
