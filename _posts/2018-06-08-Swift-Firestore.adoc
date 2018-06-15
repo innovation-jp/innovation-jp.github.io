@@ -60,7 +60,7 @@ pod installできたら準備完了です。
 
 == いざ作成
 
-==== １．画面を構成する
+=== １．画面を構成する
 
 外部ライブラリをインストールしたら、さっそく作っていきましょう。 +
 まずは画面の構成から。今回はXcodeのStoryBoardでレイアウトして作ります。 +
@@ -79,7 +79,7 @@ image:/images/kohe/toyama_swift_1_1.png[width="400px"]
 ```
 
 
-==== ２．TextFieldの処理を書くために、クラスを拡張する
+=== ２．TextFieldの処理を書くために、クラスを拡張する
 
 レイアウトが終わったら、次はコードを書いていきましょう。
 
@@ -100,7 +100,7 @@ extension ViewController:UITextFieldDelegate {
 }
 ```
 
-==== ３．入力した内容の取得し、Firestoreへ送信する
+=== ３．入力した内容の取得し、Firestoreへ送信する
 
 TextFieldの処理を書くためのクラスが準備できたので、次は入力したデータをFirestoreに送信する部分を作っていきます。
 
