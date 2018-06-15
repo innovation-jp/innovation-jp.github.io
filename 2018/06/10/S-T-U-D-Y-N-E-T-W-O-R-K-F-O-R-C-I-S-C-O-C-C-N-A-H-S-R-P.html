@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑥HSRP〜 - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑥HSRP〜">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑥HSRP〜">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/06/10/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-H-S-R-P.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑥HSRP〜" />
+    <meta property="og:description" content="KTNです 今回はHSRPの勉強をしていきたいと思います 関連記事はこちら macのGNS3でNETWORK(CISCO CCNA)の勉強　〜①GNS3導入〜 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜②VPN〜 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜③NAT準備〜 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜④NAT設定〜 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑤BGP〜 HSRPって何？ ゲートウェイを冗長化するプロトコルの1つです ゲートウェイは..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/06/10/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-H-S-R-P.html" />
+    <meta property="article:published_time" content="2018-06-09T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-06-15T05:09:29.773Z" />
+    <meta property="article:tag" content="Study" />
+    <meta property="article:tag" content="Network" />
+    <meta property="article:tag" content="mac" />
+    <meta property="article:tag" content="GNS3" />
+    <meta property="article:tag" content="CISCO" />
+    <meta property="article:tag" content="CCNA" />
+    <meta property="article:tag" content="HSRP" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑥HSRP〜" />
+    <meta name="twitter:description" content="KTNです 今回はHSRPの勉強をしていきたいと思います 関連記事はこちら macのGNS3でNETWORK(CISCO CCNA)の勉強　〜①GNS3導入〜 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜②VPN〜 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜③NAT準備〜 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜④NAT設定〜 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑤BGP〜 HSRPって何？ ゲートウェイを冗長化するプロトコルの1つです ゲートウェイは..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/06/10/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-H-S-R-P.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars0.githubusercontent.com/u/24905783?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑥HSRP〜",
+    "url": "http://tech.innovation.co.jp/2018/06/10/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-H-S-R-P.html",
+    "datePublished": "2018-06-09T15:00:00.000Z",
+    "dateModified": "2018-06-15T05:09:29.773Z",
+    "keywords": "Study,  Network,  mac,  GNS3,  CISCO,  CCNA,  HSRP",
+    "description": "KTNです 今回はHSRPの勉強をしていきたいと思います 関連記事はこちら macのGNS3でNETWORK(CISCO CCNA)の勉強　〜①GNS3導入〜 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜②VPN〜 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜③NAT準備〜 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜④NAT設定〜 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑤BGP〜 HSRPって何？ ゲートウェイを冗長化するプロトコルの1つです ゲートウェイは..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Study tag-Network tag-mac tag-G-N-S3 tag-C-I-S-C-O tag-C-C-N-A tag-H-S-R-P no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="10 Jun 2018" class="post-meta__date date">10 Jun 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Study">Study</a>, <a href="http://tech.innovation.co.jp/tag/Network"> Network</a>, <a href="http://tech.innovation.co.jp/tag/mac"> mac</a>, <a href="http://tech.innovation.co.jp/tag/G-N-S3"> GNS3</a>, <a href="http://tech.innovation.co.jp/tag/C-I-S-C-O"> CISCO</a>, <a href="http://tech.innovation.co.jp/tag/C-C-N-A"> CCNA</a>, <a href="http://tech.innovation.co.jp/tag/H-S-R-P"> HSRP</a></span>
+        <span class="post-meta__author author"><img src="https://avatars0.githubusercontent.com/u/24905783?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑥HSRP〜</h1>
+    </header>
+
+    <section class="post tag-Study tag-Network tag-mac tag-G-N-S3 tag-C-I-S-C-O tag-C-C-N-A tag-H-S-R-P">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>KTNです<br>
+今回はHSRPの勉強をしていきたいと思います<br></p>
+</div>
+<div class="paragraph">
+<p>関連記事はこちら<br>
+<a href="http://tech.innovation.co.jp/2017/11/06/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A.html">macのGNS3でNETWORK(CISCO CCNA)の勉強　〜①GNS3導入〜</a><br>
+<a href="http://tech.innovation.co.jp/2017/11/21/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-V-P-N.html">macのGNS3でNETWORK(CISCO CCNA)の勉強　〜②VPN〜</a><br>
+<a href="http://tech.innovation.co.jp/2018/01/14/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-N-A-T.html">macのGNS3でNETWORK(CISCO CCNA)の勉強　〜③NAT準備〜</a><br>
+<a href="http://tech.innovation.co.jp/2018/03/06/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-N-A-T2.html">macのGNS3でNETWORK(CISCO CCNA)の勉強　〜④NAT設定〜</a><br>
+<a href="http://tech.innovation.co.jp/2018/03/22/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-B-G-P.html">macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑤BGP〜</a><br></p>
+</div>
+</div>
+</div>
+<h1 id="_hsrp" class="sect0">HSRPって何？</h1>
+<div class="paragraph">
+<p>ゲートウェイを冗長化するプロトコルの1つです<br>
+ゲートウェイはわかりますよね？<br>
+ネットワークとネットワークを繋ぐ境目のやーつですね<br></p>
+</div>
+<div class="paragraph">
+<p>今回はHSRPを使って回線の冗長化をしてみようと思います<br>
+拠点間にネットワークが2回線引かれている想定で、<br>
+主としているネットワークに障害が発生しても副回線に切り替えて通信が継続できる構成にしたいと思います<br>
+回線はインターネットVPN、IP-VPN、専用線とかの想定です<br></p>
+</div>
+<div class="paragraph">
+<p>以下の図のような構成にしてみました<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180610/1.png" alt="1.png">
+</div>
+</div>
+<div class="paragraph">
+<p>R5とR6にHSRPを設定して、<br>
+仮想専用線A（R1〜R2）に障害が発生した場合に、<br>
+仮想専用線B（R3〜R4）を使うように設定してみます<br></p>
+</div>
+<h1 id="_hsrp_2" class="sect0">HSRPの前準備</h1>
+<div class="paragraph">
+<p>HSRPを設定していく前に、<br>
+本社のPCと支店のPCが通信出来るところまでは設定しちゃいます<br>
+各ルータにスタティックルーティングで設定していきます<br>
+前回もやっているような設定ですが一応コマンド書いておきました<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>R5#configure terminal
+R5(config)#interface FastEthernet0/0
+R5(config-if)#ip address 172.29.1.11 255.255.255.0
+R5(config-if)#no shutdown
+R5(config-if)#exit
+R5(config)#interface FastEthernet0/1
+R5(config-if)#ip address 192.168.1.1 255.255.255.0
+R5(config-if)#no shutdown
+R5(config-if)#exit
+R5(config)ip route 192.168.11.0 255.255.255.0 172.29.1.1
+R5(config)exit
+
+R6#configure terminal
+R6(config)#interface FastEthernet0/0
+R6(config-if)#ip address 172.29.11.11 255.255.255.0
+R6(config-if)#no shutdown
+R6(config-if)#exit
+R6(config)#interface FastEthernet0/1
+R6(config-if)#ip address 192.168.11.1 255.255.255.0
+R6(config-if)#no shutdown
+R6(config-if)#exit
+R6(config)#ip route 192.168.1.0 255.255.255.0 172.29.11.1
+R6(config)#exit
+
+R1#configure terminal
+R1(config)#interface FastEthernet0/0
+R1(config-if)#ip address 10.0.1.1 255.255.255.0
+R1(config-if)#no shutdown
+R1(config-if)#exit
+R1(config)#interface FastEthernet0/1
+R1(config-if)#ip address 172.29.1.1 255.255.255.0
+R1(config-if)#no shutdown
+R1(config-if)#exit
+R1(config)#ip route 192.168.1.0 255.255.255.0 172.29.1.11
+R1(config)#ip route 192.168.11.0 255.255.255.0 10.0.1.2
+R1(config)#exit
+
+R2#configure terminal
+R2(config)#interface FastEthernet0/0
+R2(config-if)#ip address 10.0.1.2 255.255.255.0
+R2(config-if)#no shutdown
+R2(config-if)#exit
+R2(config)#interface FastEthernet0/1
+R2(config-if)#ip address 172.29.11.1 255.255.255.0
+R2(config-if)#no shutdown
+R2(config-if)#exit
+R2(config)#ip route 192.168.1.0 255.255.255.0 10.0.1.1
+R2(config)#ip route 192.168.11.0 255.255.255.0 172.29.11.11
+R2(config)#exit</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>各ルータにスタティックでルーティング設定しています<br>
+行き先の方向にあるお隣さん（ルータ）を設定していきます<br>
+終わったら、本社のPCから支店のPCにトレースルートしてみます<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>[root@gns3-centos6-1 ~]# traceroute 192.168.11.11
+traceroute to 192.168.11.11 (192.168.11.11), 30 hops max, 60 byte packets
+ 1  192.168.1.1 (192.168.1.1)  12.059 ms
+ 2  172.29.1.1 (172.29.1.1)  34.604 ms
+ 3  10.0.1.2 (10.0.1.2)  34.218 ms
+ 4  172.29.11.11 (172.29.11.11)  44.181 ms
+ 5  192.168.11.11 (192.168.11.11) 55.025 ms</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>仮想専用線A（R1〜R2）を使って通信していることを確認出来ました<br>
+仮想専用線B（R3〜R4）の方も使えるように設定しておきます<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>R3#configure terminal
+R3(config)#interface FastEthernet0/0
+R3(config-if)#ip address 10.0.2.1 255.255.255.0
+R3(config-if)#no shutdown
+R3(config-if)#exit
+R3(config)#interface FastEthernet0/1
+R3(config-if)#ip address 172.29.1.2 255.255.255.0
+R3(config-if)#no shutdown
+R3(config-if)#exit
+R3(config)#ip route 192.168.1.0 255.255.255.0 172.29.1.11
+R3(config)#ip route 192.168.11.0 255.255.255.0 10.0.2.2
+R3(config)#exit
+
+R4#configure terminal
+R4(config)#interface FastEthernet0/0
+R4(config-if)#ip address 10.0.2.2 255.255.255.0
+R4(config-if)#no shutdown
+R4(config-if)#exit
+R4(config)#interface FastEthernet0/1
+R4(config-if)#ip address 172.29.11.2 255.255.255.0
+R4(config-if)#no shutdown
+R4(config-if)#exit
+R4(config)#ip route 192.168.1.0 255.255.255.0 10.0.2.1
+R4(config)#ip route 192.168.11.0 255.255.255.0 172.29.11.11
+R4(config)#exit
+
+R5#configure terminal
+R5(config)no ip route 192.168.11.0 255.255.255.0 172.29.1.1
+R5(config)ip route 192.168.11.0 255.255.255.0 172.29.1.2
+R5(config)exit
+
+R6#configure terminal
+R6(config)#no ip route 192.168.1.0 255.255.255.0 172.29.11.1
+R6(config)#ip route 192.168.1.0 255.255.255.0 172.29.11.2
+R6(config)#exit</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>終わったら、本社のPCから支店のPCにトレースルートしてみます<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>[root@gns3-centos6-1 ~]# traceroute 192.168.11.11
+traceroute to 192.168.11.11 (192.168.11.11), 30 hops max, 60 byte packets
+ 1  192.168.1.1 (192.168.1.1)  10.411 ms
+ 2  172.29.1.2 (172.29.1.1)  33.711 ms
+ 3  10.0.2.2 (10.0.1.2)  43.742 ms
+ 4  172.29.11.11 (172.29.11.11)  45.291 ms
+ 5  192.168.11.11 (192.168.11.11) 67.156 ms</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>仮想専用線B（R3〜R4）を使って通信していることを確認出来ました<br>
+前準備はこれでOKです<br></p>
+</div>
+<h1 id="_hsrp_3" class="sect0">HSRPを設定する</h1>
+<div class="paragraph">
+<p>HSRPを設定すると、物理的には2台あるルータを論理的に1台のルータとすることが出来ます<br>
+今回は2箇所にHSRPの設定を行います<br>
+■１つ目のHSRP<br>
+　R1ルータのf0/1インタフェース<br>
+　R3ルータのf0/1インタフェース<br></p>
+</div>
+<div class="paragraph">
+<p>■2つ目のHSRP<br>
+　R2ルータのf0/1インタフェース<br>
+　R4ルータのf0/1インタフェース<br></p>
+</div>
+<div class="paragraph">
+<p>もう一回構成図を貼っておきます<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180610/1.png" alt="1.png">
+</div>
+</div>
+<div class="paragraph">
+<p>HSRPを設定する時に仮想IPアドレスが作成されます<br>
+この仮想IPアドレスをゲートウェイのIPアドレスとして設定することになります<br>
+ではR1とR3の設定をしていきます<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>R1#configure terminal
+R1(config)#interface FastEthernet0/1
+R1(config-if)#standby 1 ip 172.29.1.3
+R1(config-if)#standby 1 priority 255
+R1(config-if)#standby 1 preempt
+
+R3#configure terminal
+R3(config)#interface FastEthernet0/1
+R3(config-if)#standby 1 ip 172.29.1.3</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>設定が出来たのでSHOWコマンドで状態を見てみます<br>
+State欄とVirtual IP欄を確認します<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>R1#show standby brief
+                     P indicates configured to preempt.
+                     |
+Interface   Grp Prio P State    Active          Standby         Virtual IP
+Fa0/1       1   255  P Active   local           172.29.1.2      172.29.1.3
+
+R3#show standby brief
+                     P indicates configured to preempt.
+                     |
+Interface   Grp Prio P State    Active          Standby         Virtual IP
+Fa0/1       1   100    Standby  172.29.1.1      local           172.29.1.3</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>R1とR3がグルーピングされてますね<br>
+R1がアクティブで仮想IPは172.29.1.3になってますね<br>
+設定内容についてですが、<br>
+　・standbyの後ろに書いてある数字（1）はグループIDになり任意に設定するものです<br>
+　　R1のFa0/1とR3のFa0/1で同じにする必要があります<br>
+　・ipは見たままですが、仮想IPアドレスを設定します<br>
+　・priorityはどちらのルータを優先とするかに使用します（大きいほうが優先）<br>
+　　今回の設定だとR1が優先となります<br>
+　・preemptを設定するとR1ルータの存在が確認できた時点で、R1をアクティブに切り替える処理が動くようになります<br></p>
+</div>
+<div class="paragraph">
+<p>次にR2とR4の設定です<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>R2#configure terminal
+R2(config)#interface FastEthernet0/1
+R2(config-if)#standby 11 ip 172.29.11.3
+R2(config-if)#standby 11 priority 255
+R2(config-if)#standby 11 preempt
+
+R4#configure terminal
+R4(config)#interface FastEthernet0/1
+R4(config-if)#standby 11 ip 172.29.11.3</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>同じく設定が出来たのでSHOWコマンドで状態を見てみます</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>R2#show standby brief
+                     P indicates configured to preempt.
+                     |
+Interface   Grp Prio P State    Active          Standby         Virtual IP
+Fa0/1       11  255  P Active   local           172.29.11.2     172.29.11.3
+
+R4#show standby brief
+                     P indicates configured to preempt.
+                     |
+Interface   Grp Prio P State    Active          Standby         Virtual IP
+Fa0/1       11  100    Standby  172.29.11.1     local           172.29.11.3</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>こっちもOKですね<br>
+最後にR5とR6のゲートウェイ設定を変更して、HSRPの仮想IPアドレスに向けます<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>R5#configure terminal
+R5(config)no ip route 192.168.11.0 255.255.255.0 172.29.1.2
+R5(config)ip route 192.168.11.0 255.255.255.0 172.29.1.3
+R5(config)exit
+
+R6#configure terminal
+R6(config)#no ip route 192.168.1.0 255.255.255.0 172.29.11.2
+R6(config)#ip route 192.168.1.0 255.255.255.0 172.29.11.3
+R6(config)#exit</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>全部設定できたので、疎通確認します<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>[root@gns3-centos6-1 ~]# traceroute 192.168.11.11
+traceroute to 192.168.11.11 (192.168.11.11), 30 hops max, 60 byte packets
+ 1  192.168.1.1 (192.168.1.1)  7.458 ms
+ 2  172.29.1.1 (172.29.1.1)  18.825 ms
+ 3  10.0.1.2 (10.0.1.2)  29.860 ms
+ 4  172.29.11.11 (172.29.11.11)  40.883 ms
+ 5  192.168.11.11 (192.168.11.11) 52.958 ms</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>疎通確認できました！！<br>
+あと、障害パターンのテストをしてみます<br>
+R1とR3で障害が発生したテストとして2台をシャットダウンします<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20180610/2.png" alt="2.png">
+</div>
+</div>
+<div class="paragraph">
+<p>もう一回疎通確認してみます<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>[root@gns3-centos6-1 ~]# traceroute 192.168.11.11
+traceroute to 192.168.11.11 (192.168.11.11), 30 hops max, 60 byte packets
+ 1  192.168.1.1 (192.168.1.1)  10.411 ms
+ 2  172.29.1.2 (172.29.1.1)  33.711 ms
+ 3  10.0.2.2 (10.0.1.2)  43.742 ms
+ 4  172.29.11.11 (172.29.11.11)  45.291 ms
+ 5  192.168.11.11 (192.168.11.11) 67.156 ms</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>自動的に仮想専用線B（R3〜R4）を使って通信していることを確認出来ました<br>
+テストはこれでOKですね<br>
+ルータの状態も確認しておきます<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>R3#show standby brief
+                     P indicates configured to preempt.
+                     |
+Interface   Grp Prio P State    Active          Standby         Virtual IP
+Fa0/1       1   100    Active   local           unknown         172.29.1.3
+R3#
+
+R4#show standby brief
+                     P indicates configured to preempt.
+                     |
+Interface   Grp Prio P State    Active          Standby         Virtual IP
+Fa0/1       11  100    Active   local           unknown         172.29.11.3
+R4#</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>R3とR4がアクティブになっていることが確認できました<br></p>
+</div>
+<h1 id="__" class="sect0">最後に</h1>
+<div class="paragraph">
+<p>今回設定したネットワークですが実は大きな不具合があります<br>
+次回のお楽しみとしてそのままにしておきました、どんな不具合かわかりましたか！？<br></p>
+</div>
+<div class="paragraph">
+<p>こちらからは以上です<br></p>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
