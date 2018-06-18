@@ -1,0 +1,223 @@
+# macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑦HSRP不具合対応〜
+:published_at: 2018-06-17
+:hp-alt-title: STUDY NETWORK FOR CISCO CCNA(HSRP2)
+:hp-tags: Study, Network, mac, GNS3, CISCO, CCNA, HSRP
+
+KTNです +
+前回に続いてHSRPの勉強をしていきたいと思います +
+不具合がどこにあるかわかりましたでしょうか！？ +
+
+関連記事はこちら +
+http://tech.innovation.co.jp/2017/11/06/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A.html[macのGNS3でNETWORK(CISCO CCNA)の勉強　〜①GNS3導入〜] +
+http://tech.innovation.co.jp/2017/11/21/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-V-P-N.html[macのGNS3でNETWORK(CISCO CCNA)の勉強　〜②VPN〜] +
+http://tech.innovation.co.jp/2018/01/14/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-N-A-T.html[macのGNS3でNETWORK(CISCO CCNA)の勉強　〜③NAT準備〜] +
+http://tech.innovation.co.jp/2018/03/06/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-N-A-T2.html[macのGNS3でNETWORK(CISCO CCNA)の勉強　〜④NAT設定〜] +
+http://tech.innovation.co.jp/2018/03/22/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-B-G-P.html[macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑤BGP〜] +
+http://tech.innovation.co.jp/2018/06/10/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-H-S-R-P.html[macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑥HSRP〜] +
+
+# 不具合の確認
+
+では不具合確認していきたいと思います +
+R2だけに不具合が起こった場合の動作を見てみます +
+まず障害を起こしていない状態で本社のPCから支店のPCにPINGをします +
+
+```
+[root@gns3-centos6-1 ~]# ping 192.168.11.11
+PING 192.168.11.11 (192.168.11.11) 56(84) bytes of data.
+64 bytes from 192.168.11.11: icmp_seq=1 ttl=60 time=65.2 ms
+64 bytes from 192.168.11.11: icmp_seq=2 ttl=60 time=55.2 ms
+64 bytes from 192.168.11.11: icmp_seq=3 ttl=60 time=50.9 ms
+```
+
+この状態でR2をシャットダウンしてみます +
+すると支店のPCからPINGの応答が来なくなります +
+トレースルートを見てみます +
+
+```
+[root@gns3-centos6-1 ~]# traceroute 192.168.11.11
+traceroute to 192.168.11.11 (192.168.11.11), 30 hops max, 60 byte packets
+ 1  192.168.1.1 (192.168.1.1)  5.453 ms
+ 2  172.29.1.1 (172.29.1.1)  28.827 ms
+ 3  * * *
+ 4  * * *
+```
+
+R5がR1にルーティングしていることが確認できます +
+R2で障害が発生しているのでR1に転送してほしくないところです +
+でも、HSRPはR1とR3を冗長化するだけのプロトコルなので、 +
+R1に転送したあとの通信に問題があることなんて関係ないということですね +
+これが前回の設定における不具合でした +
+
+対応を考えます +
+R2で発生した障害をR1に通知（もしくはその逆）が出来て、 +
+R1が通信経路を変更することが出来れば解決します +
+なのでHSRPの設定はそのままにして、 +
+・R1とR2の間でBGPを設定する +
+　→R1、R2のどちらかに障害が発生するとBGPのアドバタイズがなくなり +
+　　BGPによるルーティング情報が無くなる +
+・R1にアドミニストレーティブディスタンスをBGPより低くして、 +
+　R3へのスタティックルーティングを設定する +
+　（逆向きの設定でR2にも設定する） +
+　→BGPによるルーティング情報がなくなった場合に、 +
+　　ここで設定したR3へのルーティングが行われる +
+これで、うまくいきそうな気がしますよね +
+
+※BGPやアドミニストレーティブディスタンスがわからない人はこちら +
+http://tech.innovation.co.jp/2018/03/22/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-B-G-P.html[macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑤BGP〜] +
+
+# 不具合の改善
+
+設定していきます！
+まずBGP設定から
+```
+■R1
+R1#configure terminal
+R1(config)#router bgp 1
+R1(config-router)#neighbor 10.0.1.2 remote-as 2
+R1(config-router)#network 192.168.1.0 mask 255.255.255.0
+R1(config-router)#exit
+R1(config)#exit
+R1#
+
+■R2
+R2#configure terminal
+R2(config)#router bgp 2
+R2(config-router)#neighbor 10.0.1.1 remote-as 1
+R2(config-router)#network 192.168.11.0 mask 255.255.255.0
+R2(config-router)#exit
+R2(config)#exit
+R2#
+```
+
+これはシンプルですね、R1とR2でBGPを設定して +
+R1は本社のPCへの通信、R2は支店のPCへの通信をアドバタイズしています +
+
+続いてスタティックルーティング
+
+```
+■R1
+R1#configure terminal
+R1(config)#no ip route 192.168.11.0 255.255.255.0 10.0.1.2
+R1(config)#ip route 192.168.11.0 255.255.255.0 172.29.1.2 150
+
+■R2
+R2#configure terminal
+R2(config)#no ip route 192.168.1.0 255.255.255.0 10.0.1.1
+R2(config)#ip route 192.168.1.0 255.255.255.0 172.29.11.2 150
+```
+スタティックルートをアドミニストレーティブディスタンス150で登録しています +
+BGPのアドミニストレーティブディスタンスが20なので、 +
+BGPのルーティングがあればそれを優先、なければスタティックルートが使われます +
+※補足 +
+　BGPのアドミニストレーティブディスタンスですが +
+　アドミニストレーティブディスタンス +
+　　外部BGP：20、内部BGP：200 +
+　の2種類があります +
+　AS番号によって外部・内部が決まるのですが +
+　（「router bgp 2」の場合はAS番号は2になります） +
+　BGPのAS番号 +
+　　外部BGP：1～64511、内部BGP：64512～65535 +
+
+ルーティング情報を見てみます
+
+```
+■R1
+R1#show ip route
+     172.29.0.0/24 is subnetted, 1 subnets
+C       172.29.1.0 is directly connected, FastEthernet0/1
+B    192.168.11.0/24 [20/0] via 10.0.1.2, 00:15:04
+     10.0.0.0/24 is subnetted, 1 subnets
+C       10.0.1.0 is directly connected, FastEthernet0/0
+S    192.168.1.0/24 [1/0] via 172.29.1.11
+
+■R2
+R2#show ip route
+     172.29.0.0/24 is subnetted, 1 subnets
+C       172.29.11.0 is directly connected, FastEthernet0/1
+S    192.168.11.0/24 [1/0] via 172.29.11.11
+     10.0.0.0/24 is subnetted, 1 subnets
+C       10.0.1.0 is directly connected, FastEthernet0/0
+B    192.168.1.0/24 [20/0] via 10.0.1.1, 00:00:38
+R2#
+```
+BGPの通信が優先されていることが確認できます +
+それでは、動作確認していきます +
+
+障害を起こしていない状態で本社のPCから支店のPCにPINGをします +
+その状態でR2をシャットダウンしてみます +
+すると全然応答が帰ってきません +
+粘り強く3分ちょいぐらい待つと応答が帰ってくるようになりました +
+トレースルートもしてみます +
+
+```
+[root@gns3-centos6-1 ~]# ping 192.168.11.11
+PING 192.168.11.11 (192.168.11.11) 56(84) bytes of data.
+64 bytes from 192.168.11.11: icmp_seq=1 ttl=60 time=48.1 ms
+64 bytes from 192.168.11.11: icmp_seq=2 ttl=60 time=59.2 ms
+64 bytes from 192.168.11.11: icmp_seq=3 ttl=60 time=51.3 ms
+64 bytes from 192.168.11.11: icmp_seq=220 ttl=60 time=93.1 ms
+64 bytes from 192.168.11.11: icmp_seq=221 ttl=60 time=62.5 ms
+64 bytes from 192.168.11.11: icmp_seq=222 ttl=60 time=83.6 ms
+
+[root@gns3-centos6-1 ~]# traceroute 192.168.11.11
+traceroute to 192.168.11.11 (192.168.11.11), 30 hops max, 60 byte packets
+ 1  192.168.1.1 (192.168.1.1)  9.390 ms
+ 2  172.29.1.1 (172.29.1.1)  20.304 ms
+ 2  172.29.1.2 (172.29.1.2)  30.540 ms
+ 3  10.0.2.2 (10.0.2.2)  55.031 ms
+ 4  172.29.11.11 (172.29.11.11)  79.142 ms
+ 5  192.168.11.11 (192.168.11.11) 90.392 ms
+```
+
+R2で障害が発生しているので、 +
+R1→R3→R4→R6とR2を迂回して通信するようになりました +
+ただ切り替えまでに3分ちょいは長すぎるので改善していきます +
+
+# 不具合の改善2
+
+CISCOのデフォルトだとholdtime（BGPの有効期限）は180秒ですので、 +
+もっと短い値を設定します +
+※短すぎても不安定になるので、今回は6秒に設定しました +
+
+```
+■R1
+R1#configure terminal
+R1(config)#router bgp 1
+R1(config-router)#timer bgp 2 6
+R1(config-router)#exit
+R1(config)#exit
+R1#
+
+■R2
+R2#configure terminal
+R2(config)#router bgp 2
+R2(config-router)#timer bgp 2 6
+R2(config-router)#exit
+R2(config)#exit
+R2#
+```
+
+障害を起こしていない状態で本社のPCから支店のPCにPINGをします +
+その状態で再度R2をシャットダウンしてみます +
+すると今回は10秒程度で応答が帰ってきました +
+10秒で自動復旧なら利用者もイライラしない程度？なのでOKとしておきます +
+
+```
+[root@gns3-centos6-1 ~]# ping 192.168.11.11
+PING 192.168.11.11 (192.168.11.11) 56(84) bytes of data.
+64 bytes from 192.168.11.11: icmp_seq=1 ttl=60 time=69.0 ms
+64 bytes from 192.168.11.11: icmp_seq=2 ttl=60 time=77.7 ms
+64 bytes from 192.168.11.11: icmp_seq=3 ttl=60 time=81.8 ms
+64 bytes from 192.168.11.11: icmp_seq=13 ttl=60 time=54.3 ms
+64 bytes from 192.168.11.11: icmp_seq=14 ttl=60 time=63.3 ms
+64 bytes from 192.168.11.11: icmp_seq=15 ttl=60 time=74.8 ms
+```
+
+これで障害発生時にもちゃんと副回線に切り替わる冗長構成を構築出来ました +
+ということにしておきます +
+今回は勉強用に設定したのでこれで良しとしていますが、 +
+障害の内容によっては切り替わりが起きないケースが実はあります +
+誰かから具体的に指摘を受けたら修正版の記事を書こうと思いますが、今回はこれで終了！！ +
+ということで、実際の業務ではこの設定を使わないでくださいね！！ +
+
+こちらからは以上です +
