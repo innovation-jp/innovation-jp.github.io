@@ -3,7 +3,8 @@
 
 
 こんにちは、未経験中途エンジニアの、すももです。 +
-今回は、業務で使用しているLaravelのリクエストクラスについて、手の長いリーダーから色々教えてもらったので、Laravel初心者向けに書きたいと思います〜
+今回は、業務で使用しているLaravelのリクエストクラスについて、手の長いリーダーから色々教えてもらったので、Laravel初心者向けに書きたいと思います〜。
+
  +
  +
 
@@ -14,17 +15,16 @@
 === 〜準備〜
 
 
-・routes/web.php
+▪️routes/web.php
 
 ```
 Route::get('/test/{a}/{b}', 'TestController@test');
 
 ```
 
-
+▪️app/Http/Controllers/TestController.php
 
 ```
-☆TestController.php☆
 public function test(Request $request)
 {
     dd(
@@ -46,8 +46,24 @@ public function test(Request $request)
 
 
 
-試しに、http://localhost/test/lala/sumo?aaa=bbbにアクセスしてみる +
+試しに、http://localhost/test/lala/sumo?aaa=bbbにアクセスしてみる。 +
 それぞれ取得できたのがこちら
+
+
+
+```
+         // リクエストURIの取得
+        $request->path(),
+        // リクエストのURIが指定されたパターンに合致するか確認
+        $request->is('*/sumo'),
+        // 完全なURLを取得(クエリ文字列なし)
+        $request->url(),
+        // 完全なURLを取得(クエリ文字列付き)
+        $request->fullUrl(),
+        // リクエストメソッドの取得
+        $request->isMethod('post')
+
+```
 
 
 ・スクリプトエディタのメニューからプルダウンで関数名選ぶ + 
