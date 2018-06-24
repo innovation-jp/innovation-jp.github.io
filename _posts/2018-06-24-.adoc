@@ -79,6 +79,7 @@ $request->isMethod('post')
 ▪️routes/web.php
 
 ```
+Route::post('/testregist/{a}/{b}', 'TestController@testregist');
 ```
 
 ▪️app/Http/Controllers/TestController.php
