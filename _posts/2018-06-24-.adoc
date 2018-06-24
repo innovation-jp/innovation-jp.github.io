@@ -5,9 +5,9 @@
 こんにちは、未経験中途エンジニアの、すももです。 +
 今回は、業務で使用しているLaravelのリクエストクラスについて、手の長いリーダーから色々教えてもらったので、Laravel初心者向けに書きたいと思います〜。
 
- +
- +
-
+ 
+ 
+ 
 
 ## 色々なリクエストを受け取ってみる +
 
@@ -52,16 +52,24 @@ public function test(Request $request)
 
 
 ```
-         // リクエストURIの取得
-        $request->path(),
-        // リクエストのURIが指定されたパターンに合致するか確認
-        $request->is('*/sumo'),
-        // 完全なURLを取得(クエリ文字列なし)
-        $request->url(),
-        // 完全なURLを取得(クエリ文字列付き)
-        $request->fullUrl(),
-        // リクエストメソッドの取得
-        $request->isMethod('post')
+// リクエストURIの取得→（test/lala/sumo）
+$request->path()
+```
+```
+// リクエストのURIが指定されたパターンに合致するか確認→（true）
+$request->is('*/sumo')
+```
+```
+// 完全なURLを取得(クエリ文字列なし)→（http://localhost/test/lala/sumo）
+$request->url()
+```
+```
+// 完全なURLを取得(クエリ文字列付き)→（http://localhost/test/lala/sumo?aaa=bbb）
+$request->fullUrl()
+```
+```
+// リクエストメソッドの取得→（false）
+$request->isMethod('post')
 
 ```
 
