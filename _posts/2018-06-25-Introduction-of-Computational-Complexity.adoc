@@ -1,0 +1,10 @@
+# アルゴリズム計算量入門　〜　②
+:hp-alt-title: Introduction of Computational Complexity
+:hp-tags: Complexity, Sort Algorithm, bigen
+
+どうも、bigenです。 +
+なぜ２本連続で書いているかというと、先週のブログ当番をブッチしてしまった罰ゲームです！ +
+ +
+そんなわけで、前回の記事（:::TODO: ①の記事へのリンク:::）に引き続き、ソートアルゴリズムの計算量について見ていこうと思います。 +
+ +
+ 
