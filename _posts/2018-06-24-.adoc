@@ -11,18 +11,20 @@
 ## 色々なリクエストを受け取ってみる +
 
 
-〜準備〜
+=== 〜準備〜
 
-routes配下のweb.phpに記載
+
+・routes/web.php
 
 ```
 Route::get('/test/{a}/{b}', 'TestController@test');
 
 ```
 
-app→Http→Controllers配下に作成したTestController.phpに記載
+
 
 ```
+☆TestController.php☆
 public function test(Request $request)
 {
     dd(
