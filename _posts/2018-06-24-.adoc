@@ -73,8 +73,23 @@ $request->isMethod('post')
 
 ```
 
+=== 〜準備〜
 
 
+▪️routes/web.php
+
+```
+```
+
+▪️app/Http/Controllers/TestController.php
+
+```
+```
+
+▪️resources/views/test/index.blade.php
+
+```
+```
 
 
 
