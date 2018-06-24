@@ -1,5 +1,4 @@
-# アルゴリズム計算量入門
-:published_at: 2018-06-17
+# アルゴリズム計算量入門　〜　①
 :hp-alt-title: Introduction of Computational Complexity
 :hp-tags: Complexity, Search Algorithm, bigen
 
@@ -172,3 +171,5 @@ http://www.dais.is.tohoku.ac.jp/~shioura/teaching/ad11/ad11-02.pdf[アルゴリ�
 興味が湧いた方は、ぜひ導出方法についても見てみてください。 +
  +
 こちらからは以上です。
+
+
