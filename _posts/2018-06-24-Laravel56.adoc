@@ -1,4 +1,4 @@
-= Laravel
+= Laravel5.6で
 :hp-tags: sumomo, Laravel, Request, beginner
 
 
