@@ -41,32 +41,56 @@ public function test(Request $request)
 
 ```
 
-試しに、http://localhost/test/lala/sumo?aaa=bbbにアクセスしてみる。 +
-それぞれ取得できたのがこちら
+試しに、`例：http://localhost/test/lala/sumo?aaa=bbb`にアクセスしてみる。 +
+※（）内が取得した内容です↓ +
 
 
 ```
+【pathメソッド】
 // リクエストURIの取得→（test/lala/sumo）
 $request->path();
 ```
+【pathメソッド】では、クエリ文字列はなしの`http://localhost/`以降が取得できました。 +
+
+
 ```
-// リクエストのURIが指定されたパターンに合致するか確認→（true）
+【isメソッド】
+// リクエストのURIが指定されたパターンに一致するか判定→（true）
 $request->is('*/sumo');
 ```
+【isメソッド】では、`true/false`が返ってきます。 +
+今回はURIの最後が`/sumo`で一致している為`true`です。（*をワイルドカードとして使用できます。） +
+
+
 ```
+【urlメソッド】
 // 完全なURLを取得(クエリ文字列なし)→（http://localhost/test/lala/sumo）
 $request->url();
-```
-```
+
+【fullUrlメソッド】
 // 完全なURLを取得(クエリ文字列付き)→（http://localhost/test/lala/sumo?aaa=bbb）
 $request->fullUrl();
 ```
-```
-// リクエストメソッドの取得→（false）
-$request->isMethod('post');
+【urlメソッド】【fullUrlメソッド】では、クエリ文字列有り無しのURLが取得できました。 +
+用途によって使い分けられそうですね。 +
+
 
 ```
-そもそも`$request`で取れるのは、フォームとかから送ったデータだけかと思ってました。笑 +
+【methodメソッド】
+// リクエストメソッドの取得→（GET）
+$request->method();
+
+【isMethodメソッド】
+// リクエストメソッドの判定→（false）
+$request->isMethod('post');
+```
+【methodメソッド】では、リクエストのHTTP動詞が取得できます。 +
+【isMethodメソッド】の方は、 指定した文字列とHTTP動詞が一致するか`true/false`で判定してくれます。 +
+使いどころはいまいち分からないのですが、「めそっどめそっど」ってくどい名前が気に入ったので紹介してみました。
+ +
+ +
+ 
+・・・そもそも`$request`で取れるのは、フォームとかから送ったデータだけかと思ってました。笑 +
 GETリクエストの時も、いろいろ取得できるのですね〜 +
  +
  +
@@ -85,6 +109,26 @@ Route::post('/testregist/{a}/{b}', 'TestController@testregist');
 ▪️app/Http/Controllers/TestController.php
 
 ```
+public function testregist(Request $request)
+{
+    dd(
+        // 名前の取得
+        $request->input('name'),
+        // リクエストにnameが存在していない場合に、デフォルト値で指定したsumoを返す
+        $request->input('name', 'sumo'),
+        // リクエストの全入力データを配列で取得
+        $request->all(),
+        // リクエストからnameの入力データだけ取得
+        $request->only('name'),
+        // リクエストからpassword以外の入力データを取得
+        $request->except('password'),
+        // リクエストにnameが存在するか判定
+        $request->has('name'),
+        // リクエストにnameが存在しており、かつ空でない事を判定
+        $request->filled('name')
+    );
+    return view('test.index');
+}
 ```
 
 ▪️resources/views/test/index.blade.php
@@ -176,26 +220,13 @@ kebab_case();
 ```
 
 
-Slackへの通知に関しては、以下サイトを参考にGASのライブラリを使用いたしました。 +
-https://qiita.com/soundTricker/items/43267609a870fc9c7453 +
-ライブラリの登録はスクリプトエディタのメニューにある「リソース」→「ライブラリ」→「ライブラリを追加」から行えます。 +
-
-* 注意点！ +
-slackのユーザー名は、いつも見ている表示名とは違う場合があります！ +
-「プロフィール＆アカウント」→「アカウント設定」→「ユーザー名」→「開く」から確認できます。 +
-この事に気付くまで、「slack送れる人と送れない人がいる！なんで？？」となりました...
-
-
-*②-2.指定した時間に、シートに書き込まれている日付をチェックする* +
-*③-2.書き込まれている日付が今日の日付でなければslackを送る*
-
 
 
 
 
 ## 感想 +
 
-GASはプログラミング初心者の私でもとっつきやすかったので、今後もいろいろ試してみたいなー！と思いました。 +
+ああああああ +
  +
 〜おしまい〜 +
 
