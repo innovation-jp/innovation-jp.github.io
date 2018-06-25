@@ -9,7 +9,7 @@
  
  
 
-## 色々なリクエストを受け取ってみる +
+## なんかいれる +
 
 
 === 〜準備〜
@@ -53,25 +53,28 @@ public function test(Request $request)
 
 ```
 // リクエストURIの取得→（test/lala/sumo）
-$request->path()
+$request->path();
 ```
 ```
 // リクエストのURIが指定されたパターンに合致するか確認→（true）
-$request->is('*/sumo')
+$request->is('*/sumo');
 ```
 ```
 // 完全なURLを取得(クエリ文字列なし)→（http://localhost/test/lala/sumo）
-$request->url()
+$request->url();
 ```
 ```
 // 完全なURLを取得(クエリ文字列付き)→（http://localhost/test/lala/sumo?aaa=bbb）
-$request->fullUrl()
+$request->fullUrl();
 ```
 ```
 // リクエストメソッドの取得→（false）
-$request->isMethod('post')
+$request->isMethod('post');
 
 ```
+
+
+## なんかいれる +
 
 === 〜準備〜
 
@@ -90,9 +93,57 @@ Route::post('/testregist/{a}/{b}', 'TestController@testregist');
 ▪️resources/views/test/index.blade.php
 
 ```
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>リクエストの勉強</title>
+</head>
+<body>
+    <h1>入力フォーム</h1>
+    <div>
+        {{ Form::open(['url' => '/testregist/lala/sumo', 'method' => 'post']) }}
+            <label>お名前：<input type="text" name="name"></label><br>
+            <label>メール：<input type="text" name="mail"></label><br>
+            <label>パスワード：<input type="password" name="password"></label><br>
+            <input type="submit" name="regist" value="登録する">
+        {{ Form::close() }}
+    </div>
+</body>
+</html>
 ```
 
+```
+// ☓☓☓の取得→（）
+$request->input('☓☓☓');
+$request->☓☓☓;
+```
+```
+// リクエストに☓☓☓が存在していない場合に、デフォルト値で指定した△△△を返す→（）
+$request->input('☓☓☓', '△△△');
+```
+```
+// リクエストの全入力データを配列で取得→（）
+$request->all();
+```
+```
+// リクエストから☓☓☓の入力データだけ取得→（）
+$request->only('☓☓☓');
+```
+```
+// リクエストから☓☓☓以外の入力データを取得→（）
+$request->except('☓☓☓');
+```
+```
+----入力値の存在チェック----
+// リクエストに☓☓☓が存在するか判定→（）
+$request->has('☓☓☓');
+```
+```
+// リクエストに☓☓☓が存在しており、かつ空でない事を判定→（）
+$request->filled('☓☓☓');
 
+```
 
 
 Slackへの通知に関しては、以下サイトを参考にGASのライブラリを使用いたしました。 +
