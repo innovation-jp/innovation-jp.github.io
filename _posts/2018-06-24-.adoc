@@ -165,8 +165,7 @@ public function testregist(Request $request)
 
 
 ```
-【inputメソッド】
-// ☓☓☓の取得
+【inputメソッド】（☓☓☓の取得）
 $request->input('☓☓☓');
 例：$request->input('name');→（すもも）
 
@@ -176,8 +175,7 @@ $request->input('☓☓☓');
 
 
 ```
-【inputメソッド〜デフォルト値指定〜】
-// リクエストに☓☓☓が存在していない場合に、デフォルト値で指定した△△△を返す
+【inputメソッド〜デフォルト値指定〜】（リクエストに☓☓☓が存在していない場合に、デフォルト値で指定した△△△を返す）
 $request->input('☓☓☓', '△△△');
 例：$request->input('name', 'sumo');→（※すもも）
 ```
