@@ -142,8 +142,8 @@ public function testregist(Request $request)
         $request->input('name', 'sumo'),
         // リクエストの全入力データを配列で取得
         $request->all(),
-        // リクエストからnameの入力データだけ取得
-        $request->only('name'),
+        // リクエストからmailの入力データだけ取得
+        $request->only('mail'),
         // リクエストからpassword以外の入力データを取得
         $request->except('password'),
         // リクエストにnameが存在するか判定
@@ -165,9 +165,9 @@ public function testregist(Request $request)
 
 
 ```
-【inputメソッド】（☓☓☓の取得）
+【inputメソッド】　（☓☓☓の取得）
 $request->input('☓☓☓');
-例：$request->input('name');→（すもも）
+例：$request->input('name');　→（すもも）
 
 ```
 【inputメソッド】では、指定した項目のデータが取得できました。 +
@@ -175,26 +175,25 @@ $request->input('☓☓☓');
 
 
 ```
-【inputメソッド〜デフォルト値指定〜】（リクエストに☓☓☓が存在していない場合に、デフォルト値で指定した△△△を返す）
+【inputメソッド〜デフォルト値指定〜】　（リクエストに☓☓☓が存在していない場合に、デフォルト値で指定した△△△を返す）
 $request->input('☓☓☓', '△△△');
-例：$request->input('name', 'sumo');→（※すもも）
+例：$request->input('name', 'sumo');　→（※すもも）
 ```
 ※注意※【inputメソッド〜デフォルト値指定〜】は、フォームに該当の項目`name="☓☓☓"`があるけどユーザーが未入力だった場合ではなく、そもそもフォームに指定した`name="☓☓☓"`が存在しない時にデフォルト値が返ってきます。 +
 今回は、フォームに該当の項目がある為、そのまま入力値の`すもも`が返ってきました。
 
 
 ```
-【allメソッド】
-// リクエストの全入力データを配列で取得
+【allメソッド】　（リクエストの全入力データを配列で取得）
 $request->all();
 
-【onlyメソッド】
-// リクエストから☓☓☓の入力データだけ取得
+【onlyメソッド】　（リクエストから☓☓☓の入力データだけ取得）
 $request->only('☓☓☓');
+例：$request->only('mail');　→（"mail" => "sumo@xxx.jp"）
 
-【exceptメソッド】
-// リクエストから☓☓☓以外の入力データを取得
+【exceptメソッド】　（リクエストから☓☓☓以外の入力データを取得）
 $request->except('☓☓☓');
+例：$request->except('password');　→（パスワード以外全部）
 ```
 【allメソッド】は全入力データ、【onlyメソッド】は指定データだけ、【exceptメソッド】は指定データ以外を取得できます。 +
 `only`や`except`は、パスワードなどの機密情報を含めたくない時などに良さそうですね。 +
