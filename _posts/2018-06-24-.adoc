@@ -106,6 +106,30 @@ GETリクエストの時も、いろいろ取得できるのですね〜 +
 Route::post('/testregist/{a}/{b}', 'TestController@testregist');
 ```
 
+▪️resources/views/test/index.blade.php
+
+```
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>リクエストの勉強</title>
+</head>
+<body>
+    <h1>入力フォーム</h1>
+    <div>
+        {{ Form::open(['url' => '/testregist/lala/sumo', 'method' => 'post']) }}
+            <label>お名前：<input type="text" name="name"></label><br>
+            <label>メール：<input type="text" name="mail"></label><br>
+            <label>パスワード：<input type="password" name="password"></label><br>
+            <input type="submit" name="regist" value="送信する">
+        {{ Form::close() }}
+    </div>
+</body>
+</html>
+```
+
+
 ▪️app/Http/Controllers/TestController.php
 
 ```
@@ -130,57 +154,49 @@ public function testregist(Request $request)
     return view('test.index');
 }
 ```
-
-▪️resources/views/test/index.blade.php
-
-```
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>リクエストの勉強</title>
-</head>
-<body>
-    <h1>入力フォーム</h1>
-    <div>
-        {{ Form::open(['url' => '/testregist/lala/sumo', 'method' => 'post']) }}
-            <label>お名前：<input type="text" name="name"></label><br>
-            <label>メール：<input type="text" name="mail"></label><br>
-            <label>パスワード：<input type="password" name="password"></label><br>
-            <input type="submit" name="regist" value="登録する">
-        {{ Form::close() }}
-    </div>
-</body>
-</html>
-```
+簡単に、名前・メールアドレス・パスワードを送信するフォームを作成して試してみました。 +
+※それぞれのメソッドの使用方法と注意点がこちらです↓ +
 
 ```
+【inputメソッド】
 // ☓☓☓の取得→（）
 $request->input('☓☓☓');
 $request->☓☓☓;
 ```
+
+
 ```
+【inputメソッド（デフォルト値指定）】
 // リクエストに☓☓☓が存在していない場合に、デフォルト値で指定した△△△を返す→（）
 $request->input('☓☓☓', '△△△');
 ```
+
+
 ```
+【allメソッド】
 // リクエストの全入力データを配列で取得→（）
 $request->all();
 ```
+
+
 ```
+【onlyメソッド】
 // リクエストから☓☓☓の入力データだけ取得→（）
 $request->only('☓☓☓');
-```
-```
+
+【exceptメソッド】
 // リクエストから☓☓☓以外の入力データを取得→（）
 $request->except('☓☓☓');
 ```
+
+
 ```
-----入力値の存在チェック----
+【】
 // リクエストに☓☓☓が存在するか判定→（）
 $request->has('☓☓☓');
 ```
 ```
+【】
 // リクエストに☓☓☓が存在しており、かつ空でない事を判定→（）
 $request->filled('☓☓☓');
 
