@@ -1,5 +1,5 @@
 # アルゴリズム計算量入門　〜　②
-:hp-alt-title: Introduction of Computational Complexity
+:hp-alt-title: Introduction of Computational Complexity 2
 :hp-tags: Complexity, Sort Algorithm, bigen
 
 どうも、bigenです。 +
