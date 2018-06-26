@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>アルゴリズム計算量入門　〜　① - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="アルゴリズム計算量入門　〜　①">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="アルゴリズム計算量入門　〜　①">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/06/17/Introduction-of-Computational-Complexity.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="アルゴリズム計算量入門　〜　①" />
+    <meta property="og:description" content="はじめに どうも、bigenです。 最近、弊社の新人エンジニア向けに勉強会が頻繁に行われています。 その中で、ソートアルゴリズムやサーチアルゴリズムを自力で実装してみる練習問題がありました。 ソートやサーチなどのアルゴリズムは計算量の考え方を学ぶのにもちょうどいい題材で、知っていることを社内共有用も兼ねてブログにまとめて行こうかと思います。 今回はソートアルゴリズムの計算量について考えていきます。 内容 計算量とは リソースの種類による分類 時間計算量(time complexity) 空間計算量(space complexity) 扱うデータの種類に..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/06/17/Introduction-of-Computational-Complexity.html" />
+    <meta property="article:published_time" content="2018-06-16T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-06-26T02:48:17.385Z" />
+    <meta property="article:tag" content="Complexity" />
+    <meta property="article:tag" content="Search Algorithm" />
+    <meta property="article:tag" content="bigen" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="アルゴリズム計算量入門　〜　①" />
+    <meta name="twitter:description" content="はじめに どうも、bigenです。 最近、弊社の新人エンジニア向けに勉強会が頻繁に行われています。 その中で、ソートアルゴリズムやサーチアルゴリズムを自力で実装してみる練習問題がありました。 ソートやサーチなどのアルゴリズムは計算量の考え方を学ぶのにもちょうどいい題材で、知っていることを社内共有用も兼ねてブログにまとめて行こうかと思います。 今回はソートアルゴリズムの計算量について考えていきます。 内容 計算量とは リソースの種類による分類 時間計算量(time complexity) 空間計算量(space complexity) 扱うデータの種類に..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/06/17/Introduction-of-Computational-Complexity.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars1.githubusercontent.com/u/23183770?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "アルゴリズム計算量入門　〜　①",
+    "url": "http://tech.innovation.co.jp/2018/06/17/Introduction-of-Computational-Complexity.html",
+    "datePublished": "2018-06-16T15:00:00.000Z",
+    "dateModified": "2018-06-26T02:48:17.385Z",
+    "keywords": "Complexity,  Search Algorithm,  bigen",
+    "description": "はじめに どうも、bigenです。 最近、弊社の新人エンジニア向けに勉強会が頻繁に行われています。 その中で、ソートアルゴリズムやサーチアルゴリズムを自力で実装してみる練習問題がありました。 ソートやサーチなどのアルゴリズムは計算量の考え方を学ぶのにもちょうどいい題材で、知っていることを社内共有用も兼ねてブログにまとめて行こうかと思います。 今回はソートアルゴリズムの計算量について考えていきます。 内容 計算量とは リソースの種類による分類 時間計算量(time complexity) 空間計算量(space complexity) 扱うデータの種類に..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Complexity tag-Search-Algorithm tag-bigen no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="17 Jun 2018" class="post-meta__date date">17 Jun 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Complexity">Complexity</a>, <a href="http://tech.innovation.co.jp/tag/Search-Algorithm"> Search Algorithm</a>, <a href="http://tech.innovation.co.jp/tag/bigen"> bigen</a></span>
+        <span class="post-meta__author author"><img src="https://avatars1.githubusercontent.com/u/23183770?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">アルゴリズム計算量入門　〜　①</h1>
+    </header>
+
+    <section class="post tag-Complexity tag-Search-Algorithm tag-bigen">
+      <div class="sect1">
+<h2 id="__">はじめに</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>どうも、bigenです。<br>
+最近、弊社の新人エンジニア向けに勉強会が頻繁に行われています。<br>
+その中で、ソートアルゴリズムやサーチアルゴリズムを自力で実装してみる練習問題がありました。<br>
+<br>
+ソートやサーチなどのアルゴリズムは計算量の考え方を学ぶのにもちょうどいい題材で、知っていることを社内共有用も兼ねてブログにまとめて行こうかと思います。<br></p>
+</div>
+<div class="paragraph">
+<p>今回はソートアルゴリズムの計算量について考えていきます。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">内容</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>計算量とは</p>
+<div class="ulist">
+<ul>
+<li>
+<p>リソースの種類による分類</p>
+<div class="ulist">
+<ul>
+<li>
+<p>時間計算量(time complexity)</p>
+</li>
+<li>
+<p>空間計算量(space complexity)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>扱うデータの種類による分類</p>
+<div class="ulist">
+<ul>
+<li>
+<p>最悪計算量(worst-case complexity)</p>
+</li>
+<li>
+<p>平均計算量(average-case complexity)</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>ソートアルゴリズムの計算量について</p>
+<div class="ulist">
+<ul>
+<li>
+<p>バブルソート</p>
+</li>
+<li>
+<p>バケツソート</p>
+</li>
+<li>
+<p>マージソート</p>
+</li>
+<li>
+<p>どう違うの？</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">計算量とは</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>計算量とは、英語ではcomputatoinal complexityあるいは単にcomplexityといいます。<br>
+直訳すると「計算の複雑さ」です。<br>
+複雑さといっても、指標は色々あり、<br></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>計算にどのぐらいの時間がかかるか（時間計算量）</p>
+</li>
+<li>
+<p>計算にどれぐらいのメモリが必要か（空間計算量）</p>
+</li>
+<li>
+<p>どれぐらい計算時間にばらつきがあるか（平均計算量、最悪計算量、最良計算量）</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>といった観点があります。</p>
+</div>
+<div class="sect3">
+<h4 id="__time_complexity">時間計算量(time complexity)</h4>
+<div class="paragraph">
+<p>時間計算量は、計算にどのぐらいの時間がかかるか、を示す指標です。<br>
+計算量について議論する場合、やはり時間についてに制約がネックになる場合が多く、 単に「計算量」といった場合「時間計算量」を指すことが多いです。<br></p>
+</div>
+<div class="paragraph">
+<p>具体的な時間（xx秒で終わる、xx日で終わる）で議論しようとすると CPUやメモリのスペック、場合によってはインターネット環境など色々な要素に左右されてしまうため、
+アルゴリズムについて考える場合は</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>「データの規模」に対して計算時間がどれぐらい依存するか</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>という観点で議論されます。<br>
+たとえばソートアルゴリズムだと、配列の要素数が100倍になったら計算時間は10000倍になるよね、とかとういった具合です。<br></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__space_complexity">空間計算量(space complexity)</h4>
+<div class="paragraph">
+<p>空間計算量（あるいは領域計算量）は、計算にどれぐらいメモリが必要か、を示す指標です。<br>
+こちらも時間計算量と同様に、「データの規模が大きくなるにつれ専有するメモリがどのくらい増えるか」という観点で議論されます。<br>
+<br>
+処理を並列化させて同時に複数の計算を進めるようなアルゴリズムの場合、 空間計算量がネックとなる場合があります。<br></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__worst_case_complexity">最悪計算量(worst-case complexity)</h4>
+<div class="paragraph">
+<p>最悪計算量は、もっとも時間がかかるデータを相手にした場合、計算量がどれぐらいになるかを考える指標です。<br>
+通常、時間計算量に対して考えますが、明示的でない場合は「最悪時間計算量」「最悪空間計算量」などと使い分けます。<br></p>
+</div>
+<div class="paragraph">
+<p>アルゴリズムの性能を考える場合は、多くの場合この最悪計算量を基準に考えます。<br>
+「平均1分で終わるんだけど、運が悪いと1年かかるんだよねー」 <br>
+とか言われたら使えないですよね？<br>
+そういうことです。<br>
+<br>
+同様に最良計算量という指標もありますが、アルゴリズムの性能を議論する際にはあまり使われません。<br></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__average_case_complexity">平均計算量(average-case complexity)</h4>
+<div class="paragraph">
+<p>平均計算量は、あらゆる種類のデータを相手にしたときに、平均的に計算量がどのくらいになるかを考える指標です。<br>
+通常、時間計算量に対して考えますが、明示的でない場合は「平均時間計算量」「平均空間計算量」などと使い分けます。<br>
+<br>
+最悪計算量となるケースが極端に少ないとわかっている場合や、最悪ケースになった計算を無視できる（時間がかかるデータは処理を中断して破棄してもよいケースなど）場合などは平均計算量が重視されます。+</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___4">ソートアルゴリズムの計算量について</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ソートアルゴリズムの中から、代表的なアルゴリズム３つについて、計算量の特徴を見ていきたいと思います。<br>
+<br>
+<br></p>
+</div>
+<div class="sect3">
+<h4 id="___5">バブルソート</h4>
+<div class="paragraph">
+<p>言わずも知れたバブルソートです。<br>
+データの数をnとすると、<strong>最悪時間計算量は<em>O(n<sup>2</sup>)</em></strong>、<strong>空間計算量は<em>O(n)</em></strong>となります。<br>
+<br>
+計算量の導出などは下記の資料が非常に参考になりますので、参考にしてみてください。<br>
+<a href="http://www.dais.is.tohoku.ac.jp/~shioura/teaching/ad11/ad11-02.pdf">アルゴリズムとデータ構造第2回 東北大学 塩浦昭義</a><br>
+<br>
+はい。多分多くの人はこれで意味わかんねってなりますよね？<br>
+詳しい説明は資料を参照してほしいのですが、<br>
+ <strong>「計算時間はデータの数の（だいたい）2乗に比例する」</strong><br>
+という意味です。<br>
+もう少し具体的に言うと、
+データの数が10倍になったら計算時間は100倍、データの数が100倍になったら計算時間は10000倍になる、ということです。<br>
+<br>
+アルゴリズムを思い出してみると、n個のデータそれぞれに対して、自分以外のn-1個のデータに対して「俺より大きい？小さい？」と比較を繰り返します。<br>
+ソートが終わったデータに対しては比較する必要がないのでもう少し少なくなるんですが、それを込みで考えても計算時間は<br>
+<strong><em>(n-1)(n-2)/2</em>回 * (比較一回の計算時間) =  <em>(n<sup>2</sup> - 3n + 2) * c</em></strong><br>
+の比較が行われます。<br>
+nの数がかなり大きくなっていくと、<strong><em>-3n</em></strong>に比べて<strong><em>n<sup>2</sup></em></strong>は爆発的に大きくなり、  <strong><em>-3n</em></strong>だとか<strong><em>c</em>倍</strong>してるだとかの部分はほぼ無視できるようになります。<br>
+【参考（n=10000のとき）】<br>
+(n<sup>2</sup> - 3n + 2)c = (100000000 - 30000 + 2)c<br>
+　　　　　　　　↑これに比べて↑これはほぼ無視できる</p>
+</div>
+<div class="paragraph">
+<p><strong>結局n<sup>2</sup>の部分がどれぐらい大きいかだけ注目しておけば大体の計算量を見るには十分</strong>ということになり、これを数学的に表現したのが <strong><em>O(n<sup>2</sup>)</em></strong>という記号です。<br></p>
+</div>
+<div class="paragraph">
+<p>空間計算量については、バブルソートは計算用に一時的にデータを記憶したりする必要はないので、データの数分の配列が確保できれば十分です。<br>
+なので、 <strong><em>O(n)</em></strong> となります。</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___6">バケツソート</h4>
+<div class="paragraph">
+<p>バケツソートは少し特殊なアルゴリズムで、あらかじめデータのとりうる範囲がわかっている必要があります。<br>
+データの数を n個、データのとりうる範囲（用意するバケツの数）をmとすると、最悪時間計算量は<strong><em>O(m+n)</em></strong>、空間計算量も <strong><em>O(m+n)</em></strong> となります。<br>
+<br>
+計算量の導出について詳しくは<br>
+<a href="http://www.dais.is.tohoku.ac.jp/~shioura/teaching/ad11/ad11-03.pdf">アルゴリズムとデータ構造第3回
+ 東北大学 塩浦昭義</a><br>
+がわかりやすいくまとまっています。<br>
+<br>
+簡単にいうと、ぞれぞれのデータを１回ずつ見て（合計n回）バケツに投げ入れ、各バケツに入っているデータの数を調べる(m回)ので、大体n + m回ぐらい計算するよね、っていうことです。<br>
+空間計算量も、n個のデータを保持する配列と、m個のバケツを保持する配列ぐらいのメモリがあればOKということです。<br></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___7">マージソート</h4>
+<div class="paragraph">
+<p>マージソートは、最悪時間計算量 <strong><em>O(n</em> log <em>n)</em></strong>、空間計算量 <strong><em>O(n)</em></strong> となります。<br>
+<br>
+ここでまた多くの人がつまずきがちな <strong>log <em>n</em></strong>という謎の記号が出てきました。<br>
+<strong>log</strong> というのは対数と呼ばれる記号で、超ざっくり説明すると
+「データの数が100倍になっても計算時間は3倍、データの数が10000倍になっても計算時間は5倍」っていうことです。<br>
+データの数が増えれば確かにlog <em>n</em>も増えるんですが、そのスピードはめっちゃ遅いです。</p>
+</div>
+<div class="paragraph">
+<p>計算量の導出はかなり難しいですが、興味ある人は下記を参照してください。<br>
+<a href="http://www.dais.is.tohoku.ac.jp/~shioura/teaching/ad11/ad11-02.pdf">アルゴリズムとデータ構造第2回 東北大学 塩浦昭義</a><br></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___8">どう違うの？</h4>
+<div class="paragraph">
+<p>ここまで <strong><em>O()</em></strong>という記号についても触れ、めっちゃ大きいとかめっちゃ遅いとか書いてましたが、具体的にどれぐらい差があるか見てみましょう。</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"></th>
+<th class="tableblock halign-left valign-top">n = 100</th>
+<th class="tableblock halign-left valign-top">n=10000</th>
+<th class="tableblock halign-left valign-top">n=1000000</th>
+<th class="tableblock halign-left valign-top">100000000</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">log <em>n</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">100</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1000000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">100000000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n</em> log <em>n</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">200</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">50000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7000000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">900000000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>n<sup>2</sup></em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">100000000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1000000000000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10000000000000000</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>具体的に見ても0の数が多すぎて分かりづらいかもしれませんが、100万件のデータをソートするのに<br>
+・バケツソートだと１時間<br>
+・マージソートだと7時間<br>
+・バブルソートだと114年<br>
+ぐらいの差が出るってことですね。<br>
+<br>
+途中の計算の時に「１回の反復にかかる時間<strong>c</strong>とか無視しちゃいましょう」、とか言っていたことを思い出してほしいのですが、 これを見ると<br>
+<strong>「一回の反復はバブルソートよりマージソートのほうが複雑だから、マージソートはcが30倍ぐらい違うよ！」</strong><br>
+とか言っても <strong>「だから？」</strong> ってなるのがよく分かりますね</p>
+</div>
+<div class="paragraph">
+<p>あと、対数logがめっちゃ遅いっていうのもわかってもらえるかと思います。<br>
+<br>
+<br>
+<strong>時間計算量</strong> だけを見るとバケツソート最強じゃんと思いますが、バケツソートはあらかじめデータの取りうる値の範囲がわかっていないと使えないという強い制約があります。<br>
+<br>
+これは、例えばメールアドレスのような長さがはっきりとは決まっていないものには使えないということになります。<br>
+ 他にも、空間計算量がデータの範囲mに依存しているため、日本語の名前などにも使えません。<br>
+常用漢字だけでも2136字あり、名前に使われる文字数が最大6文字としても、2136<sup>6</sup> ~ 10<sup>20</sup>、つまり1垓個の配列を用意する必要があります。<br>
+<br>
+このような制約をクリアできるデータであれば、バケツソートは非常に高速だと言えるでしょう。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___9">おわりに</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>今回は計算量を考える時の基本的なスキーマについて説明し、ソートアルゴリズムの計算量について少し具体的な数値を見てみました。<br>
+興味が湧いた方は、ぜひ導出方法についても見てみてください。<br>
+<br>
+こちらからは以上です。</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
