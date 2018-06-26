@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Laravel5.6でRequestクラスの勉強してみた - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Laravel5.6でRequestクラスの勉強してみた">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Laravel5.6でRequestクラスの勉強してみた">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/06/24/Laravel56-Request.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Laravel5.6でRequestクラスの勉強してみた" />
+    <meta property="og:description" content="こんにちは、未経験中途エンジニアの、すももです。 今回は、業務で使用しているLaravelのRequestクラスについて、手の長いリーダーから色々教えてもらったので、Laravel初心者向けに書きたいと思います〜。 リクエストURIなど取得してみる 〜準備〜 ▪️routes/web.php Route::get(&#x27;/test/{a}/{b}&#x27;, &#x27;TestController@test&#x27;); ▪️app/Http/Controllers/TestController.php public function test(Request $request)..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/06/24/Laravel56-Request.html" />
+    <meta property="article:published_time" content="2018-06-23T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-06-26T06:14:01.608Z" />
+    <meta property="article:tag" content="sumomo" />
+    <meta property="article:tag" content="Laravel" />
+    <meta property="article:tag" content="Request" />
+    <meta property="article:tag" content="beginner" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Laravel5.6でRequestクラスの勉強してみた" />
+    <meta name="twitter:description" content="こんにちは、未経験中途エンジニアの、すももです。 今回は、業務で使用しているLaravelのRequestクラスについて、手の長いリーダーから色々教えてもらったので、Laravel初心者向けに書きたいと思います〜。 リクエストURIなど取得してみる 〜準備〜 ▪️routes/web.php Route::get(&#x27;/test/{a}/{b}&#x27;, &#x27;TestController@test&#x27;); ▪️app/Http/Controllers/TestController.php public function test(Request $request)..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/06/24/Laravel56-Request.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars0.githubusercontent.com/u/34367516?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "Laravel5.6でRequestクラスの勉強してみた",
+    "url": "http://tech.innovation.co.jp/2018/06/24/Laravel56-Request.html",
+    "datePublished": "2018-06-23T15:00:00.000Z",
+    "dateModified": "2018-06-26T06:14:01.608Z",
+    "keywords": "sumomo,  Laravel,  Request,  beginner",
+    "description": "こんにちは、未経験中途エンジニアの、すももです。 今回は、業務で使用しているLaravelのRequestクラスについて、手の長いリーダーから色々教えてもらったので、Laravel初心者向けに書きたいと思います〜。 リクエストURIなど取得してみる 〜準備〜 ▪️routes/web.php Route::get(&#x27;/test/{a}/{b}&#x27;, &#x27;TestController@test&#x27;); ▪️app/Http/Controllers/TestController.php public function test(Request $request)..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-sumomo tag-Laravel tag-Request tag-beginner no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="24 Jun 2018" class="post-meta__date date">24 Jun 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/sumomo">sumomo</a>, <a href="http://tech.innovation.co.jp/tag/Laravel"> Laravel</a>, <a href="http://tech.innovation.co.jp/tag/Request"> Request</a>, <a href="http://tech.innovation.co.jp/tag/beginner"> beginner</a></span>
+        <span class="post-meta__author author"><img src="https://avatars0.githubusercontent.com/u/34367516?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">Laravel5.6でRequestクラスの勉強してみた</h1>
+    </header>
+
+    <section class="post tag-sumomo tag-Laravel tag-Request tag-beginner">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんにちは、未経験中途エンジニアの、すももです。<br>
+今回は、業務で使用しているLaravelのRequestクラスについて、手の長いリーダーから色々教えてもらったので、Laravel初心者向けに書きたいと思います〜。<br>
+<br>
+<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__uri_br">リクエストURIなど取得してみる<br></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="__">〜準備〜</h3>
+<div class="paragraph">
+<p>▪️routes/web.php</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>Route::get('/test/{a}/{b}', 'TestController@test');</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>▪️app/Http/Controllers/TestController.php</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>public function test(Request $request)
+{
+    dd(
+        // リクエストURIの取得
+        $request-&gt;path(),
+        // リクエストのURIが指定されたパターンに合致するか確認
+        $request-&gt;is('*/sumo'),
+        // 完全なURLを取得(クエリ文字列なし)
+        $request-&gt;url(),
+        // 完全なURLを取得(クエリ文字列付き)
+        $request-&gt;fullUrl(),
+        // リクエストメソッドの取得
+        $request-&gt;isMethod('post')
+    );
+    return view('test.index');
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>試しに、<code>例：http://localhost/test/lala/sumo?aaa=bbb</code>にアクセスしてみる。<br>
+※（）内が取得した内容です↓<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>【pathメソッド】
+// リクエストURIの取得→（test/lala/sumo）
+$request-&gt;path();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>【pathメソッド】では、クエリ文字列なしの<code><a href="http://localhost/" class="bare">http://localhost/</a></code>以降が取得できました。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>【isメソッド】
+// リクエストのURIが指定されたパターンに一致するか判定→（true）
+$request-&gt;is('*/sumo');</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>【isメソッド】では、<code>true/false</code>が返ってきます。<br>
+今回はURIの最後が<code>/sumo</code>で一致している為<code>true</code>です。（*をワイルドカードとして使用できます。）<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>【urlメソッド】
+// 完全なURLを取得(クエリ文字列なし)→（http://localhost/test/lala/sumo）
+$request-&gt;url();
+
+【fullUrlメソッド】
+// 完全なURLを取得(クエリ文字列付き)→（http://localhost/test/lala/sumo?aaa=bbb）
+$request-&gt;fullUrl();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>【urlメソッド】【fullUrlメソッド】では、クエリ文字列有り無しのURLが取得できました。<br>
+用途によって使い分けられそうですね。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>【methodメソッド】
+// リクエストメソッドの取得→（GET）
+$request-&gt;method();
+
+【isMethodメソッド】
+// リクエストメソッドの判定→（false）
+$request-&gt;isMethod('post');</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>【methodメソッド】では、リクエストのHTTP動詞が取得できます。<br>
+【isMethodメソッド】の方は、 指定した文字列とHTTP動詞が一致するか<code>true/false</code>で判定してくれます。<br>
+使いどころはいまいち分からないのですが、「めそっどめそっど」ってくどい名前が気に入ったので紹介してみました。笑
+<br>
+<br></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__br">フォームで入力したデータを受け取る<br></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="___2">〜準備〜</h3>
+<div class="paragraph">
+<p>▪️routes/web.php</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>Route::post('/testregist/{a}/{b}', 'TestController@testregist');</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>▪️resources/views/test/index.blade.php</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="ja"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;リクエストの勉強&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;入力フォーム&lt;/h1&gt;
+    &lt;div&gt;
+        {{ Form::open(['url' =&gt; '/testregist/lala/sumo', 'method' =&gt; 'post']) }}
+            &lt;label&gt;お名前：&lt;input type="text" name="name"&gt;&lt;/label&gt;&lt;br&gt;
+            &lt;label&gt;メール：&lt;input type="text" name="mail"&gt;&lt;/label&gt;&lt;br&gt;
+            &lt;label&gt;パスワード：&lt;input type="password" name="password"&gt;&lt;/label&gt;&lt;br&gt;
+            &lt;input type="submit" name="regist" value="送信する"&gt;
+        {{ Form::close() }}
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>▪️app/Http/Controllers/TestController.php</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>public function testregist(Request $request)
+{
+    dd(
+        // 名前の取得
+        $request-&gt;input('name'),
+        // リクエストにnameが存在していない場合に、デフォルト値で指定したsumoを返す
+        $request-&gt;input('name', 'sumo'),
+        // リクエストの全入力データを配列で取得
+        $request-&gt;all(),
+        // リクエストからmailの入力データだけ取得
+        $request-&gt;only('mail'),
+        // リクエストからpassword以外の入力データを取得
+        $request-&gt;except('password'),
+        // リクエストにnameが存在するか判定
+        $request-&gt;has('name'),
+        // リクエストにnameが存在しており、かつ空でない事を判定
+        $request-&gt;filled('name')
+    );
+    return view('test.index');
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>簡単に、名前・メールアドレス・パスワードを送信するフォームを作成しました。<br>
+試しに以下内容を送ってみます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>お名前：すもも
+メール：sumo@xxx.jp
+パスワード：xxxxxx</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>※以下、<code>☓☓☓</code>の箇所には、bladeで設定した<code>input type</code>の<code>name="☓☓☓"</code>より取得したいデータの名前を入れてください。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>【inputメソッド】　（☓☓☓の取得）
+$request-&gt;input('☓☓☓');
+例：$request-&gt;input('name');　→（すもも）</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>【inputメソッド】では、指定した項目のデータが取得できました。<br>
+<code>input</code>を省いて<code>$request&#8594;name;</code>でも同様に指定データを取得できます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>【inputメソッド〜デフォルト値指定〜】　（リクエストに☓☓☓が存在していない場合に、デフォルト値で指定した△△△を返す）
+$request-&gt;input('☓☓☓', '△△△');
+例：$request-&gt;input('name', 'sumo');　→（※すもも）</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>※注意※【inputメソッド〜デフォルト値指定〜】は、フォームに該当の項目<code>name="☓☓☓"</code>があるけどユーザーが未入力だった場合ではなく、そもそもフォームに指定した<code>name="☓☓☓"</code>が存在しない時にデフォルト値が返ってきます。<br>
+今回は、フォームに該当の項目がある為、そのまま入力値の<code>すもも</code>が返ってきました。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>【allメソッド】　（リクエストの全入力データを配列で取得）
+$request-&gt;all();
+
+【onlyメソッド】　（リクエストから☓☓☓の入力データだけ取得）
+$request-&gt;only('☓☓☓');
+例：$request-&gt;only('mail');　→（"mail" =&gt; "sumo@xxx.jp"）
+
+【exceptメソッド】　（リクエストから☓☓☓以外の入力データを取得）
+$request-&gt;except('☓☓☓');
+例：$request-&gt;except('password');　→（パスワード以外全部）</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>【allメソッド】は全入力データ、【onlyメソッド】は指定データだけ、【exceptメソッド】は指定データ以外を取得できます。<br>
+<code>only</code>や<code>except</code>は、パスワードなどの機密情報を含めたくない時などに良さそうですね。<br>
+入力をフラッシュデータとして保存する【flashメソッド】でも、<code>flashOnly</code>や<code>flashExcept</code>で同様の使い分けができます。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>【hasメソッド】
+// リクエストに☓☓☓が存在するか判定(返り値：true/false)
+$request-&gt;has('☓☓☓');
+
+【filledメソッド】
+// リクエストに☓☓☓が存在しており、かつ空でない事を判定(返り値：true/false)
+$request-&gt;filled('☓☓☓');</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>※注意※【hasメソッド】は【inputメソッド〜デフォルト値指定〜】の時と同じように、そもそもフォームに指定した<code>name="☓☓☓"</code>が存在しない時に<code>false</code>が返ってきます。<br>
+<code>name="☓☓☓"</code>の値が空ではないことを判定したい場合は【filledメソッド】の方を使いましょう。<br>
+<br>
+ <mark><strong>【filledメソッド】はLaravel 5.5で追加されたメソッドです。</strong></mark> <br>
+Laravel 5.4までは【hasメソッド】のみだった為、値が空ではないことの判定を以前は【hasメソッド】でしていました。以前から使っている方は注意が必要ですね！<br>
+<br>
+<br></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__br_2">番外編（ヘルパ関数）<br></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ちょっと疲れたので、リクエストから離れて。。<br>
+数あるヘルパ関数の中から気になったものだけ紹介します〜</p>
+</div>
+<div class="sect2">
+<h3 id="___3">〜デバッグ系〜</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>【dd関数】
+// 指定された変数($☓☓☓)の内容を表示し、スクリプトの実行も停止
+dd($☓☓☓);
+
+【dump関数】
+// 指定された変数($☓☓☓)の内容を表示するが、スクリプトの実行は停止しない
+dump($☓☓☓);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>今回のブログでも使用していた<code>dd();</code><br>
+いつも<code>dd();</code>しか使ってなかったですが、<code>dump();</code>もあるのですね！<br>
+画面の表示も見ながらデバッグしたい時は<code>dump();</code>を使ってみることにします〜。<br>
+<br></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___4">〜文字列変換系〜</h3>
+<div class="paragraph">
+<p>それぞれに<code>$test = 'onaka suita nanika tabetai';</code>を与えてみました。<br>
+※（）内が取得した内容です↓<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>【snake_case関数】
+// 文字列をスネークケース（小文字名下線区切り）に変換
+snake_case($test);　→（onaka_suita_nanika_tabetai）
+
+【camel_case関数】
+// 文字列をキャメルケース（２つ目以降の単語の先頭は大文字）へ変換
+camel_case($test);　→（onakaSuitaNanikaTabetai）
+
+【studly_case関数】
+// 文字列をアッパーキャメルケース（単語の頭文字を大文字）に変換
+studly_case($test);　→（OnakaSuitaNanikaTabetai）
+
+【title_case関数】
+// 指定された文字列をタイトルケースへ変換
+title_case($test);　→（Onaka Suita Nanika Tabetai）
+
+【kebab_case関数】
+// 指定した文字列をケバブケースに変換
+kebab_case($test);　→（onaka-suita-nanika-tabetai）</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>スネークケース</code>と<code>キャメルケース</code>は知っていましたが、<code>ケバブケース</code>もあるのですね！！<br>
+文字列がハイフンで繋がれている様が、肉が串刺しにされたケバブに似ていることから<code>ケバブケース</code>と呼ばれているそうです。<br>
+ああ、なおさらお腹が空いてきましたので、終わりにしたいと思います。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__br_3">感想<br></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>勉強するまで、<code>$request</code>で受け取れるのは、フォームとかから送ったデータだけかと思ってました。笑<br>
+GETリクエストの時もいろいろ取得できるのですね〜。<br>
+リクエストクラスだけでも、ここに載せきれないぐらいメソッドが用意されていて奥が深いですが、今後も少しずつ学んでいきたいと思います。<br>
+<br>
+〜おわり〜<br></p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
