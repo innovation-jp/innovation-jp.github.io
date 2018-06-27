@@ -55,7 +55,7 @@ var _trackingid = 'LFT-10003-1';
     <meta property="og:description" content="こんにちは、未経験中途エンジニアの、すももです。 今回は、業務で使用しているLaravelのRequestクラスについて、手の長いリーダーから色々教えてもらったので、Laravel初心者向けに書きたいと思います〜。 リクエストURIなど取得してみる 〜準備〜 ▪️routes/web.php Route::get(&#x27;/test/{a}/{b}&#x27;, &#x27;TestController@test&#x27;); ▪️app/Http/Controllers/TestController.php public function test(Request $request)..." />
     <meta property="og:url" content="http://tech.innovation.co.jp/2018/06/24/Laravel56-Request.html" />
     <meta property="article:published_time" content="2018-06-23T15:00:00.000Z" />
-    <meta property="article:modified_time" content="2018-06-26T06:14:01.608Z" />
+    <meta property="article:modified_time" content="2018-06-27T09:48:39.995Z" />
     <meta property="article:tag" content="sumomo" />
     <meta property="article:tag" content="Laravel" />
     <meta property="article:tag" content="Request" />
@@ -81,7 +81,7 @@ var _trackingid = 'LFT-10003-1';
     "headline": "Laravel5.6でRequestクラスの勉強してみた",
     "url": "http://tech.innovation.co.jp/2018/06/24/Laravel56-Request.html",
     "datePublished": "2018-06-23T15:00:00.000Z",
-    "dateModified": "2018-06-26T06:14:01.608Z",
+    "dateModified": "2018-06-27T09:48:39.995Z",
     "keywords": "sumomo,  Laravel,  Request,  beginner",
     "description": "こんにちは、未経験中途エンジニアの、すももです。 今回は、業務で使用しているLaravelのRequestクラスについて、手の長いリーダーから色々教えてもらったので、Laravel初心者向けに書きたいと思います〜。 リクエストURIなど取得してみる 〜準備〜 ▪️routes/web.php Route::get(&#x27;/test/{a}/{b}&#x27;, &#x27;TestController@test&#x27;); ▪️app/Http/Controllers/TestController.php public function test(Request $request)..."
 }
@@ -296,6 +296,8 @@ var _trackingid = 'LFT-10003-1';
         // 完全なURLを取得(クエリ文字列付き)
         $request-&gt;fullUrl(),
         // リクエストメソッドの取得
+        $request-&gt;method(),
+        // リクエストメソッドの取得
         $request-&gt;isMethod('post')
     );
     return view('test.index');
@@ -373,7 +375,7 @@ $request-&gt;isMethod('post');</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>Route::post('/testregist/{a}/{b}', 'TestController@testregist');</code></pre>
+<pre class="highlight"><code>Route::post('/testregist/{a}/{b}', 'TestController@testRegist');</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -406,7 +408,7 @@ $request-&gt;isMethod('post');</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>public function testregist(Request $request)
+<pre class="highlight"><code>public function testRegist(Request $request)
 {
     dd(
         // 名前の取得
@@ -451,7 +453,8 @@ $request-&gt;input('☓☓☓');
 </div>
 <div class="paragraph">
 <p>【inputメソッド】では、指定した項目のデータが取得できました。<br>
-<code>input</code>を省いて<code>$request&#8594;name;</code>でも同様に指定データを取得できます。</p>
+<code>input</code>を省いて<code>$request&#8594;name;</code>でも同様に指定データを取得できます。<br>
+もしくはヘルパ関数の【request関数】を使用することもできます。</p>
 </div>
 <div class="listingblock">
 <div class="content">
