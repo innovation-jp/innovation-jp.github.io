@@ -34,6 +34,8 @@ public function test(Request $request)
         // 完全なURLを取得(クエリ文字列付き)
         $request->fullUrl(),
         // リクエストメソッドの取得
+        $request->method(),
+        // リクエストメソッドの取得
         $request->isMethod('post')
     );
     return view('test.index');
@@ -99,7 +101,7 @@ $request->isMethod('post');
 ▪️routes/web.php
 
 ```
-Route::post('/testregist/{a}/{b}', 'TestController@testregist');
+Route::post('/testregist/{a}/{b}', 'TestController@testRegist');
 ```
 
 ▪️resources/views/test/index.blade.php
@@ -129,7 +131,7 @@ Route::post('/testregist/{a}/{b}', 'TestController@testregist');
 ▪️app/Http/Controllers/TestController.php
 
 ```
-public function testregist(Request $request)
+public function testRegist(Request $request)
 {
     dd(
         // 名前の取得
@@ -167,7 +169,7 @@ $request->input('☓☓☓');
 
 ```
 【inputメソッド】では、指定した項目のデータが取得できました。 +
-`input`を省いて`$request->name;`でも同様に指定データを取得できます。
+`input`を省いて`$request->name;`でも同様に指定データを取得できます。もしくはヘルパ関数の【request関数】を使用することもできます。
 
 
 ```
