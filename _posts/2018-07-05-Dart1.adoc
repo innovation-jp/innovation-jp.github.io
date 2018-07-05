@@ -1,0 +1,250 @@
+# Dartでウェブフレームワークを作る（1）
+:hp-tags: Dart
+
+先日このイノベーションエンジニアブログで、 +
+同僚のはすみんが以下の記事を書いていました。
+
+FlutterとDartを使ってみる +
+http://tech.innovation.co.jp/2018/05/21/Flutter-Dart.html
+
+上記、記事中でも紹介しています通り、 +
+FlutterはiOSとAndroidで動くアプリケーションを開発することができるフレームワークですが、 +
+その中で使われているDartというプログラミング言語の言語仕様が美しく、 +
+ぜひこの言語でサーバーサイドのフレームワークを作ってみたいと思いました。
+
+まず、必要なものを洗い出してみました。
+
+* ORマッパー
+* DBマイグレーション機能
+* 開発用Webサーバ機能
+* routing機能
+* オートローダー機能
+* validation機能
+* テンプレートエンジン
+* バッチ実行機能
+* モジュール作成導入機能
+* キャッシュ機能
+
+ひとまずこのぐらいあれば大丈夫でしょうか。
+
+まずは、routing機能を作成したいと思いました。
+
+## ディレクトリ構成を考える
+
+routing機能を作成する前に、まずディレクトリ構成を考えてみました。
+
+```
+root ―┬― app ―――┬― controller
+　　　 ├― config    　　　　　　　　　　├― model
+     |         　　　　　　　　　　　　　　   ├― service
+     |    　　　　　　　　　　　　　　　        └― view
+   ├― lib
+ 　　 ├― public ----- index.dart
+　　　 ├― route.dart
+　　　 └― vendor
+```
+
+appにアプリケーションを入れるとして、
+今回作りたかったのは route.dart の部分となります。
+
+## やりたいこと
+
+Webサーバを立て、GETリクエストを受け取り、
+以下の形でroutingしてプログラムを実行する。
+
+```
+http://xxxx.xxx/{controller}/{method}/
+```
+
+## Dartのパッケージ管理ツールとWebサーバ機能部分について
+
+Webサーバ機能を考える前にまず +
+Dartにはpubというパッケージ管理ツールがあります。
+
+Node.jsで言うところのnpmのようなものかと思います。
+
+https://pub.dartlang.org/
+
+pubspec.yamlというYMLファイルを作成・モジュール指定し、 +
+同階層で pub get とするだけでnpmのようにモジュールを導入できます。
+
+今回、Webサーバ機能はこのpubの中にある以下のモジュールをそのまま使おうと思いました。
+
+shelf
+https://pub.dartlang.org/packages/shelf
+
+このモジュールはAuthorがDart Teamとなっていて、信頼できそうです。
+
+また、今後信頼できる良いモジュールがあればpubのものを使って行きたいと思いました。
+
+## routing.dart を作ってみる...だがしかし
+
+Webサーバ機能は前述のモジュールを導入し、早速以下の形でWebサーバが立ち上がりました。
+
+pubspec.yaml
+
+```
+name: zeal
+dependencies:
+  shelf: "^0.6.0"
+  shelf_route: "^0.14.3"
+  shelf_exception_handler: "^0.1.0"
+```
+
+上記の name: zeal の部分は今回のプロジェクトのzealという仮名称を付けたためです。
+
+shelf_route: shelf_exception_handloer: は、 +
+pubの中にこれまたroutingや例外処理できるモジュールがありましたので、 +
+導入をしました。
+
+以下のようなコードで簡単にWebサーバを立ち上げてリクエスト情報を取得できました。
+
+```
+import 'package:http_multi_server/http_multi_server.dart';
+import 'package:shelf/shelf.dart';
+import 'package:shelf/shelf_io.dart' as io;
+import 'package:shelf_route/shelf_route.dart' as r;
+
+var router = r.router()
+    ..get('/{controller}/{method}/', (request) {
+        var controller = r.getPathParameter(request, 'controller');
+        var method     = r.getPathParameter(request, 'method');
+        
+        var res = //// routing処理！ ////
+        
+        return new Response.ok(res);
+    });
+
+var handler = const Pipeline()
+        .addMiddleware(logRequests())
+        .addMiddleware(exceptionHandler())
+        .addHandler(router.handler);
+
+r.printRoutes(router);
+
+io.serve(handler, 'localhost', 8080).then((server) {
+    print('Serving at http://${server.address.host}:${server.port}');
+});
+```
+
+上記の、
+
+```
+..get('/{controller}/{method}/', (request) {
+```
+
+の部分でパスも取得して、 +
+変数controllerでクラス名を指定、 +
+変数methodでクラスメソッドを指定、 +
+そして実行させる！と思ったのですが。。。
+
+```
+リクエスト
+http://localhost:8080/index/index/
+
+controller: index
+method: index
+```
+
+```
+ディレクトリ
+app - controller - indexController.dart
+```
+
+indexController.dart
+```
+class indexController {
+	index() {
+		print('index!');
+	}
+}
+```
+
+文字列からクラス名を指定してインスタンスを作り、 +
+文字列からメソッドを指定して実行。
+
+これが、例えばPHPであれば、
+
+```
+class indexController {
+    function index() {
+        print('index!');
+    }
+}
+
+$controller = 'indexController';
+$method     = 'index';
+
+$instance = new $controller();
+$instance->{$method}();
+```
+
+このような変態的？なことができる、 +
+または最悪evalなどを使ってどうとでもなるのですが、
+
+Dartはevalも無いし、
+
+```
+$instance->{$method}();
+```
+
+このような書き方はできません。
+
+その代わりに dart:mirrors というリフレクションモジュールが用意されていて、 +
+以下のように使えるのですが。。
+
+```
+var controller = r.getPathParameter(request, 'controller');
+var method     = r.getPathParameter(request, 'method');
+    
+var controller = new indexController();
+var mirror = reflect(controller);
+var res = mirror.invoke(new Symbol(method), []);
+
+print(res.reflectee);
+```
+
+```
+var controller = r.getPathParameter(request, 'controller');
+var method     = r.getPathParameter(request, 'method');
+```
+
+上記部分で、 +
+controller は indexController という文字列 +
+method は index という文字列 +
+が格納されますが、
+
+method名は dart:mirrors の機能を使い、 +
+以下の部分でSymbol型に変換した上で動的に指定できるのですが。。
+
+```
+var res = mirror.invoke(new Symbol(method), []);
+
+controller名（Class名）の部分は動的に指定できる機構がない。。
+
+var controller = new indexController();
+```
+
+dart:mirrors の機能で reflectClass というものがあり、 +
+引数にType型を指定してミラーインスタンスを作成することはできるのですが。。
+
+```
+reflectClass(controller);
+```
+
+この引数はType型が期待されています。 +
+しかし、Webサーバから取得できる変数controllerは、文字列型です。
+
+```
+reflectClass(controller as Type);
+```
+
+などのように、文字列型をType型に変更しようとするとエラーになってしまいます。
+
+```
+type 'String' is not a subtype of type 'Type' in type cast where
+```
+
+どうやってリクエストから取得した文字列からリフレクションしてクラスを指定したら良いのでしょうか。
+
+次回の課題としたいと思います。
