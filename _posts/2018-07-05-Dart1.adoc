@@ -204,7 +204,7 @@ $instance->{$method}();
 このような書き方はできません。
 
 その代わりに dart:mirrors というリフレクションモジュールが用意されていて、 +
-以下のように使えるのですが。。
+以下のように試してみました。
 
 ```
 // リクエストから取ってきた文字列
@@ -224,12 +224,13 @@ var controller = r.getPathParameter(request, 'controller');
 var method     = r.getPathParameter(request, 'method');
 ```
 
-上記部分で、 +
+まず上記部分、Webサーバの機能で +
 controller は indexController という文字列 +
 method は index という文字列 +
-が格納されますが、
+が格納されます。
 
-method名は dart:mirrors の機能を使い、 +
+そして、 +
+メソッド名は dart:mirrors の機能を使い、 +
 以下の部分でSymbol型に変換した上で動的に指定できるのですが。。
 
 ```
@@ -239,21 +240,25 @@ var res = mirror.invoke(new Symbol(method), []);
 var controller = new indexController();
 ```
 
-dart:mirrors の機能で reflectClass というものがあり、 +
-引数にType型を指定してミラーインスタンスを作成することはできるのですが。。
+コントローラー名の方はクラス名の指定なので、 +
+メソッド名のように動的に指定ができないようです。
+
+さらに dart:mirrors の機能をよく調べてみると、reflectClass というものがあり、 +
+これでコントローラー名も動的に指定できると思ったのですが、
 
 ```
 reflectClass(controller);
 ```
 
-この引数controllerはType型が期待されています。 +
-しかし、Webサーバから取得できる変数controllerは、文字列型です。
+この引数controllerはType型が期待されていまして、 +
+Webサーバから取得できる文字列型の変数controllerを +
+Type型にキャストしようと思いましたが、
 
 ```
 reflectClass(controller as Type);
 ```
 
-などのように、文字列型をType型にキャストしようとするとエラーになってしまいます。
+上記のようにキャストしようとすると以下エラーになってしまいます。
 
 ```
 type 'String' is not a subtype of type 'Type' in type cast where
