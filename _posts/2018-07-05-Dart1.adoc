@@ -4,15 +4,15 @@
 先日このイノベーションエンジニアブログで、 +
 同僚のはすみんが以下の記事を書いていました。
 
-FlutterとDartを使ってみる +
-http://tech.innovation.co.jp/2018/05/21/Flutter-Dart.html
+> FlutterとDartを使ってみる +
+> http://tech.innovation.co.jp/2018/05/21/Flutter-Dart.html
 
 上記、記事中でも紹介しています通り、 +
 FlutterはiOSとAndroidで動くアプリケーションを開発することができるフレームワークですが、 +
 その中で使われているDartというプログラミング言語の言語仕様が美しく、 +
 ぜひこの言語でサーバーサイドのフレームワークを作ってみたいと思いました。
 
-まず、必要なものを洗い出してみました。
+そこでまず、必要そうなものを洗い出してみました。
 
 * ORマッパー
 * DBマイグレーション機能
@@ -22,7 +22,7 @@ FlutterはiOSとAndroidで動くアプリケーションを開発することが
 * validation機能
 * テンプレートエンジン
 * バッチ実行機能
-* モジュール作成導入機能
+* モジュール作成・導入機能
 * キャッシュ機能
 
 ひとまずこのぐらいあれば大丈夫でしょうか。
@@ -34,14 +34,18 @@ FlutterはiOSとAndroidで動くアプリケーションを開発することが
 routing機能を作成する前に、まずディレクトリ構成を考えてみました。
 
 ```
-root ―┬― app ―――┬― controller
-　　　 ├― config    　　　　　　　　　　├― model
-     |         　　　　　　　　　　　　　　   ├― service
-     |    　　　　　　　　　　　　　　　        └― view
-   ├― lib
- 　　 ├― public ----- index.dart
-　　　 ├― route.dart
-　　　 └― vendor
+root
+├─app
+│ ├─controller
+│ ├─model
+│ ├─service
+│ └─view
+├─config
+├─lib
+├─public
+│ └─index.dart
+├─route.dart
+└─vendor
 ```
 
 appにアプリケーションを入れるとして、
@@ -63,14 +67,15 @@ Dartにはpubというパッケージ管理ツールがあります。
 
 Node.jsで言うところのnpmのようなものかと思います。
 
-https://pub.dartlang.org/
+> pub +
+> https://pub.dartlang.org/
 
 pubspec.yamlというYMLファイルを作成・モジュール指定し、 +
 同階層で pub get とするだけでnpmのようにモジュールを導入できます。
 
-今回、Webサーバ機能はこのpubの中にある以下のモジュールをそのまま使おうと思いました。
+今回、 Webサーバ機能はこのpubの中にある以下のモジュールをそのまま使おうと思いました。
 
-shelf
+shelf +
 https://pub.dartlang.org/packages/shelf
 
 このモジュールはAuthorがDart Teamとなっていて、信頼できそうです。
@@ -91,16 +96,20 @@ dependencies:
   shelf_exception_handler: "^0.1.0"
 ```
 
-上記の name: zeal の部分は今回のプロジェクトのzealという仮名称を付けたためです。
+上記の name: zeal の部分は今回のプロジェクトにzealという名称を付けたためです。
 
-shelf_route: shelf_exception_handloer: は、 +
-pubの中にこれまたroutingや例外処理できるモジュールがありましたので、 +
-導入をしました。
+```
+shelf_route:
+shelf_exception_handloer:
+```
+
+の部分は、 +
+pubにこれまたroutingや例外処理できるモジュールがありましたので、 +
+導入をしてみました。
 
 以下のようなコードで簡単にWebサーバを立ち上げてリクエスト情報を取得できました。
 
 ```
-import 'package:http_multi_server/http_multi_server.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf_route/shelf_route.dart' as r;
@@ -139,16 +148,17 @@ io.serve(handler, 'localhost', 8080).then((server) {
 そして実行させる！と思ったのですが。。。
 
 ```
-リクエスト
+# リクエスト
 http://localhost:8080/index/index/
 
+# 変数の中身
 controller: index
 method: index
 ```
 
 ```
-ディレクトリ
-app - controller - indexController.dart
+# 実行されてほしいメソッド
+app/controller/indexController.dart
 ```
 
 indexController.dart
@@ -161,7 +171,7 @@ class indexController {
 ```
 
 文字列からクラス名を指定してインスタンスを作り、 +
-文字列からメソッドを指定して実行。
+文字列からメソッドを指定して実行させたい。
 
 これが、例えばPHPであれば、
 
@@ -172,9 +182,11 @@ class indexController {
     }
 }
 
-$controller = 'indexController';
-$method     = 'index';
+// こんな書き方はしないけど
+$controller = $_GET['controller'].'Controller';
+$method     = $_GET['method'];
 
+// クラス名、メソッド名に変数を指定できる
 $instance = new $controller();
 $instance->{$method}();
 ```
@@ -194,11 +206,13 @@ $instance->{$method}();
 以下のように使えるのですが。。
 
 ```
-var controller = r.getPathParameter(request, 'controller');
-var method     = r.getPathParameter(request, 'method');
+// リクエストから取ってきた文字列
+String controller = r.getPathParameter(request, 'controller');
+String method     = r.getPathParameter(request, 'method');
     
 var controller = new indexController();
 var mirror = reflect(controller);
+// 第一引数に実行したいメソッド名をシンボル型で、第二引数にそのメソッドに対する引数をリストで指定
 var res = mirror.invoke(new Symbol(method), []);
 
 print(res.reflectee);
@@ -220,8 +234,7 @@ method名は dart:mirrors の機能を使い、 +
 ```
 var res = mirror.invoke(new Symbol(method), []);
 
-controller名（Class名）の部分は動的に指定できる機構がない。。
-
+// controller名（Class名）の部分は動的に指定できる機構がない。。
 var controller = new indexController();
 ```
 
@@ -232,14 +245,14 @@ dart:mirrors の機能で reflectClass というものがあり、 +
 reflectClass(controller);
 ```
 
-この引数はType型が期待されています。 +
+この引数controllerはType型が期待されています。 +
 しかし、Webサーバから取得できる変数controllerは、文字列型です。
 
 ```
 reflectClass(controller as Type);
 ```
 
-などのように、文字列型をType型に変更しようとするとエラーになってしまいます。
+などのように、文字列型をType型にキャストしようとするとエラーになってしまいます。
 
 ```
 type 'String' is not a subtype of type 'Type' in type cast where
@@ -247,4 +260,7 @@ type 'String' is not a subtype of type 'Type' in type cast where
 
 どうやってリクエストから取得した文字列からリフレクションしてクラスを指定したら良いのでしょうか。
 
-次回の課題としたいと思います。
+うーん。次回の課題としたいと思います。 +
+取り敢えずこんな形で作成中です。
+
+次回へ続く。。
