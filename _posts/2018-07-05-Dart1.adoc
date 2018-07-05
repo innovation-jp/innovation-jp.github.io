@@ -1,5 +1,5 @@
 # Dartでウェブフレームワークを作る（1）
-:hp-tags: Dart
+:hp-tags: Dart, Shirota
 :published_at: 2018-07-05
 
 先日このイノベーションエンジニアブログで、 +
