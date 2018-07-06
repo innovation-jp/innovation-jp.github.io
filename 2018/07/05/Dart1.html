@@ -52,16 +52,16 @@ var _trackingid = 'LFT-10003-1';
     <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="Dartでウェブフレームワークを作る（1）" />
-    <meta property="og:description" content="先日このイノベーションエンジニアブログで、 同僚のはすみんが以下の記事を書いていました。 FlutterとDartを使ってみる + http://tech.innovation.co.jp/2018/05/21/Flutter-Dart.html 上記、記事中でも紹介しています通り、 FlutterはiOSとAndroidで動くアプリケーションを開発することができるフレームワークですが、 その中で使われているDartというプログラミング言語の言語仕様が美しく、 ぜひこの言語でサーバーサイドのフレームワークを作ってみたいと思いました。 そこでまず、必要そ..." />
+    <meta property="og:description" content="先日このイノベーションエンジニアブログで、 同僚のはすみんが以下の記事を書いていました。 FlutterとDartを使ってみる http://tech.innovation.co.jp/2018/05/21/Flutter-Dart.html 上記、記事中でも紹介しています通り、 FlutterはiOSとAndroidで動くアプリケーションを開発することができるフレームワークですが、 その中で使われているDartというプログラミング言語の言語仕様が美しく、 ぜひこの言語でサーバーサイドのフレームワークを作ってみたいと思いました。 そこでまず、必要そうな..." />
     <meta property="og:url" content="http://tech.innovation.co.jp/2018/07/05/Dart1.html" />
     <meta property="article:published_time" content="2018-07-04T15:00:00.000Z" />
-    <meta property="article:modified_time" content="2018-07-06T04:07:14.700Z" />
+    <meta property="article:modified_time" content="2018-07-06T05:55:20.267Z" />
     <meta property="article:tag" content="Dart" />
     <meta property="article:tag" content="Shirota" />
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Dartでウェブフレームワークを作る（1）" />
-    <meta name="twitter:description" content="先日このイノベーションエンジニアブログで、 同僚のはすみんが以下の記事を書いていました。 FlutterとDartを使ってみる + http://tech.innovation.co.jp/2018/05/21/Flutter-Dart.html 上記、記事中でも紹介しています通り、 FlutterはiOSとAndroidで動くアプリケーションを開発することができるフレームワークですが、 その中で使われているDartというプログラミング言語の言語仕様が美しく、 ぜひこの言語でサーバーサイドのフレームワークを作ってみたいと思いました。 そこでまず、必要そ..." />
+    <meta name="twitter:description" content="先日このイノベーションエンジニアブログで、 同僚のはすみんが以下の記事を書いていました。 FlutterとDartを使ってみる http://tech.innovation.co.jp/2018/05/21/Flutter-Dart.html 上記、記事中でも紹介しています通り、 FlutterはiOSとAndroidで動くアプリケーションを開発することができるフレームワークですが、 その中で使われているDartというプログラミング言語の言語仕様が美しく、 ぜひこの言語でサーバーサイドのフレームワークを作ってみたいと思いました。 そこでまず、必要そうな..." />
     <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/07/05/Dart1.html" />
     
     <script type="application/ld+json">
@@ -79,9 +79,9 @@ var _trackingid = 'LFT-10003-1';
     "headline": "Dartでウェブフレームワークを作る（1）",
     "url": "http://tech.innovation.co.jp/2018/07/05/Dart1.html",
     "datePublished": "2018-07-04T15:00:00.000Z",
-    "dateModified": "2018-07-06T04:07:14.700Z",
+    "dateModified": "2018-07-06T05:55:20.267Z",
     "keywords": "Dart,  Shirota",
-    "description": "先日このイノベーションエンジニアブログで、 同僚のはすみんが以下の記事を書いていました。 FlutterとDartを使ってみる + http://tech.innovation.co.jp/2018/05/21/Flutter-Dart.html 上記、記事中でも紹介しています通り、 FlutterはiOSとAndroidで動くアプリケーションを開発することができるフレームワークですが、 その中で使われているDartというプログラミング言語の言語仕様が美しく、 ぜひこの言語でサーバーサイドのフレームワークを作ってみたいと思いました。 そこでまず、必要そ..."
+    "description": "先日このイノベーションエンジニアブログで、 同僚のはすみんが以下の記事を書いていました。 FlutterとDartを使ってみる http://tech.innovation.co.jp/2018/05/21/Flutter-Dart.html 上記、記事中でも紹介しています通り、 FlutterはiOSとAndroidで動くアプリケーションを開発することができるフレームワークですが、 その中で使われているDartというプログラミング言語の言語仕様が美しく、 ぜひこの言語でサーバーサイドのフレームワークを作ってみたいと思いました。 そこでまず、必要そうな..."
 }
     </script>
 
@@ -260,11 +260,13 @@ var _trackingid = 'LFT-10003-1';
 <p>先日このイノベーションエンジニアブログで、<br>
 同僚のはすみんが以下の記事を書いていました。</p>
 </div>
-<div class="literalblock">
-<div class="content">
-<pre>FlutterとDartを使ってみる +
-http://tech.innovation.co.jp/2018/05/21/Flutter-Dart.html</pre>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>FlutterとDartを使ってみる<br>
+<a href="http://tech.innovation.co.jp/2018/05/21/Flutter-Dart.html" class="bare">http://tech.innovation.co.jp/2018/05/21/Flutter-Dart.html</a></p>
 </div>
+</blockquote>
 </div>
 <div class="paragraph">
 <p>上記、記事中でも紹介しています通り、<br>
@@ -323,9 +325,9 @@ FlutterはiOSとAndroidで動くアプリケーションを開発することが
 <div class="paragraph">
 <p>routing機能を作成する前に、まずディレクトリ構成を考えてみました。</p>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="highlight"><code>root
+<pre>root
 ├─app
 │ ├─controller
 │ ├─model
@@ -336,7 +338,7 @@ FlutterはiOSとAndroidで動くアプリケーションを開発することが
 ├─public
 │ └─index.dart
 ├─route.dart
-└─vendor</code></pre>
+└─vendor</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -352,9 +354,9 @@ FlutterはiOSとAndroidで動くアプリケーションを開発することが
 <p>Webサーバを立て、GETリクエストを受け取り、
 以下の形でroutingしてプログラムを実行する。</p>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="highlight"><code>http://xxxx.xxx/{controller}/{method}/</code></pre>
+<pre>http://xxxx.xxx/{controller}/{method}/</pre>
 </div>
 </div>
 </div>
@@ -369,11 +371,13 @@ Dartにはpubというパッケージ管理ツールがあります。</p>
 <div class="paragraph">
 <p>Node.jsで言うところのnpmのようなものかと思います。</p>
 </div>
-<div class="literalblock">
-<div class="content">
-<pre>pub +
-https://pub.dartlang.org/</pre>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>pub<br>
+<a href="https://pub.dartlang.org/" class="bare">https://pub.dartlang.org/</a></p>
 </div>
+</blockquote>
 </div>
 <div class="paragraph">
 <p>pubspec.yamlというYMLファイルを作成・モジュール指定し、<br>
@@ -382,11 +386,13 @@ https://pub.dartlang.org/</pre>
 <div class="paragraph">
 <p>今回、 Webサーバ機能はこのpubの中にある以下のモジュールをそのまま使おうと思いました。</p>
 </div>
-<div class="literalblock">
-<div class="content">
-<pre>shelf +
-https://pub.dartlang.org/packages/shelf</pre>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>shelf<br>
+<a href="https://pub.dartlang.org/packages/shelf" class="bare">https://pub.dartlang.org/packages/shelf</a></p>
 </div>
+</blockquote>
 </div>
 <div class="paragraph">
 <p>このモジュールはAuthorがDart Teamとなっていて、信頼できそうです。</p>
@@ -405,22 +411,22 @@ https://pub.dartlang.org/packages/shelf</pre>
 <div class="paragraph">
 <p>pubspec.yaml</p>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="highlight"><code>name: zeal
+<pre>name: zeal
 dependencies:
   shelf: "^0.6.0"
   shelf_route: "^0.14.3"
-  shelf_exception_handler: "^0.1.0"</code></pre>
+  shelf_exception_handler: "^0.1.0"</pre>
 </div>
 </div>
 <div class="paragraph">
 <p>上記の name: zeal の部分は今回のプロジェクトにzealという名称を付けたためです。</p>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="highlight"><code>shelf_route:
-shelf_exception_handloer:</code></pre>
+<pre>shelf_route:
+shelf_exception_handloer:</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -462,9 +468,9 @@ io.serve(handler, 'localhost', 8080).then((server) {
 <div class="paragraph">
 <p>上記の、</p>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="highlight"><code>..get('/{controller}/{method}/', (request) {</code></pre>
+<pre>..get('/{controller}/{method}/', (request) {</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -473,32 +479,35 @@ io.serve(handler, 'localhost', 8080).then((server) {
 変数methodでクラスメソッドを指定、<br>
 そして実行させる！と思ったのですが。。。</p>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="highlight"><code># リクエスト
-http://localhost:8080/index/index/
-
-# 変数の中身
+<pre># リクエスト
+http://localhost:8080/index/index/</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre># 変数の中身
 controller: index
-method: index</code></pre>
+method: index</pre>
 </div>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="highlight"><code># 実行されてほしいメソッド
-app/controller/indexController.dart</code></pre>
+<pre># 実行されてほしいメソッド
+app/controller/indexController.dart</pre>
 </div>
 </div>
 <div class="paragraph">
 <p>indexController.dart</p>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="highlight"><code>class indexController {
-	index() {
-		print('index!');
-	}
-}</code></pre>
+<pre>class indexController {
+    index() {
+        print('index!');
+    }
+}</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -535,9 +544,9 @@ $instance-&gt;{$method}();</code></pre>
 <p>しかし、<br>
 Dartはevalも無いし、</p>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="highlight"><code>$instance-&gt;{$method}();</code></pre>
+<pre>$instance-&gt;{$method}();</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -561,10 +570,10 @@ var res = mirror.invoke(new Symbol(method), []);
 print(res.reflectee);</code></pre>
 </div>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="highlight"><code>var controller = r.getPathParameter(request, 'controller');
-var method     = r.getPathParameter(request, 'method');</code></pre>
+<pre>var controller = r.getPathParameter(request, 'controller');
+var method     = r.getPathParameter(request, 'method');</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -578,12 +587,11 @@ method は index という文字列<br>
 メソッド名は dart:mirrors の機能を使い、<br>
 以下の部分でSymbol型に変換した上で動的に指定できるのですが。。</p>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="highlight"><code>var res = mirror.invoke(new Symbol(method), []);
-
+<pre>var res = mirror.invoke(new Symbol(method), []);
 // controller名（Class名）の部分は動的に指定できる機構がない。。
-var controller = new indexController();</code></pre>
+var controller = new indexController();</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -594,9 +602,9 @@ var controller = new indexController();</code></pre>
 <p>さらに dart:mirrors の機能をよく調べてみると、reflectClass というものがあり、<br>
 これでコントローラー名も動的に指定できると思ったのですが、</p>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="highlight"><code>reflectClass(controller);</code></pre>
+<pre>reflectClass(controller);</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -605,15 +613,15 @@ Webサーバから取得できる文字列型の変数controllerを<br>
 Type型にキャストできず、<br>
 以下のようにキャストしようとするとエラーになってしまいます。</p>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="highlight"><code>reflectClass(controller as Type);</code></pre>
+<pre>reflectClass(controller as Type);</pre>
 </div>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="highlight"><code># エラー
-type 'String' is not a subtype of type 'Type' in type cast where</code></pre>
+<pre># エラー
+type 'String' is not a subtype of type 'Type' in type cast where</pre>
 </div>
 </div>
 <div class="paragraph">
