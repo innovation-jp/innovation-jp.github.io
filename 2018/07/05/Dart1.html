@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Dartでウェブフレームワークを作る（1） - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Dartでウェブフレームワークを作る（1）">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Dartでウェブフレームワークを作る（1）">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/07/05/Dart1.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Dartでウェブフレームワークを作る（1）" />
+    <meta property="og:description" content="先日このイノベーションエンジニアブログで、 同僚のはすみんが以下の記事を書いていました。 FlutterとDartを使ってみる + http://tech.innovation.co.jp/2018/05/21/Flutter-Dart.html 上記、記事中でも紹介しています通り、 FlutterはiOSとAndroidで動くアプリケーションを開発することができるフレームワークですが、 その中で使われているDartというプログラミング言語の言語仕様が美しく、 ぜひこの言語でサーバーサイドのフレームワークを作ってみたいと思いました。 そこでまず、必要そ..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/07/05/Dart1.html" />
+    <meta property="article:published_time" content="2018-07-04T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-07-06T04:07:14.700Z" />
+    <meta property="article:tag" content="Dart" />
+    <meta property="article:tag" content="Shirota" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Dartでウェブフレームワークを作る（1）" />
+    <meta name="twitter:description" content="先日このイノベーションエンジニアブログで、 同僚のはすみんが以下の記事を書いていました。 FlutterとDartを使ってみる + http://tech.innovation.co.jp/2018/05/21/Flutter-Dart.html 上記、記事中でも紹介しています通り、 FlutterはiOSとAndroidで動くアプリケーションを開発することができるフレームワークですが、 その中で使われているDartというプログラミング言語の言語仕様が美しく、 ぜひこの言語でサーバーサイドのフレームワークを作ってみたいと思いました。 そこでまず、必要そ..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/07/05/Dart1.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "Junichi Shirota",
+        "image": "https://avatars2.githubusercontent.com/u/26893225?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "Dartでウェブフレームワークを作る（1）",
+    "url": "http://tech.innovation.co.jp/2018/07/05/Dart1.html",
+    "datePublished": "2018-07-04T15:00:00.000Z",
+    "dateModified": "2018-07-06T04:07:14.700Z",
+    "keywords": "Dart,  Shirota",
+    "description": "先日このイノベーションエンジニアブログで、 同僚のはすみんが以下の記事を書いていました。 FlutterとDartを使ってみる + http://tech.innovation.co.jp/2018/05/21/Flutter-Dart.html 上記、記事中でも紹介しています通り、 FlutterはiOSとAndroidで動くアプリケーションを開発することができるフレームワークですが、 その中で使われているDartというプログラミング言語の言語仕様が美しく、 ぜひこの言語でサーバーサイドのフレームワークを作ってみたいと思いました。 そこでまず、必要そ..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Dart tag-Shirota no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="05 Jul 2018" class="post-meta__date date">05 Jul 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Dart">Dart</a>, <a href="http://tech.innovation.co.jp/tag/Shirota"> Shirota</a></span>
+        <span class="post-meta__author author"><img src="https://avatars2.githubusercontent.com/u/26893225?v=4" alt="profile image for Junichi Shirota" class="avatar post-meta__avatar" /> by Junichi Shirota</span>
+      </div>
+      <h1 class="post-title">Dartでウェブフレームワークを作る（1）</h1>
+    </header>
+
+    <section class="post tag-Dart tag-Shirota">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>先日このイノベーションエンジニアブログで、<br>
+同僚のはすみんが以下の記事を書いていました。</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>FlutterとDartを使ってみる +
+http://tech.innovation.co.jp/2018/05/21/Flutter-Dart.html</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>上記、記事中でも紹介しています通り、<br>
+FlutterはiOSとAndroidで動くアプリケーションを開発することができるフレームワークですが、<br>
+その中で使われているDartというプログラミング言語の言語仕様が美しく、<br>
+ぜひこの言語でサーバーサイドのフレームワークを作ってみたいと思いました。</p>
+</div>
+<div class="paragraph">
+<p>そこでまず、必要そうなものを洗い出してみました。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>ORマッパー</p>
+</li>
+<li>
+<p>DBマイグレーション機能</p>
+</li>
+<li>
+<p>開発用Webサーバ機能</p>
+</li>
+<li>
+<p>routing機能</p>
+</li>
+<li>
+<p>オートローダー機能</p>
+</li>
+<li>
+<p>validation機能</p>
+</li>
+<li>
+<p>テンプレートエンジン</p>
+</li>
+<li>
+<p>バッチ実行機能</p>
+</li>
+<li>
+<p>モジュール作成・導入機能</p>
+</li>
+<li>
+<p>キャッシュ機能</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>ひとまずこのぐらいあれば大丈夫でしょうか。</p>
+</div>
+<div class="paragraph">
+<p>まずは、routing機能を作成したいと思いました。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">ディレクトリ構成を考える</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>routing機能を作成する前に、まずディレクトリ構成を考えてみました。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>root
+├─app
+│ ├─controller
+│ ├─model
+│ ├─service
+│ └─view
+├─config
+├─lib
+├─public
+│ └─index.dart
+├─route.dart
+└─vendor</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>appにアプリケーションを入れるとして、
+今回作りたかったのは route.dart の部分となります。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">やりたいこと</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Webサーバを立て、GETリクエストを受け取り、
+以下の形でroutingしてプログラムを実行する。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>http://xxxx.xxx/{controller}/{method}/</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dart_web">Dartのパッケージ管理ツールとWebサーバ機能部分について</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Webサーバ機能を考える前にまず<br>
+Dartにはpubというパッケージ管理ツールがあります。</p>
+</div>
+<div class="paragraph">
+<p>Node.jsで言うところのnpmのようなものかと思います。</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>pub +
+https://pub.dartlang.org/</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>pubspec.yamlというYMLファイルを作成・モジュール指定し、<br>
+同階層で pub get とするだけでnpmのようにモジュールを導入できます。</p>
+</div>
+<div class="paragraph">
+<p>今回、 Webサーバ機能はこのpubの中にある以下のモジュールをそのまま使おうと思いました。</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>shelf +
+https://pub.dartlang.org/packages/shelf</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>このモジュールはAuthorがDart Teamとなっていて、信頼できそうです。</p>
+</div>
+<div class="paragraph">
+<p>また、今後信頼できる良いモジュールがあればpubのものを使って行きたいと思いました。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_routing_dart">routing.dart を作ってみる&#8230;&#8203;だがしかし</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Webサーバ機能は前述のモジュールを導入し、早速以下の形でWebサーバが立ち上がりました。</p>
+</div>
+<div class="paragraph">
+<p>pubspec.yaml</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>name: zeal
+dependencies:
+  shelf: "^0.6.0"
+  shelf_route: "^0.14.3"
+  shelf_exception_handler: "^0.1.0"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>上記の name: zeal の部分は今回のプロジェクトにzealという名称を付けたためです。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>shelf_route:
+shelf_exception_handloer:</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>の部分は、<br>
+pubにこれまたroutingや例外処理できるモジュールがありましたので、<br>
+導入をしてみました。</p>
+</div>
+<div class="paragraph">
+<p>以下のようなコードで簡単にWebサーバを立ち上げてリクエスト情報を取得できました。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import 'package:shelf/shelf.dart';
+import 'package:shelf/shelf_io.dart' as io;
+import 'package:shelf_route/shelf_route.dart' as r;
+
+var router = r.router()
+    ..get('/{controller}/{method}/', (request) {
+        var controller = r.getPathParameter(request, 'controller');
+        var method     = r.getPathParameter(request, 'method');
+
+        var res = //// routing処理！ ////
+
+        return new Response.ok(res);
+    });
+
+var handler = const Pipeline()
+        .addMiddleware(logRequests())
+        .addMiddleware(exceptionHandler())
+        .addHandler(router.handler);
+
+r.printRoutes(router);
+
+io.serve(handler, 'localhost', 8080).then((server) {
+    print('Serving at http://${server.address.host}:${server.port}');
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>上記の、</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>..get('/{controller}/{method}/', (request) {</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>の部分でパスも取得して、<br>
+変数controllerでクラス名を指定、<br>
+変数methodでクラスメソッドを指定、<br>
+そして実行させる！と思ったのですが。。。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code># リクエスト
+http://localhost:8080/index/index/
+
+# 変数の中身
+controller: index
+method: index</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code># 実行されてほしいメソッド
+app/controller/indexController.dart</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>indexController.dart</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>class indexController {
+	index() {
+		print('index!');
+	}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>文字列からクラス名を指定してインスタンスを作り、<br>
+文字列からメソッドを指定して実行させたい。</p>
+</div>
+<div class="paragraph">
+<p>この前者が実現できず、苦労しております。</p>
+</div>
+<div class="paragraph">
+<p>例えばPHPであれば、</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>class indexController {
+    function index() {
+        print('index!');
+    }
+}
+
+// こんな書き方はしないけど
+$controller = $_GET['controller'].'Controller';
+$method     = $_GET['method'];
+
+// クラス名、メソッド名に変数を指定できる
+$instance = new $controller();
+$instance-&gt;{$method}();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>クラス名、メソッド名を変数指定して実行できます。</p>
+</div>
+<div class="paragraph">
+<p>しかし、<br>
+Dartはevalも無いし、</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$instance-&gt;{$method}();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>このような書き方もできません。</p>
+</div>
+<div class="paragraph">
+<p>代わりに dart:mirrors というリフレクションモジュールが用意されているようで、<br>
+以下のように試してみました。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// リクエストから取ってきた文字列
+String controller = r.getPathParameter(request, 'controller');
+String method     = r.getPathParameter(request, 'method');
+
+var controller = new indexController();
+var mirror = reflect(controller);
+// 第一引数に実行したいメソッド名をシンボル型で、第二引数にそのメソッドに対する引数をリストで指定
+var res = mirror.invoke(new Symbol(method), []);
+
+print(res.reflectee);</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>var controller = r.getPathParameter(request, 'controller');
+var method     = r.getPathParameter(request, 'method');</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>まず上記部分、Webサーバの機能で<br>
+controller は indexController という文字列<br>
+method は index という文字列<br>
+が格納されます。</p>
+</div>
+<div class="paragraph">
+<p>そして、<br>
+メソッド名は dart:mirrors の機能を使い、<br>
+以下の部分でSymbol型に変換した上で動的に指定できるのですが。。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>var res = mirror.invoke(new Symbol(method), []);
+
+// controller名（Class名）の部分は動的に指定できる機構がない。。
+var controller = new indexController();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>コントローラー名の方はクラス名の指定なので、<br>
+メソッド名のように動的に指定ができないようです。</p>
+</div>
+<div class="paragraph">
+<p>さらに dart:mirrors の機能をよく調べてみると、reflectClass というものがあり、<br>
+これでコントローラー名も動的に指定できると思ったのですが、</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>reflectClass(controller);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>この引数controllerはType型が期待されていまして、<br>
+Webサーバから取得できる文字列型の変数controllerを<br>
+Type型にキャストできず、<br>
+以下のようにキャストしようとするとエラーになってしまいます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>reflectClass(controller as Type);</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code># エラー
+type 'String' is not a subtype of type 'Type' in type cast where</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>どうやってリクエストから取得した文字列からリフレクションしてクラスを指定したら良いのか、<br>
+課題が残っております。</p>
+</div>
+<div class="paragraph">
+<p>うーん。取り敢えずこんな形でDartでウェブフレームワーク、作成中です。</p>
+</div>
+<div class="paragraph">
+<p>次回へ続く。。</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
