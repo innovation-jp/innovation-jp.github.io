@@ -5,8 +5,10 @@
 先日このイノベーションエンジニアブログで、 +
 同僚のはすみんが以下の記事を書いていました。
 
- FlutterとDartを使ってみる +
- http://tech.innovation.co.jp/2018/05/21/Flutter-Dart.html
+____
+FlutterとDartを使ってみる +
+http://tech.innovation.co.jp/2018/05/21/Flutter-Dart.html
+____
 
 上記、記事中でも紹介しています通り、 +
 FlutterはiOSとAndroidで動くアプリケーションを開発することができるフレームワークですが、 +
@@ -34,20 +36,18 @@ FlutterはiOSとAndroidで動くアプリケーションを開発することが
 
 routing機能を作成する前に、まずディレクトリ構成を考えてみました。
 
-```
-root
-├─app
-│ ├─controller
-│ ├─model
-│ ├─service
-│ └─view
-├─config
-├─lib
-├─public
-│ └─index.dart
-├─route.dart
-└─vendor
-```
+ root
+ ├─app
+ │ ├─controller
+ │ ├─model
+ │ ├─service
+ │ └─view
+ ├─config
+ ├─lib
+ ├─public
+ │ └─index.dart
+ ├─route.dart
+ └─vendor
 
 appにアプリケーションを入れるとして、
 今回作りたかったのは route.dart の部分となります。
@@ -57,9 +57,7 @@ appにアプリケーションを入れるとして、
 Webサーバを立て、GETリクエストを受け取り、
 以下の形でroutingしてプログラムを実行する。
 
-```
-http://xxxx.xxx/{controller}/{method}/
-```
+ http://xxxx.xxx/{controller}/{method}/
 
 ## Dartのパッケージ管理ツールとWebサーバ機能部分について
 
@@ -68,16 +66,20 @@ Dartにはpubというパッケージ管理ツールがあります。
 
 Node.jsで言うところのnpmのようなものかと思います。
 
- pub +
- https://pub.dartlang.org/
+____
+pub +
+https://pub.dartlang.org/
+____
 
 pubspec.yamlというYMLファイルを作成・モジュール指定し、 +
 同階層で pub get とするだけでnpmのようにモジュールを導入できます。
 
 今回、 Webサーバ機能はこのpubの中にある以下のモジュールをそのまま使おうと思いました。
 
- shelf +
- https://pub.dartlang.org/packages/shelf
+____
+shelf +
+https://pub.dartlang.org/packages/shelf
+____
 
 このモジュールはAuthorがDart Teamとなっていて、信頼できそうです。
 
@@ -87,22 +89,18 @@ pubspec.yamlというYMLファイルを作成・モジュール指定し、 +
 
 Webサーバ機能は前述のモジュールを導入し、早速以下の形でWebサーバが立ち上がりました。
 
-pubspec.yaml
-
-```
-name: zeal
-dependencies:
-  shelf: "^0.6.0"
-  shelf_route: "^0.14.3"
-  shelf_exception_handler: "^0.1.0"
-```
+pubspec.yaml 
+ 
+ name: zeal
+ dependencies:
+   shelf: "^0.6.0"
+   shelf_route: "^0.14.3"
+   shelf_exception_handler: "^0.1.0"
 
 上記の name: zeal の部分は今回のプロジェクトにzealという名称を付けたためです。
 
-```
-shelf_route:
-shelf_exception_handloer:
-```
+ shelf_route:
+ shelf_exception_handloer:
 
 の部分は、 +
 pubにこれまたroutingや例外処理できるモジュールがありましたので、 +
@@ -139,37 +137,30 @@ io.serve(handler, 'localhost', 8080).then((server) {
 
 上記の、
 
-```
-..get('/{controller}/{method}/', (request) {
-```
+ ..get('/{controller}/{method}/', (request) {
 
 の部分でパスも取得して、 +
 変数controllerでクラス名を指定、 +
 変数methodでクラスメソッドを指定、 +
 そして実行させる！と思ったのですが。。。
 
-```
-# リクエスト
-http://localhost:8080/index/index/
+ # リクエスト
+ http://localhost:8080/index/index/
+ 
+ # 変数の中身
+ controller: index
+ method: index
 
-# 変数の中身
-controller: index
-method: index
-```
-
-```
-# 実行されてほしいメソッド
-app/controller/indexController.dart
-```
+ # 実行されてほしいメソッド
+ app/controller/indexController.dart
 
 indexController.dart
-```
-class indexController {
-	index() {
-		print('index!');
-	}
-}
-```
+
+ class indexController {
+ 	index() {
+ 		print('index!');
+ 	}
+ }
 
 文字列からクラス名を指定してインスタンスを作り、 +
 文字列からメソッドを指定して実行させたい。
@@ -199,9 +190,7 @@ $instance->{$method}();
 しかし、 +
 Dartはevalも無いし、
 
-```
-$instance->{$method}();
-```
+ $instance->{$method}();
 
 このような書き方もできません。
 
@@ -221,10 +210,8 @@ var res = mirror.invoke(new Symbol(method), []);
 print(res.reflectee);
 ```
 
-```
-var controller = r.getPathParameter(request, 'controller');
-var method     = r.getPathParameter(request, 'method');
-```
+ var controller = r.getPathParameter(request, 'controller');
+ var method     = r.getPathParameter(request, 'method');
 
 まず上記部分、Webサーバの機能で +
 controller は indexController という文字列 +
@@ -235,12 +222,9 @@ method は index という文字列 +
 メソッド名は dart:mirrors の機能を使い、 +
 以下の部分でSymbol型に変換した上で動的に指定できるのですが。。
 
-```
-var res = mirror.invoke(new Symbol(method), []);
-
-// controller名（Class名）の部分は動的に指定できる機構がない。。
-var controller = new indexController();
-```
+ var res = mirror.invoke(new Symbol(method), []);
+ // controller名（Class名）の部分は動的に指定できる機構がない。。
+ var controller = new indexController();
 
 コントローラー名の方はクラス名の指定なので、 +
 メソッド名のように動的に指定ができないようです。
@@ -248,23 +232,17 @@ var controller = new indexController();
 さらに dart:mirrors の機能をよく調べてみると、reflectClass というものがあり、 +
 これでコントローラー名も動的に指定できると思ったのですが、
 
-```
-reflectClass(controller);
-```
+ reflectClass(controller);
 
 この引数controllerはType型が期待されていまして、 +
 Webサーバから取得できる文字列型の変数controllerを +
 Type型にキャストできず、 +
 以下のようにキャストしようとするとエラーになってしまいます。
 
-```
-reflectClass(controller as Type);
-```
+ reflectClass(controller as Type);
 
-```
-# エラー
-type 'String' is not a subtype of type 'Type' in type cast where
-```
+ # エラー
+ type 'String' is not a subtype of type 'Type' in type cast where
 
 どうやってリクエストから取得した文字列からリフレクションしてクラスを指定したら良いのか、 +
 課題が残っております。
