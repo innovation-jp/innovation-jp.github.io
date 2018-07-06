@@ -5,8 +5,8 @@
 先日このイノベーションエンジニアブログで、 +
 同僚のはすみんが以下の記事を書いていました。
 
-> FlutterとDartを使ってみる +
-> http://tech.innovation.co.jp/2018/05/21/Flutter-Dart.html
+ FlutterとDartを使ってみる +
+ http://tech.innovation.co.jp/2018/05/21/Flutter-Dart.html
 
 上記、記事中でも紹介しています通り、 +
 FlutterはiOSとAndroidで動くアプリケーションを開発することができるフレームワークですが、 +
@@ -68,16 +68,16 @@ Dartにはpubというパッケージ管理ツールがあります。
 
 Node.jsで言うところのnpmのようなものかと思います。
 
-> pub +
-> https://pub.dartlang.org/
+ pub +
+ https://pub.dartlang.org/
 
 pubspec.yamlというYMLファイルを作成・モジュール指定し、 +
 同階層で pub get とするだけでnpmのようにモジュールを導入できます。
 
 今回、 Webサーバ機能はこのpubの中にある以下のモジュールをそのまま使おうと思いました。
 
-shelf +
-https://pub.dartlang.org/packages/shelf
+ shelf +
+ https://pub.dartlang.org/packages/shelf
 
 このモジュールはAuthorがDart Teamとなっていて、信頼できそうです。
 
