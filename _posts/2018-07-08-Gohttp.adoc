@@ -1,0 +1,216 @@
+# Goのhttpクライアント通信！
+:hp-tags: NewTsukamoto, mac, Golang, gorm
+
+こんにちは。
+エンジニアのNew塚本です。
+
+引き続き、Golangでバッチをゴリゴリ製造しています。 + 
+今回は、httpクライアント通信についてのお話をのせたいと思います。
+
+
+====== プログラムはこんな感じ
+エラーと返却値は端折っていますが、大枠はこんな感じです。
+++++
+<pre style="font-family: Menlo, Courier">
+// 構造体定義
+type Client struct {
+	url                     string
+	parameterArray map[string]string
+	client                  *http.Client
+}
+
+// 通信実行メソッド
+func (c *Client) Execute() () {
+<text style="color:red">
+	// Getクエリの組み立て
+	queryParam := c.createGetRequestQuery()
+</text>
+	url := c.url
+
+	// リクエストを生成
+	req, _ := http.NewRequest("GET", url, nil)
+
+	// URLエンコードした値を設定
+	req.URL.RawQuery = queryParam.Encode()
+
+	// リクエスト発行
+	res, _ := c.client.Do(req)
+
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK {
+	   // エラー判定
+   }
+
+	// レスポンス取得
+	body, _ := ioutil.ReadAll(res.Body)
+}
+
+
+// httpGetリクエストのクエリパラメータ生成
+func (c *Client) createGetRequestQuery() url.Values {
+	result := url.Values{}<text style="color:red">
+	for k, v := range c.ParameterArray {
+		result.Add(k, v)
+	}</text>
+	return result
+}
+</pre> 
+++++
+
+
+引用）net/urlパッケージ
+++++
+<pre style="font-family: Menlo, Courier">
+// Values maps a string key to a list of values.
+// It is typically used for query parameters and form values.
+// Unlike in the http.Header map, the keys in a Values map
+// are case-sensitive.
+type Values map[string][]string
+</pre> 
+++++
+
+引用）net/urlパッケージ
+++++
+<pre style="font-family: Menlo, Courier">
+// Encode encodes the values into ``URL encoded'' form
+// ("bar=baz&foo=quux") sorted by key.
+func (v Values) Encode() string {
+	if v == nil {
+		return ""
+	}
+	var buf bytes.Buffer
+	keys := make([]string, 0, len(v))
+	for k := range v {
+		keys = append(keys, k)
+	}
+	<text style="color:red">sort.Strings(keys)
+	for _, k := range keys {</text>
+		vs := v[k]
+		prefix := QueryEscape(k) + "="
+		for _, v := range vs {
+			if buf.Len() > 0 {
+				buf.WriteByte('&')
+			}
+			buf.WriteString(prefix)
+			buf.WriteString(QueryEscape(v))
+		}
+	}
+	return buf.String()
+}
+</pre> 
+++++
+
+====== はまったのは赤い文字のところ
+Getリクエストのクエリパラメータを生成するところになります。 +
+Getリクエストのクエリパラメタは、Client構造体のparameterArrayで保持しています。
+その値を、url.Valuesに設定してEncodeメソッドを使えば、後はよしなにやってくれる想定でした。
+
+しかし、実行すると通信先からエラーが返却されます！
+
+
+====== 調査観点
+①通信先の問題 + 
+-> 通信先のサーバに異常があるとか？ +
+
+②ネットワークの問題 + 
+-> ネットワークの設定で通信先のサーバに繋げないように閉じている？ +
+
+③パラメタの問題 + 
+-> パラメタのKey、値が誤っている？ +
+
+====== 一次調査
+①、②についてはすぐ問題ないことが分かりました。ネットワーク的に接続できないと違うエラーが返却されますし。
+となると③？。
+
+====== 解析
+ここからは地道に解析します。 +
+発行しているリクエストをログに出力して、成功しているリクエストと比較します。
+
+====== 発見！
+何回が実行した結果、クエリパラメタの順番が異なることが分かりました。通信先は順番もみるの？
+
+++++
+<pre style="font-family: Menlo, Courier">
+// httpGetリクエストのクエリパラメータ生成
+func (c *Client) createGetRequestQuery() url.Values {
+	result := url.Values{}
+<text style="color:red">	for k, v := range c.ParameterArray {
+		result.Add(k, v)
+	}</text>
+	return result
+}
+</pre> 
+++++
+確かに、mapなので順番は保証されませんね。
+
+====== 改修！！
+
+url.Valuesを生成するループの前で、指定の順場でソートしました。
+++++
+<pre style="font-family: Menlo, Courier">
+  type order struct {
+    order int
+    val string
+  }
+  keyOrder := []order{
+    {1, "key1"},
+    {2, "key2"},
+    {3, "key3"},
+  }
+  sort.Slice(keyOrder, func(i, j int) bool {
+    return keyOrder[i].order < keyOrder[j].order
+  })
+</pre> 
+++++
+
+これでいけたかと思いきや、ダメ！
+Encode()でさらにソートして、rangeで回すのね・・・。
+
+====== 改修！！!
+・・・ソートしてURLエンコードを実装しました。
+++++
+<pre style="font-family: Menlo, Courier">
+func (c *Client) createGetRequestQuery() string {
+	type order struct {
+		order int
+		value string
+	}
+	// keyの順番定義
+	keyOrder := []order{
+		{1, "key1"},
+		{2, "key2"},
+		{3, "key3"}}
+	// ソート
+	sort.Slice(keyOrder, func(i, j int) bool {
+		return keyOrder[i].order < keyOrder[j].order
+	})
+
+	p := make([]byte, 0, 1024)
+	cnt := len(c.ParameterArray)
+	// クエリ生成
+	for _, v := range keyOrder {
+		if val, ok := ParameterArray[v.value]; ok {
+			cnt--
+			p = append(p, v.val...)
+			p = append(p, "="...)
+ 		        // URLエンコード・・・
+			p = append(p, url.PathEscape(val)...)
+			if cnt != 0 {
+				p = append(p, "&"...)
+			}
+		}
+	}
+	return string(p)
+}
+</pre> 
+++++
+
+httpGetリクエストのパラメタの順番が決められているシステム初めてでした。
+
+
+
+
+
+
+
