@@ -206,7 +206,7 @@ func (c *Client) createGetRequestQuery() string {
 </pre> 
 ++++
 
-httpGetリクエストのパラメタの順番が決められているシステム初めてでした。
+httpGetリクエストのパラメタの順番が決められているシステム初めてでした。 +
 おわり。
 
 
