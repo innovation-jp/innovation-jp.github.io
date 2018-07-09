@@ -40,10 +40,12 @@ func (c *Client) Execute() () {
 
 	if res.StatusCode != http.StatusOK {
 	   // エラー判定
-   }
+   	}
 
 	// レスポンス取得
 	body, _ := ioutil.ReadAll(res.Body)
+    
+    	//値をごにょごにょする
 }
 
 
@@ -70,7 +72,6 @@ type Values map[string][]string
 </pre> 
 ++++
 
-引用）net/urlパッケージ
 ++++
 <pre style="font-family: Menlo, Courier">
 // Encode encodes the values into ``URL encoded'' form
@@ -102,7 +103,7 @@ func (v Values) Encode() string {
 ++++
 
 ====== はまったのは赤い文字のところ
-Getリクエストのクエリパラメータを生成するところになります。 +
+今回つまづいたのは、Getリクエストのクエリパラメータを生成するところになります。 +
 Getリクエストのクエリパラメタは、Client構造体のparameterArrayで保持しています。
 その値を、url.Valuesに設定してEncodeメソッドを使えば、後はよしなにやってくれる想定でした。
 
@@ -117,10 +118,10 @@ Getリクエストのクエリパラメタは、Client構造体のparameterArray
 -> ネットワークの設定で通信先のサーバに繋げないように閉じている？ +
 
 ③パラメタの問題 + 
--> パラメタのKey、値が誤っている？ +
+-> パラメタで指定するKey、Valueが誤っている？ +
 
 ====== 一次調査
-①、②についてはすぐ問題ないことが分かりました。ネットワーク的に接続できないと違うエラーが返却されますし。
+①、②についてはすぐ問題ないことが分かりました。ネットワーク的に接続できないなら、違うエラーが返却されますし。
 となると③？。
 
 ====== 解析
@@ -164,11 +165,11 @@ url.Valuesを生成するループの前で、指定の順場でソートしま�
 </pre> 
 ++++
 
-これでいけたかと思いきや、ダメ！
-Encode()でさらにソートして、rangeで回すのね・・・。
+これでいけたかと思いきや、ダメ！ +
+net/urlのEncodeメソッドで、でさらにソートして、rangeで回すのね・・・。
 
 ====== 改修！！!
-・・・ソートしてURLエンコードを実装しましたが、何だかなー
+独自メソッドでソートしてURLエンコードする様に実装しました。が、何だかなー
 ++++
 <pre style="font-family: Menlo, Courier">
 func (c *Client) createGetRequestQuery() string {
