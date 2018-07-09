@@ -35,8 +35,18 @@
 
 ということで、軽いプレゼン用意しました。
 
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/SsaCbXNyCvU" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
++++
+
 ### バーチャル空間でプレゼン
 こちらも用意しました。
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/eMt3lmPnPcY" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
++++
+
 
 ## 違いまとめ
 ■普通のスライド +
