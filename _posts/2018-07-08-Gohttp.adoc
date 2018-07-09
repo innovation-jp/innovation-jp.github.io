@@ -102,7 +102,7 @@ func (v Values) Encode() string {
 </pre> 
 ++++
 
-====== はまったのは赤い文字のところ
+====== はまったのはcreateGetRequestQueryメソッドの赤い文字のところ
 今回つまづいたのは、Getリクエストのクエリパラメータを生成するところになります。 +
 Getリクエストのクエリパラメタは、Client構造体のparameterArrayで保持しています。
 その値を、url.Valuesに設定してEncodeメソッドを使えば、後はよしなにやってくれる想定でした。
