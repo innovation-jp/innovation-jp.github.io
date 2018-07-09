@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>PHP-CS-FixerとGitを使って、規約に沿った快適なコーディングライフを - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="PHP-CS-FixerとGitを使って、規約に沿った快適なコーディングライフを">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="PHP-CS-FixerとGitを使って、規約に沿った快適なコーディングライフを">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/07/09/P-H-P-C-S-Fixer-Git.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="PHP-CS-FixerとGitを使って、規約に沿った快適なコーディングライフを" />
+    <meta property="og:description" content="こんにちは。はすみんです。 弊社の開発ではPHPを主に使っているのですが、 それなりに歴史が長いからこそ、イケてない箇所がたまにあります。 例えばコーディング規約に沿っていないなどです。 「PSR-2に準拠してコーディングしようよ」となったのも、プロダクトがそれなりに成熟し始めてからでした。 そのため、過去のプログラムに規約に沿っていないソースコードもたまにあります。 コードレビュー時にそういった指摘はしたくないですよね。 とはいえ大きなプロダクトなので、いきなり改修を加えるのは、工数的にもメンタル的にも大変です。 少なくとも変更を加えたソースコードだ..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/07/09/P-H-P-C-S-Fixer-Git.html" />
+    <meta property="article:published_time" content="2018-07-08T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-07-09T08:24:50.872Z" />
+    <meta property="article:tag" content="Hasumin" />
+    <meta property="article:tag" content="PHP-CS" />
+    <meta property="article:tag" content="PHP-CS-Fixer" />
+    <meta property="article:tag" content="Git" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="PHP-CS-FixerとGitを使って、規約に沿った快適なコーディングライフを" />
+    <meta name="twitter:description" content="こんにちは。はすみんです。 弊社の開発ではPHPを主に使っているのですが、 それなりに歴史が長いからこそ、イケてない箇所がたまにあります。 例えばコーディング規約に沿っていないなどです。 「PSR-2に準拠してコーディングしようよ」となったのも、プロダクトがそれなりに成熟し始めてからでした。 そのため、過去のプログラムに規約に沿っていないソースコードもたまにあります。 コードレビュー時にそういった指摘はしたくないですよね。 とはいえ大きなプロダクトなので、いきなり改修を加えるのは、工数的にもメンタル的にも大変です。 少なくとも変更を加えたソースコードだ..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/07/09/P-H-P-C-S-Fixer-Git.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "takuya hasumi",
+        "image": "https://avatars0.githubusercontent.com/u/22537034?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "PHP-CS-FixerとGitを使って、規約に沿った快適なコーディングライフを",
+    "url": "http://tech.innovation.co.jp/2018/07/09/P-H-P-C-S-Fixer-Git.html",
+    "datePublished": "2018-07-08T15:00:00.000Z",
+    "dateModified": "2018-07-09T08:24:50.872Z",
+    "keywords": "Hasumin,  PHP-CS,  PHP-CS-Fixer,  Git",
+    "description": "こんにちは。はすみんです。 弊社の開発ではPHPを主に使っているのですが、 それなりに歴史が長いからこそ、イケてない箇所がたまにあります。 例えばコーディング規約に沿っていないなどです。 「PSR-2に準拠してコーディングしようよ」となったのも、プロダクトがそれなりに成熟し始めてからでした。 そのため、過去のプログラムに規約に沿っていないソースコードもたまにあります。 コードレビュー時にそういった指摘はしたくないですよね。 とはいえ大きなプロダクトなので、いきなり改修を加えるのは、工数的にもメンタル的にも大変です。 少なくとも変更を加えたソースコードだ..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Hasumin tag-P-H-P-C-S tag-P-H-P-C-S-Fixer tag-Git no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="09 Jul 2018" class="post-meta__date date">09 Jul 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Hasumin">Hasumin</a>, <a href="http://tech.innovation.co.jp/tag/P-H-P-C-S"> PHP-CS</a>, <a href="http://tech.innovation.co.jp/tag/P-H-P-C-S-Fixer"> PHP-CS-Fixer</a>, <a href="http://tech.innovation.co.jp/tag/Git"> Git</a></span>
+        <span class="post-meta__author author"><img src="https://avatars0.githubusercontent.com/u/22537034?v=4" alt="profile image for takuya hasumi" class="avatar post-meta__avatar" /> by takuya hasumi</span>
+      </div>
+      <h1 class="post-title">PHP-CS-FixerとGitを使って、規約に沿った快適なコーディングライフを</h1>
+    </header>
+
+    <section class="post tag-Hasumin tag-P-H-P-C-S tag-P-H-P-C-S-Fixer tag-Git">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんにちは。はすみんです。<br></p>
+</div>
+<div class="paragraph">
+<p>弊社の開発ではPHPを主に使っているのですが、<br>
+それなりに歴史が長いからこそ、イケてない箇所がたまにあります。<br></p>
+</div>
+<div class="paragraph">
+<p>例えばコーディング規約に沿っていないなどです。<br></p>
+</div>
+<div class="paragraph">
+<p>「PSR-2に準拠してコーディングしようよ」となったのも、プロダクトがそれなりに成熟し始めてからでした。<br>
+そのため、過去のプログラムに規約に沿っていないソースコードもたまにあります。<br>
+コードレビュー時にそういった指摘はしたくないですよね。</p>
+</div>
+<div class="paragraph">
+<p>とはいえ大きなプロダクトなので、いきなり改修を加えるのは、工数的にもメンタル的にも大変です。<br>
+少なくとも変更を加えたソースコードだけは、規約に沿って書いていきたいです。<br>
+そうすれば全体の保守性も徐々にあがっていくはずです。<br></p>
+</div>
+<div class="paragraph">
+<p>規約に沿ったソースコードを書くために、PHP-CS-Fixerというツールを使いました。<br>
+このツールは、設定した規約に沿って自動補正してくれるものです。<br>
+タイミングはコミット単位で実行し、変更を加えたファイルのみ対象にしました。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">作ったもの</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんな感じです。<br>
+<span class="image"><img src="/images/hasumi/php-cs/phpcs.gif" alt="phpcs.gif"></span></p>
+</div>
+<div class="paragraph">
+<p>コミットしようとしているファイルをすべてチェックします。<br>
+規約に沿っていないとコミットされません。<br>
+また、インタラクティブに自動補正するかどうかユーザに聞いて実行します。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__pre_commit_sh">書いたpre-commit.sh</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんな感じです。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>######################################
+# commitごとに規約に沿っているかチェックする
+######################################
+# IS_ERRORでコミットするかどうか判定する関数
+function execFix() {
+    echo "対象のファイルに修正を実行しますか？ [Y/n]"
+    exec &lt; /dev/tty
+    read input
+
+    if [ -z $input ]; then
+        echo "alert: y or nを入力してください"
+        execFix
+    elif [ $input = 'y' ] || [ $input = 'Y' ] || [ $input = 'yes' ]; then
+        echo "php-cs-fixerを実行します"
+        # 対象ファイル毎にphp-cs-fixerの実行
+        for FILE in `git status -uno --short | cut -c3-`; do
+            php-cs-fixer fix $FILE
+        done
+        echo "php-cs-fixerの実行が完了しました。対象ファイルを確認してください。"
+        exit 1
+    elif [ $input = 'n' ] || [ $input = 'N' ] || [ $input = 'no' ]; then
+        echo "処理を終了します。規約に沿ってコーディングしてからコミットしてください。"
+        exit 1
+    fi
+}
+
+# 実行部
+# コミットしようとしているファイルだけを規約に沿っているかチェック
+echo "Files check by php-cs"
+echo "＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝"
+IS_ERROR=0
+# cutでファイル名を取得
+for FILE in `git status -uno --short | cut -c3-`; do
+    # 対象のファイルをphp-csでチェック
+    array=(`phpcs $FILE --standard=./lf-phpcs.xml | grep FOUND`)
+    # php-csが表示するエラー数を判定。[1]番目にエラー数が表示される。
+    if test ${array[1]} != 0; then
+        # エラーがあればcommitさせない
+        echo "PHPCS Err In: ${FILE}"
+        IS_ERROR=1
+    else
+        echo "No Err, be commited"
+    fi
+done
+echo "＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝"
+
+# php-cs-fixerを実行するか
+if test $IS_ERROR = 1 ;then
+    execFix
+fi
+######################################</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>流れとしてはこんな感じです。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>コミットするファイルを規約に沿っているかチェック
+|_ 沿っていればそのままコミット
+|_ 沿っていなければ対象のファイル名を表示
+  |_ PHP-CS-Fixerを使って自動補正
+  |_ 何もしない</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>気をつけなければいけないのは<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>exec &lt; /dev/tty</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>部分で、Gitのhookはインタラクティブなことが普通できなく、exec &lt; /dev/ttyとすることでできるようになるようです。<br>
+参考：https://qiita.com/mkiken/items/af5c40ce0d0c6d3530c7<br></p>
+</div>
+<div class="paragraph">
+<p>Gitのhookに関して参考にしたサイト：<br>
+<a href="https://www.unitrust.co.jp/2426" class="bare">https://www.unitrust.co.jp/2426</a><br>
+<a href="https://blog.leko.jp/post/create-git-hook-to-develop-modern-php/" class="bare">https://blog.leko.jp/post/create-git-hook-to-develop-modern-php/</a><br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">おわりに</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>まだまだ便利にできそうなので、色々調べてみようと思いました。<br>
+シェルも勉強しよう。</p>
+</div>
+<div class="paragraph">
+<p>done</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
