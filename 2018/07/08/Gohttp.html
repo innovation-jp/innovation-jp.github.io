@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Goのhttpクライアント通信！ - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Goのhttpクライアント通信！">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Goのhttpクライアント通信！">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/07/08/Gohttp.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Goのhttpクライアント通信！" />
+    <meta property="og:description" content="こんにちは。 エンジニアのNew塚本です。 引き続き、Golangでバッチをゴリゴリ製造しています。 今回は、httpクライアント通信についてのお話をのせたいと思います。 プログラムはこんな感じ エラーと返却値は端折っていますが、大枠はこんな感じです。 // 構造体定義 type Client struct { 	url                     string 	parameterArray map[string]string 	client                  *http.Client } // 通信実行メソッド func..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/07/08/Gohttp.html" />
+    <meta property="article:published_time" content="2018-07-07T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-07-09T08:08:22.505Z" />
+    <meta property="article:tag" content="NewTsukamoto" />
+    <meta property="article:tag" content="mac" />
+    <meta property="article:tag" content="Golang" />
+    <meta property="article:tag" content="gorm" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Goのhttpクライアント通信！" />
+    <meta name="twitter:description" content="こんにちは。 エンジニアのNew塚本です。 引き続き、Golangでバッチをゴリゴリ製造しています。 今回は、httpクライアント通信についてのお話をのせたいと思います。 プログラムはこんな感じ エラーと返却値は端折っていますが、大枠はこんな感じです。 // 構造体定義 type Client struct { 	url                     string 	parameterArray map[string]string 	client                  *http.Client } // 通信実行メソッド func..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/07/08/Gohttp.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars2.githubusercontent.com/u/29852256?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "Goのhttpクライアント通信！",
+    "url": "http://tech.innovation.co.jp/2018/07/08/Gohttp.html",
+    "datePublished": "2018-07-07T15:00:00.000Z",
+    "dateModified": "2018-07-09T08:08:22.505Z",
+    "keywords": "NewTsukamoto,  mac,  Golang,  gorm",
+    "description": "こんにちは。 エンジニアのNew塚本です。 引き続き、Golangでバッチをゴリゴリ製造しています。 今回は、httpクライアント通信についてのお話をのせたいと思います。 プログラムはこんな感じ エラーと返却値は端折っていますが、大枠はこんな感じです。 // 構造体定義 type Client struct { \turl                     string \tparameterArray map[string]string \tclient                  *http.Client } // 通信実行メソッド func..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-New-Tsukamoto tag-mac tag-Golang tag-gorm no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="08 Jul 2018" class="post-meta__date date">08 Jul 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/New-Tsukamoto">NewTsukamoto</a>, <a href="http://tech.innovation.co.jp/tag/mac"> mac</a>, <a href="http://tech.innovation.co.jp/tag/Golang"> Golang</a>, <a href="http://tech.innovation.co.jp/tag/gorm"> gorm</a></span>
+        <span class="post-meta__author author"><img src="https://avatars2.githubusercontent.com/u/29852256?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">Goのhttpクライアント通信！</h1>
+    </header>
+
+    <section class="post tag-New-Tsukamoto tag-mac tag-Golang tag-gorm">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんにちは。
+エンジニアのNew塚本です。</p>
+</div>
+<div class="paragraph">
+<p>引き続き、Golangでバッチをゴリゴリ製造しています。<br>
+今回は、httpクライアント通信についてのお話をのせたいと思います。</p>
+</div>
+</div>
+</div>
+<div class="sect5">
+<h6 id="__">プログラムはこんな感じ</h6>
+<div class="paragraph">
+<p>エラーと返却値は端折っていますが、大枠はこんな感じです。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+// 構造体定義
+type Client struct {
+	url                     string
+	parameterArray map[string]string
+	client                  *http.Client
+}
+
+// 通信実行メソッド
+func (c *Client) Execute() () {
+<text style="color:red">
+	// Getクエリの組み立て
+	queryParam := c.createGetRequestQuery()
+</text>
+	url := c.url
+
+	// リクエストを生成
+	req, _ := http.NewRequest("GET", url, nil)
+
+	// URLエンコードした値を設定
+	req.URL.RawQuery = queryParam.Encode()
+
+	// リクエスト発行
+	res, _ := c.client.Do(req)
+
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK {
+	   // エラー判定
+   	}
+
+	// レスポンス取得
+	body, _ := ioutil.ReadAll(res.Body)
+
+    	//値をごにょごにょする
+}
+
+
+// httpGetリクエストのクエリパラメータ生成
+func (c *Client) createGetRequestQuery() url.Values {
+	result := url.Values{}<text style="color:red">
+	for k, v := range c.ParameterArray {
+		result.Add(k, v)
+	}</text>
+	return result
+}
+</pre>
+<div class="paragraph">
+<p>引用）net/urlパッケージ</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+// Values maps a string key to a list of values.
+// It is typically used for query parameters and form values.
+// Unlike in the http.Header map, the keys in a Values map
+// are case-sensitive.
+type Values map[string][]string
+</pre>
+<pre style="font-family: Menlo, Courier">
+// Encode encodes the values into ``URL encoded'' form
+// ("bar=baz&foo=quux") sorted by key.
+func (v Values) Encode() string {
+	if v == nil {
+		return ""
+	}
+	var buf bytes.Buffer
+	keys := make([]string, 0, len(v))
+	for k := range v {
+		keys = append(keys, k)
+	}
+	<text style="color:red">sort.Strings(keys)
+	for _, k := range keys {</text>
+		vs := v[k]
+		prefix := QueryEscape(k) + "="
+		for _, v := range vs {
+			if buf.Len() > 0 {
+				buf.WriteByte('&')
+			}
+			buf.WriteString(prefix)
+			buf.WriteString(QueryEscape(v))
+		}
+	}
+	return buf.String()
+}
+</pre>
+</div>
+<div class="sect5">
+<h6 id="__creategetrequestquery">はまったのはcreateGetRequestQueryメソッドの赤い文字のところ</h6>
+<div class="paragraph">
+<p>今回つまづいたのは、Getリクエストのクエリパラメータを生成するところになります。<br>
+Getリクエストのクエリパラメタは、Client構造体のparameterArrayで保持しています。
+その値を、url.Valuesに設定してEncodeメソッドを使えば、後はよしなにやってくれる想定でした。</p>
+</div>
+<div class="paragraph">
+<p>しかし、実行すると通信先からエラーが返却されます！</p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="___2">調査観点</h6>
+<div class="paragraph">
+<p>①通信先の問題<br>
+&#8594; 通信先のサーバに異常があるとか？<br></p>
+</div>
+<div class="paragraph">
+<p>②ネットワークの問題<br>
+&#8594; ネットワークの設定で通信先のサーバに繋げないように閉じている？<br></p>
+</div>
+<div class="paragraph">
+<p>③パラメタの問題<br>
+&#8594; パラメタで指定するKey、Valueが誤っている？<br></p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="___3">一次調査</h6>
+<div class="paragraph">
+<p>①、②についてはすぐ問題ないことが分かりました。ネットワーク的に接続できないなら、違うエラーが返却されますし。
+となると③？。</p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="___4">解析</h6>
+<div class="paragraph">
+<p>ここからは地道に解析します。<br>
+発行しているリクエストをログに出力して、成功しているリクエストと比較します。</p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="___5">発見！</h6>
+<div class="paragraph">
+<p>何回が実行した結果、クエリパラメタの順番が異なることが分かりました。通信先は順番もみるの？</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+// httpGetリクエストのクエリパラメータ生成
+func (c *Client) createGetRequestQuery() url.Values {
+	result := url.Values{}
+<text style="color:red">	for k, v := range c.ParameterArray {
+		result.Add(k, v)
+	}</text>
+	return result
+}
+</pre>
+<div class="paragraph">
+<p>確かに、mapなので順番は保証されませんね。</p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="___6">改修！！</h6>
+<div class="paragraph">
+<p>url.Valuesを生成するループの前で、指定の順場でソートしました。</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+  type order struct {
+    order int
+    val string
+  }
+  keyOrder := []order{
+    {1, "key1"},
+    {2, "key2"},
+    {3, "key3"},
+  }
+  sort.Slice(keyOrder, func(i, j int) bool {
+    return keyOrder[i].order < keyOrder[j].order
+  })
+</pre>
+<div class="paragraph">
+<p>これでいけたかと思いきや、ダメ！<br>
+net/urlのEncodeメソッドで、でさらにソートして、rangeで回すのね・・・。</p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="___7">改修！！!</h6>
+<div class="paragraph">
+<p>独自メソッドでソートしてURLエンコードする様に実装しました。が、何だかなー</p>
+</div>
+<pre style="font-family: Menlo, Courier">
+func (c *Client) createGetRequestQuery() string {
+	type order struct {
+		order int
+		value string
+	}
+	// keyの順番定義
+	keyOrder := []order{
+		{1, "key1"},
+		{2, "key2"},
+		{3, "key3"}}
+	// ソート
+	sort.Slice(keyOrder, func(i, j int) bool {
+		return keyOrder[i].order < keyOrder[j].order
+	})
+
+	p := make([]byte, 0, 1024)
+	cnt := len(c.ParameterArray)
+	// クエリ生成
+	for _, v := range keyOrder {
+		if val, ok := ParameterArray[v.value]; ok {
+			cnt--
+			p = append(p, v.val...)
+			p = append(p, "="...)
+ 		        // URLエンコード・・・
+			p = append(p, url.PathEscape(val)...)
+			if cnt != 0 {
+				p = append(p, "&"...)
+			}
+		}
+	}
+	return string(p)
+}
+</pre>
+<div class="paragraph">
+<p>httpGetリクエストのパラメタの順番が決められているシステム初めてでした。<br>
+おわり。</p>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
