@@ -80,3 +80,5 @@ References:
 * http://php.net/manual/en/internals2.variables.intro.php
 * http://wtf.tw/ref/tatroe.pdf Page 33-34
 * http://php.net/manual/en/internals2.variables.intro.php
+
+Done
