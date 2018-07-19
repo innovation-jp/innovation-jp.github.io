@@ -77,6 +77,6 @@ In a more complex scenario, and where the developer wants complete control over 
 When I use a dynamically typed language like PHP I think it is really interesting to look at what PHP is actually doing under the hood in order to make development easier. If you have a moment, how about taking a step back and observing how a language like PHP actually moves behind the scenes!
 
 References:
-*http://php.net/manual/en/internals2.variables.intro.php
-*http://wtf.tw/ref/tatroe.pdf Page 33-34
-*http://php.net/manual/en/internals2.variables.intro.php
+* http://php.net/manual/en/internals2.variables.intro.php
+* http://wtf.tw/ref/tatroe.pdf Page 33-34
+* http://php.net/manual/en/internals2.variables.intro.php
