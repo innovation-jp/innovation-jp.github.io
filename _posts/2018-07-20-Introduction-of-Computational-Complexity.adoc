@@ -1,0 +1,435 @@
+# Vue.jsを使って量子コンピュータの並列演算を再現してみた
+
+:hp-alt-title: Introduction of Computational Complexity
+:hp-tags: JavaScript, Vue.js, Yu
+
+## はじめに
+初めまして、新卒エンジニアのYuです。
+初ブログです。
+よろしくお願いします。 +
+
+最近、色々あって量子コンピュータの勉強をしていました。
+量子いいですよね量子。
+
+さて、量子コンピュータの重要な性質の一つに「並列演算」があります。
+詳しい説明は書くと長くなるので割愛します（ググれば出てきます）が、
+要するに「複数の演算を同時に実行できる」ということです。
+この並列性があるからこそ量子コンピュータは高速に計算をすることができます。 +
+この並列演算ですが、実際に紙とペンで回路に沿って計算してみると「確かに並列で計算してるなー」ということは分かります。
+しかし、1回1回手計算しているとイマイチ並列っぽさがありません。 +
+せっかくならもっとそれっぽい並列演算を見てみたい……
+
+ということで量子コンピュータっぽい計算機をJavaScriptで作って計算過程をVue.jsで可視化してみました。
+
+## やりたかったこと
+* 任意の量子回路を設定し、それに従って実際に量子計算を実行
+* 計算過程でどのように状態が遷移しているかを表示
+
+## 作ったもの
+実際にできたものがこちらになります。
+
+image:/images/yu/quantum/calculator.png[width="250"]
+
+
+最低限の計算機能のみを実装したのでレイアウト等はかなり適当です。そのうちキレイにしたい。 +
+画像内の各番号の機能の説明は以下の通りです。
+
+. 使用するビットの数。現時点では16ビットくらいが限界です。それより大きな値を入力すると正常に動きません。
+. 計算の初期値。2進数表示です。
+. 論理回路入力欄。各ビットの初期値と計算の回路を入力します。回路に使用できるゲートは今のところ2種類です。ゲートについてもっと詳しく知りたい方はググってください。
+.. アダマールゲート +
+入力欄に「h」を入れます。重ね合わせの状態を作ります。
+.. 制御NOTゲート +
+制御ビット側に「u」または「d」、標的ビット側に「@」を入れます。制御側が0なら標的側は変化なし、制御側が1なら標的側を反転させます。
+. 論理回路。入力欄のテキストを回路っぽい表示に変換します。
+. 結果表示の変更。計算結果を2進数で表示したいときにチェックをつけます。チェックが無い場合は10進数表記になります。
+. 回路全体の状態。確率が0でない状態のみを表示します。
+. 計算結果の確率分布。確率が0でない状態のみを表示します。
+
+
+## 書いたコード
+
+#### html
+```
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>量子コンピュータっぽい計算機</title>
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+    <div id="app">
+        <form @submit.prevent="calculate">
+            <!-- 使用するビット数 -->
+            <p><label for="bit">bit数 : </label><input type="text" name="bit" v-model="maxBit" size = "2"></p>
+            <!-- 計算の初期値 -->
+            <p>初期値 : {{ initialValue }}</p>
+            <!-- 論理回路入力欄 -->
+            <ul class="output">
+                <li v-for="(bit,index) in bits">
+                    <input type="text" v-model="bits[index]" size = "1">
+                    <input type="text" v-model="routes[index]">
+                </li>
+            </ul>
+            <input type="submit" value="計算"><br>
+        </form>
+        <!-- 論理回路 -->
+        <ul class="output">
+            <li><span v-bind:style="{ paddingLeft: nowPosition + 'px' }">{{ now }}</span></li>
+            <li v-for="(route,index) in routesOutput">|{{ bits[index] }} > {{ route }}</li>
+        </ul>
+        <!-- 結果表示の変更 -->
+        <form>
+            <p><label><input type="checkbox" v-model="binary">結果を2進数表示</label></p>
+        </form>
+        <!-- 回路全体の状態 -->
+        <p>状態</p>
+        <ul class="output">
+            <li v-for="(value,index) in output" v-if="value != 0">
+                <span v-if="binary">{{ outputBinary[index] }} : {{ value }}</span>
+                <span v-else>{{ index }} : {{ value }}</span>
+            </li>
+        </ul>
+        <!-- 計算結果の確率分布 -->
+        <p>確率</p>
+        <ul class="output">
+            <li v-for="(value,index) in probability" v-if="value != 0">
+                <span v-if="binary">{{ outputBinary[index] }} : {{ value }}</span>
+                <span v-else>{{ index }} : {{ value }}</span>
+            </li>
+        </ul>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="js/hadamardGate.js"></script>
+    <script src="js/controlNotGate.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
+```
+
+#### 論理ゲート
+
+2種類のゲートは、具体的に以下のような変換をします。
+
+.アダマールゲート
+[options="header"]
+|=======================
+|入力|出力
+|0|stem:[1/sqrt(2)]0 + stem:[1/sqrt(2)] 1
+|1|stem:[1/sqrt(2)]0 - stem:[1/sqrt(2)] 1
+|=======================
+.制御NOTゲート
+[options="header"]
+|=======================
+|入力（制御/標的）|出力（制御/標的）
+|00|00
+|01|01
+|10|11
+|11|10
+|=======================
+
+ゲートのコードは以下の通りです。
+
+```
+/**
+ * アダマール変換を実行する
+ * @param {array} input 入力（全ての状態）
+ * @param {int} conversion 変換するbit
+ * @param {int} maxBit 全体のbit数
+ * @return {array} 出力（全ての状態）
+ */
+const HadamardGate = (input, conversion, maxBit) => {
+    const maxValue = Math.pow(2, maxBit);        
+    // 結果を入れるための配列
+    let output = new Array(maxValue).fill(0);
+    let result = [];
+    // 全ての状態を変換する
+    for (let i = 0; i < maxValue; i++) {
+        if (input[i] !== 0) {
+            result = HadamardGateOneState(i, conversion, maxBit);
+            for (let state in result) {
+                output[state] += input[i] * result[state];
+            }
+        }
+    }
+    return output;
+}
+
+/**
+ * 1つの状態について、アダマール変換を実行する
+ * @param {int} input 入力（1つの状態, 10進数）
+ * @param {int} conversion 変換するbit
+ * @param {int} maxBit 全体のbit数
+ * @return {array} 出力（2つの状態とその重み, 10進数）
+ */
+const HadamardGateOneState = (input, conversion, maxBit) => {
+    const sqrt2 = Math.sqrt(2);
+    // 入力を2進数表示
+    let str_0 = '';
+    for (i = 0; i < maxBit; i++) {
+        str_0 += '0';
+    }
+    let inputBinaryNumber = (str_0 + input.toString(2)).substr(-maxBit);
+    // 変換するbitの左から数えた位置
+    let charNum = maxBit - conversion;
+    // 変換するbitの現在の値
+    let bit = inputBinaryNumber.charAt(charNum);
+
+    // 変換後の状態
+    let up = inputBinaryNumber.substr(0, charNum) + '0' + inputBinaryNumber.substr(charNum + 1); //up = 0
+    let down = inputBinaryNumber.substr(0, charNum) + '1' + inputBinaryNumber.substr(charNum + 1); //down = 1
+
+    // 10進数に変換
+    let upDecimalNumber = Number.parseInt(up, 2);
+    let downDecimalNumber = Number.parseInt(down, 2);
+
+    // 係数をつけて結果を返す
+    if (bit === '0') {
+        let result = {
+            [upDecimalNumber]: (sqrt2 / 2),
+            [downDecimalNumber]: (sqrt2 / 2),
+        }
+        return result;
+    } else if (bit === '1') {
+        let result = {
+            [upDecimalNumber]: (sqrt2 / 2),
+            [downDecimalNumber]: (-sqrt2 / 2),
+        }
+        return result;
+    }
+}
+```
+```
+/**
+ * 制御NOTゲートを実行する
+ * @param {array} input 入力（全ての状態）
+ * @param {int} control 制御bit
+ * @param {int} target 標的bit
+ * @param {int} maxBit 全体のbit数
+ * @return {array} 出力（全ての状態）
+ */
+const ControlNotGate = (input, control, target, maxBit) => {
+    const maxValue = Math.pow(2, maxBit);        
+    // 結果を入れるための配列
+    let output = new Array(maxValue).fill(0);
+    let result = [];
+    // 全ての状態を変換する
+    for (let i = 0; i < maxValue; i++ ) {
+        if (input[i] !== 0) {
+            result = ControlNotGateOneState(i, control, target, maxBit);
+            output[result] = input[i];
+        }
+    }
+    return output;
+}
+
+/**
+ * 1つの状態について、制御NOTゲートを実行する
+ * @param {int} input 入力（1つの状態, 10進数）
+ * @param {int} control 制御bit
+ * @param {int} target 標的bit
+ * @return {int} 出力（1つの状態, 10進数）
+ */
+const ControlNotGateOneState = (input, control, target, maxBit) => {
+    // 入力を2進数表示
+    let str_0 = '';
+    for (i = 0; i < maxBit; i++) {
+        str_0 += '0';
+    }
+    let inputBinaryNumber = (str_0 + input.toString(2)).substr(-maxBit);
+    // 制御bit, 標的bitの左から数えた位置
+    let controlCharNumber = maxBit - control;
+    let targetCharNumber = maxBit - target;
+    // 制御bit, 標的bitの現在の値
+    let controlBit = inputBinaryNumber.charAt(controlCharNumber);
+    let targetBit = inputBinaryNumber.charAt(targetCharNumber);
+    
+    // 制御bitが1の場合、標的bitの値を反転
+    if (controlBit === '0') {
+        return input;
+    } else if (controlBit === '1') {
+        let result = inputBinaryNumber.substr(0, targetCharNumber) + (1 - targetBit) + inputBinaryNumber.substr(targetCharNumber + 1);
+        // 10進数に変換
+        return Number.parseInt(result,2);
+    }
+}
+```
+#### Vue
+
+```
+const vm =
+    new Vue({
+        el: '#app',
+        data: {
+            maxBit: 2,
+            bits: [0,0],
+            routes: ['-hd-', '--@-'],
+            input: [1, 0, 0, 0],
+            now: '',
+            nowPosition: 20,
+            binary: true,
+        },
+        methods: {
+            // 計算の実行
+            calculate() {
+                const max = this.routes[0].length;
+                let routesArray = [];
+                for (let route of this.routes) {
+                    routesArray.push(route.split(''));
+                }
+                this.now = '↓';
+                let i = 0;
+                // 1秒ごとに1列分の計算を進める
+                let loop = setInterval(() => {
+                    this.nowPosition += 16;
+                    if (i >= max) {
+                        this.now = '';
+                        this.nowPosition = 20;
+                        clearInterval(loop);
+                        return;
+                    }
+                    let targetFlag = false;
+                    let controlFlag = false;
+                    let targetBit = 0;
+                    let controlBit = 0;
+                    for (let key in routesArray) {
+                        // h : アダマール
+                        if (routesArray[key][i] === 'h') {
+                            this.input = Hadam　ardGate(this.input, (Number(key) + 1), this.maxBit);
+                        }
+                        // d : 制御ビット
+                        if (routesArray[key][i] === 'd' && !controlFlag) {
+                            controlFlag = true;
+                            controlBit = Number(key) + 1;
+                        }
+                        // u : 制御ビット
+                        if (routesArray[key][i] === 'u' && targetFlag) {
+                            this.input = ControlNotGate(this.input, (Number(key) + 1), targetBit, this.maxBit)
+                            targetFlag = false;
+                        }
+                        // @ : 標的ビット
+                        if (routesArray[key][i] === '@') {
+                            if (controlFlag) {
+                                this.input = ControlNotGate(this.input, controlBit, (Number(key) + 1), this.maxBit);
+                                controlFlag = false;
+                            } else {
+                                targetFlag = true;
+                                targetBit = Number(key) + 1;
+                            }
+                        }
+                    }
+                    i++;
+                }, 1000);
+            },
+        },
+        watch: {
+            // ビット数を変更したときに入力欄を増減させる
+            maxBit() {
+                this.bits = [];
+                this.routes = [];
+                for (i = 0; i < this.maxBit; i++) {
+                    this.bits.push(0);
+                    this.routes.push('-');
+                }
+            },
+            // 初期値を計算の入力側に入れる
+            initialValue() {
+                const initial = Number.parseInt(this.initialValue,2);
+                const maxValue = Math.pow(2, this.maxBit);
+                this.input = new Array(maxValue).fill(0);
+                this.input[initial] = 1;
+            }
+        },
+        computed: {
+            // 回路をそれっぽく変換して表示する
+            routesOutput() {
+                let output = [];
+                for (let route of this.routes) {
+                    let routeArray = route.split('');
+                    for (let key in routeArray) {
+                        if (routeArray[key] === '-') {
+                            routeArray[key] = '━';
+                        }
+                        if (routeArray[key] === 'h') {
+                            routeArray[key] = 'Η';
+                        }
+                        if (routeArray[key] === 'd') {
+                            routeArray[key] = '┳';
+                        }
+                        if (routeArray[key] === 'u') {
+                            routeArray[key] = '┻';
+                        }
+                        if (routeArray[key] === '+') {
+                            routeArray[key] = '╋';
+                        }
+                        if (routeArray[key] === '@') {
+                            routeArray[key] = '◎';
+                        }
+                    }
+                    output.push(routeArray.join(''));
+                }
+                return output;
+            },
+            // 計算の初期値を2進数に変換する
+            initialValue() {
+                let initial = [];
+                for (let bit of this.bits) {
+                    initial.unshift(bit);
+                }
+                return initial.join('');
+            },
+            // ビット全体の状態を計算
+            output() {
+                let result = [];
+                for (let value of this.input) {
+                    // 四捨五入
+                    let round = Math.floor((value * 100000) + 0.5) / 100000;
+                    result.push(round);
+                }
+                return result;
+            },
+            // ビット全体の確率を計算
+            probability() {
+                let result = [];
+                for (let value of this.input) {
+                    // 四捨五入
+                    let round = Math.floor((value * value * 100000) + 0.5) / 100000;
+                    result.push(round);
+                }
+                return result;
+            },
+            // 出力を2進数に変換
+            outputBinary() {
+                let result = [];
+                let str_0 = '';
+                let max = Math.pow(2, this.maxBit);
+                for (i = 0; i < this.maxBit; i++) {
+                    str_0 += '0';
+                }
+                for (i = 0; i < max; i++) {
+                    let binary = (str_0 + i.toString(2)).substr(-this.maxBit);
+                    result.push(binary);
+                }
+                return result;
+            },
+        }
+    });
+```
+
+## 動かしてみた
+計算を実行すると以下のように計算過程が表示されます。
+
+image:/images/yu/quantum/demo.gif[]
+
+計算自体は適当で、特に意味はありません。
+回路の上で動いている矢印は、どこまで計算が進んでいるかを示しています。
+矢印の位置に対応する状態、確率が下に表示されています。
+途中で複数の状態が現れ、それらが同時に計算されていく様子を見ることができます。
+
+## おわりに
+Vue.jsの勉強も兼ねて作ってみましたが、中々楽しかったです。
+ただし、最低限の機能しか実装していないので大した計算はできません。
+もう少しまともな計算ができるように、少しずつ機能追加していこうかなと思います。
+
+おわり
