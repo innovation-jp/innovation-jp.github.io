@@ -49,7 +49,7 @@ image:/images/yu/quantum/calculator.png[width="250"]
 
 ## 書いたコード
 
-長いので興味のない方は最後のほうまで飛ばしてください。
+興味のある方以外は最後のほうまで飛ばしてください。
 
 
 #### html
