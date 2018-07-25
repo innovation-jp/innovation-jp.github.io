@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>PHP Under the Hood - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="PHP Under the Hood">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="PHP Under the Hood">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/07/19/P-H-P-Under-the-Hood.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="PHP Under the Hood" />
+    <meta property="og:description" content="Nice to meet you! First-year engineer Ah-Yung here! For my first blog post I wanted to introduce some of the peculiarities in variable declaration and memory management within PHP.  As a new-grad I have a background in C++, so the..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/07/19/P-H-P-Under-the-Hood.html" />
+    <meta property="article:published_time" content="2018-07-18T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-07-25T02:08:49.852Z" />
+    <meta property="article:tag" content="AhYung" />
+    <meta property="article:tag" content="PHP" />
+    <meta property="article:tag" content="zvalue" />
+    <meta property="article:tag" content="zend value" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="PHP Under the Hood" />
+    <meta name="twitter:description" content="Nice to meet you! First-year engineer Ah-Yung here! For my first blog post I wanted to introduce some of the peculiarities in variable declaration and memory management within PHP.  As a new-grad I have a background in C++, so the..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/07/19/P-H-P-Under-the-Hood.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars1.githubusercontent.com/u/22947387?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "PHP Under the Hood",
+    "url": "http://tech.innovation.co.jp/2018/07/19/P-H-P-Under-the-Hood.html",
+    "datePublished": "2018-07-18T15:00:00.000Z",
+    "dateModified": "2018-07-25T02:08:49.852Z",
+    "keywords": "AhYung,  PHP,  zvalue,  zend value",
+    "description": "Nice to meet you! First-year engineer Ah-Yung here! For my first blog post I wanted to introduce some of the peculiarities in variable declaration and memory management within PHP.  As a new-grad I have a background in C++, so the..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Ah-Yung tag-P-H-P tag-zvalue tag-zend-value no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="19 Jul 2018" class="post-meta__date date">19 Jul 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Ah-Yung">AhYung</a>, <a href="http://tech.innovation.co.jp/tag/P-H-P"> PHP</a>, <a href="http://tech.innovation.co.jp/tag/zvalue"> zvalue</a>, <a href="http://tech.innovation.co.jp/tag/zend-value"> zend value</a></span>
+        <span class="post-meta__author author"><img src="https://avatars1.githubusercontent.com/u/22947387?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">PHP Under the Hood</h1>
+    </header>
+
+    <section class="post tag-Ah-Yung tag-P-H-P tag-zvalue tag-zend-value">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Nice to meet you! First-year engineer Ah-Yung here! For my first blog post I wanted to introduce some of the peculiarities in variable declaration and memory management within PHP.  As a new-grad I have a background in C++, so the differences between a compiled language and an interpreted language intrigued me.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_variable_declarations">Variable Declarations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Variable declaration has always been a strict process. Especially with the constant need to ensure that the type and size were correct in relation to the variable at hand. However, with PHP much of the type declaration and memory allocation is done under the hood,
+Here is a basic example of a PHP variable declaration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$myNum = 1.23;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In PHP variables are maintained and represented by an arbitrary value known as Zend value, usually shortened to zval. Each variable declared corresponds to a zval in the form of a struct:</p>
+</div>
+<div class="sect2">
+<h3 id="_zval_struct">Zval Struct</h3>
+<div class="listingblock">
+<div class="content">
+<pre>typedef struct _zval_struct {
+    zvalue_value value;        /* variable value */
+    zend_uint refcount__gc;    /* reference counter */
+    zend_uchar type;           /* value type */
+    zend_uchar is_ref__gc;     /* reference flag */
+} zval;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Each zval struct contains the value of the variable, the type of the variable, the reference counter and the reference flag. The first two components are fairly straightforward; however, the reference counter and the reference flag are more specific to PHP.<br>
+The reference counter indicates the number of ways that the value of the variable is referenced to. Rather than make a new copy of the variable each time, PHP uses a symbol table to keep track of how many different ways that the variable is referred to. The reference flag is a way for PHP to keep track of whether the variable is a reference or not.</p>
+</div>
+<div class="paragraph">
+<p>To get a basic idea of what a zval struct looks like in relation to a specific variable, debug_zval_dump($myVariable) can be used to show the contents of a variable’s zval struct. In continuation with the previous example using debug_zval_dump with $myNum would produce the following:</p>
+</div>
+<div class="paragraph">
+<p>Example Code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$myNum = 1.23;
+debug_zval_dump($myNum);</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>double(1.23) refcount(2)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output reveals that the type of the variable is a double, the value being 1.23, and the reference count as two.
+However, logically speaking the reference count at this point should be 1. PHP uses a system under the hood called copy-on-write. When a variable is used in a function, even one such as debug_zval_dump, PHP automatically creates a reference to the variable, yet waits to create a copy until the variable is changed.</p>
+</div>
+<div class="paragraph">
+<p>The zval struct holds a union zval_value which is used to determine the type of variable declared.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_zval_struct_2">Zval Struct</h3>
+<div class="listingblock">
+<div class="content">
+<pre>typedef union _zvalue_value {
+    long lval;                 /* long value */
+    double dval;               /* double value */
+    struct {
+        char *val;
+        int len;               /* this will always be set for strings */
+    } str;                     /* string (always has length) */
+    HashTable *ht;             /* an array */
+    zend_object_value obj;     /* stores an object store handle, and handlers */
+} zvalue_value;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Another perk of PHP is that rather than with C++ where the developer needs to think about what level of precision they want based on single, double or float data types, PHP defaults the precision of double variables as 64-bit IEEE 754 precision.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_garbage_collection">Garbage Collection</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>While on the topic of data types I wanted to touch on the concept of arrays in PHP, especially in regard to memory management. When declaring dynamic arrays in a language such as C++ the developer needs to make sure to deallocate values from the arrays after they are used otherwise the allocated values will lead to a memory leak. However, PHP has a handy garbage collector that for the majority of the time takes care of memory management.</p>
+</div>
+<div class="paragraph">
+<p>There are many different functions utilized by the garage collector such as in relation to variables, sessions, etc. As of now I will introduced two main ways that the garbage collector makes sure that unused variables are disposed of properly in order to prevent memory leaks.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Garbage collection based on reference count, once the variable’s reference count reaches 0 then the automatic garbage collection will make sure that there are no wild values left floating around in memory.</p>
+</li>
+<li>
+<p>In regard to arrays, depending on the complexity of the array the garage collector may be able to collect the unused values with the above reference count. If not, then it will use cycle collection with the aid of a buffer in order to check the reference count of each unique value.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In a more complex scenario, and where the developer wants complete control over memory management it is possible to toggle the automatic garbage collection, however is not recommended unless memory leaks are very strictly maintained.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When I use a dynamically typed language like PHP I think it is really interesting to look at what PHP is actually doing under the hood in order to make development easier. If you have a moment, how about taking a step back and observing how a language like PHP actually moves behind the scenes!</p>
+</div>
+<div class="paragraph">
+<p>References:
+* <a href="http://php.net/manual/en/internals2.variables.intro.php" class="bare">http://php.net/manual/en/internals2.variables.intro.php</a>
+* <a href="http://wtf.tw/ref/tatroe.pdf" class="bare">http://wtf.tw/ref/tatroe.pdf</a> Page 33-34
+* <a href="http://php.net/manual/en/internals2.variables.intro.php" class="bare">http://php.net/manual/en/internals2.variables.intro.php</a></p>
+</div>
+<div class="paragraph">
+<p>Done</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
