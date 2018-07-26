@@ -64,7 +64,7 @@ image:/images/yasuhiro/scratch/scratch_code1.png[width="500"]
 小学生の方々が読んでくれたら嬉しいなというレベルになっていましましたが、今後も自分の原点に立ち返り、色々作っていきたいと思っております。（ニーズはなさそうですが） +
 
 関連サイト： +
-https://scratch.mit.edu/studios/1168062/Scratch Studio - Scratchではじめよう！プログラミング入門
+https://scratch.mit.edu/studios/1168062/ Scratch Studio - Scratchではじめよう！プログラミング入門
 
 done
 
