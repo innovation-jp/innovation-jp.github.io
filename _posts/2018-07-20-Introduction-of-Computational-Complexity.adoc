@@ -119,8 +119,8 @@ image:/images/yu/quantum/calculator.png[width="250"]
 [options="header"]
 |=======================
 |入力|出力
-|0|latexmath:[1/sqrt(2) 0 + 1/sqrt(2) 1]
-|1|latexmath:[1/sqrt(2) 0 - 1/sqrt(2) 1]
+|0|(1/sqrt(2)) 0 + (1/sqrt(2)) 1
+|1|(1/sqrt(2)) 0 - (1/sqrt(2)) 1
 |=======================
 .制御NOTゲート
 [options="header"]
