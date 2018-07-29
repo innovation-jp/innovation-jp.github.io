@@ -73,7 +73,7 @@ https://graph.facebook.com/v3.1?fields=engagement&id=xxxxxxxxxxxxxxx&access_toke
 どうやらソーシャルボタン上で表現している数値は +
 いいねやコメント、シェアを合算した数値のようですね。
 
-image::[ソーシャルボタンの値]
+image::http://tech.innovation.co.jp/images/ozasa/social.png[]
 
 ## ソーシャルボタンで表現されている数値をAPI経由で取得する
 
@@ -157,7 +157,7 @@ function get_facebook_data(id){
 
 set_facebook_dataを実行すると画像のようにデータをセットすることができました。
 
-image::[表の様子]
+image::http://tech.innovation.co.jp/images/ozasa/gas_facebook_sample.png[]
 
 意外に時間がかかってしまったので今回はここまでですが、 +
 以下のようなことを引き続きやってみてマーケティング活動に活かせればと思っています。
