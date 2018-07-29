@@ -75,6 +75,8 @@ https://graph.facebook.com/v3.1?fields=engagement&id=xxxxxxxxxxxxxxx&access_toke
 
 image::http://tech.innovation.co.jp/images/ozasa/social.png[]
 
+※上記画像でいう「いいね！」の92という数値です。
+
 ## ソーシャルボタンで表現されている数値をAPI経由で取得する
 
 APIリファレンスを見る限り、 +
