@@ -1,6 +1,6 @@
 = FacebookのAPI(ver3.1)を使って「いいね」等のマーケティング数値を取ってみる~その1~
 :published_at: 2018-07-30
-:hp-tags: ozasa,Facebook,API,GoogleAppsScript
+:hp-tags: ozasa,Facebook,API,GoogleAppsScript,GoogleSpreadSheet
 
 こんにちは。ozです。
 
@@ -16,7 +16,7 @@ Google Analytics,Twitter,Facebook,はてなブックマークなどなど +
 それを一括で並べて分析などできると活用ができそうですよね！？
 
 今回はそんな理由からFacebookのマーケティングデータを +
-GoogleSpreadSheetに記録する、その前段階について色々書いてみました。
+Google スプレッドシートに記録する、その前段階について色々書いてみました。
 
 エンジニアのみならずマーケターの方のお役に立てれば幸いです。
 
@@ -167,6 +167,7 @@ image::http://tech.innovation.co.jp/images/ozasa/gas_facebook_sample.png[]
 * 対象URL数が多いことのに備える
 * トリガーをセットして定期的にデータを取得する
 * APIのレスポンスに時間がかかるケースを想定する
+* エラーハンドリングを実装する
 
 そんな感じです。 +
 良いエンジニアリングライフを！
