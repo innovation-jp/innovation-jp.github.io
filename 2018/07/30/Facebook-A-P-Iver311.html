@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>FacebookのAPI(ver3.1)を使って「いいね」等のマーケティング数値を取ってみる~その1~ - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="FacebookのAPI(ver3.1)を使って「いいね」等のマーケティング数値を取ってみる~その1~">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="FacebookのAPI(ver3.1)を使って「いいね」等のマーケティング数値を取ってみる~その1~">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/07/30/Facebook-A-P-Iver311.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="FacebookのAPI(ver3.1)を使って「いいね」等のマーケティング数値を取ってみる~その1~" />
+    <meta property="og:description" content="こんにちは。ozです。 皆様の役に立てているのかはわかりませんが、 本ブログも週2ペースを保っているような保ってないようなくらいに運用を始めて、 結構な月日が経ちました。 とりあえず投稿し続ける！って方針で本ブログは運用しているのですが、 ブログの運用って本気でやるなら各種マーケティングデータを活用するものだと思います。 Google Analytics,Twitter,Facebook,はてなブックマークなどなど 一口にマーケティングデータと言っても様々な種類がございます。 それを一括で並べて分析などできると活用ができそうですよね！？ 今回はそんな理..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/07/30/Facebook-A-P-Iver311.html" />
+    <meta property="article:published_time" content="2018-07-29T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-07-30T08:56:20.779Z" />
+    <meta property="article:tag" content="ozasa" />
+    <meta property="article:tag" content="Facebook" />
+    <meta property="article:tag" content="API" />
+    <meta property="article:tag" content="GoogleAppsScript" />
+    <meta property="article:tag" content="GoogleSpreadSheet" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="FacebookのAPI(ver3.1)を使って「いいね」等のマーケティング数値を取ってみる~その1~" />
+    <meta name="twitter:description" content="こんにちは。ozです。 皆様の役に立てているのかはわかりませんが、 本ブログも週2ペースを保っているような保ってないようなくらいに運用を始めて、 結構な月日が経ちました。 とりあえず投稿し続ける！って方針で本ブログは運用しているのですが、 ブログの運用って本気でやるなら各種マーケティングデータを活用するものだと思います。 Google Analytics,Twitter,Facebook,はてなブックマークなどなど 一口にマーケティングデータと言っても様々な種類がございます。 それを一括で並べて分析などできると活用ができそうですよね！？ 今回はそんな理..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/07/30/Facebook-A-P-Iver311.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "yuki ozasa",
+        "image": "https://avatars3.githubusercontent.com/u/8304640?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "FacebookのAPI(ver3.1)を使って「いいね」等のマーケティング数値を取ってみる~その1~",
+    "url": "http://tech.innovation.co.jp/2018/07/30/Facebook-A-P-Iver311.html",
+    "datePublished": "2018-07-29T15:00:00.000Z",
+    "dateModified": "2018-07-30T08:56:20.779Z",
+    "keywords": "ozasa, Facebook, API, GoogleAppsScript, GoogleSpreadSheet",
+    "description": "こんにちは。ozです。 皆様の役に立てているのかはわかりませんが、 本ブログも週2ペースを保っているような保ってないようなくらいに運用を始めて、 結構な月日が経ちました。 とりあえず投稿し続ける！って方針で本ブログは運用しているのですが、 ブログの運用って本気でやるなら各種マーケティングデータを活用するものだと思います。 Google Analytics,Twitter,Facebook,はてなブックマークなどなど 一口にマーケティングデータと言っても様々な種類がございます。 それを一括で並べて分析などできると活用ができそうですよね！？ 今回はそんな理..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-ozasa tag-Facebook tag-A-P-I tag-Google-Apps-Script tag-Google-Spread-Sheet no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="30 Jul 2018" class="post-meta__date date">30 Jul 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/ozasa">ozasa</a>, <a href="http://tech.innovation.co.jp/tag/Facebook">Facebook</a>, <a href="http://tech.innovation.co.jp/tag/A-P-I">API</a>, <a href="http://tech.innovation.co.jp/tag/Google-Apps-Script">GoogleAppsScript</a>, <a href="http://tech.innovation.co.jp/tag/Google-Spread-Sheet">GoogleSpreadSheet</a></span>
+        <span class="post-meta__author author"><img src="https://avatars3.githubusercontent.com/u/8304640?v=4" alt="profile image for yuki ozasa" class="avatar post-meta__avatar" /> by yuki ozasa</span>
+      </div>
+      <h1 class="post-title">FacebookのAPI(ver3.1)を使って「いいね」等のマーケティング数値を取ってみる~その1~</h1>
+    </header>
+
+    <section class="post tag-ozasa tag-Facebook tag-A-P-I tag-Google-Apps-Script tag-Google-Spread-Sheet">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんにちは。ozです。</p>
+</div>
+<div class="paragraph">
+<p>皆様の役に立てているのかはわかりませんが、<br>
+本ブログも週2ペースを保っているような保ってないようなくらいに運用を始めて、<br>
+結構な月日が経ちました。</p>
+</div>
+<div class="paragraph">
+<p>とりあえず投稿し続ける！って方針で本ブログは運用しているのですが、<br>
+ブログの運用って本気でやるなら各種マーケティングデータを活用するものだと思います。</p>
+</div>
+<div class="paragraph">
+<p>Google Analytics,Twitter,Facebook,はてなブックマークなどなど<br>
+一口にマーケティングデータと言っても様々な種類がございます。<br>
+それを一括で並べて分析などできると活用ができそうですよね！？</p>
+</div>
+<div class="paragraph">
+<p>今回はそんな理由からFacebookのマーケティングデータを<br>
+Google スプレッドシートに記録する、その前段階について色々書いてみました。</p>
+</div>
+<div class="paragraph">
+<p>エンジニアのみならずマーケターの方のお役に立てれば幸いです。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">アクセストークンの取得</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>なにはともあれトークンを取得してデータにアクセスできる準備をしましょう！</p>
+</div>
+<div class="paragraph">
+<p>Facebook for Developersに登録するだけです！<br>
+記事は他にもあるのでここは割愛します。</p>
+</div>
+<div class="paragraph">
+<p>FacebookのAPIを叩くときには</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-rust" data-lang="rust">App ID|App Secret</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>という形で繋げて表現してあげれば大丈夫です。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">マーケティングデータの取得</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>今回はページごとのリアクション数・コメント数・シェア数を取得します。</p>
+</div>
+<div class="paragraph">
+<p>では早速データを取ってみましょう。</p>
+</div>
+<div class="paragraph">
+<p>今回使うAPIのリファレンスは以下のURLです。</p>
+</div>
+<div class="paragraph">
+<p><a href="https://developers.facebook.com/docs/graph-api/reference/v3.1/url" class="bare">https://developers.facebook.com/docs/graph-api/reference/v3.1/url</a></p>
+</div>
+<div class="paragraph">
+<p>fieldsにengagementを指定してあげると、目的の値が取得できるようです。<br>
+ブラウザからでも良いので下記のようなURLにアクセスしてみましょう。</p>
+</div>
+<div class="paragraph">
+<p><a href="https://graph.facebook.com/v3.1?fields=engagement&amp;id=xxxxxxxxxxxxxxx&amp;access_token=xxxxxxxxxxxxxxx" class="bare">https://graph.facebook.com/v3.1?fields=engagement&amp;id=xxxxxxxxxxxxxxx&amp;access_token=xxxxxxxxxxxxxxx</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-rust" data-lang="rust">{
+   "engagement": {
+      "reaction_count": xx,
+      "comment_count": xx,
+      "share_count": xx,
+      "comment_plugin_count": xx
+   },
+   "id": "xxxxxxxxxxxxxxx"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>しっかりデータは取れているようです！<br>
+これをそのまま使いましょう。</p>
+</div>
+<div class="paragraph">
+<p>と、いきたいところですが、<br>
+ちょっとここでハマりました。</p>
+</div>
+<div class="paragraph">
+<p>ブログで見るソーシャルボタン(プラグイン?)の数値とAPI経由で取得できる値に差異があったのです。<br>
+どうやらソーシャルボタン上で表現している数値は<br>
+いいねやコメント、シェアを合算した数値のようですね。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://tech.innovation.co.jp/images/ozasa/social.png" alt="social.png">
+</div>
+</div>
+<div class="paragraph">
+<p>※上記画像でいう「いいね！」の92という数値です。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__api">ソーシャルボタンで表現されている数値をAPI経由で取得する</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>APIリファレンスを見る限り、<br>
+Open Graph objectにアクセスすると取得ができるようです。</p>
+</div>
+<div class="paragraph">
+<p>og_objectのengagementを取得してみましょう。</p>
+</div>
+<div class="paragraph">
+<p><a href="https://developers.facebook.com/docs/graph-api/reference/engagement/" class="bare">https://developers.facebook.com/docs/graph-api/reference/engagement/</a></p>
+</div>
+<div class="paragraph">
+<p>先ほどのAPIの表記に繋げてみると以下のような形になります。</p>
+</div>
+<div class="paragraph">
+<p><a href="https://graph.facebook.com/v3.1?fields=og_object{engagement},engagement&amp;id=xxxxxxxxxxxxxxx&amp;access_token=xxxxxxxxxxxxxxx" class="bare">https://graph.facebook.com/v3.1?fields=og_object{engagement},engagement&amp;id=xxxxxxxxxxxxxxx&amp;access_token=xxxxxxxxxxxxxxx</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-rust" data-lang="rust">// ※あくまで例です
+
+{
+   "og_object": {
+      "engagement": {
+         "count": 100,
+         "social_sentence": "100 people like this."
+      },
+      "id": "xxxxxxxxx"
+   },
+   "engagement": {
+      "reaction_count": 90,
+      "comment_count": xx,
+      "share_count": 10,
+      "comment_plugin_count": xx
+   },
+   "id": "xxxxxxxxxxxxxxx"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>例の数値はあてですが、<br>
+og_object['engagement']['count']　<br>
+と<br>
+engagementの各数値の合算が一致しているようでした。</p>
+</div>
+<div class="paragraph">
+<p>(いいね以外にもボタンがついたのでreaction_countなのは分かりますが、「100 people like this.」はちょっと微妙な気もします。 <strong>※あくまで個人的な感想です</strong> )</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_googlespreadsheet">GoogleSpreadSheetに記録するならこんな感じ</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-rust" data-lang="rust">/**
+* Facebook各種データを表に書き込む
+*/
+function set_facebook_data(){
+  var spreadSheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = spreadSheet.getActiveSheet();
+  var id = sheet.getRange("A2").getValue();
+  var response = get_facebook_data(id);
+  var reaction_count = response['reaction_count'];
+  var comment_count  = response['comment_count'];
+  var share_count  = response['share_count'];
+  sheet.getRange("C2").setValue(reaction_count);
+  sheet.getRange("D2").setValue(comment_count);
+  sheet.getRange("E2").setValue(share_count);
+}
+
+function get_facebook_data(id){
+  var facebook_access_token = "xxxxxxxxxxxxxxx";
+  facebook_url = "https://graph.facebook.com/v3.1?fields=og_object{engagement},engagement&amp;id=" + id + "&amp;access_token=" + facebook_access_token;
+  url = encodeURI(facebook_url);
+  var response = UrlFetchApp.fetch(url);
+  if(response !='null'){
+    return JSON.parse(response)['engagement'];
+  }else{
+	return 0;
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>set_facebook_dataを実行すると画像のようにデータをセットすることができました。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://tech.innovation.co.jp/images/ozasa/gas_facebook_sample.png" alt="gas facebook sample.png">
+</div>
+</div>
+<div class="paragraph">
+<p>意外に時間がかかってしまったので今回はここまでですが、<br>
+以下のようなことを引き続きやってみてマーケティング活動に活かせればと思っています。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>対象URL数が多いことのに備える</p>
+</li>
+<li>
+<p>トリガーをセットして定期的にデータを取得する</p>
+</li>
+<li>
+<p>APIのレスポンスに時間がかかるケースを想定する</p>
+</li>
+<li>
+<p>エラーハンドリングを実装する</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>そんな感じです。<br>
+良いエンジニアリングライフを！</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>
