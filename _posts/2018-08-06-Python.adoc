@@ -1,0 +1,325 @@
+= Pythonで購入履歴を使ったレコメンドを作成してみた
+:hp-tags: nakamura,Python,レコメンド,Recommend,Jaccard係数,類似度
+
+どうも、中村です。暑いですね〜
+
+今回はいわゆる「この商品を購入した方はこんな商品も購入してます」的なレコメンドツールを作成してみたので、ご紹介します。
+
+購入履歴データはあるものの、レコメンドロジックに活用できていない方も多いのではないでしょうか。
+
+ぜひ参考にしていただけたら幸いです。
+
+あ、ちなみに「購入履歴」と言ってしまったのですが、普段開発に携わっているメディア( https://it-trend.jp )では購入ではなく「資料請求」となるため以後は
+
+```
+購入⇒資料請求
+商品⇒製品
+```
+
+と書かせていただきます。
+
+それでは行きましょう！
+
+
+
+=== 作成するプログラム
+
+今回作成するファイルは2つです。
+
+
+```
+├── data.py ← 履歴データ
+└── get_recommend.py ← レコメンド取得プログラム
+```
+
+履歴データは説明しやすいためにこのようにさせていただきましたが、履歴データをファイルからDBに変えるとより実用的かと思います。
+
+
+
+
+=== レコメンドロジックについて
+
+今回は色々検討した結果、以下のようなロジックにすることにしました。
+
+```
+①資料請求した情報を使って類似ユーザーを抽出
+②類似ユーザーが選択した他の商品を抽出
+③②で選択率の高いもの順に返す
+```
+
+
+=== ⓪履歴データの準備
+
+まずは資料請求履歴データから以下のような形式のデータをあらかじめ作成しておきます。
+
+
+
+```
+[data.py]
+
+data_set = {
+	'user1': [111, 222, 333, 444, 555],
+	'user2': [111, 222, 333, 444, 555, 666, 777],
+	'user3': [222, 444, 666],
+	'user4': [111, 333, 555, 777],
+	...
+}
+```
+
+各ユーザー毎に資料請求した製品IDをまとめています。
+
+こちらはブログ用のサンプルになりますが、実際には `user1` の部分は資料請求ID or メールアドレス になりそうな気がします。
+
+また`一括資料請求`データなどは省くことで、より精度を高められるかもしれません。
+
+この辺りのデータ抽出ロジックだけでも工夫が色々と出来そうなので是非試してみて下さい。
+
+
+
+=== ①購入した情報を使って類似ユーザーを抽出
+
+いよいよ今回の目玉である`類似ユーザー`のマッチングです。
+
+先ほど用意したデータからもお分かりの通り、`評点`という情報がありません。
+
+よって、今回は
+
+```
+同じ製品を選択している率が高い　= 類似度が高い
+```
+
+とすることにしました。
+
+そうなるとベクトルでの類似度を求める`ユークリッド距離`や`ピアソンの積率相関係数`よりも、集合を使った`Jaccard係数`を使うのが良さそうです。
+
+https://en.wikipedia.org/wiki/Jaccard_index#Generalized_Jaccard_similarity_and_distance
+
+ちなみにこちらのサイトの解説がとても分かりやすかったので一読することをオススメします。 +
+https://mieruca-ai.com/ai/jaccard_dice_simpson/
+
+
+
+
+難易度がいきなり上がってしまう気がしますが、大丈夫です。今回使用する言語のPythonではこの`Jaccard係数`を算出してくれるライブラリがあります。
+
+以下のような感じで算出することができます。
+
+```
+from nltk.metrics import jaccard_distance
+
+jaccard = jaccard_distance(データA, データB)
+```
+
+非常に簡単ですね。。。
+
+詳細の使い方はこちらをご覧ください。 +
+http://www.nltk.org/_modules/nltk/metrics/distance.html
+
+
+
+そして今回作成したプログラムはこちらです。
+```
+def get_similar_user(product_ids, cv_data):
+	"""
+	類似度が高いユーザーを、指定した製品idから抽出する
+
+	Parameters
+	----------
+	product_ids : list
+		指定した製品id
+	cv_data : dict
+		CVしたユーザーデータ
+
+	Returns
+	-------
+	target_users : list
+		類似度が高い順にソートされたユーザー情報
+	"""
+	target_users = {};
+
+	# CVデータ分類似度を検証させる
+	for user in cv_data:
+		# 類似度を算出
+		jaccard = jaccard_distance(set(product_ids), set(cv_data[user]))
+
+		# 全く同じデータは省く
+		if jaccard != 1.0:
+			target_users[jaccard] = user
+
+	# 類似度が高い順にソートして返す
+	return sorted(target_users.items())
+```
+
+
+=== ②類似ユーザーが選択した他の商品を抽出
+
+こんなプログラムになりました。
+
+```
+def get_target_product_ids(product_ids, target_user, cv_data):
+	"""
+	類似度が高いユーザーを対象に、非選択の製品idを抽出する
+
+	Parameters
+	----------
+	product_ids : list
+		指定した製品id
+	target_user : list
+		類似度の高いユーザー
+	cv_data : dict
+		CVしたユーザーデータ
+
+	Returns
+	-------
+	target_product_ids : list
+		非選択の製品id
+	"""
+	target_product_ids = []
+
+	# 類似度が高いユーザー分処理
+	for jaccard, user in target_user:
+		# 指定した製品id以外の製品idを取得
+		diff = list(set(cv_data[user]) - set(product_ids))
+
+		# 取得した製品idをリストに追加
+		target_product_ids.extend(diff)
+
+	return target_product_ids
+```
+
+コメントも多めに書いているので、特に説明は不要かと思います。
+
+
+
+=== ③②で選択率の高いもの順に返す
+
+②の結果から選択数が多いもの順にソートさせたいのですが、なんと1行で書けました（笑）
+
+```
+counter = collections.Counter(target_product_ids).most_common()
+```
+
+これだからPythonは素敵ですよね。
+
+使い方はこの辺りを参考にして見て下さい。 +
+https://docs.python.jp/3/library/collections.html#collections.Counter
+
+
+
+=== 最終形
+
+こんな感じになりました。
+
+```
+import argparse
+import collections
+from nltk.metrics import jaccard_distance
+from data import data_set
+
+# コマンドライン引数の設定
+parser = argparse.ArgumentParser(description='This is a script that returns product id with high similarity')
+parser.add_argument('-d', '--data', help = 'Please specify product id with comma separator', required = True)
+
+def get_similar_user(product_ids, cv_data):
+	"""
+	類似度が高いユーザーを、指定した製品idから抽出する
+
+	Parameters
+	----------
+	product_ids : list
+		指定した製品id
+	cv_data : dict
+		CVしたユーザーデータ
+
+	Returns
+	-------
+	target_users : list
+		類似度が高い順にソートされたユーザー情報
+	"""
+	target_users = {};
+
+	# CVデータ分類似度を検証させる
+	for user in cv_data:
+		# 類似度を算出
+		jaccard = jaccard_distance(set(product_ids), set(cv_data[user]))
+
+		# 全く同じデータは省く
+		if jaccard != 1.0:
+			target_users[jaccard] = user
+
+	# 類似度が高い順にソートして返す
+	return sorted(target_users.items())
+
+
+def get_target_product_ids(product_ids, target_user, cv_data):
+	"""
+	類似度が高いユーザーを対象に、非選択の製品idを抽出する
+
+	Parameters
+	----------
+	product_ids : list
+		指定した製品id
+	target_user : list
+		類似度の高いユーザー
+	cv_data : dict
+		CVしたユーザーデータ
+
+	Returns
+	-------
+	target_product_ids : list
+		非選択の製品id
+	"""
+	target_product_ids = []
+
+	# 類似度が高いユーザー分処理
+	for jaccard, user in target_user:
+		# 指定した製品id以外の製品idを取得
+		diff = list(set(cv_data[user]) - set(product_ids))
+
+		# 取得した製品idをリストに追加
+		target_product_ids.extend(diff)
+
+	return target_product_ids
+
+
+if __name__== '__main__':
+	# コマンドライン引数から指定したデータをセット
+	args        = parser.parse_args()
+	product_ids = [int(id.strip()) for id in args.data.split(',')]
+
+	# 類似度が高いユーザーを、指定した製品idから抽出する
+	target_users = get_similar_user(product_ids, data_set)
+
+	# 類似度が高いユーザーを対象に、非選択の製品idを抽出する
+	target_product_ids = get_target_product_ids(product_ids, target_users, data_set)
+
+	# 選択数を算出
+	counter = collections.Counter(target_product_ids).most_common()
+
+	# 製品idのみをカンマ区切りの文字列にして表示
+	print(','.join([str(id) for id, count in counter]))
+
+```
+実行結果
+```
+$ python3 get_recommend.py -d 777,222
+555,333,111,444,666
+```
+
+
+=== 感想
+
+難しそうなイメージが先行してしまっていたのですが、思っていたよりも簡単に作成することができました。 +
+（もちろん精度をあげていくためにはカスタマイズが必要となりそうですが）
+
+そしてやはりPythonはこういった処理に向いているなと改めて感じました。
+
+普段はPHP（Laravel）を使っているので、実際にこちらで作成したプログラムを画面に組み込む所まで書いてみたかったのですが、時間がなくここまでとなってしまいました。機会があれば是非。。。
+
+もし何かご意見などあればこちらまでお願いします！ 
+
+m_nakamura@innovation.co.jp
+
+こちらからは以上です！
+
+
