@@ -85,7 +85,7 @@ FROM docker.elastic.co/kibana/kibana:6.3.2
 
 以上の準備が完了したら、 `docker-compose.yml` があるディレクトリで `docker-comse up` を行い、 `localhost:5601` にアクセスします。
 
-[画像]
+image::/images/oyaizu/blog_document.png[]
 
 上記の画像のようにKibanaのホーム画面が表示されれば、環境構築の完了です。 +
 
