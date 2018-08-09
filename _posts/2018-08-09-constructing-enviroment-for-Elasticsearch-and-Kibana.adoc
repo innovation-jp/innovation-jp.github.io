@@ -84,7 +84,7 @@ FROM docker.elastic.co/kibana/kibana:6.3.2
 
 以上の準備が完了したら、 `docker-compose.yml` があるディレクトリで `docker-comse up` を行い、 `localhost:5601` にアクセスします。
 
-image::/images/oyaizu/blog_document.png[]
+image::/images/oyaizu/kibana_home.png[]
 
 上記の画像のようにKibanaのホーム画面が表示されれば、環境構築の完了です。 +
 
@@ -94,11 +94,11 @@ image::/images/oyaizu/blog_document.png[]
 データは適当なものを入れました。 +
 サイドバーにあるリンクをクリックします。 +
 
-[画像]
+image::/images/oyaizu/kibana_sidemenu.png[]
 
 遷移するとエディタがあるのでそこにクエリ文を打ち込んでいきます。 +
 
-[画像]
+image::/images/oyaizu/kibana_query.png[]
 
 左側に以下のクエリ文を打ち込みます。 +
 
