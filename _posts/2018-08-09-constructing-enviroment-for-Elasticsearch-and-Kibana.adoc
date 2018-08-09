@@ -7,11 +7,10 @@
 
 社内から「サイト内検索の精度を高めたい！」と要望を受けてElasticsearchとKibanaをDocker環境で触ったので、今回はそれの方法を共有したいと思います。 +
 
-## Elasticsearch, Kibanaとは
 
 ## 動作環境
 
-以下がJSDocを試した環境です。 +
+以下が動作環境です。 +
 
 - Docker: `18.06.0-ce`
 - Elasticsearch: `6.3.2`
