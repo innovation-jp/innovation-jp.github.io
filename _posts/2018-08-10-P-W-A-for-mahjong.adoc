@@ -2,3 +2,5 @@
 
 :hp-alt-title: PWA for mahjong
 :hp-tags: kohe,Vue,Firebase,PWA
+
+こんばんは
