@@ -1,0 +1,4 @@
+# Vuejs とFirebase,Firestoreでサーバレスの麻雀得点記録サービスをPWAで作ってみたお話。
+
+:hp-alt-title: PWA for mahjong
+:hp-tags: kohe,Vue,Firebase,PWA
