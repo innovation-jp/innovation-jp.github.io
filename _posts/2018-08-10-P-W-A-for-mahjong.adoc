@@ -8,3 +8,9 @@
 
 # UI
 
+## Login
+image::/images/oyaizu/kibana_query.png[]
+
+## Score
+
+## MyPage(Score History)
