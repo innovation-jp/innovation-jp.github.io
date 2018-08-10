@@ -3,4 +3,8 @@
 :hp-alt-title: PWA for mahjong
 :hp-tags: kohe,Vue,Firebase,PWA
 
-こんばんは
+こんばんはkoheです。 + 
+元雀荘店員エンジニアとして、最新技術を駆使し、サーバレスで麻雀成績管理Appを作る責務があるため作りました。
+
+# UI
+
