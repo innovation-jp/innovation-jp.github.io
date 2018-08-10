@@ -6,6 +6,19 @@
 こんばんはkoheです。 + 
 元雀荘店員エンジニアとして、最新技術を駆使し、サーバレスで麻雀成績管理Appを作る責務があるため作りました。
 
+
+# 構成
+
+
+|=======================
+|デプロイ  |  Firebase Hosting     
+|DB        |  Firestore
+|認証      | Firebase Authentication
+|フロント   | Vue
+|=======================
+
+UIのライブラリとして https://quasar-framework.org/ を使用。
+
 # UI
 
 ## Login
