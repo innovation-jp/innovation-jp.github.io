@@ -64,7 +64,7 @@ image::/images/kohe/mahjong_score02.png[]
 ## MyPage(Score History)
 image::/images/kohe/mahjong_score03.png[]
 
-# test
+# 自動入力
 
 image::/images/kohe/mahjong_score00.gif[]
 
