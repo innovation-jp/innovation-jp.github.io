@@ -64,6 +64,42 @@ image::/images/kohe/mahjong_score02.png[]
 ## MyPage(Score History)
 image::/images/kohe/mahjong_score03.png[]
 
+
+# PWA
+manifest json
+
+```
+{
+  "name": "mahjong-point",
+  "short_name": "MahjongScore",
+  "icons": [
+    {
+      "src": "/static/img/icons/u-pin-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/img/icons/u-pin-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#4DBA87"
+}
+
+```
+
+まだ、HomeIconの登録設定くらいしかしていないため。 +
+スコアはこんな感じ
+
+image::/images/kohe/mahjong_score04.png[]
+
+ある程度のメイン機能が完成し次第、サービスワーカーを使いオフライン対応をしていく。
+
+
 # 自動入力
 
 image::/images/kohe/mahjong_score00.gif[]
