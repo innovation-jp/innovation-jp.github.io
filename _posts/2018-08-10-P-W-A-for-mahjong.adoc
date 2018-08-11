@@ -22,8 +22,12 @@ UIのライブラリとして https://quasar-framework.org/ を使用。
 # UI
 
 ## Login
-image::/images/oyaizu/kibana_query.png[]
+image::/images/kohe/mahjong_score01.png[]
 
 ## Score
+image::/images/kohe/mahjong_score02.png[]
+
 
 ## MyPage(Score History)
+image::/images/kohe/mahjong_score03.png[]
+
