@@ -100,6 +100,20 @@ image::/images/kohe/mahjong_score04.png[]
 ある程度のメイン機能が完成し次第、サービスワーカーを使いオフライン対応をしていく。
 
 
+# Deploy
+
+`yarn build`
+デコンパイルをしたあとに、
+
+`firebase deploy`
+一発で本番環境にデプロイすることができる。
+
+image::/images/kohe/mahjong_score05.png[]
+
+
+RollBackも超簡単であり、デプロした瞬間に勝手に #https#になってくれる。
+まさにいたせりつくせり。
+
 # 自動入力
 
 image::/images/kohe/mahjong_score00.gif[]
