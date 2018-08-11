@@ -104,4 +104,9 @@ image::/images/kohe/mahjong_score04.png[]
 
 image::/images/kohe/mahjong_score00.gif[]
 
+#　最後に
+
+β版という得るところまでの機能を作り次第ドメインをとり、ローンチする予定です。
+たくさんの　FBをお待ちしております。
+余裕があれば技術チュートリアルのなおをnoteなどで書いていこうかなーとかも考えていたりします。
 
