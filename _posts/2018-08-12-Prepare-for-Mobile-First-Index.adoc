@@ -1,0 +1,91 @@
+# Googlebotのアクセス数を数えてモバイルファーストインデックスに備える
+
+:hp-alt-title: Prepare for Mobile First Index
+:hp-tags: AMI,MobileFirstIndex,MFI,shellscript
+
+
+お疲れ様です、AMIです。 +
+我々SREチームでは、ハンサム風マーケター男子のMさんからの依頼で +
+Googlebotのアクセス数を数えてマーケのチームのお伝えするという業務を行っており、 +
+このたび、自動化しましたのでそちらを紹介させていただきます！ +
+ +
+ 
+## モバイルファーストインデックス（MFI）って？
+そもそも、モバイルファーストインデックスとは、Googleでの検索結果の表示順を決めるのに、 +
+モバイル用のページを優先的に見て、判断するよーという内容みたいです。 +
+ +
+ただ、全てのWebサイトに対して一斉に一律モバイルファーストインデックスを適用するのではなく、 +
+準備が完了したWebサイトから順番に適用していく、ということらしいのです。 +
+ +
+Googleウェブマスター向け公式ブログ：https://webmaster-ja.googleblog.com/2018/03/rolling-out-mobile-first-indexing.html +
+ +
+MFIに備えるために、どうしてGooglebotのアクセス数を数えるかというと、 +
+GooglebotにはPC版とモバイル版の2種類があるらしく、MFIに移行したかどうかを +
+上記2つのGooglebotの、アクセス数の比率によって判断するという方法があるそうなのです。 +
+ +
+出典：ハンサムマーケターMさん +
+参考にしたサイト：https://seo-lpo-consultant.com/mfi-log/ +
+ +
+対応した内容は、 +
+一日分のアクセスログの中から、PCのGooglebotとモバイルのGooglebotを抜き出して、 +
+それぞれ数えてSlackに通知する、というものです。 +
+▼完成イメージ図 +
+
+image::/images/ami/20180812/1.png[]
+
+
+## シェルスクリプトを作成する
+
+```
+#!/bin/bash
+
+#SlackのチャンネルID
+CHANNEL="<チャンネルID>"
+
+// 昨日の日付を取得
+DAY=`date --date '1 day ago' "+%d"`
+// 昨日の月を取得
+MONTH=`date --date '1 day ago' "+%m"`
+// 昨日の年を取得
+YEAR=`date --date '1 day ago' "+%Y"`
+
+// PC、モバイルそれぞれのGooglebotアクセスログの数を取得する
+// アクセスログが圧縮ファイルじゃない場合は「zcat」を「cat」にする
+PC_BOT=`sudo zcat /<アクセスログが格納されているディレクトリ>/access.log-${YEAR}${MONTH}${DAY}* |  grep 'Googlebot' | grep -v 'Mobile' | egrep -v -i '\.png|\.gif|\.jpg|\.jpeg|\.js|\.css|\.ico' | wc -l`
+MOBILE_BOT=`sudo zcat /<アクセスログが格納されているディレクトリ>/access.log-${YEAR}${MONTH}${DAY}* |  grep 'Googlebot' | grep 'Mobile' | egrep -v -i '\.png|\.gif|\.jpg|\.jpeg|\.js|\.css|\.ico' | wc -l`
+
+
+//Slack通知
+curl -X POST \
+  --data-urlencode 'payload={"channel": "'$CHANNEL'"
+  , "username": "googleBotAccess"
+  , "text": "PCのgoogleBotアクセス数は *'$PC_BOT'* です"
+  , "icon_emoji": ":heart:"}'  <SlackのWebHook用URL>
+
+
+curl -X POST \
+  --data-urlencode 'payload={"channel": "'$CHANNEL'"
+  , "username": "googleBotAccess"
+  , "text": "モバイルのgoogleBotアクセス数は *'$MOBILE_BOT'* です"
+  , "icon_emoji": ":heart:"}'  <SlackのWebHook用URL>
+```
+
+参考にしたサイト： +
+コマンド：http://tech.innovation.co.jp/2018/05/14/command64.html +
+curlでSlack通知：https://qiita.com/sshojiro/items/4e5d8c8f373858fb77a5 +
+Googleのクローラのユーザエージェント：https://support.google.com/webmasters/answer/1061943?hl=ja +
+ +
+これを実行してみると・・・ +
+
+image::/images/ami/20180812/2.png[]
+
+やったー！通知がきました！ +
+ +
+このようなシェルスクリプトを、Webサーバに配置して、jenkinsから実行させるような形にいたしましたが、 +
+お好みの方法で実行させてみてくださいね！ +
+ +
+ +
+ハンサム風マーケター男子から、グルメ系マーケター女子へと引き継がれまして、 +
+そちらに納品させていただきましたとさ +
+ +
+おしまい +
