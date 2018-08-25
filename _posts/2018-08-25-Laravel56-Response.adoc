@@ -1,1 +1,1 @@
-= Laravel5.6でResponse
+= Laravel5.6でResponseクラスの勉強してみた
