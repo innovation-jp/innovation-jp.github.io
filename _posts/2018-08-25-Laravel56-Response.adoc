@@ -11,5 +11,9 @@
 http://tech.innovation.co.jp/2018/06/24/Laravel56-Request.html[Laravel5.6でRequestクラスの勉強してみた] +
  +
  +
- 
+
+
+## 一番シンプルなレスポンスの返し方 +
+
+
  
