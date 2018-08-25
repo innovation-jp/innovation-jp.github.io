@@ -7,3 +7,4 @@
  +
 前回は`Requestクラス`の勉強をしたので、今回は`Responseクラス`の勉強をしてみました！ +
 
+http://tech.innovation.co.jp/2018/06/24/Laravel56-Request.html
