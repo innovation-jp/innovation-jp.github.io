@@ -31,10 +31,9 @@ Route::get('/response', function () {
 
 === 〜redirectヘルパの引数にリダイレクト先を入れるパターン〜
 
-ユーザーを他のURLへリダイレクトさせる一番簡単な方法は【redirectヘルパ】️の使用 +
+ユーザーを他のURLへ単純にリダイレクトさせたい場合は【redirectヘルパ】 +
 例：`/response`にアクセスがきたら`/test`にリダイレクトする
 ```
-あああ
 Route::get('/response', function () {
 	return redirect('/test');
 });
