@@ -31,7 +31,7 @@ Route::get('/response', function () {
 
 === 〜redirectヘルパの引数にリダイレクト先を入れるパターン〜
 
-ユーザーを他のURLへ単純にリダイレクトさせたい場合は【redirectヘルパ】 +
+▼ユーザーを他のURLへ単純にリダイレクトさせたい場合は【redirectヘルパ】 +
 例：`/response`にアクセスがきたら`/test`にリダイレクトする
 ```
 Route::get('/response', function () {
@@ -39,7 +39,7 @@ Route::get('/response', function () {
 });
 ```
 
-セッションにフラッシュデータを保存しつつリダイレクトしたい場合は【redirectヘルパ、からのメソッドチェーン】 +
+▼セッションにフラッシュデータを保存しつつリダイレクトしたい場合は【redirectヘルパ、からのメソッドチェーン】 +
 例：`/testflash`にリダイレクトしてセッションに保存した`入力できたよ！`を画面に表示する
 ```
 // ->with('フラッシュデータ名', '保存したい内容')
@@ -53,7 +53,7 @@ return redrect('/testflash')->with('status', '入力できたよ！');
  
 === 〜redirectヘルパを引数なしで呼んで、Redirectorインスタンスのメソッドを使うパターン〜
 
-名前付きルートにリダイレクトしたい場合は【routeメソッド】️ +
+▼名前付きルートにリダイレクトしたい場合は【routeメソッド】️ +
 例：`route('test_input')`にリダイレクトときたら`/test/aaa/bbb/ccc/ddd`にアクセスする
 ```
 // ->name('名前付きルート名')
@@ -63,7 +63,7 @@ Route::get('/test/aaa/bbb/ccc/ddd', 'TestController@test')->name('test_input');
 return redirect()->route('test_input');
 ```
 
-コントローラアクションにリダイレクトしたい場合は【actionメソッド】 +
+▼コントローラアクションにリダイレクトしたい場合は【actionメソッド】 +
 例：`actionメソッド`にコントローラとアクション名を渡す`TestController@test`にリダイレクトされる
 ```
 return redirect()->action('TestController@test');
@@ -71,7 +71,7 @@ return redirect()->action('TestController@test');
 
 <!-- パラメータの話いれるか否か。。。長くなるようなら割愛したい -->
 
-外部ドメインにリダイレクトしたい場合は【awayメソッド】 +
+▼外部ドメインにリダイレクトしたい場合は【awayメソッド】 +
 例：イノベーションエンジニアブログにリダイレクト
 ```
 return redirect()->away('http://tech.innovation.co.jp/');
