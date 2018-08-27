@@ -39,6 +39,17 @@ Route::get('/response', function () {
 });
 ```
 
+セッションにフラッシュデータを保存しつつリダイレクトしたい場合は【redirectヘルパ、からのメソッドチェーン】 +
+例：`/testflash`にリダイレクトしてセッションに保存した`入力できたよ！`を画面に表示する
+```
+// ->with('フラッシュデータ名', '保存したい内容')
+return redrect('/testflash')->with('status', '入力できたよ！');
+
+// セッションに保存したフラッシュデータのメッセージを取り出して表示する
+@if (session('status'))
+    <p>{{ session('status') }}</p>
+@endif
+```
  
 === 〜redirectヘルパを引数なしで呼んで、Redirectorインスタンスのメソッドを使うパターン〜
 
