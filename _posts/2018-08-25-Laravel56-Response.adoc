@@ -76,3 +76,36 @@ return redirect()->action('TestController@test');
 ```
 return redirect()->away('http://tech.innovation.co.jp/');
 ```
+
+=== 〜backヘルパ関数を使うパターン〜
+
+▼送信したフォーム内容にエラーがありデータを残したままリダイレクトしたい場合は【backヘルパ関数】
+例：名前が空だった場合、メールアドレスの入力情報は残したままフォーム画面にリダイレクトする
+```
+// 名前とメールアドレスを送るフォームを準備
+{{ Form::open(['url' => '/testregist', 'method' => 'post']) }}
+    <label>お名前：<input type="text" name="name"></label><br>
+    <label>メール：<input type="text" name="mail"></label><br>
+    <input type="submit" name="regist" value="登録する">
+{{ Form::close() }}
+
+// 名前が入力されているか確認
+Route::post('/testregist', function (Request $request) {
+    if (empty($request->name)) {
+        return back()->withInput();
+    }
+    return view('test.index');
+});
+```
+
+また、【backヘルパ関数】を使わずとも【validateメソッド】を使えばも同様にデータを残したままリダイレクト出来ます。
+そのことを知らずにちょっとハマりました。。汗
+```
+// 名前が入力されているか確認
+Route::post('/testregist', function (Request $request) {
+    $request->validate([
+        'name' => 'required',
+    ]);
+    return view('test.index');
+});
+```
