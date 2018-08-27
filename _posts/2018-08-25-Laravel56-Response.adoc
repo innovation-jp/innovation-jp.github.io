@@ -5,19 +5,72 @@
 日中はまだまだ暑いですが、夜はクーラーなしでも寝れる時期になりましたね〜 +
 鈴虫の鳴き声を聞くと秋がくるなぁとしみじみ感じます。 +
  +
-さて、前回は`Requestクラス`の勉強をしたので、今回は`Responseクラス`の勉強をしてみましたよ！ +
+さて、前回は`Requestクラス`の勉強をしたので、今回は`Responseクラス`の勉強をしてみました！ +
 
 関連記事はこちら +
 http://tech.innovation.co.jp/2018/06/24/Laravel56-Request.html[Laravel5.6でRequestクラスの勉強してみた] +
  +
  +
 
-
 ## 一番シンプルなレスポンスの返し方 +
 
-▪️routes/web.php
+Laravelのレスポンスを返す方法で、一番シンプルなのはルートやコントローラから文字列を返す方法です +
+ +
+例：`/response`にアクセスがきたら`レスポンスの勉強中！`を返す
 ```
 Route::get('/response', function () {
 	return 'レスポンスの勉強中！';
 });
+```
+
+しかし、実際はそんな単純なレスポンスを返すことはあまりないと思うので他も見ていきましょう〜 +
+ +
+ +
+
+## いろいろなリダイレクト +
+
+=== 〜redirectヘルパの引数にリダイレクト先を入れるパターン〜
+
+ユーザーを他のURLへ単純にリダイレクトさせたい場合は【redirectヘルパ】 +
+例：`/response`にアクセスがきたら`/test`にリダイレクトする
+```
+Route::get('/response', function () {
+	return redirect('/test');
+});
+```
+
+セッションにフラッシュデータを保存しつつリダイレクトしたい場合は【redirectヘルパ、からのメソッドチェーン】 +
+例：`/testflash`にリダイレクトしてセッションに保存した`入力できたよ！`を画面に表示する
+```
+// ->with('フラッシュデータ名', '保存したい内容')
+return redrect('/testflash')->with('status', '入力できたよ！');
+
+// セッションに保存したフラッシュデータのメッセージを取り出して表示する
+@if (session('status'))
+    <p>{{ session('status') }}</p>
+@endif
+```
+ 
+=== 〜redirectヘルパを引数なしで呼んで、Redirectorインスタンスのメソッドを使うパターン〜
+
+名前付きルートにリダイレクトしたい場合は【routeメソッド】️ +
+例：`route('test_input')`にリダイレクトときたら`/test/aaa/bbb/ccc/ddd`にアクセスする
+```
+Route::get('/test/aaa/bbb/ccc/ddd', 'TestController@test')->name('test_input');
+
+return redirect()->route('test_input');
+```
+
+コントローラアクションにリダイレクトしたい場合は【actionメソッド】 +
+例：`actionメソッド`にコントローラとアクション名を渡す`TestController@test`にリダイレクトされる
+```
+return redirect()->action('TestController@test');
+```
+
+<!-- パラメータの話いれるか否か。。。長くなるようなら割愛したい -->
+
+外部ドメインにリダイレクトしたい場合は【awayメソッド】 +
+例：イノベーションエンジニアブログにリダイレクト
+```
+return redirect()->away('http://tech.innovation.co.jp/');
 ```

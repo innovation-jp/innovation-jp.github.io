@@ -1,0 +1,121 @@
+# GASでslackのお誕生日チャンネルを作成する
+:published_at: 2018-08-27
+:hp-alt-title: GAS slack birthday channel
+:hp-tags: GAS, slack, birthday, channel
+
+KTNです +
+今回はGASでslackをあれしてみたいと思います +
+社内で「お誕生日社員にプレゼントを作る」という文化があるのですが、 +
+その連絡にslackのプライベートチャンネルを使っています +
+slackの画面で「チャンネルを作成する」ボタンを押して、 +
+面倒ですが、メンバーを手作業でぽちぽちぽちぽちして +
+全社員（お誕生日の人だけ除く）になっているのを確認後、作成してます +
+たまにミスって誕生日の人が入ってたりして何を作るかバレたりなんてこともあります +
+なのでこの面倒な作業を自動化してみます +
+
+# お誕生日の人を選択するプルダウンを実装
+
+1.全社員が参加しているチャンネルがあるのでそのチャンネルのメンバ全員を取得 +
+　→slackのAPIで情報を取得、このURLで検証が出来ます +
+　　https://api.slack.com/methods/channels.info/test +
+　　https://api.slack.com/methods/users.list/test +
+
+image::/images/kotani/20180827/1.png[]
+image::/images/kotani/20180827/2.png[]
+
+ここで検証して問題なければ、
+GASのUrlFetchApp.fetchメソッドで呼び出して上げればOKです
+
+2.スプレットシートにメンバ一覧を貼り付け +
+ +
+コードはこんな感じです +
+ファンクション名：setAllUser +
+
+```
+function setAllUser(){
+  var token 　　　　　　= "**************************************************************************"; 
+  var w_row = 1;
+
+  //社員全員参加チャンネルのメンバーを対象にして検索、プルダウンのリストに設定
+  var response = UrlFetchApp.fetch("https://slack.com/api/channels.info?token=" + token + "&channel=C7DA9AQAJ");
+  var json = JSON.parse(response.getContentText())
+  var response2 = UrlFetchApp.fetch("https://slack.com/api/users.list?token=" + token);
+  var json2 = JSON.parse(response2.getContentText())
+
+  //メンバーの名前を検索してスプレットシートに出力
+  for (var row in json["channel"]["members"]) {
+    for (var row2 in json2["members"]) {
+      if (json["channel"]["members"][row] === json2["members"][row2]["id"]){
+        SpreadsheetApp.getActive().getSheetByName('お誕生日チャンネル作成').getRange(w_row++,3).setValue(json2["members"][row2]["name"]);
+        break;
+      }
+    }    
+  }
+}
+```
+
+3.プルダウンの作成 +
+スプレットシートの「データ」「データの入力規則」から設定 +
+セル範囲：プルダウンを作成するセルを指定 +
+条件：リストを範囲で指定 +
+　　　上記で貼り付けたメンバー一覧を指定します +
+ +
+4.リスト更新ボタンの作成 +
+スプレットシートの「挿入」「図形描画」からボタンを作成 +
+作成したボタンの「スクリプトを割り当て」を選択 +
+上記で作成した「setAllUser」を設定する +
+
+# チャンネル作成を実装
+
+1.プルダウンで選択したユーザの日本語名取得 +
+2.プライベートチャンネル作成 +
+3.プルダウンで選択したユーザ以外の全ユーザをチャンネルに招待 +
+ +
+コードはこんな感じです +
+
+```
+function makeBirthDayChannel(){
+  var token 　　　　　　= "**************************************************************************"; 
+  var birthday_user_name = SpreadsheetApp.getActive().getSheetByName('お誕生日チャンネル作成').getRange(1,2).getValue();
+
+  //誕生日ユーザのIDを検索する
+  var response = UrlFetchApp.fetch("https://slack.com/api/users.list?token=" + token);
+  var json=JSON.parse(response.getContentText())
+  for (var row in json["members"]) {
+    if (json["members"][row]["name"] === birthday_user_name){
+      var birthday_user_id = json["members"][row]["id"]
+      var birthday_user_real_name = json["members"][row]["real_name"]
+      break;
+    }
+  }
+
+  //プライベートチャンネル作成
+  var response = UrlFetchApp.fetch("https://slack.com/api/groups.create?token=" + token + "&name=" + birthday_user_real_name + "さんの誕生日" + Utilities.formatDate( new Date(), 'Asia/Tokyo', 'yyyy年'));
+  var json = JSON.parse(response.getContentText())
+  var channel_id = json["group"]["id"];
+
+  //社員全員参加チャンネルのメンバーを対象にして、プライベートチャンネルに追加する
+  //誕生日ユーザだけ除外する
+  var response = UrlFetchApp.fetch("https://slack.com/api/channels.info?token=" + token + "&channel=C7DA9AQAJ&");
+  var json=JSON.parse(response.getContentText())
+  for (var row in json["channel"]["members"]) {
+    if (json["channel"]["members"][row] === birthday_user_id){
+      continue;
+    }
+    //テスト用コード
+    //いきなり全社員処理されないように処理対象ユーザを限定する
+    if (json["channel"]["members"][row] !== "U0PKJGY2Y" &&
+        json["channel"]["members"][row] !== "U3M42KZS8" &&
+        json["channel"]["members"][row] !== "U2HSW3QJ3" &&
+        json["channel"]["members"][row] !== "U9Z8BLCGL" &&
+        json["channel"]["members"][row] !== "U195J5RCP"){
+      continue;
+    }
+    var response = UrlFetchApp.fetch("https://slack.com/api/groups.invite?token=" + token + "&channel=" + channel_id + "&user=" + json["channel"]["members"][row]);
+  }
+}
+```
+
+# 結果確認
+
+
