@@ -14,7 +14,7 @@ http://tech.innovation.co.jp/2018/06/24/Laravel56-Request.html[Laravel5.6でRequ
 
 ## 一番シンプルなレスポンスの返し方 +
 
-Laravelのレスポンスを返す方法で、一番シンプルなのはルートやコントローラから文字列を返す方法です +
+Laravelのレスポンスを返す方法で、一番シンプルなのはルートやコントローラから文字列を返す方法です。 +
  +
 例：`/response`にアクセスがきたら`レスポンスの勉強中！`を返す
 ```
@@ -23,7 +23,7 @@ Route::get('/response', function () {
 });
 ```
 
-しかし、実際はそんな単純なレスポンスを返すことはあまりないと思うので他も見ていきましょう〜 +
+しかし、実際はそんな単純なレスポンスを返すことはあまりないと思うので他も見ていきましょう〜！ +
  +
  +
 
@@ -56,8 +56,10 @@ return redrect('/testflash')->with('status', '入力できたよ！');
 名前付きルートにリダイレクトしたい場合は【routeメソッド】️ +
 例：`route('test_input')`にリダイレクトときたら`/test/aaa/bbb/ccc/ddd`にアクセスする
 ```
+// ->name('名前付きルート名')
 Route::get('/test/aaa/bbb/ccc/ddd', 'TestController@test')->name('test_input');
 
+// routeメソッドの引数として('名前付きルート名')を渡す
 return redirect()->route('test_input');
 ```
 
