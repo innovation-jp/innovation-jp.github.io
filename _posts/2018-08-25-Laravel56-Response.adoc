@@ -56,8 +56,10 @@ return redrect('/testflash')->with('status', '入力できたよ！');
 名前付きルートにリダイレクトしたい場合は【routeメソッド】️ +
 例：`route('test_input')`にリダイレクトときたら`/test/aaa/bbb/ccc/ddd`にアクセスする
 ```
+// ->name('名前付きルート名')
 Route::get('/test/aaa/bbb/ccc/ddd', 'TestController@test')->name('test_input');
 
+// routeメソッドの引数として('名前付きルート名')を渡す
 return redirect()->route('test_input');
 ```
 
