@@ -27,3 +27,33 @@ Route::get('/response', function () {
 ## いろいろなリダイレクト +
 
 〜redirectヘルパの引数にリダイレクト先を入れるパターン〜
+
+例：`/response`にアクセスがきたら`/test`にリダイレクトする
+```
+Route::get('/response', function () {
+	return redirect('/test');
+});
+```
+
+〜redirectヘルパを引数なしで呼んで、Redirectorインスタンスのメソッドを使うパターン〜
+
+名前付きルートにリダイレクトしたい場合は【routeメソッド】️ +
+例：`route('test_input')`にリダイレクトときたら`/test/aaa/bbb/ccc/ddd`にアクセスする
+```
+Route::get('/test/aaa/bbb/ccc/ddd', 'TestController@test')->name('test_input');
+return redirect()->route('test_input');
+```
+
+コントローラアクションにリダイレクトしたい場合は【actionメソッド】 +
+例：`actionメソッド`にコントローラとアクション名を渡す`TestController@test`にリダイレクトされる
+```
+return redirect()->action('TestController@test');
+```
+
+<!-- パラメータの話いれるか否か。。。長くなるようなら割愛したい -->
+
+外部ドメインにリダイレクトしたい場合は【awayメソッド】 +
+例：イノベーションエンジニアブログにリダイレクト
+```
+return redirect()->away('http://tech.innovation.co.jp/');
+```
