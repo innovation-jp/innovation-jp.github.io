@@ -62,6 +62,15 @@ Route::get('/test/aaa/bbb/ccc/ddd', 'TestController@test')->name('test_input');
 // routeメソッドの引数として('名前付きルート名')を渡す
 return redirect()->route('test_input');
 ```
+※もし、ルートにパラメーターがある場合は【routeメソッド】の第２引数として渡します！ +
+例：`route('test_input', ['name' => 'sumo'])`にリダイレクトときたら`/test/sumo`にアクセスする
+```
+// ->name('名前付きルート名')
+Route::get('/test/{name}', 'TestController@test')->name('test_input');
+
+// routeメソッドの引数として('名前付きルート名', ['パラメーター'])を渡す
+return redirect()->route('test_input', ['name' => 'sumo']);
+```
 
 ▼コントローラアクションにリダイレクトしたい場合は【actionメソッド】 +
 例：`TestController@test`にリダイレクトされる
@@ -70,7 +79,6 @@ return redirect()->route('test_input');
 return redirect()->action('TestController@test');
 ```
 
-<!-- パラメータの話いれるか否か。。。長くなるようなら割愛したい -->
 
 ▼外部ドメインにリダイレクトしたい場合は【awayメソッド】 +
 例：イノベーションエンジニアブログにリダイレクト
