@@ -79,6 +79,7 @@ return redirect()->action('TestController@test');
 return redirect()->away('http://tech.innovation.co.jp/');
 ```
 
+
 === 〜backヘルパ関数を使うパターン〜
 
 ▼送信したフォーム内容にエラーがありデータを残したままリダイレクトしたい場合は【backヘルパ関数】 +
@@ -100,8 +101,8 @@ Route::post('/testregist', function (Request $request) {
 });
 ```
 
-また、【backヘルパ関数】を使わずとも【validateメソッド】を使えば同様にデータを残したままリダイレクト出来ます。 +
-そのことを知らずにちょっとハマりました。。汗
+また、【backヘルパ関数】を使わずとも【validateメソッド】を使えば同様にデータを残したままリダイレクト出来ます！ +
+便利！！
 ```
 // 名前が入力されているか確認
 Route::post('/testregist', function (Request $request) {
@@ -111,3 +112,4 @@ Route::post('/testregist', function (Request $request) {
     return view('test.index');
 });
 ```
+
