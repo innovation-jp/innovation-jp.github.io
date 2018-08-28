@@ -64,8 +64,9 @@ return redirect()->route('test_input');
 ```
 
 ▼コントローラアクションにリダイレクトしたい場合は【actionメソッド】 +
-例：`actionメソッド`にコントローラとアクション名を渡す`TestController@test`にリダイレクトされる
+例：`TestController@test`にリダイレクトされる
 ```
+// actionメソッドにコントローラとアクション名を渡す
 return redirect()->action('TestController@test');
 ```
 
@@ -74,6 +75,7 @@ return redirect()->action('TestController@test');
 ▼外部ドメインにリダイレクトしたい場合は【awayメソッド】 +
 例：イノベーションエンジニアブログにリダイレクト
 ```
+// ->away('外部ドメインのURL')
 return redirect()->away('http://tech.innovation.co.jp/');
 ```
 
