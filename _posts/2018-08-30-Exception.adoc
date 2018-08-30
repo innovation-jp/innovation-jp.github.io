@@ -1,6 +1,6 @@
 = 例外のお話
 :hp-alt-title: Exception
-:hp-tags: syoga, log
+:hp-tags: syoga, log, exception
 
 お久しぶりです、SRE チームの syoga です +
 今年の夏は激アツでしたが皆様いかがお過ごしでしょうか？
@@ -106,7 +106,7 @@ public function getIdArray($param)
 とても助かります、コーディング中はその後の保守・運用について忘れがちになりますが +
 誰かがメンテをする必要がある可能性があるなら、意識してコーディングしていただきたいです。
 
-合わせて読みたい！ http [aaa]
+合わせて読みたい！ http://tech.innovation.co.jp/2016/09/23/wtf-log.html[ログのお話] 
 
 それでは皆様、残り少ない夏を満喫しましょう。
 
