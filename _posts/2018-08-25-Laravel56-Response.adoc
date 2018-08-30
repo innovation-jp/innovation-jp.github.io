@@ -22,7 +22,6 @@ Route::get('/response', function () {
 	return 'レスポンスの勉強中！';
 });
 ```
-
 image::/images/sumomo/20180830/2.png[]
 
 しかし、実際はそんな単純なレスンスを返すことはあまりないと思うので他も見ていきましょう〜！ +
