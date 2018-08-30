@@ -22,9 +22,10 @@ Route::get('/response', function () {
 	return 'レスポンスの勉強中！';
 });
 ```
-image::/images/sumomo/20180830/2.png[]
+image::/images/sumomo/20180830/1.png[]
 
 わーい、表示されましたー！これは簡単ですね！ +
+ +
 しかし実際はそんな単純なレスポンスを返すことはあまりないと思うので、他も見ていきましょう〜！ +
  +
  +
