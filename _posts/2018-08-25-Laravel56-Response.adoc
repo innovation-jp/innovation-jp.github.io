@@ -57,7 +57,7 @@ return redrect('/testflash')->with('status', '入力できたよ！');
 === 〜redirectヘルパを引数なしで呼んで、Redirectorインスタンスのメソッドを使うパターン〜
 
 ▼名前付きルートにリダイレクトしたい場合は【routeメソッド】️ +
-例：`/response`にアクセスがきたらきたら`/test/aaa/bbb/ccc/ddd`にリダイレクトする
+例：`/response`にアクセスがきたら`/test/aaa/bbb/ccc/ddd`にリダイレクトする
 ```
 // ->name('名前付きルート名')
 Route::get('/test/aaa/bbb/ccc/ddd', 'TestController@test')->name('test_input');
@@ -68,7 +68,7 @@ Route::get('/response', function () {
 });
 ```
 ※もし、ルートにパラメーターがある場合は【routeメソッド】の第２引数として渡します！ +
-例：`/response`にアクセスがきたらきたら`/test/sumo`にリダイレクトする
+例：`/response`にアクセスがきたら`/test/sumo`にリダイレクトする
 ```
 // ->name('名前付きルート名')
 Route::get('/test/{name}', 'TestController@test')->name('test_input');
