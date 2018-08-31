@@ -6,8 +6,8 @@
 今年の夏は激アツでしたが皆様いかがお過ごしでしょうか？
 
 ふわふわなかき氷が流行っているという事で、天然氷を使ったかき氷が人気だそうです、 +
-天然氷だと知らなければ食べてる人はあまり意識しないと思われますが、こだわりをもった +
-職人さんがいるという話を聞きました。
+天然氷だと知らなければ食べてる人はあまり意識しないと思われますが、こだわりを +
+もった職人さんがいるという話を聞きました。
 
 上記のこだわりについては、今回の話にあまり関係ありませんが、皆様ログ出力していますか？
 
@@ -28,7 +28,7 @@
 該当の関数で例外を投げている箇所を確認するとそこには、コメントも何もないコードが…
 
 ```
-public function getIdArray($param)
+public function getIdsArray($param)
 {
     $count = $param->count();
     if ($count < 1) {
@@ -38,10 +38,10 @@ public function getIdArray($param)
         $param->setCountNumber($i);
         $item = $param->getItems();
         foreach ($item as $val) {
-            $idArray[] = $val['id'];
+            $idsArray[] = $val['id'];
         }
     }
-    return $idArray
+    return $idsArray
 }
 ```
 
