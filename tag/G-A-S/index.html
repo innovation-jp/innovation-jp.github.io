@@ -213,38 +213,38 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/05/28/G-A-S.html" title="link to GASを使ってシステムオールグリーンって言いたい">GASを使ってシステムオールグリーンって言いたい</a></h2>
-        <p class="excerpt">こんにちは。ozasaです。 いかがお過ごしでしょうか。 いきなりですが、 皆さんはお仕事の中でどんなことを楽しみにしていますか？ やらなきゃいけないことも自らご褒美や細やかなお楽しみを設けることで ポジティブに取り組めたりするものですよね、きっと。 ということで今回は Googleのスプレッドシートに新たに追加された「チェックボックス」機能を使って、 何かしらのチェック作業が楽しいものになれば良いなという発想でGoogle Apps Script(GAS)を書いてみました。 やりたいこととしては 「チェックが完了したら何か実行できるようにする」というそれだけです。 イメージ的には「システムオールグリーン！いけます！」っていう感じです。 そういうの熱いですよね？ 作業するスプレッドシートと&hellip;</p>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/08/27/G-A-S-slack-birthday-channel.html" title="link to GASでslackのお誕生日チャンネルを作成する">GASでslackのお誕生日チャンネルを作成する</a></h2>
+        <p class="excerpt">KTNです 今回はGASでslackをあれしてみたいと思います 社内で「お誕生日社員にプレゼントを作る」という文化があるのですが、 その連絡にslackのプライベートチャンネルを使っています slackの画面で「チャンネルを作成する」ボタンを押して、メンバーを手作業でぽちぽちぽちぽちして 全社員（お誕生日の人だけ除く）になっているのを確認後、作成してます たまにミスって誕生日の人が入ってたりして何を作るかバレたりなんてこともあります なのでこの面倒な作業を自動化してみます お誕生日の人を選択するプルダウンを実装 全社員が参加しているチャンネルがあるのでそのチャンネルのメンバ全員を取得 →slackのAPIで情報を取得、このURLで検証が出来ます 　https://api.slack.com&hellip;</p>
         <div class="post-list__meta">
-            <time datetime="28 May 2018" class="post-list__meta--date date">28 May 2018</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="ozasa">ozasa</a>, <a href="#blog" title=" systemAllGreen"> systemAllGreen</a>, <a href="#blog" title=" GAS"> GAS</a></span>
+            <time datetime="27 Aug 2018" class="post-list__meta--date date">27 Aug 2018</time> &#8226;
+            <span class="post-list__meta--tags tags"><a href="#blog" title="GAS">GAS</a>, <a href="#blog" title=" slack"> slack</a>, <a href="#blog" title=" birthday"> birthday</a>, <a href="#blog" title=" channel"> channel</a></span>
         </div>
         <hr class="post-list__divider" />
       </li>
       <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/05/02/G-A-S-Slack.html" title="link to GAS入門 (シートに日付入力〜Slack通知までやってみた)">GAS入門 (シートに日付入力〜Slack通知までやってみた)</a></h2>
-        <p class="excerpt">はじめまして！未経験中途の新人、すももです。 初ブログでいろいろ困ってますが、GAS好きの亜美さんから教えてもらって、GASをちょろちょろイジってみたので初めての方向けに書きたいと思います！ まずはスプレッドシートから GASを実行するための基本操作！ 1.スプレッドシートからスクリプトエディタを開く ・スプレッドシートを開いたら、メニューにある「ツール」をクリック ・上から２番目「スクリプトエディタ」という表示があるのでクリック よし、スクリプトエディタが開いたぞ！ 2.コードの編集 ・初期状態ではmyFunctionという関数が書かれているので、関数名を変えたり中身のコードを書いてみる function test() {   // スプレッドシートを開いた時にメッセージダイアログを表示&hellip;</p>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/05/02/create-Google-Document-From-Spreadsheet.html" title="link to GASで業務効率化 ~スプレッドシートからGoogleドキュメントを作成する~">GASで業務効率化 ~スプレッドシートからGoogleドキュメントを作成する~</a></h2>
+        <p class="excerpt">こんにちは、亜美です。 会社で一二を争うハンサム風男子である、Mさんからこんなご相談をいただきました ・タスクをスプレッドシートで一覧化し、管理している ・一つずつ内容をコピペしながら、作業用のGoogleドキュメントを作成している ・非常にしんどいからこういうやつをつくってほしい 図 ①スプレッドシートの変更点を取得 ②Googleドキュメントを作成し、スプレッドシートから取得した内容を書き込む ③作成したGoogleドキュメントのURLを取得 ④スプレッドシートにURLを書き込む イメージ 担当者が入力されたのをきっかけに、ドキュメントが生成されるようなイメージです コードの全体像は以下です function createDocumentForWork() {   //スプレッドシート&hellip;</p>
         <div class="post-list__meta">
             <time datetime="02 May 2018" class="post-list__meta--date date">02 May 2018</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="sumomo">sumomo</a>, <a href="#blog" title=" GAS"> GAS</a>, <a href="#blog" title=" GoogleAppsScript"> GoogleAppsScript</a>, <a href="#blog" title=" Spreadsheet"> Spreadsheet</a>, <a href="#blog" title=" slack"> slack</a></span>
+            <span class="post-list__meta--tags tags"><a href="#blog" title="GAS">GAS</a>, <a href="#blog" title="GoogleAppsScript">GoogleAppsScript</a>, <a href="#blog" title="GoogleDocument">GoogleDocument</a>, <a href="#blog" title="Spreadsheet">Spreadsheet</a>, <a href="#blog" title="AMI">AMI</a></span>
         </div>
         <hr class="post-list__divider" />
       </li>
       <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/12/04/Selenium-Google-Apps-Script.html" title="link to SeleniumとGoogle Apps Scriptの連携〜実行導入編〜">SeleniumとGoogle Apps Scriptの連携〜実行導入編〜</a></h2>
-        <p class="excerpt">こんにちは。 新卒エンジニアのはすみんです。 今回のブログのテーマは「Selenium」です。 ブラウザの操作を自動的に行なう→ユーザテストに便利、なので以前から気になっていた技術のひとつでした。 しかしなかなか活かせる機会がなく、触ったことはありませんでした。 ところが最近社内の同期と会話をしているときに、これはSeleniumを活かせるのでは？と思える事象に遭遇しました。 彼はマーケターなのですが、メディアを作る際にフォームを入力するそうで、 ひとつひとつ手打ちでしかも量が多いらしくかなり面倒とのこと。 これはSeleniumを使って自動でフォームを作ることができれば、なかなかのハックだよね、と思いやってみました。 （ここだけの話、Chromeの拡張機能で事足りるらしく、それは別途作る&hellip;</p>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/08/05/mecab.html" title="link to Trello APIとSlackとGASとRaspberryPiを使ってみたお話。">Trello APIとSlackとGASとRaspberryPiを使ってみたお話。</a></h2>
+        <p class="excerpt">みなさまこんばんはこへです。 暑くなってきまして、そろそろTrello APIやラズパイやGASを使って何かしたい時期が来ましたので触ってみました。 イメージ 残タスク通知をGASでやるぜ ↑の今日やることリストに入っているカードを毎日18時にSlackに通知する。 ※事前にTrelloApiのkeyとtoken、リストのidを取得しておく。 function checkTrello() {   var trelloKey   = "###TRELLOKEY###";   var trelloToken = "###TRELLOTOKEN###";   var listId  = "###LISTID###";   var api = "https://trello.com/1/lists&hellip;</p>
         <div class="post-list__meta">
-            <time datetime="04 Dec 2017" class="post-list__meta--date date">04 Dec 2017</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="Hasumin">Hasumin</a>, <a href="#blog" title=" Seated"> Seated</a>, <a href="#blog" title=" Google Apps Script"> Google Apps Script</a>, <a href="#blog" title=" Ruby"> Ruby</a>, <a href="#blog" title=" GAS"> GAS</a></span>
+            <time datetime="05 Aug 2017" class="post-list__meta--date date">05 Aug 2017</time> &#8226;
+            <span class="post-list__meta--tags tags"><a href="#blog" title="Kohe">Kohe</a>, <a href="#blog" title="Trello API">Trello API</a>, <a href="#blog" title="Slack">Slack</a>, <a href="#blog" title="CoffeeScript">CoffeeScript</a>, <a href="#blog" title="RaspberryPi">RaspberryPi</a>, <a href="#blog" title="GAS">GAS</a></span>
         </div>
         <hr class="post-list__divider" />
       </li>
       <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/11/12/create-button.html" title="link to ワンクリックで総務に発注できる便利ボタンを作った">ワンクリックで総務に発注できる便利ボタンを作った</a></h2>
-        <p class="excerpt">亜美です。情シスにミッション変更となり、早４ヶ月強となりました。 コーディングをすることが少なくなり、少し寂しい気持ちもあります・・・。 そんな寂しい気分を払拭するため、忙しい業務の合間に「ご褒美タスク」を挟んで息抜きをしています。 　※ 　業務改善のGASや、Salesforceのカスタムボタン（ボタン押したらJSが動くみたいなやつ）の改善など、 　私の中の好きな業務を「ご褒美タスク」と呼んでいます 今日はそのご褒美タスクに関するブログを書きます ワンクリックで総務に社内発注できる便利なボタンを作りたい ■概要 GoogleAppsScript（GAS）で作成。 スプレッドシート内のオブジェクトをクリックすると、総務宛に発注依頼のSlackが飛ぶ スプレッドシートに発注履歴が記録される&hellip;</p>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2016/11/24/G-A-S.html" title="link to 誕生日を覚えるのも、メールを送るのも忘れてしまいがちな私がGASを使って全自動化した話">誕生日を覚えるのも、メールを送るのも忘れてしまいがちな私がGASを使って全自動化した話</a></h2>
+        <p class="excerpt">こんばんはこへです。 下準備 まずはスプレットシートに必要な情報を記入していく。 こ～んな感じで、 A列に日付 B列に誕生日の人の名前 C列に誕生日の人のメアド D列にメールの件名 E列にメール本文 F列にデフォルトのメールの件名 G列にデフォルトのメールの本文 を書いていく。 これで表側の準備終了！ 仕組みとしては簡単！ 誕生日の日に指定したメアドにメールを送る。 何も指定がなければ、デフォルトの件名と内容が自動的に入る。 指定すれば、指定した件名と内容が送信される！! コードを書いていこう 全部で40行もかからない。なんとお手軽。 ってことで解説。  var sh_id    =　 SpreadsheetApp.openById('ここにスプレットシートのIDが入るよ') まず、どのシ&hellip;</p>
         <div class="post-list__meta">
-            <time datetime="12 Nov 2017" class="post-list__meta--date date">12 Nov 2017</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="AMI">AMI</a>, <a href="#blog" title=" GoogleAppsScript"> GoogleAppsScript</a>, <a href="#blog" title=" GAS"> GAS</a>, <a href="#blog" title=" slackBot"> slackBot</a></span>
+            <time datetime="24 Nov 2016" class="post-list__meta--date date">24 Nov 2016</time> &#8226;
+            <span class="post-list__meta--tags tags"><a href="#blog" title="GooleAppScript">GooleAppScript</a>, <a href="#blog" title="GAS">GAS</a>, <a href="#blog" title="gas">gas</a>, <a href="#blog" title=" kohe"> kohe</a></span>
         </div>
         <hr class="post-list__divider" />
       </li>
@@ -293,6 +293,15 @@ var _trackingid = 'LFT-10003-1';
     ga('send', 'pageview');
 
     </script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11783-1';
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
 
 </body>
 </html>
