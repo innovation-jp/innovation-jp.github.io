@@ -211,6 +211,12 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/06/24/Laravel56-Request.html" title="link to Laravel5.6でRequestクラスの勉強してみた">Laravel5.6でRequestクラスの勉強してみた</a></h2>
+        <p class="excerpt">こんにちは、未経験中途エンジニアの、すももです。 今回は、業務で使用しているLaravelのRequestクラスについて、手の長いリーダーから色々教えてもらったので、Laravel初心者向けに書きたいと思います〜。 リクエストURIなど取得してみる 〜準備〜 ▪️routes/web.php Route::get('/test/{a}/{b}', 'TestController@test'); ▪️app/Http/Controllers/TestController.php public function test(Request $request) {     dd(         // リクエストURIの取得         $request-&gt;path(),&hellip;</p>
+        <div class="post-list__meta"><time datetime="24 Jun 2018" class="post-list__meta--date date">24 Jun 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/sumomo">sumomo</a>, <a href="http://tech.innovation.co.jp/tag/Laravel"> Laravel</a>, <a href="http://tech.innovation.co.jp/tag/Request"> Request</a>, <a href="http://tech.innovation.co.jp/tag/beginner"> beginner</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/06/17/S-T-U-D-Y-N-E-T-W-O-R-K-F-O-R-C-I-S-C-O-C-C-N-A-H-S-R-P2.html" title="link to macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑦HSRP不具合対応〜">macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑦HSRP不具合対応〜</a></h2>
         <p class="excerpt">KTNです 前回に続いてHSRPの勉強をしていきたいと思います 不具合がどこにあるかわかりましたでしょうか！？ 関連記事はこちら macのGNS3でNETWORK(CISCO CCNA)の勉強　〜①GNS3導入〜 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜②VPN〜 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜③NAT準備〜 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜④NAT設定〜 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑤BGP〜 macのGNS3でNETWORK(CISCO CCNA)の勉強　〜⑥HSRP〜 不具合の確認 では不具合確認していきたいと思います R2だけに不具合が起こった場合の&hellip;</p>
         <div class="post-list__meta"><time datetime="17 Jun 2018" class="post-list__meta--date date">17 Jun 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Study">Study</a>, <a href="http://tech.innovation.co.jp/tag/Network"> Network</a>, <a href="http://tech.innovation.co.jp/tag/mac"> mac</a>, <a href="http://tech.innovation.co.jp/tag/G-N-S3"> GNS3</a>, <a href="http://tech.innovation.co.jp/tag/C-I-S-C-O"> CISCO</a>, <a href="http://tech.innovation.co.jp/tag/C-C-N-A"> CCNA</a>, <a href="http://tech.innovation.co.jp/tag/H-S-R-P"> HSRP</a></span></div>
@@ -262,12 +268,6 @@ var _trackingid = 'LFT-10003-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/05/19/Go-O-R-Join.html" title="link to GoのORマッパーでJoinデータのとり方を学ぶ！">GoのORマッパーでJoinデータのとり方を学ぶ！</a></h2>
         <p class="excerpt">こんにちは。 エンジニアのNew塚本です。 現在、Golangでバッチをゴリゴリ製造しています。 ORマッパーはgormを使用しているのですが、Joinしたデータのとり方でハマりましたので そのお話をのせたいと思います。 その前に gormドキュメントのJoinについて確認してみます。 引用）http://doc.gorm.io/crud.html#query db.Table("users").Select("users.name, emails.email").Joins("left join emails on emails.user_id = users.id").Scan(&results) 前の方から、 db.Table("users")　&#8594;　usersテーブルを基&hellip;</p>
         <div class="post-list__meta"><time datetime="19 May 2018" class="post-list__meta--date date">19 May 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/New-Tsukamoto">NewTsukamoto</a>, <a href="http://tech.innovation.co.jp/tag/mac"> mac</a>, <a href="http://tech.innovation.co.jp/tag/Golang"> Golang</a>, <a href="http://tech.innovation.co.jp/tag/gorm"> gorm</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/05/14/command64.html" title="link to ウェブ系エンジニアがLinux使うようになったら覚えておきたいコマンド64選">ウェブ系エンジニアがLinux使うようになったら覚えておきたいコマンド64選</a></h2>
-        <p class="excerpt">みなさん元気ですか？城田です。内容は掲題の通りです。 一覧 grep find watch alias source awk cut vi xargs sort diff &lt;() uniq time id dig sendmail scp ssh df du top ps kill pkill ls -Gal ll less gzip gunzip tar cp wc -l bg fg nohup which whereis ln echo -n &gt; cd -&hellip;</p>
-        <div class="post-list__meta"><time datetime="14 May 2018" class="post-list__meta--date date">14 May 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Linux">Linux</a>, <a href="http://tech.innovation.co.jp/tag/Command"> Command</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
