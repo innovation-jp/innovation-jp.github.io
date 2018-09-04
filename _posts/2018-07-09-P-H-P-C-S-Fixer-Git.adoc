@@ -1,0 +1,114 @@
+# PHP-CS-FixerとGitを使って、規約に沿った快適なコーディングライフを
+:hp-alt-title:　PHP-CS-FixerとGitを使って、規約に沿った快適なコーディングライフを
+:hp-tags: Hasumin, PHP-CS, PHP-CS-Fixer, Git
+
+こんにちは。はすみんです。 +
+
+弊社の開発ではPHPを主に使っているのですが、 +
+それなりに歴史が長いからこそ、イケてない箇所がたまにあります。 +
+
+例えばコーディング規約に沿っていないなどです。 +
+
+「PSR-2に準拠してコーディングしようよ」となったのも、プロダクトがそれなりに成熟し始めてからでした。 +
+そのため、過去のプログラムに規約に沿っていないソースコードもたまにあります。 +
+コードレビュー時にそういった指摘はしたくないですよね。
+
+とはいえ大きなプロダクトなので、いきなり改修を加えるのは、工数的にもメンタル的にも大変です。 +
+少なくとも変更を加えたソースコードだけは、規約に沿って書いていきたいです。 +
+そうすれば全体の保守性も徐々にあがっていくはずです。 +
+
+規約に沿ったソースコードを書くために、PHP-CS-Fixerというツールを使いました。 +
+このツールは、設定した規約に沿って自動補正してくれるものです。 +
+タイミングはコミット単位で実行し、変更を加えたファイルのみ対象にしました。 +
+
+## 作ったもの
+こんな感じです。 +
+image:/images/hasumi/php-cs/phpcs.gif[]
+
+コミットしようとしているファイルをすべてチェックします。 +
+規約に沿っていないとコミットされません。 +
+また、インタラクティブに自動補正するかどうかユーザに聞いて実行します。 +
+
+## 書いたpre-commit.sh
+こんな感じです。 +
+
+
+----
+######################################
+# commitごとに規約に沿っているかチェックする
+######################################
+# IS_ERRORでコミットするかどうか判定する関数
+function execFix() {
+    echo "対象のファイルに修正を実行しますか？ [Y/n]"
+    exec < /dev/tty
+    read input
+
+    if [ -z $input ]; then
+        echo "alert: y or nを入力してください"
+        execFix
+    elif [ $input = 'y' ] || [ $input = 'Y' ] || [ $input = 'yes' ]; then
+        echo "php-cs-fixerを実行します"
+        # 対象ファイル毎にphp-cs-fixerの実行
+        for FILE in `git status -uno --short | cut -c3-`; do
+            php-cs-fixer fix $FILE
+        done
+        echo "php-cs-fixerの実行が完了しました。対象ファイルを確認してください。"
+        exit 1
+    elif [ $input = 'n' ] || [ $input = 'N' ] || [ $input = 'no' ]; then
+        echo "処理を終了します。規約に沿ってコーディングしてからコミットしてください。"
+        exit 1
+    fi
+}
+
+# 実行部
+# コミットしようとしているファイルだけを規約に沿っているかチェック
+echo "Files check by php-cs"
+echo "＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝"
+IS_ERROR=0
+# cutでファイル名を取得
+for FILE in `git status -uno --short | cut -c3-`; do
+    # 対象のファイルをphp-csでチェック
+    array=(`phpcs $FILE --standard=./lf-phpcs.xml | grep FOUND`)
+    # php-csが表示するエラー数を判定。[1]番目にエラー数が表示される。
+    if test ${array[1]} != 0; then
+        # エラーがあればcommitさせない
+        echo "PHPCS Err In: ${FILE}"
+        IS_ERROR=1
+    else
+        echo "No Err, be commited"
+    fi
+done
+echo "＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝"
+
+# php-cs-fixerを実行するか
+if test $IS_ERROR = 1 ;then
+    execFix
+fi
+######################################
+----
+
+流れとしてはこんな感じです。 +
+```
+コミットするファイルを規約に沿っているかチェック
+|_ 沿っていればそのままコミット
+|_ 沿っていなければ対象のファイル名を表示
+  |_ PHP-CS-Fixerを使って自動補正
+  |_ 何もしない
+```
+
+気をつけなければいけないのは +
+----
+exec < /dev/tty
+----
+部分で、Gitのhookはインタラクティブなことが普通できなく、exec < /dev/ttyとすることでできるようになるようです。 +
+参考：https://qiita.com/mkiken/items/af5c40ce0d0c6d3530c7 +
+
+Gitのhookに関して参考にしたサイト： +
+https://www.unitrust.co.jp/2426 +
+https://blog.leko.jp/post/create-git-hook-to-develop-modern-php/ +
+
+## おわりに
+まだまだ便利にできそうなので、色々調べてみようと思いました。 +
+シェルも勉強しよう。
+
+done

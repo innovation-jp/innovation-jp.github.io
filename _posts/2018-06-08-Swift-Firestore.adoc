@@ -1,0 +1,407 @@
+= SwiftとFirestoreを使って、リアルタイムチャットアプリを作ってみた
+:published_at: 2018-06-08
+:hp-tags: Chat,Firesotre,Swift4.0
+
+はじめまして、マーケ兼広報担当の遠山です。 +
+ひょんなことから、エンジニアブログを書くことになりました。
+
+定期的に記事とかブログって書いてるんですけど +
+・・・エンジニアブログとなると緊張しますね（ﾄﾞｷﾄﾞｷ +
+でも、頑張って書いてみようと思います。 +
+
+ということで記念すべき初ブログは、この間作ったチャットアプリについてです。
+
+
+
+== 作りたいあぷり
+
+今回は、名前とメッセージを入力して送信すると、リアルタイムで更新・表示されるiPhone向けののシンプルなチャットアプリを作ります。
+
+*使うもの：* +
+Swift4.0 +
+Xcode9.2 +
+Firestore
+
+・サーバの管理が不要 +
+・ある程度無料で使える +
+・リアルタイムに更新される +
+・従来のFirebaseと違ってデータの型が指定できる +
+
+そんな理由から、データベースにFirestoreを使うことにしました。
+
+※Firestoreの使い方は、ガイドを参考にしてくださいねー。 +
+https://firebase.google.com/docs/firestore/?hl=ja[Firestoreのガイド]
+
+※Firestoreを使うための初期設定方法はこちらです。 +
+https://firebase.google.com/docs/ios/setup?hl=ja[初期設定ガイド]
+
+*ちなみに構成はこんな感じです↓*
+
+image:/images/kohe/toyama_swift_3.png[]
+
+*完成したアプリはこんな感じになります↓*
+
+image:/images/kohe/toyama_swift_gif.gif[]
+
+
+
+== まずは下準備
+
+使用する外部ライブラリを、podfileを作成し、追加しましょう。
+
+```
+  pod 'Firebase/Core'
+  pod 'Firebase/Firestore'
+```
+
+pod installできたら準備完了です。
+
+
+
+== いざ作成
+
+=== １．画面を構成する
+
+外部ライブラリをインストールしたら、さっそく作っていきましょう。 +
+まずは画面の構成から。今回はXcodeのStoryBoardでレイアウトして作ります。 +
+用意するのは、「名前とメッセージが表示されるTextView」と、「名前を入力するTextfFeld」、「メッセージを入力するTextField」の3つ。
+
+image:/images/kohe/toyama_swift_1_1.png[width="400px"]
+
+
+レイアウトが終わったら、びよーーんとViewcotrollerに紐付ければ完了！ +
+このびよーーんの作業、好きだなぁ。
+
+```
+    @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak var nameTextField: UITextField!
+    @IBOutlet weak var messageTextField: UITextField!
+```
+
+
+=== ２．TextFieldの処理を書くために、クラスを拡張する
+
+レイアウトが終わったら、次はコードを書いていきましょう。
+
+TextFieldの入力時の処理を、delegateを使い処理をViewControllerClassに委任します。
+
+```
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        messageTextField.delegate = self
+        nameTextField.delegate = self
+    }
+```
+
+今回は、TextFieldの処理をメインのViewcontrollerのclassとは別で書くために、extensionでクラスを拡張していきUITextFieldDelegateプロコトルを継承します。
+
+```
+extension ViewController:UITextFieldDelegate {
+}
+```
+
+=== ３．入力した内容の取得し、Firestoreへ送信する
+
+TextFieldの処理を書くためのクラスが準備できたので、次は入力したデータをFirestoreに送信する部分を作っていきます。
+
+名前とメッセージ両方のTextFieldにテキストを入力してreturnkeyを押した時に、Firestoreにデータを送信するようにしたいと思います。じゃんじゃん書いていきましょう。
+
+
+===== Firestoreへのコネクションを張る
+
+TextFieldの処理を書いていく前に、まずはFirestoreへのコネクションをviewDidLoadを読み込んだ時に張っておきます。
+
+```
+        //Firestoreへのコネクションを張る
+        defaultstore = Firestore.firestore()
+```
+
+===== Firestoreのデータを取得し、表示する
+
+viewDidLoadを読み込んだ時に、Firestore内のデータを取得し、チャット内容をTextViewに表示します。 +
+今回は、"chat"という名前のコレクションにデータを保存していきます。 +
+
+
+addSnapshotListenerを使って、起動時はFirestoreのデータをすべて読み込み、その後はFirestoreの更新を監視し、更新があるたびに実行されるようにします。
+
+```
+        defaultstore.collection("chat").addSnapshotListener { (snapShot, error) in
+
+        }
+```
+
+中を書いていきましょう。 +
+Firestoreの"chat"コレクション内のデータがあるかどうか確認し、無ければreturnを返します。
+
+```
+            guard let value = snapShot else {
+                print("snapShot is nil")
+                return
+            }
+```
+
+Firestoreにデータが追加された時に、TextViewの内容を更新します。
+
+```
+            value.documentChanges.forEach{diff in
+	    //更新内容が追加だったときの処理
+                if diff.type == .added {	
+                    //追加データを変数に入れる
+                    let chatDataOp = diff.document.data() as? Dictionary<String, String>
+                    guard let chatData = chatDataOp else {
+                        return
+                    }
+                    guard let message = chatData["message"] else {
+                        return
+                    }
+                    guard let name = chatData["name"] else {
+                        return
+                    }
+                    //TextViewの一番下に新しいメッセージ内容を追加する
+                    self.textView.text =  "\(self.textView.text!)\n\(name) : \(message)"
+                }
+            }
+```
+
+
+
+===== returnkeyが押された時の処理
+
+Firestoreのコネクションとデータの取得＆表示ができたら、次にreturnkeyが押された時の処理を書いていきます。
+
+```
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        print("returnが押されたよ")
+        return true
+    }
+```
+
+まずはこれで、TextFieldでreturnkeyを押した時に、「returnkeyが押されたよ」って出てきたらOKです。
+
+
+===== returnkeyが押されたらキーボードを閉じる
+
+今のままだとreturnkeyを押してもキーボードが閉じないので、閉じる処理を追加。
+
+```
+        //キーボードを閉じる
+        textField.resignFirstResponder()
+```
+
+===== TextFieldに入力されたテキストを変数に入れる
+
+nameとmessageそれぞれのTextFieldに入力された値を変数に入れます。 +
+nameとmessageのTextFieldがnilの可能性があるので、guard文を書いてはじきます。
+また、TextFieldの値がnilもしくは空欄の場合はFirestoreへ送信する処理をしないようにします。
+
+```
+        //nameに入力されたテキストを変数に入れる。nilの場合はFirestoreへ行く処理をしない
+        guard let name = nameTextField.text else {
+            return true
+        }
+        
+        //nameが空欄の場合はFirestoreへ行く処理をしない
+        if nameTextField.text == "" {
+            return true
+        }
+
+        //messageに入力されたテキストを変数に入れる。nilの場合はFirestoreへ行く処理をしない
+        guard let message = messageTextField.text else {
+            return true
+        }
+
+        //messageが空欄の場合はFirestoreへ行く処理をしない
+        if messageTextField.text == "" {
+            return true
+        }
+```
+
+
+===== 入力されたテキストを配列に入れる
+
+入力されたテキストを配列に格納します。
+
+```
+        //入力された値を配列に入れる
+        let messageData: [String: String] = ["name":name, "message":message]
+```
+
+
+===== Firestoreに送信する
+
+配列の内容を、Firestoreに送信します。
+
+```
+        //Firestoreに送信する
+        defaultstore.collection("chat").addDocument(data: messageData)
+```
+
+
+
+
+===== nameのTextFieldにカーソルがあるときにも送信しないようにする
+
+このままだと、returnkeyを押すたびにデータを送信してしまうので、nameのTextFieldにカーソルがあるときには送信しないようにします。
+
+まずは、現在のTextFieldがどれかを判定をするために、TextFieldにtagを設定します。
+
+nametextfield = 1 +
+messagetextfield = 2
+
+image:/images/kohe/toyama_swift_2.png[width="300px"]
+
+tagだと数字でわかりにくいので、enumを活用します。
+
+```
+    enum textFieldKind:Int {
+        case name = 1
+        case message = 2
+    }
+```
+
+先程作ったenumで、TextFieldの判定をし、nameのTextFieldにカーソルがあるときには送信しないようにします。
+
+
+```
+        //nameTextFieldの場合は　returnを押してもFirestoreへ行く処理をしない
+        if textField.tag == textFieldKind.name.rawValue {
+            return true
+        }
+```
+
+※この記述は、入力した文字を変数に入れる処理の前に入れましょう。
+
+
+==== messageのTextFieldを空にする
+
+送信後、messageのtextfieldを空欄にします。
+
+```
+        //メッセージの中身を空にする
+        messageTextField.text = ""
+```
+
+
+これで完成です！
+とってもとってもシンプルですが、リアルタイムで更新されるチャットアプリができました。
+
+
+== さいごに
+
+一応アプリはできましたが、このままだとアプリを起動した時に、すでにデータベースに保存されているチャットの内容がランダムで表示されてしまいました。 +
+なので、時系列で並ぶように、投稿時間なども保存して意図した順番に並べる必要がありそうですね。まだまだ改善の余地がありそうです。
+
+このチャットアプリを改善しつつ、引き続き別のアプリも作っていこうと思います。 +
+ということで、もしまたブログを書く機会があったらお目にかかりましょう。
+
+
+ソースコード全体はこちら↓
+
+```
+import UIKit
+import Firebase
+
+class ViewController: UIViewController {
+
+    @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak var nameTextField: UITextField!
+    @IBOutlet weak var messageTextField: UITextField!
+    
+    enum textFieldKind:Int {
+        case name = 1
+        case message = 2
+    }
+    
+    var defaultstore:Firestore!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        messageTextField.delegate = self
+        nameTextField.delegate = self
+        //Firestoreへのコネクションを張る
+        defaultstore = Firestore.firestore()
+        
+        
+        //Firestoreからデータを取得し、TextViewに表示する
+        defaultstore.collection("chat").addSnapshotListener { (snapShot, error) in
+            guard let value = snapShot else {
+                print("snapShot is nil")
+                return
+            }
+            
+            value.documentChanges.forEach{diff in
+            //更新内容が追加だったときの処理
+                if diff.type == .added {
+                	//追加データを変数に入れる
+                    let chatDataOp = diff.document.data() as? Dictionary<String, String>
+                    print(diff.document.data())
+                    guard let chatData = chatDataOp else {
+                        return
+                    }
+                    guard let message = chatData["message"] else {
+                        return
+                    }
+                    guard let name = chatData["name"] else {
+                        return
+                    }
+                    //TextViewの一番下に新しいメッセージ内容を追加する
+                    self.textView.text =  "\(self.textView.text!)\n\(name) : \(message)"
+                }
+            }
+        }
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+
+
+}
+
+extension ViewController:UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        print("returnが押されたよ")
+        
+        //キーボードを閉じる
+        textField.resignFirstResponder()
+        
+        //nameTextFieldの場合は　returnを押してもFirestoreへ行く処理をしない
+        if textField.tag == textFieldKind.name.rawValue {
+            return true
+        }
+        //nameに入力されたテキストを変数に入れる。nilの場合はFirestoreへ行く処理をしない
+        guard let name = nameTextField.text else {
+            return true
+        }
+        
+        //nameが空欄の場合はFirestoreへ行く処理をしない
+        if nameTextField.text == "" {
+            return true
+        }
+
+        //messageに入力されたテキストを変数に入れる。nilの場合はFirestoreへ行く処理をしない
+        guard let message = messageTextField.text else {
+            return true
+        }
+
+        //messageが空欄の場合はFirestoreへ行く処理をしない
+        if messageTextField.text == "" {
+            return true
+        }
+
+        //入力された値を配列に入れる
+        let messageData: [String: String] = ["name":name, "message":message]
+        
+        //Firestoreに送信する
+        defaultstore.collection("chat").addDocument(data: messageData)
+
+        //メッセージの中身を空にする
+        messageTextField.text = ""
+        
+        return true
+    }
+}
+
+```
+
+

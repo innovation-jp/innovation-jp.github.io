@@ -1,0 +1,213 @@
+= もうメンテナンスは怖くない！phpDocumentorを使ってみた
+:hp-tags: nakamura,phpDocumentor,PHPDoc
+
+お久しぶりです。中村です。
+
+突然ですが、ドキュメントって管理するのがとても難しいですよね。
+
+時間が無くて作成できなかったり、メンテナンスしなくなってしまった経験ある方も多いのではないでしょうか？
+
+今回は以前から気になっていた「phpDocumentor」というものを使用して、ドキュメントを生成してみたいと思います。
+
+=== phpDocumentorとは？
+
+PHPDocという記述形式でコメントを書いておくと、コメント部分をまとめてドキュメント生成してくれるというツールです。
+
+※phpDocumentorについてはこちら +
+https://docs.phpdoc.org/
+
+※PHPDocについてはこちら +
+https://en.wikipedia.org/wiki/PHPDoc
+
+通常のドキュメントと異なりコメントから自動生成してくれるため、
+
+- 体裁を整える必要がない（誰が書いても同じようになる）
+- メンテナンスがし易い
+
+
+といったメリットがありそうです！
+
+
+それでは早速試していきましょう〜
+
+=== テスト用環境
+
+Laravel 5.6 +
+PHP 7.1.4 +
+Composer 1.4.1 +
+
+※laradockを使用して環境構築しました
+
+
+=== 導入編
+
+composerを使って導入しましょう。
+以下コマンドになります。
+
+```
+$ composer require --dev phpdocumentor/phpdocumentor
+```
+
+。。。とはいかず、以下のようなエラーが発生しました。
+
+```
+Using version ^2.9 for phpdocumentor/phpdocumentor
+./composer.json has been updated
+Loading composer repositories with package information
+Updating dependencies (including require-dev)
+Your requirements could not be resolved to an installable set of packages.
+
+  Problem 1
+    - Installation request for phpdocumentor/phpdocumentor ^2.9 -> satisfiable by phpdocumentor/phpdocumentor[v2.9.0].
+    - Conclusion: remove nikic/php-parser v4.0.2
+    - phpdocumentor/phpdocumentor v2.9.0 requires phpdocumentor/reflection ^3.0 -> satisfiable by phpdocumentor/reflection[3.0.0, 3.0.1, 3.0.x-dev].
+    - phpdocumentor/reflection 3.0.0 requires nikic/php-parser ^1.0 -> satisfiable by nikic/php-parser[1.x-dev, v1.0.0, v1.0.0beta1, v1.0.0beta2, v1.0.1, v1.0.2, v1.1.0, v1.2.0, v1.2.1, v1.2.2, v1.3.0, v1.4.0, v1.4.1].
+    - phpdocumentor/reflection 3.0.1 requires nikic/php-parser ^1.0 -> satisfiable by nikic/php-parser[1.x-dev, v1.0.0, v1.0.0beta1, v1.0.0beta2, v1.0.1, v1.0.2, v1.1.0, v1.2.0, v1.2.1, v1.2.2, v1.3.0, v1.4.0, v1.4.1].
+    - phpdocumentor/reflection 3.0.x-dev requires nikic/php-parser ^1.0 -> satisfiable by nikic/php-parser[1.x-dev, v1.0.0, v1.0.0beta1, v1.0.0beta2, v1.0.1, v1.0.2, v1.1.0, v1.2.0, v1.2.1, v1.2.2, v1.3.0, v1.4.0, v1.4.1].
+    - Can only install one of: nikic/php-parser[v4.0.2, 1.x-dev].
+    - Can only install one of: nikic/php-parser[v4.0.2, v1.3.0].
+    - Can only install one of: nikic/php-parser[v4.0.2, v1.4.0].
+    - Can only install one of: nikic/php-parser[v4.0.2, v1.4.1].
+    - Can only install one of: nikic/php-parser[v4.0.2, v1.0.0].
+    - Can only install one of: nikic/php-parser[v4.0.2, v1.0.0beta1].
+    - Can only install one of: nikic/php-parser[v4.0.2, v1.0.0beta2].
+    - Can only install one of: nikic/php-parser[v4.0.2, v1.0.1].
+    - Can only install one of: nikic/php-parser[v4.0.2, v1.0.2].
+    - Can only install one of: nikic/php-parser[v4.0.2, v1.1.0].
+    - Can only install one of: nikic/php-parser[v4.0.2, v1.2.0].
+    - Can only install one of: nikic/php-parser[v4.0.2, v1.2.1].
+    - Can only install one of: nikic/php-parser[v4.0.2, v1.2.2].
+    - Installation request for nikic/php-parser (installed at v4.0.2) -> satisfiable by nikic/php-parser[v4.0.2].
+
+
+Installation failed, reverting ./composer.json to its original content.
+```
+
+composerで上手くいかないので、pharでやることに。
+
+```
+$ cd vendor/bin
+$ wget http://phpdoc.org/phpDocumentor.phar
+
+```
+
+
+
+=== ドキュメント生成
+
+それでは早速phpDocumentorを使ってドキュメントを生成していきたいと思います。
+
+使用するファイルはapp/User.php（Laravelを導入した時にデフォで入っているサンプルファイル）です。
+
+
+▪️app/User.php
+
+```
+<?php
+
+namespace App;
+
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
+class User extends Authenticatable
+{
+    use Notifiable;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name', 'email', 'password',
+    ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
+}
+```
+
+
+
+ドキュメントを生成するコマンドは、以下のようになります。
+
+```
+$ php vendor/bin/phpDocumentor.phar -d {対象ディレクトリーのパス} -t {ドキュメント生成先のパス}
+```
+
+-d {対象ディレクトリーのパス} の代わりに -f {対象ファイルのパス}　という使い方もできます。 +
+今回は1ファイルだけなのでそちらのオプションを使いました。
+
+
+```
+$ php vendor/bin/phpDocumentor.phar -f app/User.php -t public/phpdoc
+```
+
+このようなファイルが生成されます。
+
+image::/images/nakamura/phpDocumentor/01.png[width="250"]
+
+対象ファイルのドキュメントはこんな感じ。
+
+image::/images/nakamura/phpDocumentor/02.png[]
+
+=== メソッドを追加してみる
+
+何かコードを追加して、再度ドキュメント生成した時にどんな感じになるのかみてみましょう。
+
+以下のコードを追加してみました。（Laravelの公式サイトより）
+
+```
+    /**
+     * 人気のあるユーザだけに限定するクエリスコープ
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopePopular($query)
+    {
+        return $query->where('votes', '>', 100);
+    }
+
+    /**
+     * アクティブなユーザだけに限定するクエリスコープ
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('active', 1);
+    }
+```
+
+保存後に、以下コマンドを再度実行してみます。
+
+```
+$ php vendor/bin/phpDocumentor.phar -f app/User.php -t public/phpdoc
+```
+
+生成されたドキュメントがこちら。
+
+image::/images/nakamura/phpDocumentor/03.png[]
+
+ちゃんとメソッドが追加されてますね！
+
+
+=== 感想
+
+- composerでインストールができなかったので再挑戦したい
+- git hookにドキュメント生成コマンドを仕込むなどすると、チームメンバー間でドキュメントが常に最新の状態にすることができそう
+- とはいえ、エンジニア向けのドキュメントでしかない
+
+
+今後現在のプロジェクトにも導入していきたいと思いますので、またそちらの感想などもあれば追記しておきます。
+
+おしまい！

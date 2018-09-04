@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>パフォーマンスも大事！〜PHPでプロファイリング編〜 - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="パフォーマンスも大事！〜PHPでプロファイリング編〜">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="パフォーマンスも大事！〜PHPでプロファイリング編〜">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/07/30/P-H-P.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="パフォーマンスも大事！〜PHPでプロファイリング編〜" />
+    <meta property="og:description" content="こんばんは。(TZ=JST-9) 矢ヶ崎です。 おかげさまで、本日43歳になりました。 これもひとえに全人類のみなさまのおかげです！ 非常感謝！ ということで、43歳のパフォーマンスを発揮していくために、 まずはプロファイリングをしてボトルネックを探すこととします。 古のPHPのコードだとしても！ PHPのプロファイリングの記事！いまさらだとしても！ 準備 PHPのプロファイリングと言っても、いろんな方法がありますが、 今回は、古の環境でも使いやすい(気がする) Xdebug + Webgrind で行ってみたいとおもいます！ Xdebugのインスト..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/07/30/P-H-P.html" />
+    <meta property="article:published_time" content="2018-07-29T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-07-30T06:19:13.589Z" />
+    <meta property="article:tag" content="Yagasaki" />
+    <meta property="article:tag" content="PHP" />
+    <meta property="article:tag" content="Performance" />
+    <meta property="article:tag" content="xdebug" />
+    <meta property="article:tag" content="webgrind" />
+    <meta property="article:tag" content="Profiling" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="パフォーマンスも大事！〜PHPでプロファイリング編〜" />
+    <meta name="twitter:description" content="こんばんは。(TZ=JST-9) 矢ヶ崎です。 おかげさまで、本日43歳になりました。 これもひとえに全人類のみなさまのおかげです！ 非常感謝！ ということで、43歳のパフォーマンスを発揮していくために、 まずはプロファイリングをしてボトルネックを探すこととします。 古のPHPのコードだとしても！ PHPのプロファイリングの記事！いまさらだとしても！ 準備 PHPのプロファイリングと言っても、いろんな方法がありますが、 今回は、古の環境でも使いやすい(気がする) Xdebug + Webgrind で行ってみたいとおもいます！ Xdebugのインスト..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/07/30/P-H-P.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "Akihiro YAGASAKI",
+        "image": "https://avatars1.githubusercontent.com/u/13131599?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "パフォーマンスも大事！〜PHPでプロファイリング編〜",
+    "url": "http://tech.innovation.co.jp/2018/07/30/P-H-P.html",
+    "datePublished": "2018-07-29T15:00:00.000Z",
+    "dateModified": "2018-07-30T06:19:13.589Z",
+    "keywords": "Yagasaki, PHP, Performance, xdebug, webgrind, Profiling",
+    "description": "こんばんは。(TZ=JST-9) 矢ヶ崎です。 おかげさまで、本日43歳になりました。 これもひとえに全人類のみなさまのおかげです！ 非常感謝！ ということで、43歳のパフォーマンスを発揮していくために、 まずはプロファイリングをしてボトルネックを探すこととします。 古のPHPのコードだとしても！ PHPのプロファイリングの記事！いまさらだとしても！ 準備 PHPの\bプロファイリングと言っても、いろんな方法がありますが、 今回は、古の環境でも使いやすい(気がする) Xdebug + Webgrind で行ってみたいとおもいます！ Xdebugのインスト..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Yagasaki tag-P-H-P tag-Performance tag-xdebug tag-webgrind tag-Profiling no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="30 Jul 2018" class="post-meta__date date">30 Jul 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Yagasaki">Yagasaki</a>, <a href="http://tech.innovation.co.jp/tag/P-H-P">PHP</a>, <a href="http://tech.innovation.co.jp/tag/Performance">Performance</a>, <a href="http://tech.innovation.co.jp/tag/xdebug">xdebug</a>, <a href="http://tech.innovation.co.jp/tag/webgrind">webgrind</a>, <a href="http://tech.innovation.co.jp/tag/Profiling">Profiling</a></span>
+        <span class="post-meta__author author"><img src="https://avatars1.githubusercontent.com/u/13131599?v=4" alt="profile image for Akihiro YAGASAKI" class="avatar post-meta__avatar" /> by Akihiro YAGASAKI</span>
+      </div>
+      <h1 class="post-title">パフォーマンスも大事！〜PHPでプロファイリング編〜</h1>
+    </header>
+
+    <section class="post tag-Yagasaki tag-P-H-P tag-Performance tag-xdebug tag-webgrind tag-Profiling">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんばんは。(TZ=JST-9)<br>
+矢ヶ崎です。</p>
+</div>
+<div class="paragraph">
+<p>おかげさまで、本日43歳になりました。<br>
+これもひとえに全人類のみなさまのおかげです！<br>
+非常感謝！</p>
+</div>
+<div class="paragraph">
+<p>ということで、43歳のパフォーマンスを発揮していくために、<br>
+まずはプロファイリングをしてボトルネックを探すこととします。</p>
+</div>
+<div class="paragraph">
+<p>古のPHPのコードだとしても！</p>
+</div>
+<div class="paragraph">
+<p>PHPのプロファイリングの記事！いまさらだとしても！</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__">準備</h3>
+<div class="paragraph">
+<p>PHPのプロファイリングと言っても、いろんな方法がありますが、<br>
+今回は、古の環境でも使いやすい(気がする)</p>
+</div>
+<div class="paragraph">
+<p><strong>Xdebug + Webgrind</strong></p>
+</div>
+<div class="paragraph">
+<p>で行ってみたいとおもいます！</p>
+</div>
+<div class="sect3">
+<h4 id="_xdebug">Xdebugのインストール</h4>
+<div class="paragraph">
+<p>みなさんの環境にはきっとたぶんおそらくだいたい入っているかとは思いますが、<br>
+もし入れるのであれば、ご自分のOSやPHPのバージョンにあったものを入れたりしますよね。</p>
+</div>
+<div class="paragraph">
+<p>例えば</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ sudo apt-get install php-5.6-xdebug</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>こんな雰囲気で入れてみましょう！</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_xdebug_2">Xdebugのプロファイラ設定</h4>
+<div class="paragraph">
+<p>php.ini系の設定にて、XdebugのプロファイラをONにしてみましょう！</p>
+</div>
+<div class="listingblock">
+<div class="title">php.ini</div>
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">zend_extension=/usr/local/zend/lib/php_extensions/xdebug.so
+xdebug.profiler_enable=1
+xdebug.profiler_enable_trigger=1
+xdebug.profiler_output_dir=/tmp</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>xdebug.soを読むところは、ご自分の環境にいい感じに合わせていただければいい感じかと思います。</p>
+</div>
+<div class="sect4">
+<h5 id="_web">Webサーバ系の再起動</h5>
+<div class="paragraph">
+<p>Webサーバ系などでPHPを利用している場合は、そのプロセスも再起動して、php.iniの設定を反映させましょう。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ sudo service httpd restart
+とか
+$ sudo service apache restart
+とか
+$ sudo service php-fpm restart
+とか</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>PHP単体で動くアプリケーションの場合(バッチなど)は、これは必要ありません。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___2">いざプロファイリング</h3>
+<div class="paragraph">
+<p>この状態で、実はすでにプロファイリングが始まっています。</p>
+</div>
+<div class="paragraph">
+<p>上の設定ですと、プロファイリングされたアウトプットファイルが、</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>/tmp</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>に出力されるようになっています。<br>
+lsとかで見てみると、</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>/tmp/cachegrind.out.プロセスID</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>みたいなファイルが出力されているかと思います。</p>
+</div>
+<div class="paragraph">
+<p>たとえばちょろっと中身を覗いてみると、</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ head -30 /tmp/cachegrind.out.3130
+version: 1
+creator: xdebug 2.4.0 (PHP 5.6.30)
+cmd: /var/www/index.php
+part: 1
+positions: line
+
+events: Time
+
+fl=(1) php:internal
+fn=(1) php::defined
+4 2
+
+fl=(1)
+fn=(2) php::dirname
+5 2
+
+fl=(1)
+fn=(3) php::realpath
+5 5
+
+fl=(1)
+fn=(4) php::define
+5 3
+
+fl=(1)
+fn=(1)
+8 2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>こんな感じになってます。<br>
+いい感じにプロファイリングされているので、これをがんばって読めば、パフォーマンスチューニングできそうですね！<br>
+いや、でもそれはつらいです。。。<br>
+目grepや目sed、目awkの鬼！みたいな人であればできるかもしれませんが、<br>
+わたしはちょっとご遠慮させていただきたく存じます。。。</p>
+</div>
+<div class="paragraph">
+<p>じゃあどうしましょう？！</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___3">結果をいい感じにみる</h3>
+<div class="paragraph">
+<p>そんな時に、このファイルをいい感じに見るツールが役立ちます。<br>
+そんな便利なツールのひとつが、Webgrindになるっていう寸法です。</p>
+</div>
+<div class="sect3">
+<h4 id="_webgrind">Webgrindをセットアップ</h4>
+<div class="paragraph">
+<p><a href="https://github.com/jokkedk/webgrind" class="bare">https://github.com/jokkedk/webgrind</a></p>
+</div>
+<div class="paragraph">
+<p>こちらから、git cloneや</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ wget https://github.com/jokkedk/webgrind/archive/master.zip</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>とかダウンロードなどして、一式をWebサーバに持ってきます。</p>
+</div>
+<div class="paragraph">
+<p>また、Readmeのドキュメントを読んで、動かす最低限のモジュールを入れましょう。</p>
+</div>
+<div class="paragraph">
+<p>例えば</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ sudo apt-get install unzip python graphviz</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>みたいな感じです。</p>
+</div>
+<div class="paragraph">
+<p>そして、さきほどプロファイリングしたWebサーバでもいいですし、他のWebサーバでもよいのですが、こちらをセットアップします。<br>
+とはいっても、Web公開系のディレクトリに、上記の一式をおいておいて、Webで動くようにするだけです。</p>
+</div>
+<div class="paragraph">
+<p>例えば、ApacheでNameVirtualHostを使う場合とかですと、こんな感じで設定になりますかね。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>&lt;VirtualHost *:80&gt;
+        ServerName wg.tech.innovation.co.jp
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/webgrind-master
+        ErrorLog /var/log/httpd/error.log
+        CustomLog /var/log/httpd/access.log combined
+
+        &lt;Directory /var/www/webgrind-master&gt;
+            Options FollowSymLinks
+            AllowOverride All
+            Require all granted
+        &lt;/Directory&gt;
+&lt;/VirtualHost&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>そしたら、ブラウザでアクセスしてみます。</p>
+</div>
+<div class="paragraph">
+<p>こんな画面が表示されます。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/yagasaki/wg/wg1.png" alt="wg1">
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___4">解析してみる</h4>
+<div class="paragraph">
+<p>上の画面はまだ、何も解析していない状態です。</p>
+</div>
+<div class="paragraph">
+<p>"90%" となっている部分は、どのくらいの網羅率で調べるかみたいな感じです。<br>
+場合によっては"98%"とかにしてもいいかもしれません。<br>
+"Auto (newest) "の部分が解析対象で、デフォルトだと、/tmp に先程の "cachegrind.out.プロセスID"ファイルがあれば、それをドロップダウンで選べるようになっています。<br>
+"percent"の部分で単位を変えられます。</p>
+</div>
+<div class="paragraph">
+<p>これらを設定して、"update"ボタンを押すと、解析結果を表示してくれます。<br>
+また、"Show Call Graph"ボタンを押すと、グラフィカルにグラフを表示してくれて、どこが遅いのか一目瞭然です。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/yagasaki/wg/wg2.png" alt="wg2">
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___5">まさかの結果？！いや、まあ、当然か。</h4>
+<div class="imageblock">
+<div class="content">
+<img src="/images/yagasaki/wg/wg3.png" alt="wg3">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/yagasaki/wg/wg4.png" alt="wg4">
+</div>
+</div>
+<div class="paragraph">
+<p>こちらの例では、<br>
+・array_merge呼びすぎ＆激遅問題<br>
+が露呈しました。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/yagasaki/wg/wg5.png" alt="wg5">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/yagasaki/wg/wg6.png" alt="wg6">
+</div>
+</div>
+<div class="paragraph">
+<p>こちらの例では、<br>
+・mcrypt激遅問題<br>
+・redisまでちょっと遠い問題<br>
+・マジックメソッド呼びすぎ＆遅問題<br>
+・debugログは出ないログレベルになっているのに呼ぶだけで遅い問題
+が露呈しました。</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___6">修正した結果(祝！)</h4>
+<div class="paragraph">
+<p>100倍速くなりました！！！</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___7">最後に注意点</h3>
+<div class="paragraph">
+<p>プロファイリング中は、当然オーバーヘッドがかかるので、本番環境に入れっぱなしにしておくのは、むしろ逆パフォーマンスチューニングになってしまうので、気をつけてください。</p>
+</div>
+<div class="paragraph">
+<p>また、プロファイリングするときだけ、xdebugのプロファイラをenableにするようにしましょう。おわったら、すぐにdisableとか、xdebugごとOFFにしておきましょう。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___8">効率って大事</h3>
+<div class="paragraph">
+<p>パフォーマンスのボトルネックとかは、意外と基本的なところに問題や解決策があったりなかったりします。<br>
+がんばってクラウドとかでスケールアウトとかスケールアップとか考えるのも良いですが、そのまえに自分の範囲内を見直してみるのが良いのではないでしょうか？簡単なプログラム部分やSQL部分には結構改善ポイントがたくさんあるかも？？？</p>
+</div>
+<div class="paragraph">
+<p>IDEやデバッガ、プロファイラなどの便利なツールの利用は、生産性を劇的に変えてくれます。なにも探さずにあせって書きまくることはせずに、積極的に調べて使っていきましょう！</p>
+</div>
+<div class="paragraph">
+<p>Walk, Don&#8217;t Run.<br>
+Also Don&#8217;t Stop.</p>
+</div>
+<div class="paragraph">
+<p>こちらからは以上になります。</p>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>

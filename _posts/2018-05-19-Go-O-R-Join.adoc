@@ -1,0 +1,178 @@
+# GoのORマッパーでJoinデータのとり方を学ぶ！
+:hp-tags: NewTsukamoto, mac, Golang, gorm
+
+こんにちは。
+エンジニアのNew塚本です。
+
+現在、Golangでバッチをゴリゴリ製造しています。 + 
+ORマッパーはgormを使用しているのですが、Joinしたデータのとり方でハマりましたので +
+そのお話をのせたいと思います。
+
+
+====== その前に
+
+gormドキュメントのJoinについて確認してみます。 +
+引用）http://doc.gorm.io/crud.html#query
+++++
+<pre style="font-family: Menlo, Courier">
+db.Table("users").Select("users.name, emails.email").Joins("left join emails on emails.user_id = users.id").Scan(&results)
+</pre> 
+++++
+
+前の方から、 +
+db.Table("users")　->　usersテーブルを基礎表に設定 + 
+.Select　->　取得する項目（SQLのselect句）を設定 + 
+.Joins　->　結合するテーブルと条件を設定 + 
+.Scan　->　SQLの結果を格納する構造体のポインタを設定 + 
+
+++++
+SQLの結果を格納する構造体
+<pre style="font-family: Menlo, Courier">
+type Results struct {
+　Name　string　  // name
+　Email　string   // email
+}
+</pre> 
+++++
+
+Scan関数のパラメタに設定しているポインタに、データベースから取得した値（Select関数で設定）をバインドしてくれます。この仕組みでデータベースから値が取得できるわけです。 +
+内容はざっくりこんな感じです。メソッドチェインしている詳しい内容はgormのドキュメントを確認してください。 +
+
+これ自体は納得しているのですが・・・
+
+====== 前提
+現在製造しているバッチは、データベースのテーブル単位で構造体を定義し１ファイルとしています。 +
+以降、テーブル定義ファイルと言います。
+
+「その前に」で示した例でいうと、 +
+usersテーブル、emailsテーブル用に、テーブル定義ファイルが２ファイルあります。
+
+====== 問題①　SQL毎（select句が異なる場合）に取得用の構造体が必要？
+データベースから取得する項目と、構造体のメンバ変数は一致している必要があります。 +
+これって、SQL毎に構造体が必要になるのか？ だとすると、Resultsみたいな構造体が増えていくのはメンテナンス性も悪いし、そもそもイヤだ！
+
+
+
+
+====== 問題②　selectする項目に別名（select name as otherNameとか）をつけた場合に取得用の構造体はどうなる？
+問題①にも関連しますが、データベースから取得する項目と、構造体のメンバ変数は一致している必要があります。
+ただし、テーブル定義ファイルにある構造体はデータベースのカラムと一致させてます。 +
+
+データベースに存在しないカラム（別名を設定）を取得するために、テーブル定義ファイルの構造体にその変数を追加したくない。無秩序になり混沌としそうな気がする！
+
+
+
+====== 解決に向けて
+まず、問題①については、Scan関数に指定する構造体をどうにかすれば良さそうです。
+++++
+<pre style="font-family: Menlo, Courier">
+db.Table("users").Select("users.name, emails.email").
+Joins("left join emails on emails.user_id = users.id").
+<text style="color:red">Scan(&results)</text>
+</pre> 
+++++
+
+
+一緒に開発をしているこへくんが色々調べてくれましたー +
+頼りになります！
+
+まず、構造体の埋め込みが使えそうな事がわかりました。
+Golangは他の言語のように継承はありまん。ただし、構造体の中に構造体を定義する事で似た様な事ができます。
+
+例えば、Results構造体は、string型の変数を2つ定義しています。
+++++
+<pre style="font-family: Menlo, Courier">
+type Results struct {
+　Name　string　  // name
+　Email　string   // email
+}
+</pre> 
+++++
+
+これに、他の構造体（Sample）を定義してResultsに追加してみます。
+++++
+<pre style="font-family: Menlo, Courier">
+type Sample struct {
+　Id　string　  
+　Type　string
+}
+</pre> 
+<pre style="font-family: Menlo, Courier">
+type Results struct {
+　<text style="color:red">Sample</text>
+　Name　string　  // name
+　Email　string   // email
+}
+</pre> 
+++++
+埋め込んだSample構造体の変数にはこの様にアクセスできます。
+Results.Sample.Type +
+また、Results構造体全体でユニークとなる変数については、Results.Typeとしてアクセスできます。 +
+これで、問題①については解決です。
+
+問題②については、gormのドキュメントに書いてありました。 
+++++
+<pre style="font-family: Menlo, Courier">
+db.Table("users").
+Select(<text style="color:red">"users.name, emails.email"</text>).Joins("left join emails on emails.user_id = users.id").Scan(&results)
+</pre> 
+++++
+
+Select関数のパラメタに指定する値（SQLのselect句）は、取得するテーブルまで指定します。 +
+SQLの別名についてはこんな感じで書けばよく、後は、構造体に追加します。
+++++
+<pre style="font-family: Menlo, Courier">
+Select("users.name, emails.email <text style="color:red">as \"otherName\"</text> ")
+</pre> 
+</pre> 
+<pre style="font-family: Menlo, Courier">
+type Results struct {
+　<text style="color:red">Sample</text>
+　Name　string　  // name
+　Email　string   // email
+　<text style="color:red">OtherName string</text>
+}
+</pre> 
+++++
+
+====== まとめ
+問題①、②を解決するためには、こんな感じになりました。
+
+++++
+<pre style="font-family: Menlo, Courier">
+db.Table("users").
+Select("users.name, users.name as \"otherName\", emails.email").
+Joins("left join emails on emails.user_id = users.id").
+Scan(&results)
+</pre> 
+++++
+
+++++
+・Usersテーブルの構造体
+<pre style="font-family: Menlo, Courier">
+type Users struct {
+　Name　string　  // name
+}
+</pre> 
+・Emailsテーブルの構造体
+<pre style="font-family: Menlo, Courier">
+type Emails struct {
+　Email　string   // email
+}
+</pre> 
+・Resultsの構造体　SQLで別名を指定した変数はここに定義
+<pre style="font-family: Menlo, Courier">
+type Results struct {
+ Users
+ Emails
+ OtherName string
+}
+</pre> 
+++++
+
+おわり。
+
+
+
+
+

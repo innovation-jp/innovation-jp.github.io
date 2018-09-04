@@ -1,0 +1,280 @@
+= Laravel5.6で
+:hp-tags: sumomo, Laravel, Request, beginner
+
+
+こんにちは、未経験中途エンジニアの、すももです。 +
+今回は、業務で使用しているLaravelのRequestクラスについて、手の長いリーダーから色々教えてもらったので、Laravel初心者向けに書きたいと思います〜。 +
+ +
+ +
+ 
+ 
+## リクエストURIなど取得してみる +
+
+=== 〜準備〜
+
+▪️routes/web.php
+
+```
+Route::get('/test/{a}/{b}', 'TestController@test');
+
+```
+
+▪️app/Http/Controllers/TestController.php
+
+```
+public function test(Request $request)
+{
+    dd(
+        // リクエストURIの取得
+        $request->path(),
+        // リクエストのURIが指定されたパターンに合致するか確認
+        $request->is('*/sumo'),
+        // 完全なURLを取得(クエリ文字列なし)
+        $request->url(),
+        // 完全なURLを取得(クエリ文字列付き)
+        $request->fullUrl(),
+        // リクエストメソッドの取得
+        $request->isMethod('post')
+    );
+    return view('test.index');
+}
+
+```
+
+試しに、`例：http://localhost/test/lala/sumo?aaa=bbb`にアクセスしてみる。 +
+※（）内が取得した内容です↓ +
+
+
+```
+【pathメソッド】
+// リクエストURIの取得→（test/lala/sumo）
+$request->path();
+```
+【pathメソッド】では、クエリ文字列はなしの`http://localhost/`以降が取得できました。 +
+
+
+```
+【isメソッド】
+// リクエストのURIが指定されたパターンに一致するか判定→（true）
+$request->is('*/sumo');
+```
+【isメソッド】では、`true/false`が返ってきます。 +
+今回はURIの最後が`/sumo`で一致している為`true`です。（*をワイルドカードとして使用できます。） +
+
+
+```
+【urlメソッド】
+// 完全なURLを取得(クエリ文字列なし)→（http://localhost/test/lala/sumo）
+$request->url();
+
+【fullUrlメソッド】
+// 完全なURLを取得(クエリ文字列付き)→（http://localhost/test/lala/sumo?aaa=bbb）
+$request->fullUrl();
+```
+【urlメソッド】【fullUrlメソッド】では、クエリ文字列有り無しのURLが取得できました。 +
+用途によって使い分けられそうですね。 +
+
+
+```
+【methodメソッド】
+// リクエストメソッドの取得→（GET）
+$request->method();
+
+【isMethodメソッド】
+// リクエストメソッドの判定→（false）
+$request->isMethod('post');
+```
+【methodメソッド】では、リクエストのHTTP動詞が取得できます。 +
+【isMethodメソッド】の方は、 指定した文字列とHTTP動詞が一致するか`true/false`で判定してくれます。 +
+使いどころはいまいち分からないのですが、「めそっどめそっど」ってくどい名前が気に入ったので紹介してみました。笑
+ +
+ +
+ 
+
+
+## フォームで入力したデータを受け取る +
+
+=== 〜準備〜
+
+▪️routes/web.php
+
+```
+Route::post('/testregist/{a}/{b}', 'TestController@testregist');
+```
+
+▪️resources/views/test/index.blade.php
+
+```
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>リクエストの勉強</title>
+</head>
+<body>
+    <h1>入力フォーム</h1>
+    <div>
+        {{ Form::open(['url' => '/testregist/lala/sumo', 'method' => 'post']) }}
+            <label>お名前：<input type="text" name="name"></label><br>
+            <label>メール：<input type="text" name="mail"></label><br>
+            <label>パスワード：<input type="password" name="password"></label><br>
+            <input type="submit" name="regist" value="送信する">
+        {{ Form::close() }}
+    </div>
+</body>
+</html>
+```
+
+
+▪️app/Http/Controllers/TestController.php
+
+```
+public function testregist(Request $request)
+{
+    dd(
+        // 名前の取得
+        $request->input('name'),
+        // リクエストにnameが存在していない場合に、デフォルト値で指定したsumoを返す
+        $request->input('name', 'sumo'),
+        // リクエストの全入力データを配列で取得
+        $request->all(),
+        // リクエストからmailの入力データだけ取得
+        $request->only('mail'),
+        // リクエストからpassword以外の入力データを取得
+        $request->except('password'),
+        // リクエストにnameが存在するか判定
+        $request->has('name'),
+        // リクエストにnameが存在しており、かつ空でない事を判定
+        $request->filled('name')
+    );
+    return view('test.index');
+}
+```
+簡単に、名前・メールアドレス・パスワードを送信するフォームを作成しました。 +
+試しに以下内容を送ってみます。
+```
+お名前：すもも
+メール：sumo@xxx.jp
+パスワード：abcdefg
+```
+※`☓☓☓`の箇所には、bladeで設定した`input type`の`name="☓☓☓"`より取得したいデータの名前を入れてください。 +
+
+
+```
+【inputメソッド】　（☓☓☓の取得）
+$request->input('☓☓☓');
+例：$request->input('name');　→（すもも）
+
+```
+【inputメソッド】では、指定した項目のデータが取得できました。 +
+`input`を省いて`$request->name;`でも同様に指定データを取得できます。
+
+
+```
+【inputメソッド〜デフォルト値指定〜】　（リクエストに☓☓☓が存在していない場合に、デフォルト値で指定した△△△を返す）
+$request->input('☓☓☓', '△△△');
+例：$request->input('name', 'sumo');　→（※すもも）
+```
+※注意※【inputメソッド〜デフォルト値指定〜】は、フォームに該当の項目`name="☓☓☓"`があるけどユーザーが未入力だった場合ではなく、そもそもフォームに指定した`name="☓☓☓"`が存在しない時にデフォルト値が返ってきます。 +
+今回は、フォームに該当の項目がある為、そのまま入力値の`すもも`が返ってきました。
+
+
+```
+【allメソッド】　（リクエストの全入力データを配列で取得）
+$request->all();
+
+【onlyメソッド】　（リクエストから☓☓☓の入力データだけ取得）
+$request->only('☓☓☓');
+例：$request->only('mail');　→（"mail" => "sumo@xxx.jp"）
+
+【exceptメソッド】　（リクエストから☓☓☓以外の入力データを取得）
+$request->except('☓☓☓');
+例：$request->except('password');　→（パスワード以外全部）
+```
+【allメソッド】は全入力データ、【onlyメソッド】は指定データだけ、【exceptメソッド】は指定データ以外を取得できます。 +
+`only`や`except`は、パスワードなどの機密情報を含めたくない時などに良さそうですね。 +
+入力をフラッシュデータとして保存する【flashメソッド】でも、`flashOnly`や`flashExcept`で同様の使い分けができます。 +
+
+
+```
+【hasメソッド】
+// リクエストに☓☓☓が存在するか判定(返り値：true/false)
+$request->has('☓☓☓');
+
+【filledメソッド】
+// リクエストに☓☓☓が存在しており、かつ空でない事を判定(返り値：true/false)
+$request->filled('☓☓☓');
+
+```
+※注意※【hasメソッド】は【inputメソッド〜デフォルト値指定〜】の時と同じように、そもそもフォームに指定した`name="☓☓☓"`が存在しない時に`false`が返ってきます。 +
+`name="☓☓☓"`の値が空ではないことを判定したい場合は【filledメソッド】の方を使いましょう。 +
+ +
+ #*【filledメソッド】はLaravel 5.5で追加されたメソッドです。*#  +
+Laravel 5.4までは【hasメソッド】のみだった為、値が空ではないことの判定を以前は【hasメソッド】でしていた為、以前から使っている方は注意が必要です！ +
+ +
+ +
+
+
+## 番外編（ヘルパ関数） +
+ちょっと疲れたので、リクエストから離れて。。 +
+数あるヘルパ関数の中から気になったものだけ紹介します〜
+
+=== 〜デバッグ系〜
+
+```
+【dd関数】
+// 指定された変数($☓☓☓)の内容を表示し、スクリプトの実行も停止
+dd($☓☓☓);
+
+【dump関数】
+// 指定された変数($☓☓☓)の内容を表示するが、スクリプトの実行は停止しない
+dump($☓☓☓);
+```
+今回のブログでも使用していた`dd();` +
+いつも`dd();`しか使ってなかったけど、`dump();`もあるのですね！ +
+画面の表示も見ながらデバッグしたい時は`dump();`を使ってみることにしますー。
+
+
+=== 〜文字列変換系〜
+それぞれに`$test = 'onaka suita nanika tabetai';`を与えてみました。 +
+※（）内が取得した内容です↓ +
+
+```
+【snake_case関数】
+// 文字列をスネークケース（小文字名下線区切り）に変換
+snake_case($test);　→（onaka_suita_nanika_tabetai）
+
+【camel_case関数】
+// 文字列をキャメルケース（２つ目以降の単語の先頭は大文字）へ変換
+camel_case($test);　→（onakaSuitaNanikaTabetai）
+
+【studly_case関数】
+// 文字列をアッパーキャメルケース（単語の頭文字を大文字）に変換
+studly_case($test);　→（OnakaSuitaNanikaTabetai）
+
+【title_case関数】
+// 指定された文字列をタイトルケースへ変換
+title_case($test);　→（Onaka Suita Nanika Tabetai）
+
+【kebab_case関数】
+// 指定した文字列をケバブケースに変換
+kebab_case($test);　→（onaka-suita-nanika-tabetai）
+
+```
+
+`スネークケース`と`キャメルケース`は知っていましたが、`ケバブケース`もあるのですね！！ +
+肉が串刺しにされてる感じに似ていることから`ケバブケース`と呼ばれているそうです。 +
+ああ、なおさらお腹が空いてきました。
+
+
+
+
+## 感想 +
+
+・・・そもそも`$request`で受け取れるのは、フォームとかから送ったデータだけかと思ってました。笑 +
+GETリクエストの時もいろいろ取得できるのですね〜。 +
+リクエストクラスだけでも、ここに載せきれないぐらいメソッドが用意されていて奥が深いですが、今後もちょっとずつ学んでいきたいと思います。 +
+ +
+〜おしまい〜 +
+
+

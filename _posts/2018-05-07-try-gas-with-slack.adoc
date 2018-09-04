@@ -34,7 +34,7 @@
 1に関しては、弊社のすももさんが書いたこちらの記事を参照してみてください。
 
 1.のやり方参考記事:GAS入門 (シートに日付入力〜Slack通知までやってみた) +
-http://tech.innovation.co.jp/2018/05/02/Azure-11.html
+http://tech.innovation.co.jp/2018/05/02/G-A-S-Slack.html
 
 2.のやり方参考記事:slack botをGASでつくる方法で一番楽そうなやつ +
 http://vaaaaaanquish.hatenablog.com/entry/2017/09/27/184352
@@ -42,14 +42,14 @@ http://vaaaaaanquish.hatenablog.com/entry/2017/09/27/184352
 ### 1.1.SlackApp作成
 https://api.slack.com/apps
 
-ここにアクセスすると、create an appというボタンが見えると思うので、作成します。 +
+ここにアクセスすると、Create an Appというボタンが見えると思うので、作成します。 +
 今後はこの作成したappから投稿がされますので、画像とかいい感じに設定してあげてくださいね！ +
 
 image::/images/obata/try_gas/create_app.png[]
 
 ### 1.2.SlackAppにIncoming Webhooksを追加し、URLを取得
 
-image::/images/obata/try_gas/incoming.png[]
+image::/images/obata/try_gas/incoming_hook.png[]
 
 画面右側、Features→Incoming Webhooksを選択。
 
@@ -181,7 +181,7 @@ function dropNullItemFromArray(array)
 
 これで、スプレッドシートに書かれた文字を、ランダムでslackに投稿するbotが出来ました！わーい！
 
-## 黒歴史投稿botが作れるよ！
+## 感想
 ということで、スプレッドシートに書かれた文字を、ランダムで投稿出来るbotが作れました！
 
 ここまで出来るといろいろ応用が出来まして。

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>今更あえて真偽値を返す関数の命名について - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="今更あえて真偽値を返す関数の命名について">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="今更あえて真偽値を返す関数の命名について">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/08/30/naming-of-functions-that-return-boolean.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="今更あえて真偽値を返す関数の命名について" />
+    <meta property="og:description" content="どうも、bigenです。 語り尽くされた話題だとは思いますが、真偽値を返す関数の命名についてあえて考えてみようかと思います。 1.はじめに この時代ですので、googleで調べて上位に出てくる情報は前提に進めたいと思います。 今回は、「真偽値　関数 命名」と検索して上位10位に出てきた下記のサイトを参照しました。 各記事の筆者方、ありがとうございます！ 真偽値を返す関数のネーミング Boolean型の変数名・メソッド名に主語を含めたい時はどうしたらいいか やはりお前らの真偽値メソッド名は間違っている。 〜「Xxx できる？」系メソッドの命名〜 プログラ..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/08/30/naming-of-functions-that-return-boolean.html" />
+    <meta property="article:published_time" content="2018-08-29T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-08-31T07:34:23.774Z" />
+    <meta property="article:tag" content="naming" />
+    <meta property="article:tag" content="prgoraming" />
+    <meta property="article:tag" content="function" />
+    <meta property="article:tag" content="boolean" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="今更あえて真偽値を返す関数の命名について" />
+    <meta name="twitter:description" content="どうも、bigenです。 語り尽くされた話題だとは思いますが、真偽値を返す関数の命名についてあえて考えてみようかと思います。 1.はじめに この時代ですので、googleで調べて上位に出てくる情報は前提に進めたいと思います。 今回は、「真偽値　関数 命名」と検索して上位10位に出てきた下記のサイトを参照しました。 各記事の筆者方、ありがとうございます！ 真偽値を返す関数のネーミング Boolean型の変数名・メソッド名に主語を含めたい時はどうしたらいいか やはりお前らの真偽値メソッド名は間違っている。 〜「Xxx できる？」系メソッドの命名〜 プログラ..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/08/30/naming-of-functions-that-return-boolean.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars1.githubusercontent.com/u/23183770?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "今更あえて真偽値を返す関数の命名について",
+    "url": "http://tech.innovation.co.jp/2018/08/30/naming-of-functions-that-return-boolean.html",
+    "datePublished": "2018-08-29T15:00:00.000Z",
+    "dateModified": "2018-08-31T07:34:23.774Z",
+    "keywords": "naming,  prgoraming,  function,  boolean",
+    "description": "どうも、bigenです。 語り尽くされた話題だとは思いますが、真偽値を返す関数の命名についてあえて考えてみようかと思います。 1.はじめに この時代ですので、googleで調べて上位に出てくる情報は前提に進めたいと思います。 今回は、「真偽値　関数 命名」と検索して上位10位に出てきた下記のサイトを参照しました。 各記事の筆者方、ありがとうございます！ 真偽値を返す関数のネーミング Boolean型の変数名・メソッド名に主語を含めたい時はどうしたらいいか やはりお前らの真偽値メソッド名は間違っている。 〜「Xxx できる？」系メソッドの命名〜 プログラ..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-naming tag-prgoraming tag-function tag-boolean no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="30 Aug 2018" class="post-meta__date date">30 Aug 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/naming">naming</a>, <a href="http://tech.innovation.co.jp/tag/prgoraming"> prgoraming</a>, <a href="http://tech.innovation.co.jp/tag/function"> function</a>, <a href="http://tech.innovation.co.jp/tag/boolean"> boolean</a></span>
+        <span class="post-meta__author author"><img src="https://avatars1.githubusercontent.com/u/23183770?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">今更あえて真偽値を返す関数の命名について</h1>
+    </header>
+
+    <section class="post tag-naming tag-prgoraming tag-function tag-boolean">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>どうも、bigenです。<br>
+語り尽くされた話題だとは思いますが、真偽値を返す関数の命名についてあえて考えてみようかと思います。<br>
+<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_1">1.はじめに</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>この時代ですので、googleで調べて上位に出てくる情報は前提に進めたいと思います。<br>
+今回は、「真偽値　関数 命名」と検索して上位10位に出てきた下記のサイトを参照しました。<br>
+各記事の筆者方、ありがとうございます！<br>
+<br>
+<a href="https://qiita.com/yskszk/items/5a7f99c974773f03a82a">真偽値を返す関数のネーミング</a><br>
+<a href="https://qiita.com/ikngtty/items/3125c2210b8623a70311">Boolean型の変数名・メソッド名に主語を含めたい時はどうしたらいいか</a><br>
+<a href="https://qiita.com/lovee/items/aa2125eb0bce4a9dde1f">やはりお前らの真偽値メソッド名は間違っている。 〜「Xxx できる？」系メソッドの命名〜</a><br>
+<a href="http://www.dcom-web.co.jp/technology/pgpoint1/">プログラミング ワンポイント – boolean型の変数の名前は命題にする</a><br>
+<a href="http://kusamakura.hatenablog.com/entry/2016/03/03/boolean_%E5%80%A4%E3%82%92%E8%BF%94%E5%8D%B4%E3%81%99%E3%82%8B%E3%83%A1%E3%82%BD%E3%83%83%E3%83%89%E5%90%8D%E3%80%81%E5%A4%89%E6%95%B0%E5%90%8D%E3%81%AE%E4%BB%98%E3%81%91%E6%96%B9">boolean 値を返却するメソッド名、変数名の付け方</a><br>
+<a href="https://glorificatio.org/archives/2828">booleanの変数名に悩む</a><br>
+<a href="http://tech.pjin.jp/blog/2018/04/28/boolean_naming/">【Java】boolean型の変数名、メソッド名</a><br>
+<a href="https://teratail.com/questions/13585">「～を取得するか否か」というboolean変数の適切な名前</a><br>
+<a href="https://nelog.jp/codic">関数や変数のネーミングに悩んだら「codic」に日本語名を入力するとある程度解決するかも</a><br>
+<a href="http://www.aerith.net/design/bool-j.html">ブール値を返すメンバー関数の命名規則</a><br>
+<br>
+ codicは少し使ってみましたが、かなりいいですね。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_2">2.本編</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_2_1">2.1 ２つの原則について</h3>
+<div class="paragraph">
+<p>いろいろな話題がありますが、よくよく全体を追ってみると大きく２つの原則に分かれることが分かります。<br>
+<br>
+まずみなさんに質問ですが、「xxxが空かどうか」という関数はどのように命名しますか？<br>
+これは（ほぼ）すべての人が <code>isEmpty()</code> と答えると思います。<br>
+<br>
+これを題材に２つの原則について考えます。<br></p>
+</div>
+<div class="sect3">
+<h4 id="_2_1_1_br">2.1.1①仮定文から命名<br></h4>
+<div class="paragraph">
+<p>まずは「命名は英語の仮定文に基づく」派です<br>
+<br>
+例えば、<code>isEmpty()</code> については「もし○○が空ならば」を英訳すると「if xxx is empty, &#8230;&#8203;」となり、これをもとに命名するという発想です。<br>
+これは、例えば</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>if (file-&gt;isEmpty()) {
+  doSomething();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>のように、if文の中でオブジェクトのメソッドとして使われる場合を考えると、疑問文がほぼそのままの形ででてきており直感的に理解しやすいですね。<br></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_2_1_2">2.1.2 ②疑問文から命名</h4>
+<div class="paragraph">
+<p>次に、「命名は英語の疑問文に基づく」派です<br>
+<br>
+例えば、 <code>isEmpty()</code> については「○○は空か？」を英訳すると「is xxx empty?」となり、これをもとに命名するという発想です。<br></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_2_2">2.2 使い分け</h3>
+<div class="paragraph">
+<p>どちらも発想としては自然ですし、読みやすい命名につながることが多いです。<br>
+しかし両方を使い分けないと、どちらかの原則にこだわってしまうと却って可読性を落とす命名となるケースがあります。<br></p>
+</div>
+<div class="sect3">
+<h4 id="_2_2_1_xxx">2.2.1 xxxが存在するか？ （動詞が自動詞のとき）</h4>
+<div class="paragraph">
+<p>定番の命名問題ですが、これは①の原則に即して命名するのが一般的です。<br>
+①の原則に沿うと、「if xxx exists, &#8230;&#8203;」となり、<code>exists()</code>と命名します。<br>
+<br>
+これを②の原則に沿うと、「does xxx exist?」となり、 <code>doesExist()</code>と命名することになりますが、あまり見かけませんね<br>
+単に長くなっているだけで、 <code>Exists()</code> と比べて特別読みやすいわけでもありません。<br></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_2_2_2_yyy_or">2.2.2 yyyが選択されているか？（主語が変わるor明示的でない場合）</h4>
+<div class="paragraph">
+<p>例えばSpreadSheetのような表オブジェクトを考えた時、「セルが選択されているかどうか？」を命名するにはどうすればいいでしょうか？<br></p>
+</div>
+<div class="paragraph">
+<p>①の原則に沿うと、「if cell is selected, &#8230;&#8203;」となり、 <code>cellIsSelected()</code> と命名することになります。<br>
+これまで主語は省略していましたが、主語が変わる場合は省略できません。<br>
+この時、「関数名は動詞から始めたほうが自然である」という別の原則が働き、②の原則が採用されることが多いようです。</p>
+</div>
+<div class="paragraph">
+<p>②の原則に沿うと、「is cell selected?」 となり、 <code>isCellSelected()</code> と命名することになります。<br>
+これなら動詞から始まっていて自然な感じがするでしょうか。</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_2_2_3_xxx_yyy_have_has">2.2.3 xxxはyyyを持っているか？（have, has系</h4>
+<div class="paragraph">
+<p>「hageがhairを持っているかどうか？」という関数を命名するときはどうでしょうか。<br>
+<br>
+①の原則に沿うと、「if hage has hair, &#8230;&#8203;」となるので、 <code>hasHair()</code>と命名することになります。<br>
+<br>
+一方、②の原則に沿うと「does hage have hair?」となるので、 <code>doesHaveHair()</code>と命名することになります。<br>
+これも、2.2.1と同様に長ったらしいだけなので①が使われることがほとんどです。</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_2_3">2.3 どちらの原則にも則さない変なやつ</h3>
+<div class="paragraph">
+<p>ここまでを読んでいただけると、この２つの原則は <strong>かなりうまく</strong> 命名をできるので、ほとんどこれでいけそうな気がします。<br>
+しかし、どちらの原則にも当てはまらない（しかし一般的によく使われてる）ものがあります。<br>
+<br></p>
+</div>
+<div class="paragraph">
+<p>有名な命名問題として、「ユーザーが存在するかどうか」という関数の命名があります。<br></p>
+</div>
+<div class="paragraph">
+<p>①の原則に沿うと「if user exists, &#8230;&#8203;」となり、 <code>userExists()</code>と命名することになります。<br>
+②の原則に沿うと「if does user exist, &#8230;&#8203;」となり、 <code>doesUserExist()</code> と命名することになります。<br>
+<br>
+これまでの流れ的に <code>userExists()</code>が自然かと思うのですが、なんと海外では <code>existsUser()</code>派が結構いるそうです。<br>
+【参考】 <a href="https://qiita.com/ikngtty/items/3125c2210b8623a70311">Boolean型の変数名・メソッド名に主語を含めたい時はどうしたらいいか</a><br>
+<br>
+記事では</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>おそらく「Boolean型の変数名・メソッド名は動詞（or 助動詞）で始める」というルールを重要視しています。
+このルールを守るために、英文っぽく読むことは諦めて語順をひっくり返す必要があったのでしょう。</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>と考察してますが果たして・・・</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_3">3. まとめ</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>いろいろな記事を読んでいると、<br>
+「①が原則で、例外として②みたいなやつがいる〜」派と、<br>
+「②が原則で、例外として①みたいなやつがいる〜」派がいましたが、<br>
+どちらも英語としては自然で区別する必要はないように見えます。<br>
+<br>
+①または②のうち、短く読みやすいものを場合によって選択する、というのが一番柔軟で実用的だと思いますので、<br>
+苦手な方はまずはこのフレームワークをインプットするといいのではないでしょうか！<br>
+<br></p>
+</div>
+<div class="paragraph">
+<p>それでは！</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11783-1';
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+</body>
+</html>

@@ -1,4 +1,4 @@
-= Mac　⇔ Windows ショートカットキー対応表＜私用＞
+= Mac ⇔ Windows ショートカットキー対応表＜私用＞
 :published_at: 2016-09-30
 :hp-alt-title: shortcutkey taiouhyou
 :hp-tags: AMI,Shortcutkey

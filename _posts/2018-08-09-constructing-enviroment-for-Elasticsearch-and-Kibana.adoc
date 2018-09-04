@@ -1,0 +1,117 @@
+# Elasticsearch, KibanaをDocker環境で動かしてみた
+
+:hp-alt-title: constructing enviroment for Elasticsearch and Kibana
+:hp-tags: Docker,Elasticesearch,Kibana
+
+こんにちは！小柳津です。 +
+
+社内から「サイト内検索の精度を高めたい！」と要望を受けてElasticsearchとKibanaをDocker環境で触ったので、今回はそれの方法を共有したいと思います。 +
+
+
+## 動作環境
+
+以下が動作環境です。 +
+
+- Docker: `18.06.0-ce`
+- Elasticsearch: `6.3.2`
+- Kibana: `6.3.2`
+
+## Docker環境作成
+
+環境を構築するためにまず以下のようなディレクトリ構成にします。
+
+```
+|----docker-compose.yml
+|----Elasticsearch
+|         |----Dockerfile
+|----Kibana
+          |----Dockerfile
+```
+
+それぞれのファイルの中身は以下です。 +
+
+*docker-compose.yml* 
+
+データを永続化させるために `volumes` でローカルとElasticsearchのコンテナ内でデータが格納されるディレクトリをマウントします。 +
+
+```
+version: '2'
+services:
+  elasticsearch:
+    build: elasticsearch
+    volumes:
+        - elasticsearch-data:/usr/share/elasticsearch/data
+    ports:
+        - 9200:9200
+    expose:
+        - 9300
+  kibana:
+    build: kibana
+    ports:
+        - 5601:5601
+
+volumes:
+    elasticsearch-data:
+        driver: local
+```
+
+*elasticsearch/Dockerfile*
+
+https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
+
+上記の公式サイトを参考にし、 `docker.elastic.co/elasticsearch/elasticsearch:6.3.2` からimageをpullしています。 +
+そしてサイト内検索に必須であろう形態素解析のプラグイン `analysis-kuromoji` をインストールします。 +
+
+```
+FROM docker.elastic.co/elasticsearch/elasticsearch:6.3.2
+
+RUN elasticsearch-plugin install analysis-kuromoji
+```
+
+*kibana/Dockerfile*
+
+https://www.elastic.co/guide/en/kibana/current/docker.html
+
+こちらも公式のドキュメントを参考にして、 `docker.elastic.co/kibana/kibana:6.3.2` からimageをpullしています。 +
+
+今回はKibanaのDevtool(後ほど説明)を使用したかっただけなので、imageをpullする以外、特別なことはしていません。 +
+Dockerfileにするほどでもなかったのですが、今後色々触ることを考えて、一応 Dockerfileにしています。 +
+
+
+```
+FROM docker.elastic.co/kibana/kibana:6.3.2
+```
+
+以上の準備が完了したら、 `docker-compose.yml` があるディレクトリで `docker-comse up` を行い、 `localhost:5601` にアクセスします。
+
+image::/images/oyaizu/kibana_home.png[]
+
+上記の画像のようにKibanaのホーム画面が表示されれば、環境構築の完了です。 +
+
+## KibanaからElasticsearchにクエリを投げてみる
+
+今回はKibanaのDevtoolを使えばElasticsearchからクエリが投げれるので、使っていきたいと思います。 +
+データは適当なものを入れました。 +
+サイドバーにあるリンクをクリックします。 +
+
+image::/images/oyaizu/kibana_sidemenu.png[]
+
+遷移するとエディタがあるのでそこにクエリ文を打ち込んでいきます。 +
+
+image::/images/oyaizu/kibana_query.png[]
+
+左側に以下のクエリ文を打ち込みます。 +
+
+```
+GET _search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+```
+上記のクエリを投げて、右側の画面に結果が帰ってくれば完了です。 +
+
+環境を構築したので、これから上手くサイト内検索ができるように設定やクエリ文を整えていきます！ +
+こちらからは以上です。 +
+

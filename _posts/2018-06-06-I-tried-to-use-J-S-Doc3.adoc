@@ -1,0 +1,269 @@
+# もうメンテナンスは怖くない！JSDoc 3を使ってみた
+
+:published_at: 2018-06-06
+:hp-alt-title: I tried to use JSDoc3
+:hp-tags: JSDoc3,Node.js,npm,JavaScript
+
+こんにちは！小柳津です。 +
+
+今回はJavaScriptのファイルから自動でドキュメントを生成するJSDoc 3というライブラリーの導入方法を調べたので、ブログを書いていきます。 +
+
+## JSDoc 3とは
+
+JSDoc 3とは、JavaScript用のドキュメントジェネレータでJSDocの形式で書かれたコメントを解析して自動でドキュメントを生成してくれるライブラリーです。 +
+以下が公式のドキュメントになります。 +
+
+http://usejsdoc.org/[Use JSDoc] +
+
+全て英語で書かれていますが、JSDoc 3(以下JSDoc)のインストールから設定の方法だけでなく、JSDoc形式のコメントの書き方が詳細に載っていたのでとても参考になりました。 +
+
+## 動作環境
+
+以下がJSDocを試した環境です。 +
+
+- Node.js: `8.11.2`
+- npm: `5.6.0`
+- JSDoc: `3.5.5`
+
+## インストール手順
+
+npmでインストールをしていきます。 +
+JSDocはアプリケーションを動かすのには必要ないものなので `--save-dev` オプションをつけてインストールをします。 +
+今回はチーム開発を想定しているので、ローカルでのインストールを行います。なので `package.json` があるディレクトリで作業を行ってください。 +
+
+```
+# package.jsonがあるディレクトリにJSDocをインストール
+npm install --save-dev jsdoc
+
+
+# 以下は省略形
+npm i -D jsdoc
+
+```
+
+インストールができたら、以下のコマンドで挙動を確認しましょう +
+インストールされたJSDocのバージョンが出力されれば成功です。 +
+```
+
+./node_modules/.bin/jsdoc -v
+```
+2018年6月4日時点では `3.5.5` がインストールされるようです。 +
+
+試しにドキュメントを生成してみます。以下のようなディレクトリ構成で挙動を確認します。 +
+`public/js` のディレクトリ配下に `a.js` `b.js` というファイルを作成してください。 +
+
+```
+|--node_modules
+|--package.json
+|--public
+|  |--js
+|  |  |--a.js
+|  |  |--b.js
+```
+
+a.jsのファイル
+```JavaScript
+/**
+ * @file JSDocによってドキュメント化されるか試すJS
+ * 1つめ
+ */
+
+/**
+ * @namespace
+ */
+A = {
+  /**
+   * おはようっていう関数
+   * @return {void} - コンソールに表示
+   */
+  sayHello: function () {
+    console.log('Hello');
+  },
+
+  /**
+   * 何回かおはようっていう関数
+   * @param {int} times - おはようの回数
+   * @return {void} - コンソールに表示
+   * @example
+   *  sayHelloSeveralTimes(4);
+   */
+  sayHelloSeveralTimes: function (times) {
+    for (var i = 1; i < times; i++) {
+      this.sayHello();
+    }
+  },
+
+  /**
+   * めっちゃおはようっていう関数
+   * @return {void} - コンソールに表示
+   */
+  sayHelloManyTimes: function () {
+    this.sayHelloSeveralTimes(100);
+  }
+};
+```
+
+b.jsのファイル
+```
+/**
+ * @file JSDocによってドキュメント化されるか試すJS
+ * 2つめ
+ */
+
+/**
+ * @namespace
+ */
+B = {
+  /**
+   * テストのための関数
+   * @return {void} - コンソールに表示
+   */
+  execute: function () {
+    console.log('test');
+  }
+};
+```
+
+ファイルが作成し終わったら以下のコマンドを実行 +
+```
+./node_modules/.bin/jsdoc ./public/js
+```
+実行すると `out` というディレクトリを自動で生成されていると思います。 +
+その中の `index.html` というファイルをブラウザで開いてみましょう。 +
+
+image::/images/oyaizu/blog_document.png[]
+
+上記の画像のようにドキュメントが自動生成されました！ +
+
+## 設定手順
+
+インストールが完成したので設定をしていきましょう。 +
+JSDocはデフォルトの設定があります。具体例は以下のようなものです。 +
+
+- `_` (アンダーバー)がついているディレクトリの配下のファイルのドキュメントは生成しない
+- `_` (アンダーバー)がついているファイルのドキュメントは生成しない
+- `out` というディレクトリにドキュメントを吐き出す
+
+このようなデフォルトの設定はJSONファイルで変えることができます。 +
+ファイル名は `conf.json` で、 `package.json` と同じ階層に設置します。 +
+私の場合は以下のように設定しました。 +
+
+```
+{
+  "source": {
+    "include": ["./public/js", "./resources/assets/js"],
+    "excludePattern": "(^|\\/)libraries\\/"
+  },
+  "opts": {
+    "destination": "./jsdoc/"
+  }
+}
+```
+
+上記の設定で以下のように変更できます。 +
+
+- `public/js` `resources/assets/js` 配下のJSファイルからドキュメントを生成する
+- `libraries` というディレクトリの配下のJSファイルからはドキュメントを生成しない
+- ドキュメントの吐き出し先は `jsdoc` というディレクトリにする
+
+`-c` オプションをコマンドに追加すると設定を変更してドキュメントを生成できます。 +
+コマンドは以下です。 +
+
+```
+./node_modules/.bin/jsdoc -c conf.json
+```
+
+設定が効いているか確認しましょう。 +
+先程のディレクトリ・ファイル構成を以下のように変更します。 +
+
+- `public/js` 配下に `libraries` ディレクトリを追加して、その下に `c.js` を作成 +
+- `resources/assets/js` という階層でディレクトリを追加して、その下に `d.js` を作成 +
+
+
+```
+|--node_modules
+|--package.json
+|--public
+|  |--js
+|  |  |--a.js
+|  |  |--b.js
+|  |--libraries
+|  |  |--c.js
+|--resources
+|  |--assets
+|  |  |--js
+|  |  |  |--d.js
+
+```
+
+
+c.jsのファイル
+```
+/**
+ * @file libraries配下でJSDocの対象外になるJS
+ * 3つめ
+ */
+
+/**
+ * @namespace
+ */
+C = {
+  /**
+   * テストのための関数
+   * @return {void} - コンソールに表示
+   */
+  execute: function () {
+    console.log('test');
+  }
+};
+```
+
+d.jsのファイル
+```
+/**
+ * @file JSDocによってドキュメント化されるか試すJS
+ * 4つめ
+ */
+
+/**
+ * @namespace
+ */
+D = {
+  /**
+   * テストのための関数
+   * @return {void} - コンソールに表示
+   */
+  execute: function () {
+    console.log('test');
+  }
+};
+```
+変更を加えたあとに、先程のコマンドを実行すると以下のようになります。 +
+
+image::/images/oyaizu/blog_document2.png[]
+
+そして最後に `npm run jsdoc` で実行できるように `package.json` を以下の記述を追加しましょう。 +
+
+```
+{
+    "scripts": {
+        "jsdoc": "./node_modules/.bin/jsdoc -c ./conf.json"
+    }
+}
+```
+
+これにて設定が完了です。 +
+設定を自由に変えたい場合は公式のドキュメントの以下に参考すると良いです。 +
+
+http://usejsdoc.org/about-configuring-jsdoc.html[Configuring JSDoc with a configuration file] +
+
+英語ですが、設定項目自体はそんなに多くはないので、読み切れる量だと思います。 +
+
+## まとめ
+
+ドキュメントはメンテナンスしていくのが大変ですが、自動で生成されるようであればコストがかからず運用できそうな気がしますよね！ +
+あとは必ずJSDoc形式のコメントを書く文化がチームに浸透するように、規約で縛ったりコードレビューで書かれていなかったら弾くようにするという運用が必要になります。 +
+またそこらへんのナレッジが溜まっていけば、ブログを書いてみようと思います！ +
+
+今回はここで失礼します。
+

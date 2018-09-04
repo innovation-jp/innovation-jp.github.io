@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Pythonで購入履歴を使ったレコメンドを作成してみた - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Pythonで購入履歴を使ったレコメンドを作成してみた">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Pythonで購入履歴を使ったレコメンドを作成してみた">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/08/06/Python.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Pythonで購入履歴を使ったレコメンドを作成してみた" />
+    <meta property="og:description" content="どうも、中村です。暑いですね〜 今回はいわゆる「この商品を購入した方はこんな商品も購入してます」的なレコメンドツールを作成してみたので、ご紹介します。 購入履歴データはあるものの、レコメンドロジックに活用できていない方も多いのではないでしょうか。 ぜひ参考にしていただけたら幸いです。 あ、ちなみに「購入履歴」と言ってしまったのですが、普段開発に携わっているメディア( https://it-trend.jp )では購入ではなく「資料請求」となるため以後は 購入⇒資料請求 商品⇒製品 と書かせていただきます。 それでは行きましょう！ 作成するプログラム 今..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/08/06/Python.html" />
+    <meta property="article:published_time" content="2018-08-05T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-08-09T11:27:15.090Z" />
+    <meta property="article:tag" content="nakamura" />
+    <meta property="article:tag" content="Python" />
+    <meta property="article:tag" content="レコメンド" />
+    <meta property="article:tag" content="Recommend" />
+    <meta property="article:tag" content="Jaccard係数" />
+    <meta property="article:tag" content="類似度" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Pythonで購入履歴を使ったレコメンドを作成してみた" />
+    <meta name="twitter:description" content="どうも、中村です。暑いですね〜 今回はいわゆる「この商品を購入した方はこんな商品も購入してます」的なレコメンドツールを作成してみたので、ご紹介します。 購入履歴データはあるものの、レコメンドロジックに活用できていない方も多いのではないでしょうか。 ぜひ参考にしていただけたら幸いです。 あ、ちなみに「購入履歴」と言ってしまったのですが、普段開発に携わっているメディア( https://it-trend.jp )では購入ではなく「資料請求」となるため以後は 購入⇒資料請求 商品⇒製品 と書かせていただきます。 それでは行きましょう！ 作成するプログラム 今..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/08/06/Python.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars3.githubusercontent.com/u/16201452?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "Pythonで購入履歴を使ったレコメンドを作成してみた",
+    "url": "http://tech.innovation.co.jp/2018/08/06/Python.html",
+    "datePublished": "2018-08-05T15:00:00.000Z",
+    "dateModified": "2018-08-09T11:27:15.090Z",
+    "keywords": "nakamura, Python, レコメンド, Recommend, Jaccard係数, 類似度",
+    "description": "どうも、中村です。暑いですね〜 今回はいわゆる「この商品を購入した方はこんな商品も購入してます」的なレコメンドツールを作成してみたので、ご紹介します。 購入履歴データはあるものの、レコメンドロジックに活用できていない方も多いのではないでしょうか。 ぜひ参考にしていただけたら幸いです。 あ、ちなみに「購入履歴」と言ってしまったのですが、普段開発に携わっているメディア( https://it-trend.jp )では購入ではなく「資料請求」となるため以後は 購入⇒資料請求 商品⇒製品 と書かせていただきます。 それでは行きましょう！ 作成するプログラム 今..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-nakamura tag-Python tag- tag-Recommend tag-Jaccard tag- no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="06 Aug 2018" class="post-meta__date date">06 Aug 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/nakamura">nakamura</a>, <a href="http://tech.innovation.co.jp/tag/Python">Python</a>, <a href="http://tech.innovation.co.jp/tag/">レコメンド</a>, <a href="http://tech.innovation.co.jp/tag/Recommend">Recommend</a>, <a href="http://tech.innovation.co.jp/tag/Jaccard">Jaccard係数</a>, <a href="http://tech.innovation.co.jp/tag/">類似度</a></span>
+        <span class="post-meta__author author"><img src="https://avatars3.githubusercontent.com/u/16201452?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">Pythonで購入履歴を使ったレコメンドを作成してみた</h1>
+    </header>
+
+    <section class="post tag-nakamura tag-Python tag- tag-Recommend tag-Jaccard tag-">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>どうも、中村です。暑いですね〜</p>
+</div>
+<div class="paragraph">
+<p>今回はいわゆる「この商品を購入した方はこんな商品も購入してます」的なレコメンドツールを作成してみたので、ご紹介します。</p>
+</div>
+<div class="paragraph">
+<p>購入履歴データはあるものの、レコメンドロジックに活用できていない方も多いのではないでしょうか。</p>
+</div>
+<div class="paragraph">
+<p>ぜひ参考にしていただけたら幸いです。</p>
+</div>
+<div class="paragraph">
+<p>あ、ちなみに「購入履歴」と言ってしまったのですが、普段開発に携わっているメディア( <a href="https://it-trend.jp" class="bare">https://it-trend.jp</a> )では購入ではなく「資料請求」となるため以後は</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>購入⇒資料請求
+商品⇒製品</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>と書かせていただきます。</p>
+</div>
+<div class="paragraph">
+<p>それでは行きましょう！</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__">作成するプログラム</h3>
+<div class="paragraph">
+<p>今回作成するファイルは2つです。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>├── data.py ← 履歴データ
+└── get_recommend.py ← レコメンド取得プログラム</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>履歴データは説明しやすいためにこのようにさせていただきましたが、履歴データをファイルからDBに変えるとより実用的かと思います。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___2">レコメンドロジックについて</h3>
+<div class="paragraph">
+<p>今回は色々検討した結果、以下のようなロジックにすることにしました。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>①資料請求した情報を使って類似ユーザーを抽出
+②類似ユーザーが選択した他の商品を抽出
+③②で選択率の高いもの順に返す</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___3">⓪履歴データの準備</h3>
+<div class="paragraph">
+<p>まずは資料請求履歴データから以下のような形式のデータをあらかじめ作成しておきます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>[data.py]
+
+data_set = {
+	'user1': [111, 222, 333, 444, 555],
+	'user2': [111, 222, 333, 444, 555, 666, 777],
+	'user3': [222, 444, 666],
+	'user4': [111, 333, 555, 777],
+	...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>各ユーザー毎に資料請求した製品IDをまとめています。</p>
+</div>
+<div class="paragraph">
+<p>こちらはブログ用のサンプルになりますが、実際には <code>user1</code> の部分は資料請求ID or メールアドレス になりそうな気がします。</p>
+</div>
+<div class="paragraph">
+<p>また<code>一括資料請求</code>データなどは省くことで、より精度を高められるかもしれません。</p>
+</div>
+<div class="paragraph">
+<p>この辺りのデータ抽出ロジックだけでも工夫が色々と出来そうなので是非試してみて下さい。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___4">①購入した情報を使って類似ユーザーを抽出</h3>
+<div class="paragraph">
+<p>いよいよ今回の目玉である<code>類似ユーザー</code>のマッチングです。</p>
+</div>
+<div class="paragraph">
+<p>先ほど用意したデータからもお分かりの通り、<code>評点</code>という情報がありません。</p>
+</div>
+<div class="paragraph">
+<p>よって、今回は</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>同じ製品を選択している率が高い　= 類似度が高い</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>とすることにしました。</p>
+</div>
+<div class="paragraph">
+<p>そうなるとベクトルでの類似度を求める<code>ユークリッド距離</code>や<code>ピアソンの積率相関係数</code>よりも、集合を使った<code>Jaccard係数</code>を使うのが良さそうです。</p>
+</div>
+<div class="paragraph">
+<p><a href="https://en.wikipedia.org/wiki/Jaccard_index#Generalized_Jaccard_similarity_and_distance" class="bare">https://en.wikipedia.org/wiki/Jaccard_index#Generalized_Jaccard_similarity_and_distance</a></p>
+</div>
+<div class="paragraph">
+<p>ちなみにこちらのサイトの解説がとても分かりやすかったので一読することをオススメします。<br>
+<a href="https://mieruca-ai.com/ai/jaccard_dice_simpson/" class="bare">https://mieruca-ai.com/ai/jaccard_dice_simpson/</a></p>
+</div>
+<div class="paragraph">
+<p>難易度がいきなり上がってしまう気がしますが、大丈夫です。今回使用する言語のPythonではこの<code>Jaccard係数</code>を算出してくれるライブラリがあります。</p>
+</div>
+<div class="paragraph">
+<p>以下のような感じで算出することができます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>from nltk.metrics import jaccard_distance
+
+jaccard = jaccard_distance(データA, データB)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>非常に簡単ですね。。。</p>
+</div>
+<div class="paragraph">
+<p>詳細の使い方はこちらをご覧ください。<br>
+<a href="http://www.nltk.org/_modules/nltk/metrics/distance.html" class="bare">http://www.nltk.org/_modules/nltk/metrics/distance.html</a></p>
+</div>
+<div class="paragraph">
+<p>そして今回作成したプログラムはこちらです。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>def get_similar_user(product_ids, cv_data):
+	"""
+	類似度が高いユーザーを、指定した製品idから抽出する
+
+	Parameters
+	----------
+	product_ids : list
+		指定した製品id
+	cv_data : dict
+		CVしたユーザーデータ
+
+	Returns
+	-------
+	target_users : list
+		類似度が高い順にソートされたユーザー情報
+	"""
+	target_users = {};
+
+	# CVデータ分類似度を検証させる
+	for user in cv_data:
+		# 類似度を算出
+		jaccard = jaccard_distance(set(product_ids), set(cv_data[user]))
+
+		# 全く同じデータは省く
+		if jaccard != 1.0:
+			target_users[jaccard] = user
+
+	# 類似度が高い順にソートして返す
+	return sorted(target_users.items())</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___5">②類似ユーザーが選択した他の商品を抽出</h3>
+<div class="paragraph">
+<p>こんなプログラムになりました。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>def get_target_product_ids(product_ids, target_user, cv_data):
+	"""
+	類似度が高いユーザーを対象に、非選択の製品idを抽出する
+
+	Parameters
+	----------
+	product_ids : list
+		指定した製品id
+	target_user : list
+		類似度の高いユーザー
+	cv_data : dict
+		CVしたユーザーデータ
+
+	Returns
+	-------
+	target_product_ids : list
+		非選択の製品id
+	"""
+	target_product_ids = []
+
+	# 類似度が高いユーザー分処理
+	for jaccard, user in target_user:
+		# 指定した製品id以外の製品idを取得
+		diff = list(set(cv_data[user]) - set(product_ids))
+
+		# 取得した製品idをリストに追加
+		target_product_ids.extend(diff)
+
+	return target_product_ids</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>コメントも多めに書いているので、特に説明は不要かと思います。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___6">③②で選択率の高いもの順に返す</h3>
+<div class="paragraph">
+<p>②の結果から選択数が多いもの順にソートさせたいのですが、なんと1行で書けました（笑）</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>counter = collections.Counter(target_product_ids).most_common()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>これだからPythonは素敵ですよね。</p>
+</div>
+<div class="paragraph">
+<p>使い方はこの辺りを参考にして見て下さい。<br>
+<a href="https://docs.python.jp/3/library/collections.html#collections.Counter" class="bare">https://docs.python.jp/3/library/collections.html#collections.Counter</a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___7">最終形</h3>
+<div class="paragraph">
+<p>こんな感じになりました。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import argparse
+import collections
+from nltk.metrics import jaccard_distance
+from data import data_set
+
+# コマンドライン引数の設定
+parser = argparse.ArgumentParser(description='This is a script that returns product id with high similarity')
+parser.add_argument('-d', '--data', help = 'Please specify product id with comma separator', required = True)
+
+def get_similar_user(product_ids, cv_data):
+	"""
+	類似度が高いユーザーを、指定した製品idから抽出する
+
+	Parameters
+	----------
+	product_ids : list
+		指定した製品id
+	cv_data : dict
+		CVしたユーザーデータ
+
+	Returns
+	-------
+	target_users : list
+		類似度が高い順にソートされたユーザー情報
+	"""
+	target_users = {};
+
+	# CVデータ分類似度を検証させる
+	for user in cv_data:
+		# 類似度を算出
+		jaccard = jaccard_distance(set(product_ids), set(cv_data[user]))
+
+		# 全く同じデータは省く
+		if jaccard != 1.0:
+			target_users[jaccard] = user
+
+	# 類似度が高い順にソートして返す
+	return sorted(target_users.items())
+
+
+def get_target_product_ids(product_ids, target_user, cv_data):
+	"""
+	類似度が高いユーザーを対象に、非選択の製品idを抽出する
+
+	Parameters
+	----------
+	product_ids : list
+		指定した製品id
+	target_user : list
+		類似度の高いユーザー
+	cv_data : dict
+		CVしたユーザーデータ
+
+	Returns
+	-------
+	target_product_ids : list
+		非選択の製品id
+	"""
+	target_product_ids = []
+
+	# 類似度が高いユーザー分処理
+	for jaccard, user in target_user:
+		# 指定した製品id以外の製品idを取得
+		diff = list(set(cv_data[user]) - set(product_ids))
+
+		# 取得した製品idをリストに追加
+		target_product_ids.extend(diff)
+
+	return target_product_ids
+
+
+if __name__== '__main__':
+	# コマンドライン引数から指定したデータをセット
+	args        = parser.parse_args()
+	product_ids = [int(id.strip()) for id in args.data.split(',')]
+
+	# 類似度が高いユーザーを、指定した製品idから抽出する
+	target_users = get_similar_user(product_ids, data_set)
+
+	# 類似度が高いユーザーを対象に、非選択の製品idを抽出する
+	target_product_ids = get_target_product_ids(product_ids, target_users, data_set)
+
+	# 選択数を算出
+	counter = collections.Counter(target_product_ids).most_common()
+
+	# 製品idのみをカンマ区切りの文字列にして表示
+	print(','.join([str(id) for id, count in counter]))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>実行結果</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ python3 get_recommend.py -d 777,222
+555,333,111,444,666</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___8">感想</h3>
+<div class="paragraph">
+<p>難しそうなイメージが先行してしまっていたのですが、思っていたよりも簡単に作成することができました。<br>
+（もちろん精度をあげていくためにはカスタマイズが必要となりそうですが）</p>
+</div>
+<div class="paragraph">
+<p>そしてやはりPythonはこういった処理に向いているなと改めて感じました。</p>
+</div>
+<div class="paragraph">
+<p>普段はPHP（Laravel）を使っているので、実際にこちらで作成したプログラムを画面に組み込む所まで書いてみたかったのですが、時間がなくここまでとなってしまいました。機会があれば是非。。。</p>
+</div>
+<div class="paragraph">
+<p>もし何かご意見などあればこちらまでお願いします！</p>
+</div>
+<div class="paragraph">
+<p><a href="mailto:m_nakamura@innovation.co.jp">m_nakamura@innovation.co.jp</a></p>
+</div>
+<div class="paragraph">
+<p>こちらからは以上です！</p>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11783-1';
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+</body>
+</html>

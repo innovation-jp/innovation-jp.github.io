@@ -1,0 +1,227 @@
+= パフォーマンスも大事！〜PHPでプロファイリング編〜
+:published_at: 2018-07-30
+:hp-tags: Yagasaki,PHP,Performance,xdebug,webgrind,Profiling
+
+こんばんは。(TZ=JST-9) +
+矢ヶ崎です。
+
+おかげさまで、本日43歳になりました。 +
+これもひとえに全人類のみなさまのおかげです！ +
+非常感謝！
+
+ということで、43歳のパフォーマンスを発揮していくために、 +
+まずはプロファイリングをしてボトルネックを探すこととします。
+
+古のPHPのコードだとしても！
+
+PHPのプロファイリングの記事！いまさらだとしても！
+
+=== 準備
+
+PHPのプロファイリングと言っても、いろんな方法がありますが、 +
+今回は、古の環境でも使いやすい(気がする)
+
+*Xdebug + Webgrind*
+
+で行ってみたいとおもいます！
+
+==== Xdebugのインストール
+
+みなさんの環境にはきっとたぶんおそらくだいたい入っているかとは思いますが、 +
+もし入れるのであれば、ご自分のOSやPHPのバージョンにあったものを入れたりしますよね。
+
+例えば
+```
+$ sudo apt-get install php-5.6-xdebug
+```
+こんな雰囲気で入れてみましょう！
+
+==== Xdebugのプロファイラ設定
+
+php.ini系の設定にて、XdebugのプロファイラをONにしてみましょう！
+
+[source,ini]
+.php.ini
+----
+zend_extension=/usr/local/zend/lib/php_extensions/xdebug.so
+xdebug.profiler_enable=1
+xdebug.profiler_enable_trigger=1
+xdebug.profiler_output_dir=/tmp
+----
+
+xdebug.soを読むところは、ご自分の環境にいい感じに合わせていただければいい感じかと思います。
+
+===== Webサーバ系の再起動
+
+Webサーバ系などでPHPを利用している場合は、そのプロセスも再起動して、php.iniの設定を反映させましょう。
+
+```
+$ sudo service httpd restart
+とか
+$ sudo service apache restart
+とか
+$ sudo service php-fpm restart
+とか
+```
+
+PHP単体で動くアプリケーションの場合(バッチなど)は、これは必要ありません。
+
+=== いざプロファイリング
+
+この状態で、実はすでにプロファイリングが始まっています。
+
+上の設定ですと、プロファイリングされたアウトプットファイルが、
+```
+/tmp
+```
+に出力されるようになっています。 +
+lsとかで見てみると、
+```
+/tmp/cachegrind.out.プロセスID
+```
+みたいなファイルが出力されているかと思います。
+
+たとえばちょろっと中身を覗いてみると、
+```
+$ head -30 /tmp/cachegrind.out.3130
+version: 1
+creator: xdebug 2.4.0 (PHP 5.6.30)
+cmd: /var/www/index.php
+part: 1
+positions: line
+
+events: Time
+
+fl=(1) php:internal
+fn=(1) php::defined
+4 2
+
+fl=(1)
+fn=(2) php::dirname
+5 2
+
+fl=(1)
+fn=(3) php::realpath
+5 5
+
+fl=(1)
+fn=(4) php::define
+5 3
+
+fl=(1)
+fn=(1)
+8 2
+```
+こんな感じになってます。 +
+いい感じにプロファイリングされているので、これをがんばって読めば、パフォーマンスチューニングできそうですね！ +
+いや、でもそれはつらいです。。。 +
+目grepや目sed、目awkの鬼！みたいな人であればできるかもしれませんが、 +
+わたしはちょっとご遠慮させていただきたく存じます。。。
+
+じゃあどうしましょう？！
+
+=== 結果をいい感じにみる
+
+そんな時に、このファイルをいい感じに見るツールが役立ちます。 +
+そんな便利なツールのひとつが、Webgrindになるっていう寸法です。
+
+==== Webgrindをセットアップ
+
+https://github.com/jokkedk/webgrind
+
+こちらから、git cloneや
+```
+$ wget https://github.com/jokkedk/webgrind/archive/master.zip
+```
+とかダウンロードなどして、一式をWebサーバに持ってきます。
+
+また、Readmeのドキュメントを読んで、動かす最低限のモジュールを入れましょう。
+
+例えば
+```
+$ sudo apt-get install unzip python graphviz
+```
+みたいな感じです。
+
+そして、さきほどプロファイリングしたWebサーバでもいいですし、他のWebサーバでもよいのですが、こちらをセットアップします。 +
+とはいっても、Web公開系のディレクトリに、上記の一式をおいておいて、Webで動くようにするだけです。
+
+例えば、ApacheでNameVirtualHostを使う場合とかですと、こんな感じで設定になりますかね。
+```
+<VirtualHost *:80>
+        ServerName wg.tech.innovation.co.jp
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/webgrind-master
+        ErrorLog /var/log/httpd/error.log
+        CustomLog /var/log/httpd/access.log combined
+
+        <Directory /var/www/webgrind-master>
+            Options FollowSymLinks
+            AllowOverride All
+            Require all granted
+        </Directory>
+</VirtualHost>
+```
+
+そしたら、ブラウザでアクセスしてみます。
+
+こんな画面が表示されます。
+
+image::/images/yagasaki/wg/wg1.png[wg1]
+
+==== 解析してみる
+
+上の画面はまだ、何も解析していない状態です。
+
+"90%" となっている部分は、どのくらいの網羅率で調べるかみたいな感じです。 +
+場合によっては"98%"とかにしてもいいかもしれません。 +
+"Auto (newest) "の部分が解析対象で、デフォルトだと、/tmp に先程の "cachegrind.out.プロセスID"ファイルがあれば、それをドロップダウンで選べるようになっています。 +
+"percent"の部分で単位を変えられます。
+
+これらを設定して、"update"ボタンを押すと、解析結果を表示してくれます。 +
+また、"Show Call Graph"ボタンを押すと、グラフィカルにグラフを表示してくれて、どこが遅いのか一目瞭然です。
+
+image::/images/yagasaki/wg/wg2.png[wg2]
+
+==== まさかの結果？！いや、まあ、当然か。
+
+image::/images/yagasaki/wg/wg3.png[wg3]
+
+image::/images/yagasaki/wg/wg4.png[wg4]
+
+こちらの例では、 +
+・array_merge呼びすぎ＆激遅問題 +
+が露呈しました。
+
+image::/images/yagasaki/wg/wg5.png[wg5]
+
+image::/images/yagasaki/wg/wg6.png[wg6]
+
+こちらの例では、 +
+・mcrypt激遅問題 +
+・redisまでちょっと遠い問題 +
+・マジックメソッド呼びすぎ＆遅問題 +
+・debugログは出ないログレベルになっているのに呼ぶだけで遅い問題
+が露呈しました。
+
+==== 修正した結果(祝！)
+
+100倍速くなりました！！！
+
+=== 最後に注意点
+
+プロファイリング中は、当然オーバーヘッドがかかるので、本番環境に入れっぱなしにしておくのは、むしろ逆パフォーマンスチューニングになってしまうので、気をつけてください。
+
+また、プロファイリングするときだけ、xdebugのプロファイラをenableにするようにしましょう。おわったら、すぐにdisableとか、xdebugごとOFFにしておきましょう。
+
+=== 効率って大事
+
+パフォーマンスのボトルネックとかは、意外と基本的なところに問題や解決策があったりなかったりします。 +
+がんばってクラウドとかでスケールアウトとかスケールアップとか考えるのも良いですが、そのまえに自分の範囲内を見直してみるのが良いのではないでしょうか？簡単なプログラム部分やSQL部分には結構改善ポイントがたくさんあるかも？？？
+
+IDEやデバッガ、プロファイラなどの便利なツールの利用は、生産性を劇的に変えてくれます。なにも探さずにあせって書きまくることはせずに、積極的に調べて使っていきましょう！
+
+Walk, Don't Run. +
+Also Don't Stop.
+
+こちらからは以上になります。

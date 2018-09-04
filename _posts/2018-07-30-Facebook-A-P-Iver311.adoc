@@ -1,0 +1,173 @@
+= FacebookのAPI(ver3.1)を使って「いいね」等のマーケティング数値を取ってみる~その1~
+:published_at: 2018-07-30
+:hp-tags: ozasa,Facebook,API,GoogleAppsScript,GoogleSpreadSheet
+
+こんにちは。ozです。
+
+皆様の役に立てているのかはわかりませんが、 +
+本ブログも週2ペースを保っているような保ってないようなくらいに運用を始めて、 +
+結構な月日が経ちました。
+
+とりあえず投稿し続ける！って方針で本ブログは運用しているのですが、 +
+ブログの運用って本気でやるなら各種マーケティングデータを活用するものだと思います。
+
+Google Analytics,Twitter,Facebook,はてなブックマークなどなど +
+一口にマーケティングデータと言っても様々な種類がございます。 +
+それを一括で並べて分析などできると活用ができそうですよね！？
+
+今回はそんな理由からFacebookのマーケティングデータを +
+Google スプレッドシートに記録する、その前段階について色々書いてみました。
+
+エンジニアのみならずマーケターの方のお役に立てれば幸いです。
+
+
+## アクセストークンの取得
+なにはともあれトークンを取得してデータにアクセスできる準備をしましょう！
+
+Facebook for Developersに登録するだけです！ +
+記事は他にもあるのでここは割愛します。
+
+FacebookのAPIを叩くときには
+
+[source, rust]
+----
+App ID|App Secret
+----
+
+という形で繋げて表現してあげれば大丈夫です。
+
+## マーケティングデータの取得
+今回はページごとのリアクション数・コメント数・シェア数を取得します。
+
+では早速データを取ってみましょう。
+
+今回使うAPIのリファレンスは以下のURLです。
+
+https://developers.facebook.com/docs/graph-api/reference/v3.1/url
+
+fieldsにengagementを指定してあげると、目的の値が取得できるようです。 +
+ブラウザからでも良いので下記のようなURLにアクセスしてみましょう。
+
+https://graph.facebook.com/v3.1?fields=engagement&id=xxxxxxxxxxxxxxx&access_token=xxxxxxxxxxxxxxx
+
+[source, rust]
+----
+{
+   "engagement": {
+      "reaction_count": xx,
+      "comment_count": xx,
+      "share_count": xx,
+      "comment_plugin_count": xx
+   },
+   "id": "xxxxxxxxxxxxxxx"
+}
+----
+
+しっかりデータは取れているようです！ +
+これをそのまま使いましょう。
+
+と、いきたいところですが、 +
+ちょっとここでハマりました。
+
+ブログで見るソーシャルボタン(プラグイン?)の数値とAPI経由で取得できる値に差異があったのです。 +
+どうやらソーシャルボタン上で表現している数値は +
+いいねやコメント、シェアを合算した数値のようですね。
+
+image::http://tech.innovation.co.jp/images/ozasa/social.png[]
+
+※上記画像でいう「いいね！」の92という数値です。
+
+## ソーシャルボタンで表現されている数値をAPI経由で取得する
+
+APIリファレンスを見る限り、 +
+Open Graph objectにアクセスすると取得ができるようです。
+
+og_objectのengagementを取得してみましょう。
+
+https://developers.facebook.com/docs/graph-api/reference/engagement/
+
+先ほどのAPIの表記に繋げてみると以下のような形になります。
+
+https://graph.facebook.com/v3.1?fields=og_object{engagement},engagement&id=xxxxxxxxxxxxxxx&access_token=xxxxxxxxxxxxxxx
+
+
+[source, rust]
+----
+
+// ※あくまで例です
+
+{
+   "og_object": {
+      "engagement": {
+         "count": 100,
+         "social_sentence": "100 people like this."
+      },
+      "id": "xxxxxxxxx"
+   },
+   "engagement": {
+      "reaction_count": 90,
+      "comment_count": xx,
+      "share_count": 10,
+      "comment_plugin_count": xx
+   },
+   "id": "xxxxxxxxxxxxxxx"
+}
+----
+
+例の数値はあてですが、 +
+og_object['engagement']['count']　 +
+と +
+engagementの各数値の合算が一致しているようでした。
+
+(いいね以外にもボタンがついたのでreaction_countなのは分かりますが、「100 people like this.」はちょっと微妙な気もします。 *※あくまで個人的な感想です* )
+
+
+## GoogleSpreadSheetに記録するならこんな感じ
+
+
+[source, rust]
+----
+/**
+* Facebook各種データを表に書き込む
+*/
+function set_facebook_data(){
+  var spreadSheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = spreadSheet.getActiveSheet();
+  var id = sheet.getRange("A2").getValue();
+  var response = get_facebook_data(id);
+  var reaction_count = response['reaction_count'];
+  var comment_count  = response['comment_count'];
+  var share_count  = response['share_count'];
+  sheet.getRange("C2").setValue(reaction_count);
+  sheet.getRange("D2").setValue(comment_count);
+  sheet.getRange("E2").setValue(share_count);
+}
+
+function get_facebook_data(id){
+  var facebook_access_token = "xxxxxxxxxxxxxxx";
+  facebook_url = "https://graph.facebook.com/v3.1?fields=og_object{engagement},engagement&id=" + id + "&access_token=" + facebook_access_token;
+  url = encodeURI(facebook_url);
+  var response = UrlFetchApp.fetch(url);
+  if(response !='null'){
+    return JSON.parse(response)['engagement'];
+  }else{
+	return 0;
+  }
+}
+
+----
+
+set_facebook_dataを実行すると画像のようにデータをセットすることができました。
+
+image::http://tech.innovation.co.jp/images/ozasa/gas_facebook_sample.png[]
+
+意外に時間がかかってしまったので今回はここまでですが、 +
+以下のようなことを引き続きやってみてマーケティング活動に活かせればと思っています。
+
+* 対象URL数が多いことのに備える
+* トリガーをセットして定期的にデータを取得する
+* APIのレスポンスに時間がかかるケースを想定する
+* エラーハンドリングを実装する
+
+そんな感じです。 +
+良いエンジニアリングライフを！

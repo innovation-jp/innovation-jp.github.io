@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>ウェブ系エンジニアがLinux使うようになったら覚えておきたいコマンド64選 - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="ウェブ系エンジニアがLinux使うようになったら覚えておきたいコマンド64選">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="ウェブ系エンジニアがLinux使うようになったら覚えておきたいコマンド64選">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/05/14/command64.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="ウェブ系エンジニアがLinux使うようになったら覚えておきたいコマンド64選" />
+    <meta property="og:description" content="みなさん元気ですか？城田です。内容は掲題の通りです。 一覧 grep find watch alias source awk cut vi xargs sort diff &amp;lt;() uniq time id dig sendmail scp ssh df du top ps kill pkill ls -Gal ll less gzip gunzip tar cp wc -l bg..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/05/14/command64.html" />
+    <meta property="article:published_time" content="2018-05-13T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-05-15T02:40:08.782Z" />
+    <meta property="article:tag" content="Linux" />
+    <meta property="article:tag" content="Command" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="ウェブ系エンジニアがLinux使うようになったら覚えておきたいコマンド64選" />
+    <meta name="twitter:description" content="みなさん元気ですか？城田です。内容は掲題の通りです。 一覧 grep find watch alias source awk cut vi xargs sort diff &amp;lt;() uniq time id dig sendmail scp ssh df du top ps kill pkill ls -Gal ll less gzip gunzip tar cp wc -l bg..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/05/14/command64.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "Junichi Shirota",
+        "image": "https://avatars2.githubusercontent.com/u/26893225?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "ウェブ系エンジニアがLinux使うようになったら覚えておきたいコマンド64選",
+    "url": "http://tech.innovation.co.jp/2018/05/14/command64.html",
+    "datePublished": "2018-05-13T15:00:00.000Z",
+    "dateModified": "2018-05-15T02:40:08.782Z",
+    "keywords": "Linux,  Command",
+    "description": "みなさん元気ですか？城田です。内容は掲題の通りです。 一覧 grep find watch alias source awk cut vi xargs sort diff &amp;lt;() uniq time id dig sendmail scp ssh df du top ps kill pkill ls -Gal ll less gzip gunzip tar cp wc -l bg..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Linux tag-Command no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="14 May 2018" class="post-meta__date date">14 May 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Linux">Linux</a>, <a href="http://tech.innovation.co.jp/tag/Command"> Command</a></span>
+        <span class="post-meta__author author"><img src="https://avatars2.githubusercontent.com/u/26893225?v=4" alt="profile image for Junichi Shirota" class="avatar post-meta__avatar" /> by Junichi Shirota</span>
+      </div>
+      <h1 class="post-title">ウェブ系エンジニアがLinux使うようになったら覚えておきたいコマンド64選</h1>
+    </header>
+
+    <section class="post tag-Linux tag-Command">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>みなさん元気ですか？城田です。内容は掲題の通りです。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">一覧</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>grep</p>
+</li>
+<li>
+<p>find</p>
+</li>
+<li>
+<p>watch</p>
+</li>
+<li>
+<p>alias</p>
+</li>
+<li>
+<p>source</p>
+</li>
+<li>
+<p>awk</p>
+</li>
+<li>
+<p>cut</p>
+</li>
+<li>
+<p>vi</p>
+</li>
+<li>
+<p>xargs</p>
+</li>
+<li>
+<p>sort</p>
+</li>
+<li>
+<p>diff</p>
+</li>
+<li>
+<p>&lt;()</p>
+</li>
+<li>
+<p>uniq</p>
+</li>
+<li>
+<p>time</p>
+</li>
+<li>
+<p>id</p>
+</li>
+<li>
+<p>dig</p>
+</li>
+<li>
+<p>sendmail</p>
+</li>
+<li>
+<p>scp</p>
+</li>
+<li>
+<p>ssh</p>
+</li>
+<li>
+<p>df</p>
+</li>
+<li>
+<p>du</p>
+</li>
+<li>
+<p>top</p>
+</li>
+<li>
+<p>ps</p>
+</li>
+<li>
+<p>kill</p>
+</li>
+<li>
+<p>pkill</p>
+</li>
+<li>
+<p>ls -Gal</p>
+</li>
+<li>
+<p>ll</p>
+</li>
+<li>
+<p>less</p>
+</li>
+<li>
+<p>gzip</p>
+</li>
+<li>
+<p>gunzip</p>
+</li>
+<li>
+<p>tar</p>
+</li>
+<li>
+<p>cp</p>
+</li>
+<li>
+<p>wc -l</p>
+</li>
+<li>
+<p>bg</p>
+</li>
+<li>
+<p>fg</p>
+</li>
+<li>
+<p>nohup</p>
+</li>
+<li>
+<p>which</p>
+</li>
+<li>
+<p>whereis</p>
+</li>
+<li>
+<p>ln</p>
+</li>
+<li>
+<p>echo -n &gt;</p>
+</li>
+<li>
+<p>cd -</p>
+</li>
+<li>
+<p>Ctrl+r</p>
+</li>
+<li>
+<p>tail -f</p>
+</li>
+<li>
+<p>head</p>
+</li>
+<li>
+<p>yum</p>
+</li>
+<li>
+<p>chkconfig</p>
+</li>
+<li>
+<p>ifconfig</p>
+</li>
+<li>
+<p>curl ifconfig.me</p>
+</li>
+<li>
+<p>date</p>
+</li>
+<li>
+<p>touch</p>
+</li>
+<li>
+<p>rm -rf</p>
+</li>
+<li>
+<p>yes</p>
+</li>
+<li>
+<p>mkdir -p</p>
+</li>
+<li>
+<p>sed</p>
+</li>
+<li>
+<p>su</p>
+</li>
+<li>
+<p>wget</p>
+</li>
+<li>
+<p>man</p>
+</li>
+<li>
+<p>telnet</p>
+</li>
+<li>
+<p>tr</p>
+</li>
+<li>
+<p>crontab</p>
+</li>
+<li>
+<p>zcat</p>
+</li>
+<li>
+<p>mv</p>
+</li>
+<li>
+<p>pwd</p>
+</li>
+<li>
+<p>history</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_grep">grep</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ファイルの中から文字を見つけてその行を表示するコマンドです。</p>
+</div>
+<div class="paragraph">
+<p><strong>基本</strong></p>
+</div>
+<div class="paragraph">
+<p>fuga.txtというファイルからhogeという文字が含まれる行を表示します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>grep hoge fuga.txt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>grep -R</strong></p>
+</div>
+<div class="paragraph">
+<p>ディレクトリ内のファイルを再帰的に実行する。<br>
+fugaというディレクトリ内に存在する全てのファイルで、<br>
+hogeという文字が含まれる行を表示する。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>grep -R hoge fuga/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>grep -i</strong></p>
+</div>
+<div class="paragraph">
+<p>大文字と小文字を区別せずに実行します。</p>
+</div>
+<div class="paragraph">
+<p><strong>grep -v</strong></p>
+</div>
+<div class="paragraph">
+<p>含まれない行を表示します。 <br>
+プロセス一覧からphpという文字が含まれていて、<br>
+grepという文字が含まれないプロセスを表示しようとすると、</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ps aux | grep php | grep -v grep</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>例えばphpというプロセスをgrepしようとすると、上記の様なコマンドを打つことになるが、<br>
+必ずそのコマンド自身にもphpという文字が含まれてしまうため、<br>
+grepという文字を含む自分自身を表示させないために<br>
+grep -v grep とすることが多いです。</p>
+</div>
+<div class="paragraph">
+<p><strong>grep -c</strong></p>
+</div>
+<div class="paragraph">
+<p>結果の行数を表示したい場合指定する。<br>
+感覚的なものだと思うが、コマンドの最後に入れることが多いです。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>grep hoge fuga.txt -c</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>egrep</strong></p>
+</div>
+<div class="paragraph">
+<p>grepとは別のコマンドだけど、ここで紹介します。<br>
+抽出条件に正規表現が使えます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>egrep 'hoge | fuga' foo.txt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>grepコマンドについては<strong>いくら知っても知りすぎることはない</strong>と思います！</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_find">find</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ファイルを見つけるコマンドです。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>find . -name hoge
+find . -name hoge*</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>ひとまず -name でファイル名で検索する方法だけ知っていれば良いと思います。<br>
+ドットはカレントディレクトリの意です。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_watch">watch</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>後に続くコマンドを指定した秒数で定期的に実行します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>watch -n 10 ps aux | grep 'hoge'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>ps aux | grep 'hoge' というコマンドを -nオプションで指定した秒数（上記の場合は10秒）間隔で表示できます。<br>
+何か処理をした時の効果を目視で監視したい場合などに使います。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_alias">alias</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>コマンドに別名を付けるコマンドです。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>alias ll='ls -Gal'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>llコマンドが無い環境などの場合は上記のようにコマンドを発行し、<br>
+擬似的にllを再現したりします。<br>
+リリース作業の場合などのDB接続コマンドなど操作ミスが発生しうる部分をalias登録しておくと、<br>
+操作ミスのリスクを減らすことにも繋がります。<br>
+私は意外と使うことが多いコマンドです。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_source">source</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>現在使用しているシェルのプロファイルを再読込する時に使う！</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>source ~/.zshrc</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_awk">awk</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>一つの言語ではあるがいつも以下が便利なので使ってしまいます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code># hoge.txtの中身を行ごとにスペースで区切ってその7番目の値を改行区切りで表示する
+awk '{print $7}' hoge.txt
+
+# こちらはデリミタを " とした場合
+awk -F '"' '{print $7}' hoge.txt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>個人的にはウェブサーバのログを分割して表示したい時によく使います。<br>
+ブラウザのユーザーエージェント部分などはスペースが入ることがあるので、<br>
+その場合の分割は -Fオプションで " をデリミタにして使ったりします。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cut">cut</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>上のawkが無い時は調べて使っているかもです。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_vi">vi</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>マナーとして以下は覚えておきましょう。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>i: Insertモードに変更
+a:  カーソルの1つ後ろからInsertモードに変更
+k: 上
+l: 右
+j: 下
+h: 左
+G: ファイルの最下段に移動
+g: ファイルの最上段に移動</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_xargs">xargs</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>出力結果をパイプで渡して次のコマンドの対象とできます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>find . -name 'hoge' | xargs gzip</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>上記の様にfindで見つけたファイルを圧縮するなど、<br>
+findで見つけたファイル全てに対して何か行いたい場合など重宝します。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_sort">sort</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ファイルの中身を行ごとにソートします。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>sort hoge.txt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>sort -n</strong></p>
+</div>
+<div class="paragraph">
+<p>数値としてソートします。</p>
+</div>
+<div class="paragraph">
+<p><strong>sort -r</strong></p>
+</div>
+<div class="paragraph">
+<p>逆順にソートします。</p>
+</div>
+<div class="paragraph">
+<p>私がオプションで使うのは上記2つくらいです。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_diff">diff</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>2つのファイルの差分を取ります。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>diff hoge.txt fuga.txt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>何かと使います。
+-uオプションの表示が好きという人もいますが、私はそのままが好きです。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">&lt;()</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>コマンドでは無いのですが、出力結果を引数として与えることができる書き方です。<br>
+私はdiffコマンドとセットで使ったりすることが多いです。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>diff &lt;(sort hoge.txt) &lt;(sort fuga.txt)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>例えば上記だと、ソートされた結果のhoge.txt とソートされた結果のfuga.txt でのdiffを取れます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_uniq">uniq</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>行のユニークを取ることができます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>uniq hoge.txt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>uniq -c</strong></p>
+</div>
+<div class="paragraph">
+<p>こちらはユニークを取った後にその行数を数えることができます。SQLの　group by　みたいな感じです。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>sort hoge.txt | uniq -c | sort -nr | head -n 10</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>hoge.txt をソートしてユニークを取ってその重複が何件合ったか行頭に表示し、<br>
+その数値が大きい順にソートして上から10行を表示しています。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_time">time</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>後に続くコマンドの実行時間を計測できます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>time sleep 10</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>上記であればだいたい10秒の実行処理でした。と出ます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_id">id</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>現在ログイン中の自信のユーザ名を表示します。<br>
+今rootなのかどうかとか確認する時に使います。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dig">dig</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ネームサーバに名前解決をさせることができます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code># 正引き
+dig google.com
+
+# 逆引き
+dig -x 8.8.8.8</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_sendmail">sendmail</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>メールを送ることができます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>echo 'hoge' | sendmail xxxxx@xxxxx.com</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>'hoge'の部分に本文を入れて標準出力をsendmailに渡して送る感じです。<br>
+メールができるか取り敢えず確認するときなどに。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_scp">scp</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>SSHプロトコルでリモートサーバにファイルをアップしたりダウンロードしたりできます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>scp -i ~/.ssh/yourkey hoge.txt yourserver:~/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>なかなかの頻度でやっぱり使います。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ssh">ssh</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>リモートサーバにSSHでログインします。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ssh -i ~/.ssh/yourkey yourserver</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>scp同様ですが、sshに関しては~/.ssh/configにショートカットを登録しておくことが多いと思いますし、<br>
+様々な便利ツールがあると思うのでここでは念のため紹介しました。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_df">df</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ディスク容量を表示します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>df -h</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>-hオプションは human の意だったと思いますが、<br>
+GB（ギガバイト）MB（メガバイト）kB（キロバイト）などの単位で表示してくれます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_du">du</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ディレクトリ配下も含めて再帰的にディスク仕様サイズを計算して表示できます。<br>
+よく使うのが以下です。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>du -sh ./*</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>カレントディレクトリ配下のディレクトリのディスク容量を再帰的に計算して、<br>
+これまた human のオプションで単位表示してくれます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_top">top</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>現在のOSのロードアベレージやCPU使用率や各プロセスのメモリ使用状況など表示できます。<br>
+ひとまず打って見てください！<br>
+終了する時はCtrl+cで強制終了してください！</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ps">ps</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>現在のプロセスを表示します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ps aux | grep hoge</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>私は aux と書いてある通り、a と u と x をいつもオプション指定します。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_kill">kill</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>プロセスをkillできます。<br>
+psコマンドで調べたプロセスIDを指定します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>kill -9 111111</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>なぜ -9 というオプションで単体でプロセスをkillするという意味なのかは未だに。。よく知りません。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_pkill">pkill</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>プロセスをまとめてkillできます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>pkill -f php</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>コマンドが入ってない場合などはxargsなどを使ったり1つずつkillしたりしますが、<br>
+pkillが入っている時は上記で、例えばphpとプロセス名に入っているプロセス全てをまとめてkillできます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ls_gal">ls -Gal</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ファイルをパーミッションや所有者、最終変更時刻などと共にリスト表示できます。<br>
+ls -la の方が一般的だと思いますが、覚えやすいので Gal（ギャル）で指定してます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ll">ll</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ls -Gal と（多分だいたい）同じと認識してます。</p>
+</div>
+<div class="paragraph">
+<p>llが入っていればllを使っています！</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_less">less</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ファイルの中身を表示するコマンドです。</p>
+</div>
+<div class="paragraph">
+<p><strong>less -N</strong></p>
+</div>
+<div class="paragraph">
+<p>行番号付きで表示できます。</p>
+</div>
+<div class="paragraph">
+<p><strong>less -S</strong></p>
+</div>
+<div class="paragraph">
+<p>折り返し無しで表示できます。</p>
+</div>
+<div class="paragraph">
+<p>使うオプションはこれくらいです。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_gzip">gzip</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ファイルを圧縮できます。圧縮元のファイルは無くなるので注意です。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_gunzip">gunzip</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ファイルを解凍できます。解凍元の圧縮ファイルはなくなるので注意です。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tar">tar</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ファイル群（ディレクトリ）を1ファイルにまとめられます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code># 圧縮
+tar zcfp
+
+# 解凍
+tar zxfp</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>-pオプションはなるべくパーミッションを保つオプションで、いつも指定してます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cp">cp</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ファイルをコピーするコマンド</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>cp -p -R hoge fuga</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>-pオプションはパーミッションなどをなるべく維持します。<br>
+-Rオプションは再帰的に処理です。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_wc_l">wc -l</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>行数を数えるコマンドです。<br>
+wcコマンドは -lオプション付きでしか使ったことないです。Lineという意味かな？</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_bg">bg</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Ctrl+z で一時停止したプロセスをバックグラウンドに持っていけます。<br>
+思いの外時間がかかるプロセスを実行して、端末を閉じて帰りたいのに帰れないって時に使います。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_fg">fg</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>bgでバックグラウンドに持っていったプロセスをフォアグラウンドに持ってくるコマンドです。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_nohup">nohup</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>後に続くコマンドで立ち上がったプロセスをhupさせないようにするコマンドで、<br>
+初めから処理を仕掛けて帰宅したい場合などは使います！</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_which">which</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>コマンドの場所を示すコマンドです。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_whereis">whereis</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>こちらも、コマンドの場所を示すコマンドです。</p>
+</div>
+<div class="paragraph">
+<p>whichとwhereisの違いはよく知らないのですが、たまにwhichでは出てこないことがあるような。。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ln">ln</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>リンクを貼るコマンドです。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>ln -snf hoge.txt fuga.txt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>意外と使います。<br>
+hoge.txtに対してfuga.txtというリンクを作成できます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_echo_n">echo -n &gt;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ファイルを空っぽにできます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>echo -n &gt; hoge.txt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>意外と使ってるかなと。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cd">cd -</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>一つ前の作業ディレクトリに移動できます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ctrl_r">Ctrl+r</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>コマンドの履歴を検索できます。<br>
+例えば前回のMySQLへのログインコマンドを探す場合、</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>Ctrl+r &gt; mysqlと入力 &gt; Ctrl+r</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>更に過去を探す場合はそのまま Ctrl+r をしていく感じです。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tail_f">tail -f</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ファイルが更新されたら即座に表示できます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>tail -f /var/log/httpd/access_log</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>例えば上記のようにアクセスログを監視できます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_head">head</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ファイルの頭から指定した行数を表示します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>head -n 10 hoge.txt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>基本的な使い方は上記なのですが、私は組み合わせで使うことがほとんどです。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>grep 'hoge' /var/log/httpd/access_log | awk -F '"' '{print $7}' | sort | uniq -c | sort -nr | head -n 10</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>上記の場合は、<br>
+access_log を hoge で grep後に、awk で " で区切った左から7番目の文字列を sort して uniq -c して 合致数の多い順に並べて、その上位10個を抽出、<br>
+という感じです。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_yum">yum</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>RedHat系Linuxのパッケージ管理コマンド</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>yum install
+yum search
+yum list installed
+yum history</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>この4つだけ覚えておけば、ほぼ問題ないと思います。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_chkconfig">chkconfig</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>サービスの自動起動を管理するコマンド</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>chkconfig list
+chkconfig add</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>この2つだけ覚えておけば、ほぼ問題ないと思います。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ifconfig">ifconfig</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ネットワーク機器の状況を表示するコマンドです。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_curl_ifconfig_me">curl ifconfig.me</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>作業サーバのグローバルIPを表示できます。<br>
+ifconfigにグローバルIPが割り振られていない場合など使うことが結構あります。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_date">date</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>現在時刻を表示できます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_touch">touch</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>空ファイルを作成するコマンドです。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_rm_rf">rm -rf</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ファイルを削除するコマンドです。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>-r ディレクトリを削除
+-f 確認をせずに強制削除</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_yes">yes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>yを表示し続けるコマンド！</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>yes | rm ./*</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>rm で出てくる削除確認を全て y で実行してくれます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_mkdir_p">mkdir -p</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ディレクトリを作成するコマンドです。</p>
+</div>
+<div class="paragraph">
+<p>-p 再帰的に作成できます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>mkdir -p hoge/fuga/foo</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>上記の場合だとコマンド1行で hoge/ hoge/fuga hoge/fuga/foo の3ディレクトリ作成できますし、<br>
+既にディレクトリがある場合はそのまま上書きせずステータス0で返すのでシェルスクリプトなどで重宝します。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_sed">sed</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>文字列置換ができます。<br>
+foo.txtのなかのfugaをhogeに全て変換してbar.txtに出力します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>sed s/hoge/fuga/g foo.txt &gt; bar.txt</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_su">su</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>別ユーザに切り換わります。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>sudo su -
+su - hoge</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_wget">wget</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ファイルをダウンロードできます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_man">man</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>指定したコマンドのマニュアルを表示できます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_telnet">telnet</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ポートを指定してコネクションを張ることができます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>telnet xxxx.com 25</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>だいたいそのポートが空いているのかどうかを調べるときに使う感じです。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tr">tr</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>文字列を置換できます。<br>
+sedよりも簡易的なイメージです。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code># test.html の 改行コードを削除
+cat test.html | tr -d "\n"
+
+# test.html の 改行コードを &lt;br&gt; に変更
+cat test.html | tr "\n" "&lt;br&gt;"</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_crontab">crontab</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>定期的にプロセスを実行させることができます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>crontab -e
+crontab -l</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>cronの使い方は書ききれませんので、割愛します。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_zcat">zcat</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>圧縮ファイルの中身を解凍せずに表示できます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_mv">mv</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ファイルを移動させることができます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_pwd">pwd</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>現在のディレクトリの絶対パスを表示できます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_history">history</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>過去の操作履歴を表示できます。<br>
+因みに私のMacのシェルhistoryは、</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>▶ history | awk '{print $2}' | sort | uniq -c | sort -nr | head -n 20
+1195 grep
+ 833 less
+ 705 git
+ 681 cd
+ 551 ll
+ 423 docker
+ 396 aws
+ 380 ssh
+ 354 dig
+ 316 rm
+ 280 mv
+ 252 emacs
+ 201 cat
+ 194 scp
+ 187 curl
+ 171 vi
+ 165 mkdir
+ 134 brew
+ 128 sh
+ 125 open</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>となりました。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">所感</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>これくらい覚えておけばひとまずウェブ系エンジニアとしてLinuxを使えるのではないかと思いました。<br>
+これがない！というものがありましたら是非連絡をいただきたいです！</p>
+</div>
+<div class="paragraph">
+<p>以上です。</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>

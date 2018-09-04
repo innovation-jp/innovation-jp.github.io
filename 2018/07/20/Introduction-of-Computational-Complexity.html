@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Vue.jsを使って量子コンピュータの並列演算を再現してみた - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Vue.jsを使って量子コンピュータの並列演算を再現してみた">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Vue.jsを使って量子コンピュータの並列演算を再現してみた">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/07/20/Introduction-of-Computational-Complexity.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Vue.jsを使って量子コンピュータの並列演算を再現してみた" />
+    <meta property="og:description" content="はじめに 初めまして、新卒エンジニアのYuです。 初ブログです。 よろしくお願いします。 最近、色々あって量子コンピュータの勉強をしていました。 個人的に興味があっただけで、業務で使うことはないと思いますが… 量子コンピュータの重要な性質の一つに「並列演算」があります。 詳しい説明は書くと長くなるので割愛します（ググれば出てきます）が、 要するに「複数の演算を同時に実行できる」ということです。 この並列性があるからこそ量子コンピュータは高速に計算をすることができます。 この並列演算ですが、実際に紙とペンで回路に沿って計算してみると「確かに並列で計算して..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/07/20/Introduction-of-Computational-Complexity.html" />
+    <meta property="article:published_time" content="2018-07-19T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-07-26T23:23:34.341Z" />
+    <meta property="article:tag" content="JavaScript" />
+    <meta property="article:tag" content="Vue.js" />
+    <meta property="article:tag" content="Yu" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Vue.jsを使って量子コンピュータの並列演算を再現してみた" />
+    <meta name="twitter:description" content="はじめに 初めまして、新卒エンジニアのYuです。 初ブログです。 よろしくお願いします。 最近、色々あって量子コンピュータの勉強をしていました。 個人的に興味があっただけで、業務で使うことはないと思いますが… 量子コンピュータの重要な性質の一つに「並列演算」があります。 詳しい説明は書くと長くなるので割愛します（ググれば出てきます）が、 要するに「複数の演算を同時に実行できる」ということです。 この並列性があるからこそ量子コンピュータは高速に計算をすることができます。 この並列演算ですが、実際に紙とペンで回路に沿って計算してみると「確かに並列で計算して..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/07/20/Introduction-of-Computational-Complexity.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars0.githubusercontent.com/u/39402415?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "Vue.jsを使って量子コンピュータの並列演算を再現してみた",
+    "url": "http://tech.innovation.co.jp/2018/07/20/Introduction-of-Computational-Complexity.html",
+    "datePublished": "2018-07-19T15:00:00.000Z",
+    "dateModified": "2018-07-26T23:23:34.341Z",
+    "keywords": "JavaScript,  Vue.js,  Yu",
+    "description": "はじめに 初めまして、新卒エンジニアのYuです。 初ブログです。 よろしくお願いします。 最近、色々あって量子コンピュータの勉強をしていました。 個人的に興味があっただけで、業務で使うことはないと思いますが… 量子コンピュータの重要な性質の一つに「並列演算」があります。 詳しい説明は書くと長くなるので割愛します（ググれば出てきます）が、 要するに「複数の演算を同時に実行できる」ということです。 この並列性があるからこそ量子コンピュータは高速に計算をすることができます。 この並列演算ですが、実際に紙とペンで回路に沿って計算してみると「確かに並列で計算して..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Java-Script tag-Vuejs tag-Yu no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="20 Jul 2018" class="post-meta__date date">20 Jul 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Java-Script">JavaScript</a>, <a href="http://tech.innovation.co.jp/tag/Vuejs"> Vue.js</a>, <a href="http://tech.innovation.co.jp/tag/Yu"> Yu</a></span>
+        <span class="post-meta__author author"><img src="https://avatars0.githubusercontent.com/u/39402415?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">Vue.jsを使って量子コンピュータの並列演算を再現してみた</h1>
+    </header>
+
+    <section class="post tag-Java-Script tag-Vuejs tag-Yu">
+      <div class="sect1">
+<h2 id="__">はじめに</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>初めまして、新卒エンジニアのYuです。
+初ブログです。
+よろしくお願いします。<br></p>
+</div>
+<div class="paragraph">
+<p>最近、色々あって量子コンピュータの勉強をしていました。
+個人的に興味があっただけで、業務で使うことはないと思いますが…</p>
+</div>
+<div class="paragraph">
+<p>量子コンピュータの重要な性質の一つに「並列演算」があります。
+詳しい説明は書くと長くなるので割愛します（ググれば出てきます）が、
+要するに「複数の演算を同時に実行できる」ということです。
+この並列性があるからこそ量子コンピュータは高速に計算をすることができます。<br>
+この並列演算ですが、実際に紙とペンで回路に沿って計算してみると「確かに並列で計算してるなー」ということは分かります。
+しかし、1回1回手計算しているとイマイチ並列っぽさがありません。<br>
+せっかくならもっとそれっぽい並列演算を見てみたい…</p>
+</div>
+<div class="paragraph">
+<p>ということで量子コンピュータっぽい計算機をJavaScriptで作って計算過程をVue.jsで可視化してみました。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">やりたかったこと</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>任意の量子回路を設定し、それに従って実際に量子計算を実行</p>
+</li>
+<li>
+<p>計算過程でどのように状態が遷移しているかを表示</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">作ったもの</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>実際にできたものがこちらになります。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/yu/quantum/calculator.png" alt="calculator.png" width="250"></span></p>
+</div>
+<div class="paragraph">
+<p>最低限の計算機能のみを実装したのでレイアウト等はかなり適当です。そのうちキレイにしたい。<br>
+画像内の各番号の機能の説明は以下の通りです。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>使用するビットの数。現時点では16ビットくらいが限界です。それより大きな値を入力すると正常に動きません。</p>
+</li>
+<li>
+<p>計算の初期値。2進数表示です。</p>
+</li>
+<li>
+<p>論理回路入力欄。各ビットの初期値と計算の回路を入力します。回路に使用できるゲートは今のところ2種類です。ゲートについてもっと詳しく知りたい方はググってください。</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>アダマールゲート<br>
+入力欄に「h」を入れます。重ね合わせの状態を作ります。</p>
+</li>
+<li>
+<p>制御NOTゲート<br>
+制御ビット側に「u」または「d」、標的ビット側に「@」を入れます。制御側が0なら標的側は変化なし、制御側が1なら標的側を反転させます。</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>論理回路。入力欄のテキストを回路っぽい表示に変換します。</p>
+</li>
+<li>
+<p>結果表示の変更。計算結果を2進数で表示したいときにチェックをつけます。チェックが無い場合は10進数表記になります。</p>
+</li>
+<li>
+<p>回路全体の状態。確率が0でない状態のみを表示します。</p>
+</li>
+<li>
+<p>計算結果の確率分布。確率が0でない状態のみを表示します。</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___4">書いたコード</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>興味のある方以外は最後のほうまで飛ばしてください。</p>
+</div>
+<div class="sect3">
+<h4 id="_html">html</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;title&gt;量子コンピュータっぽい計算機&lt;/title&gt;
+    &lt;link rel="stylesheet" href="css/styles.css" /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div id="app"&gt;
+        &lt;form @submit.prevent="calculate"&gt;
+            &lt;!-- 使用するビット数 --&gt;
+            &lt;p&gt;&lt;label for="bit"&gt;bit数 : &lt;/label&gt;&lt;input type="text" name="bit" v-model="maxBit" size = "2"&gt;&lt;/p&gt;
+            &lt;!-- 計算の初期値 --&gt;
+            &lt;p&gt;初期値 : {{ initialValue }}&lt;/p&gt;
+            &lt;!-- 論理回路入力欄 --&gt;
+            &lt;ul class="output"&gt;
+                &lt;li v-for="(bit,index) in bits"&gt;
+                    &lt;input type="text" v-model="bits[index]" size = "1"&gt;
+                    &lt;input type="text" v-model="routes[index]"&gt;
+                &lt;/li&gt;
+            &lt;/ul&gt;
+            &lt;input type="submit" value="計算"&gt;&lt;br&gt;
+        &lt;/form&gt;
+        &lt;!-- 論理回路 --&gt;
+        &lt;ul class="output"&gt;
+            &lt;li&gt;&lt;span v-bind:style="{ paddingLeft: nowPosition + 'px' }"&gt;{{ now }}&lt;/span&gt;&lt;/li&gt;
+            &lt;li v-for="(route,index) in routesOutput"&gt;|{{ bits[index] }} &gt; {{ route }}&lt;/li&gt;
+        &lt;/ul&gt;
+        &lt;!-- 結果表示の変更 --&gt;
+        &lt;form&gt;
+            &lt;p&gt;&lt;label&gt;&lt;input type="checkbox" v-model="binary"&gt;結果を2進数表示&lt;/label&gt;&lt;/p&gt;
+        &lt;/form&gt;
+        &lt;!-- 回路全体の状態 --&gt;
+        &lt;p&gt;状態&lt;/p&gt;
+        &lt;ul class="output"&gt;
+            &lt;li v-for="(value,index) in output" v-if="value != 0"&gt;
+                &lt;span v-if="binary"&gt;{{ outputBinary[index] }} : {{ value }}&lt;/span&gt;
+                &lt;span v-else&gt;{{ index }} : {{ value }}&lt;/span&gt;
+            &lt;/li&gt;
+        &lt;/ul&gt;
+        &lt;!-- 計算結果の確率分布 --&gt;
+        &lt;p&gt;確率&lt;/p&gt;
+        &lt;ul class="output"&gt;
+            &lt;li v-for="(value,index) in probability" v-if="value != 0"&gt;
+                &lt;span v-if="binary"&gt;{{ outputBinary[index] }} : {{ value }}&lt;/span&gt;
+                &lt;span v-else&gt;{{ index }} : {{ value }}&lt;/span&gt;
+            &lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
+    &lt;script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"&gt;&lt;/script&gt;
+    &lt;script src="js/hadamardGate.js"&gt;&lt;/script&gt;
+    &lt;script src="js/controlNotGate.js"&gt;&lt;/script&gt;
+    &lt;script src="js/main.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___5">論理ゲート</h4>
+<div class="paragraph">
+<p>2種類のゲートは、具体的に以下のような変換をします。</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. アダマールゲート</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">入力</th>
+<th class="tableblock halign-left valign-top">出力</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(1/sqrt(2)) 0 + (1/sqrt(2)) 1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(1/sqrt(2)) 0 - (1/sqrt(2)) 1</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 2. 制御NOTゲート</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">入力（制御/標的）</th>
+<th class="tableblock halign-left valign-top">出力（制御/標的）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">00</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">01</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>ゲートのコードは以下の通りです。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>/**
+ * アダマール変換を実行する
+ * @param {array} input 入力（全ての状態）
+ * @param {int} conversion 変換するbit
+ * @param {int} maxBit 全体のbit数
+ * @return {array} 出力（全ての状態）
+ */
+const HadamardGate = (input, conversion, maxBit) =&gt; {
+    const maxValue = Math.pow(2, maxBit);
+    // 結果を入れるための配列
+    let output = new Array(maxValue).fill(0);
+    let result = [];
+    // 全ての状態を変換する
+    for (let i = 0; i &lt; maxValue; i++) {
+        if (input[i] !== 0) {
+            result = HadamardGateOneState(i, conversion, maxBit);
+            for (let state in result) {
+                output[state] += input[i] * result[state];
+            }
+        }
+    }
+    return output;
+}
+
+/**
+ * 1つの状態について、アダマール変換を実行する
+ * @param {int} input 入力（1つの状態, 10進数）
+ * @param {int} conversion 変換するbit
+ * @param {int} maxBit 全体のbit数
+ * @return {array} 出力（2つの状態とその重み, 10進数）
+ */
+const HadamardGateOneState = (input, conversion, maxBit) =&gt; {
+    const sqrt2 = Math.sqrt(2);
+    // 入力を2進数表示
+    let str_0 = '';
+    for (i = 0; i &lt; maxBit; i++) {
+        str_0 += '0';
+    }
+    let inputBinaryNumber = (str_0 + input.toString(2)).substr(-maxBit);
+    // 変換するbitの左から数えた位置
+    let charNum = maxBit - conversion;
+    // 変換するbitの現在の値
+    let bit = inputBinaryNumber.charAt(charNum);
+
+    // 変換後の状態
+    let up = inputBinaryNumber.substr(0, charNum) + '0' + inputBinaryNumber.substr(charNum + 1); //up = 0
+    let down = inputBinaryNumber.substr(0, charNum) + '1' + inputBinaryNumber.substr(charNum + 1); //down = 1
+
+    // 10進数に変換
+    let upDecimalNumber = Number.parseInt(up, 2);
+    let downDecimalNumber = Number.parseInt(down, 2);
+
+    // 係数をつけて結果を返す
+    if (bit === '0') {
+        let result = {
+            [upDecimalNumber]: (sqrt2 / 2),
+            [downDecimalNumber]: (sqrt2 / 2),
+        }
+        return result;
+    } else if (bit === '1') {
+        let result = {
+            [upDecimalNumber]: (sqrt2 / 2),
+            [downDecimalNumber]: (-sqrt2 / 2),
+        }
+        return result;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>/**
+ * 制御NOTゲートを実行する
+ * @param {array} input 入力（全ての状態）
+ * @param {int} control 制御bit
+ * @param {int} target 標的bit
+ * @param {int} maxBit 全体のbit数
+ * @return {array} 出力（全ての状態）
+ */
+const ControlNotGate = (input, control, target, maxBit) =&gt; {
+    const maxValue = Math.pow(2, maxBit);
+    // 結果を入れるための配列
+    let output = new Array(maxValue).fill(0);
+    let result = [];
+    // 全ての状態を変換する
+    for (let i = 0; i &lt; maxValue; i++ ) {
+        if (input[i] !== 0) {
+            result = ControlNotGateOneState(i, control, target, maxBit);
+            output[result] = input[i];
+        }
+    }
+    return output;
+}
+
+/**
+ * 1つの状態について、制御NOTゲートを実行する
+ * @param {int} input 入力（1つの状態, 10進数）
+ * @param {int} control 制御bit
+ * @param {int} target 標的bit
+ * @return {int} 出力（1つの状態, 10進数）
+ */
+const ControlNotGateOneState = (input, control, target, maxBit) =&gt; {
+    // 入力を2進数表示
+    let str_0 = '';
+    for (i = 0; i &lt; maxBit; i++) {
+        str_0 += '0';
+    }
+    let inputBinaryNumber = (str_0 + input.toString(2)).substr(-maxBit);
+    // 制御bit, 標的bitの左から数えた位置
+    let controlCharNumber = maxBit - control;
+    let targetCharNumber = maxBit - target;
+    // 制御bit, 標的bitの現在の値
+    let controlBit = inputBinaryNumber.charAt(controlCharNumber);
+    let targetBit = inputBinaryNumber.charAt(targetCharNumber);
+
+    // 制御bitが1の場合、標的bitの値を反転
+    if (controlBit === '0') {
+        return input;
+    } else if (controlBit === '1') {
+        let result = inputBinaryNumber.substr(0, targetCharNumber) + (1 - targetBit) + inputBinaryNumber.substr(targetCharNumber + 1);
+        // 10進数に変換
+        return Number.parseInt(result,2);
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_vue">Vue</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>const vm =
+    new Vue({
+        el: '#app',
+        data: {
+            maxBit: 2,
+            bits: [0,0],
+            routes: ['-hd-', '--@-'],
+            input: [1, 0, 0, 0],
+            now: '',
+            nowPosition: 20,
+            binary: true,
+        },
+        methods: {
+            // 計算の実行
+            calculate() {
+                const max = this.routes[0].length;
+                let routesArray = [];
+                for (let route of this.routes) {
+                    routesArray.push(route.split(''));
+                }
+                this.now = '↓';
+                let i = 0;
+                // 1秒ごとに1列分の計算を進める
+                let loop = setInterval(() =&gt; {
+                    this.nowPosition += 16;
+                    if (i &gt;= max) {
+                        this.now = '';
+                        this.nowPosition = 20;
+                        clearInterval(loop);
+                        return;
+                    }
+                    let targetFlag = false;
+                    let controlFlag = false;
+                    let targetBit = 0;
+                    let controlBit = 0;
+                    for (let key in routesArray) {
+                        // h : アダマール
+                        if (routesArray[key][i] === 'h') {
+                            this.input = Hadam　ardGate(this.input, (Number(key) + 1), this.maxBit);
+                        }
+                        // d : 制御ビット
+                        if (routesArray[key][i] === 'd' &amp;&amp; !controlFlag) {
+                            controlFlag = true;
+                            controlBit = Number(key) + 1;
+                        }
+                        // u : 制御ビット
+                        if (routesArray[key][i] === 'u' &amp;&amp; targetFlag) {
+                            this.input = ControlNotGate(this.input, (Number(key) + 1), targetBit, this.maxBit)
+                            targetFlag = false;
+                        }
+                        // @ : 標的ビット
+                        if (routesArray[key][i] === '@') {
+                            if (controlFlag) {
+                                this.input = ControlNotGate(this.input, controlBit, (Number(key) + 1), this.maxBit);
+                                controlFlag = false;
+                            } else {
+                                targetFlag = true;
+                                targetBit = Number(key) + 1;
+                            }
+                        }
+                    }
+                    i++;
+                }, 1000);
+            },
+        },
+        watch: {
+            // ビット数を変更したときに入力欄を増減させる
+            maxBit() {
+                this.bits = [];
+                this.routes = [];
+                for (i = 0; i &lt; this.maxBit; i++) {
+                    this.bits.push(0);
+                    this.routes.push('-');
+                }
+            },
+            // 初期値を計算の入力側に入れる
+            initialValue() {
+                const initial = Number.parseInt(this.initialValue,2);
+                const maxValue = Math.pow(2, this.maxBit);
+                this.input = new Array(maxValue).fill(0);
+                this.input[initial] = 1;
+            }
+        },
+        computed: {
+            // 回路をそれっぽく変換して表示する
+            routesOutput() {
+                let output = [];
+                for (let route of this.routes) {
+                    let routeArray = route.split('');
+                    for (let key in routeArray) {
+                        if (routeArray[key] === '-') {
+                            routeArray[key] = '━';
+                        }
+                        if (routeArray[key] === 'h') {
+                            routeArray[key] = 'Η';
+                        }
+                        if (routeArray[key] === 'd') {
+                            routeArray[key] = '┳';
+                        }
+                        if (routeArray[key] === 'u') {
+                            routeArray[key] = '┻';
+                        }
+                        if (routeArray[key] === '+') {
+                            routeArray[key] = '╋';
+                        }
+                        if (routeArray[key] === '@') {
+                            routeArray[key] = '◎';
+                        }
+                    }
+                    output.push(routeArray.join(''));
+                }
+                return output;
+            },
+            // 計算の初期値を2進数に変換する
+            initialValue() {
+                let initial = [];
+                for (let bit of this.bits) {
+                    initial.unshift(bit);
+                }
+                return initial.join('');
+            },
+            // ビット全体の状態を計算
+            output() {
+                let result = [];
+                for (let value of this.input) {
+                    // 四捨五入
+                    let round = Math.floor((value * 100000) + 0.5) / 100000;
+                    result.push(round);
+                }
+                return result;
+            },
+            // ビット全体の確率を計算
+            probability() {
+                let result = [];
+                for (let value of this.input) {
+                    // 四捨五入
+                    let round = Math.floor((value * value * 100000) + 0.5) / 100000;
+                    result.push(round);
+                }
+                return result;
+            },
+            // 出力を2進数に変換
+            outputBinary() {
+                let result = [];
+                let str_0 = '';
+                let max = Math.pow(2, this.maxBit);
+                for (i = 0; i &lt; this.maxBit; i++) {
+                    str_0 += '0';
+                }
+                for (i = 0; i &lt; max; i++) {
+                    let binary = (str_0 + i.toString(2)).substr(-this.maxBit);
+                    result.push(binary);
+                }
+                return result;
+            },
+        }
+    });</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___6">動かしてみた</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>計算を実行すると以下のように計算過程が表示されます。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/yu/quantum/demo.gif" alt="demo.gif"></span></p>
+</div>
+<div class="paragraph">
+<p>計算自体は適当で、特に意味はありません。
+回路の上で動いている矢印は、どこまで計算が進んでいるかを示しています。
+矢印の位置に対応する状態、確率が下に表示されています。
+途中で複数の状態が現れ、それらが同時に計算されていく様子を見ることができます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___7">おわりに</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Vue.jsの勉強も兼ねて作ってみましたが、中々楽しかったです。
+ただし、最低限の機能しか実装していないので大した計算はできません。
+もう少しまともな計算ができるように、少しずつ機能追加していこうかなと思います。</p>
+</div>
+<div class="paragraph">
+<p>おわり</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>

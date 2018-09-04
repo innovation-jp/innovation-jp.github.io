@@ -213,6 +213,24 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/07/08/Gohttp.html" title="link to Goのhttpクライアント通信！">Goのhttpクライアント通信！</a></h2>
+        <p class="excerpt">こんにちは。 エンジニアのNew塚本です。 引き続き、Golangでバッチをゴリゴリ製造しています。 今回は、httpクライアント通信についてのお話をのせたいと思います。 プログラムはこんな感じ エラーと返却値は端折っていますが、大枠はこんな感じです。 // 構造体定義 type Client struct { 	url                     string 	parameterArray map[string]string 	client                  *http.Client } // 通信実行メソッド func (c *Client) Execute() () { 	// Getクエリの組み立て 	queryParam := c.createGet&hellip;</p>
+        <div class="post-list__meta">
+            <time datetime="08 Jul 2018" class="post-list__meta--date date">08 Jul 2018</time> &#8226;
+            <span class="post-list__meta--tags tags"><a href="#blog" title="NewTsukamoto">NewTsukamoto</a>, <a href="#blog" title=" mac"> mac</a>, <a href="#blog" title=" Golang"> Golang</a>, <a href="#blog" title=" gorm"> gorm</a></span>
+        </div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/05/19/Go-O-R-Join.html" title="link to GoのORマッパーでJoinデータのとり方を学ぶ！">GoのORマッパーでJoinデータのとり方を学ぶ！</a></h2>
+        <p class="excerpt">こんにちは。 エンジニアのNew塚本です。 現在、Golangでバッチをゴリゴリ製造しています。 ORマッパーはgormを使用しているのですが、Joinしたデータのとり方でハマりましたので そのお話をのせたいと思います。 その前に gormドキュメントのJoinについて確認してみます。 引用）http://doc.gorm.io/crud.html#query db.Table("users").Select("users.name, emails.email").Joins("left join emails on emails.user_id = users.id").Scan(&results) 前の方から、 db.Table("users")　&#8594;　usersテーブルを基&hellip;</p>
+        <div class="post-list__meta">
+            <time datetime="19 May 2018" class="post-list__meta--date date">19 May 2018</time> &#8226;
+            <span class="post-list__meta--tags tags"><a href="#blog" title="NewTsukamoto">NewTsukamoto</a>, <a href="#blog" title=" mac"> mac</a>, <a href="#blog" title=" Golang"> Golang</a>, <a href="#blog" title=" gorm"> gorm</a></span>
+        </div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/03/14/golanggolangphperphper.html" title="link to PHPerがGolangを試してみた 後編">PHPerがGolangを試してみた 後編</a></h2>
         <p class="excerpt">概要 私はPHPerなのですが、Golangを試してみました。 難しいと思った点など書いていければと思います。 今回はその後編になります。 前編の内容は以下をご覧ください。 http://tech.innovation.co.jp/2017/12/19/P-H-Per-Golang.html 後編(今回)の内容 無名関数 クロージャ スコープ エラー ゴルーチン チャネル型 無名関数 PHPでは一番簡単に書くと以下のように無名関数を使えます。 $f = function(string $str) { 	print($str); }; $f("hello"); これをGolangで書いてみると、 f := func(str string) { 	print(str) } f("hello")&hellip;</p>
         <div class="post-list__meta">
