@@ -27,7 +27,7 @@ IF (all match)  > Add condition > Path is... +
 
 image:shirota/20180905/02.png[]
 
-/js/generate_password.js を入力してチェックボタンをクリック+
+/js/generate_password.js を入力してチェックボタンをクリック +
 
 image:shirota/20180905/03.png[]
 
@@ -40,7 +40,7 @@ Content-Type > application/javascript +
 
 image:shirota/20180905/05.png[]
 
-Response body に以下コードを入力+
+Response body に以下コードを入力 +
 
 ```
 function generate_password(){
@@ -50,13 +50,13 @@ function generate_password(){
 
 image:shirota/20180905/06.png[]
 
-Save する+
+Save する +
 
 image:shirota/20180905/07.png[]
 
 同じ要領で2行目には +
 IF (all match) > Path is... > *（アスタリスクを入力） > THEN > Response code > 200 > Content-Type > text/html +
-Response body に以下コードを入力 > チェックボタンをクリック > Save します+
+Response body に以下コードを入力 > チェックボタンをクリック > Save します +
 
 ```
 <script src="/js/generate_password.js"></script>
@@ -67,11 +67,8 @@ image:shirota/20180905/08.png[]
 
 image:shirota/20180905/11.png[]
 
-ALBにアクセスしてみます。 +
-
-image:shirota/20180905/09.png[]
-
-generateボタンをクリックするたびにJavaScriptが実行され、 +
+ALBにアクセスしてgenerateボタンをクリックすると、 +
+その度にJavaScriptが実行され、 +
 コンソールログにパスワードが生成されました。 +
 
 image:shirota/20180905/10.png[]
