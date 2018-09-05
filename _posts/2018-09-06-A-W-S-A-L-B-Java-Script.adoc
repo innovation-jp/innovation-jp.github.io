@@ -19,30 +19,28 @@
 AWSに適当なALBが作成されていること +
 
 ## 手順
-AWSコンソール > EC2 > Load Balancers > （用意してあるALBを選択）> Listeners > View/edit rules +
+AWSコンソール > EC2 > Load Balancers > （用意してあるALBを選択）> Listeners > View/edit rules > プラス文字のアイコン > Insert Rule +
 
-プラス文字のアイコン > Insert Rule +
-
-01.png
+image:shirota/20180905/01.png[]
 
 IF (all match)  > Add condition > Path is... +
 
-02.png
+image:shirota/20180905/02.png[]
 
-/js/generate_password.js +
+/js/generate_password.js を入力してチェックボタンをクリック+
 
-03.png
+image:shirota/20180905/03.png[]
 
 THEN > Add action > Return fixed response... +
 
-04.png
+image:shirota/20180905/04.png[]
 
 Response code > 200 +
 Content-Type > application/javascript +
 
-05.png
+image:shirota/20180905/05.png[]
 
-Response body +
+Response body に以下コードを入力+
 
 ```
 function generate_password(){
@@ -50,40 +48,49 @@ function generate_password(){
 }
 ```
 
-06.png
+image:shirota/20180905/06.png[]
 
-Save +
+Save する+
 
-07.png
+image:shirota/20180905/07.png[]
 
 同じ要領で2行目には +
 IF (all match) > Path is... > *（アスタリスクを入力） > THEN > Response code > 200 > Content-Type > text/html +
-Response body +
+Response body に以下コードを入力 > チェックボタンをクリック > Save します+
 
 ```
 <script src="/js/generate_password.js"></script>
 <button onclick="generate_password()">generate</button>
 ```
 
-08.png
+image:shirota/20180905/08.png[]
 
-11.png
+image:shirota/20180905/11.png[]
 
 ALBにアクセスしてみます。 +
 
-09.png
+image:shirota/20180905/09.png[]
 
-generateボタンをクリックするたびにJavaScriptが実行され、コンソールログにパスワードが生成されました。 +
+generateボタンをクリックするたびにJavaScriptが実行され、 +
+コンソールログにパスワードが生成されました。 +
 
-10.png
+image:shirota/20180905/10.png[]
 
 注意点としては、1つのResponse bodyに1024文字の文字数制限がありますので、 +
 スクリプトの記述が多いと、設定できません。 +
 逆に細かくファイル（リスエスト）を分ければ、いくらでもJavaScriptが置ける。。？(この点は未検証です) +
+はずです。
 
 ## 所感
-ALBはAPI Gatewayなどよりも簡単に作れますし、 +
-今回試した Content-Type application/javascript 以外にも JSON ヘッダーも返せますし、 +
-それで簡易スタブ作成などにも使えそうと思いました。 +
+今回はALBに追加された固定レスポンスを返す機能を使って、 +
+JavaScriptを実行するアプリケーションを置いちゃってみました。 +
+
+今回チャレンジしたこと自体は、今の所あまり使い道はないかもしれませんが、 +
+Content-Type application/javascript 以外にも application/json ヘッダーも返せますし、 +
+ALBはAPI Gatewayなどよりも簡単に作れるので、 +
+これを利用して簡易APIスタブ作成などにも使えそうと思いました。 +
+
 個人的にはALBに固定レスポンスを返す機能が付いたのは、 +
-かゆいところに手が届く機能追加だったかなと思っています。 +
+かゆいところに手が届く面白い機能追加だったかなと思っています。 +
+
+以上です。
