@@ -28,19 +28,14 @@ http://tech.innovation.co.jp/2018/07/03/vr-lt.html
 そこで、これでポーズとってスクリーンショットを取れば、 +
 今回の記事のように、ブログやWebページで使える、画像素材が簡単に作れるのでは思い、試してみました。
 
-## プチ漫画っぽいもの
-漫画での説明、わかりやすいな。 +
-私にも作れないかな。
+## 成果物：プチ漫画っぽいもの
+ランディングページや、ユーザーの目を引く画像として以下のようなものを作ってみました。
+
 
 image::/images/obata/vr_comic/comic.png[]
 
-そうだ、VRだ!(???)
-
 image::/images/obata/vr_comic/souda.png[]
 
-
-もはやVR関係なくなってますね。 +
-VRってなんだ・・・
 
 ## やったこと
 1. VirtualCastを使って３Dモデルになり、ポーズを取る
@@ -48,8 +43,10 @@ VRってなんだ・・・
 3. Googleスライドで加工する
 4. 画像で出力する
 
-image::/images/obata/vr_comic/screenshot.png[]
+image::/images/obata/vr_comic/screenshot.jpg[]
+
 image::/images/obata/vr_comic/slide.png[]
+
 image::/images/obata/vr_comic/title.png[]
 
 ■Virtual Cast +
@@ -58,7 +55,7 @@ https://virtualcast.jp/
 ## 所要時間
 10分いらないくらい
 
-## 何が嬉しいの？
+## ■利点
 ### 1.簡単に画像素材が作成できる！
 
 Webページで、注目を引くような画像が使いたいけど、素材が見つからない・・・
@@ -76,7 +73,7 @@ Virtual Castではない、他の環境でスクリーンショットを取れ�
 空を飛ぶとか、魔法を放つとか、銃とかを、合成頼らずに出来ます！ +
 ある意味、これ全部が合成とも言えますが！
 
-## 難点
+## ■難点
 ### 1.狙った構図は慣れが必要
 
 いわゆる、素材屋さんの素材は、慣れてる人が作成したものです。 +
