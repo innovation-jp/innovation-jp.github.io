@@ -1,0 +1,97 @@
+# AWS ALBに追加された固定レスポンスを返す機能を使ってJavaScriptでパスワード生成してみた
+:hp-tags: AWS, ALB, JavaScript, Shirota
+:published_at: 2018-09-06
+
+## 概要
+先日、AWSのALB(Application Load Balancer)から直接固定レスポンスを返せる機能が付きました。 +
+これは、ウェブサーバを用意せずともALBだけでsorryページなどを表示したりできる +
+という想定で主に使用する機能だと思います。 +
+
+しかし、 +
+この機能は Content-Type text/html だけでなく、application/javascript などもレスポンスすることができ、 +
+レスポンスコードは503や404など以外にも、もちろん200も返すことができます。 +
+
+ということは、この部分にJavaScriptを記述すれば動かすことができるはずなので、 +
+それを使って簡単なパスワード生成スクリプトをALBに直接置いてみて、 +
+動作するのか検証してみました。 +
+
+## 前提
+AWSに適当なALBが作成されていること +
+
+## 手順
+AWSコンソール > EC2 > Load Balancers > （用意してあるALBを選択）> Listeners > View/edit rules > プラス文字のアイコン > Insert Rule +
+
+image:shirota/20180905/01.png[]
+
+IF (all match)  > Add condition > Path is... +
+
+image:shirota/20180905/02.png[]
+
+/js/generate_password.js を入力してチェックボタンをクリック +
+
+image:shirota/20180905/03.png[]
+
+THEN > Add action > Return fixed response... +
+
+image:shirota/20180905/04.png[]
+
+Response code > 200 +
+Content-Type > application/javascript +
+
+image:shirota/20180905/05.png[]
+
+Response body に以下コードを入力 +
+
+```
+function generate_password(){
+    console.log(Math.random().toString(36).slice(-8));
+}
+```
+
+image:shirota/20180905/06.png[]
+
+Save する +
+
+image:shirota/20180905/07.png[]
+
+同じ要領で2行目には +
+IF (all match) > Path is... > *（アスタリスクを入力） > THEN > Response code > 200 > Content-Type > text/html +
+Response body に以下コードを入力 > チェックボタンをクリック > Save します +
+
+```
+<script src="/js/generate_password.js"></script>
+<button onclick="generate_password()">generate</button>
+```
+
+image:shirota/20180905/08.png[]
+
+image:shirota/20180905/11.png[]
+
+ALBにアクセスしてgenerateボタンをクリックすると、 +
+その度にJavaScriptが実行され、 +
+コンソールログにパスワードが生成されました。 +
+
+image:shirota/20180905/10.png[]
+
+注意点としては、1つのResponse bodyに1024文字の文字数制限がありますので、 +
+スクリプトの記述が多いと、設定できません。 +
+逆に細かくファイル（リクエスト）を分ければ、いくらでもJavaScriptが置ける。。？(この点は未検証です) +
+はずです。
+
+## 結果
+ALBの固定レスポンス機能で、JavaScriptを置くことは可能でした。 +
+注意として1ファイル1024文字の制限がありました。 +
+
+## 所感
+今回はALBに追加された固定レスポンスを返す機能を使って、 +
+JavaScriptを実行するアプリケーションを置いちゃってみました。 +
+
+今回検証したことそれ自体は今の所あまり使い道はないかもしれませんが、 +
+Content-Type application/javascript 以外にも application/json ヘッダーも返せますし、 +
+ALBはAPI Gatewayなどよりも簡単に作れるので、 +
+これを利用して簡易APIスタブ作成などにも使えそうと思いました。 +
+
+個人的にはALBに固定レスポンスを返す機能が付いたのは、 +
+かゆいところに手が届く面白い機能追加だったかなと思っています。 +
+
+以上です。

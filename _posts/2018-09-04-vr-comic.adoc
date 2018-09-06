@@ -2,6 +2,10 @@
 :hp-alt-title: vr_comic
 :hp-tags: obata, vr, Virtual Cast, comic
 
+# 画像素材作成は簡単
+
+image::/images/obata/vr_comic/title.png[]
+
 ## VRが生活の一部になってます
 あっという間に9月です。 +
 新卒2年目エンジニアの小畑です。
@@ -20,7 +24,11 @@
 漫画での説明、わかりやすいな。 +
 私にも作れないかな。
 
+image::/images/obata/vr_comic/comic.png[]
+
 そうだ、VRだ!(???)
+
+image::/images/obata/vr_comic/souda.png[]
 
 
 もはやVR関係なくなってますね。 +

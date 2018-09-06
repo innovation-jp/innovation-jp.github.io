@@ -211,6 +211,12 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/06/25/Introduction-of-Computational-Complexity-2.html" title="link to アルゴリズム計算量入門　〜　②">アルゴリズム計算量入門　〜　②</a></h2>
+        <p class="excerpt">どうも、bigenです。 なぜ２本連続で書いているかというと、先週のブログ当番をブッチしてしまった罰ゲームです！ そんなわけで、 前回の記事に引き続き、ソートアルゴリズムの計算量について見ていこうと思います。  【前回の記事のまとめ】  バブルソート： 時間計算量 O(n2), 空間計算量O(n)  バケツソート： 時間計算量 O(m + n), 空間計算量O(m + n)  マージソート： 時間計算量 O(n log n), 空間計算量O(n)  【まとめおわり】  今回は、実際にphpでそれぞれのアルゴリズムを動かして、「計算量本当にそれであってんの？」っていうのを見ていきたいと思います。 前提条件 OS: macOS High Sierra ver.10.13.5 CPU: 第7世代&hellip;</p>
+        <div class="post-list__meta"><time datetime="25 Jun 2018" class="post-list__meta--date date">25 Jun 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Complexity">Complexity</a>, <a href="http://tech.innovation.co.jp/tag/Sort-Algorithm"> Sort Algorithm</a>, <a href="http://tech.innovation.co.jp/tag/bigen"> bigen</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/06/24/Laravel56-Request.html" title="link to Laravel5.6でRequestクラスの勉強してみた">Laravel5.6でRequestクラスの勉強してみた</a></h2>
         <p class="excerpt">こんにちは、未経験中途エンジニアの、すももです。 今回は、業務で使用しているLaravelのRequestクラスについて、手の長いリーダーから色々教えてもらったので、Laravel初心者向けに書きたいと思います〜。 リクエストURIなど取得してみる 〜準備〜 ▪️routes/web.php Route::get('/test/{a}/{b}', 'TestController@test'); ▪️app/Http/Controllers/TestController.php public function test(Request $request) {     dd(         // リクエストURIの取得         $request-&gt;path(),&hellip;</p>
         <div class="post-list__meta"><time datetime="24 Jun 2018" class="post-list__meta--date date">24 Jun 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/sumomo">sumomo</a>, <a href="http://tech.innovation.co.jp/tag/Laravel"> Laravel</a>, <a href="http://tech.innovation.co.jp/tag/Request"> Request</a>, <a href="http://tech.innovation.co.jp/tag/beginner"> beginner</a></span></div>
@@ -262,12 +268,6 @@ var _trackingid = 'LFT-10003-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/05/21/Flutter-Dart.html" title="link to FlutterとDartを使ってみる">FlutterとDartを使ってみる</a></h2>
         <p class="excerpt">こんにちは。はすみんです。 Google I/O 2018、みなさん見てましたか？ AIによる美容室の予約など、新しい機能が続々発表されていて楽しかったですね。 生でいつか聞きたいな〜〜 さて、今回ブログのテーマにしたのは一部界隈で噂のFlutter（Dart）です。 AndroidでもiOSでも動く！？と聞いたときはなんだそれは！と食いついてしまいました。 とはいっても環境構築と簡単なアプリ作成くらいしかやっておらず本格的な記事は書けませんが、 興味ある人に導入編として環境構築とアプリの起動まで紹介したいと思います。 その前にFlutterって？ FlutterはiOSとAndroidで動くアプリケーションを開発することができるフレームワークです。 両方のOSに対応していることからクロス&hellip;</p>
         <div class="post-list__meta"><time datetime="21 May 2018" class="post-list__meta--date date">21 May 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Hasumin">Hasumin</a>, <a href="http://tech.innovation.co.jp/tag/flutter"> flutter</a>, <a href="http://tech.innovation.co.jp/tag/dart"> dart</a>, <a href="http://tech.innovation.co.jp/tag/android"> android</a>, <a href="http://tech.innovation.co.jp/tag/ios"> ios</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/05/19/Go-O-R-Join.html" title="link to GoのORマッパーでJoinデータのとり方を学ぶ！">GoのORマッパーでJoinデータのとり方を学ぶ！</a></h2>
-        <p class="excerpt">こんにちは。 エンジニアのNew塚本です。 現在、Golangでバッチをゴリゴリ製造しています。 ORマッパーはgormを使用しているのですが、Joinしたデータのとり方でハマりましたので そのお話をのせたいと思います。 その前に gormドキュメントのJoinについて確認してみます。 引用）http://doc.gorm.io/crud.html#query db.Table("users").Select("users.name, emails.email").Joins("left join emails on emails.user_id = users.id").Scan(&results) 前の方から、 db.Table("users")　&#8594;　usersテーブルを基&hellip;</p>
-        <div class="post-list__meta"><time datetime="19 May 2018" class="post-list__meta--date date">19 May 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/New-Tsukamoto">NewTsukamoto</a>, <a href="http://tech.innovation.co.jp/tag/mac"> mac</a>, <a href="http://tech.innovation.co.jp/tag/Golang"> Golang</a>, <a href="http://tech.innovation.co.jp/tag/gorm"> gorm</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
