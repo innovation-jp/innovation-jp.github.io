@@ -1,0 +1,329 @@
+# Goのプロファイラ！
+:hp-tags: NewTsukamoto, mac, Golang, 
+
+こんにちは。
+エンジニアのNew塚本です。
+
+引き続き、Golangでバッチをゴリゴリ製造している毎日です。 + 
+今回は、プロファイラについてのお話をのせたいと思います。 +
+
+弊社、矢ヶ崎もPHPプロファイルについて触れてますので興味のある方はどうぞ！
+http://tech.innovation.co.jp/2018/07/30/P-H-P.html
+
+
+====== 事前準備
+Goの標準ライブラリのpprofを使うため、特別な準備はありません。
+
+
+====== 使用するプログラム
+現在、製造中のプラグラムを使用しました。 +
+Azureのキューストレージからデータを取得し、チェック処理後にDBにInsertするバッチ処理です。 
+
+今回は、CpuProfile情報を取得してみます。 + 
+
+
+使い方は簡単。 +
+CpuProfile情報を出力するファイルを生成 +
+
+計測開始時にStartCPUProfile(f) を実行。 +
+
+計測終了時にStopCPUProfile()を実行。 +
+
+これだけです。main関数の最初に追記しました。
+
+
+++++
+<pre style="font-family: Menlo, Courier">
+f, _ := os.Create("test.profile")
+pprof.StartCPUProfile(f)
+defer pprof.StopCPUProfile()
+</pre> 
+++++
+
+
+====== プロファイルデータの取得
+
+・Goの実行モジュール（バッチアプリケーション）を生成します。
+
+++++
+<pre style="font-family: Menlo, Courier">
+go install /**/sample
+</pre> 
+++++
+
+・バッチ実行
+
+++++
+<pre style="font-family: Menlo, Courier">
+. ./sample
+</pre> 
+++++
+
+・バッチ実行後 +
+同じディレクトリにtest.profileファイルが出力されます。
+
+
+++++
+<pre style="font-family: Menlo, Courier">
+-rwxr-xr-x 1 root root 12446598 Sep  8 12:48 sample
+-rw-r--r-- 1 root root    19163 Sep  8 15:27 test.profile
+</pre> 
+++++
+
+====== プロファイルの解析！
+それでは、見てみましょう。 +
+
+以下のコマンドを実行。
+++++
+<pre style="font-family: Menlo, Courier">
+go tool pprof sample test.profile
+</pre> 
+++++
+
+どん！
+
+++++
+<pre style="font-family: Menlo, Courier">
+File: sample
+Type: cpu
+Time: Sep 8, 2018 at 3:23pm (JST)
+Duration: 4.17mins, Total samples = 1.81s ( 0.72%)
+Entering interactive mode (type "help" for commands, "o" for options)
+(pprof)
+</pre> 
+++++
+(pprof)プロンプトの入力待ちになりました。 +
+
+
+・topコマンド実行
+++++
+<pre style="font-family: Menlo, Courier">
+(pprof) top
+Showing nodes accounting for 1130ms, 62.43% of 1810ms total
+Showing top 10 nodes out of 407
+      flat  flat%   sum%        cum   cum%
+     370ms 20.44% 20.44%      410ms 22.65%  syscall.Syscall
+     270ms 14.92% 35.36%      270ms 14.92%  runtime._ExternalCode
+     160ms  8.84% 44.20%      160ms  8.84%  runtime.usleep
+     110ms  6.08% 50.28%      110ms  6.08%  runtime.futex
+      60ms  3.31% 53.59%       60ms  3.31%  runtime.memmove
+      40ms  2.21% 55.80%       40ms  2.21%  runtime.epollwait
+      30ms  1.66% 57.46%       30ms  1.66%  runtime.epollctl
+      30ms  1.66% 59.12%       30ms  1.66%  runtime.getitab
+      30ms  1.66% 60.77%       30ms  1.66%  runtime.heapBitsSetType
+      30ms  1.66% 62.43%       90ms  4.97%  runtime.mallocgc
+</pre> 
+++++
+
+・top -cumコマンド実行
+++++
+<pre style="font-family: Menlo, Courier">
+(pprof)top -cum
+Showing nodes accounting for 0.65s, 35.91% of 1.81s total
+Showing top 10 nodes out of 407
+      flat  flat%   sum%        cum   cum%
+         0     0%     0%      0.65s 35.91%  main.mainProcess
+         0     0%     0%      0.42s 23.20%  main.businessProcess
+     0.37s 20.44% 20.44%      0.41s 22.65%  syscall.Syscall
+         0     0% 20.44%      0.30s 16.57%  github.com/innovation-jp/list-finder-batch/application/tracking/logic.InsertAccessLogData
+         0     0% 20.44%      0.28s 15.47%  runtime._System
+     0.27s 14.92% 35.36%      0.27s 14.92%  runtime._ExternalCode
+     0.01s  0.55% 35.91%      0.25s 13.81%  github.com/innovation-jp/list-finder-batch/vendor/github.com/jinzhu/gorm.(*Scope).callCallbacks
+         0     0% 35.91%      0.23s 12.71%  net.(*Resolver).goLookupIPCNAMEOrder.func1
+         0     0% 35.91%      0.23s 12.71%  net.(*Resolver).tryOneName
+         0     0% 35.91%      0.22s 12.15%  net.(*Resolver).exchange
+
+</pre> 
+++++
+
+・peekコマンド実行
+++++
+<pre style="font-family: Menlo, Courier">
+(pprof) peek main.
+Showing nodes accounting for 1.81s, 100% of 1.81s total
+----------------------------------------------------------+-------------
+      flat  flat%   sum%        cum   cum%   calls calls% + context
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   net.packStruct.func1
+     0.01s  0.55%  0.55%      0.01s  0.55%                | net.packDomainName
+----------------------------------------------------------+-------------
+                                             0.09s   100% |   github.com/innovation-jp/list-finder-batch/library/common.ExistTargetClient
+         0     0%  0.55%      0.09s  4.97%                | github.com/innovation-jp/list-finder-batch/library/database/postgres/masters.(*ClientDomainDB).FindContractClientByTrackingID
+                                             0.09s   100% |   github.com/innovation-jp/list-finder-batch/vendor/github.com/jinzhu/gorm.(*DB).Scan
+----------------------------------------------------------+-------------
+                                             0.42s   100% |   main.mainProcess
+         0     0%  0.55%      0.42s 23.20%                | main.businessProcess
+                                             0.30s 71.43% |   github.com/innovation-jp/list-finder-batch/application/tracking/logic.InsertAccessLogData
+                                             0.09s 21.43% |   github.com/innovation-jp/list-finder-batch/library/common.ExistTargetClient
+                                             0.03s  7.14% |   github.com/innovation-jp/list-finder-batch/application/tracking/logic.SetRequestData
+----------------------------------------------------------+-------------
+         0     0%  0.55%      0.65s 35.91%                | main.mainProcess
+                                             0.42s 64.62% |   main.businessProcess
+                                             0.14s 21.54% |   github.com/innovation-jp/list-finder-batch/library/common.AzureStorageQueueClient.GetStorageQueues
+                                             0.04s  6.15% |   github.com/innovation-jp/list-finder-batch/library/common.AzureStorageQueueClient.DeleteStorageQueues
+                                             0.02s  3.08% |   encoding/json.Unmarshal
+                                             0.02s  3.08% |   html.UnescapeString
+                                             0.01s  1.54% |   github.com/innovation-jp/list-finder-batch/vendor/github.com/cihub/seelog.(*commonLogger).Debug
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   net.unpackStruct.func1
+         0     0%  0.55%      0.01s  0.55%                | net.unpackDomainName
+                                             0.01s   100% |   runtime.concatstring3
+----------------------------------------------------------+-------------
+
+</pre> 
+++++
+
+・listコマンド実行
+++++
+<pre style="font-family: Menlo, Courier">
+(pprof) list main
+Total: 1.81s
+ROUTINE ======================== github.com/innovation-jp/list-finder-batch/library/database/postgres/masters.(*ClientDomainDB).FindContractClientByTrackingID in /go/src/github.com/innovation-jp/list-finder-batch/library/database/postgres/masters/client_domains.go
+         0       90ms (flat, cum)  4.97% of Total
+         .          .     72:                   domains.tracking_id,
+         .          .     73:                   clients.thirdparty_cookie,
+         .          .     74:                   clients.database_host_name,
+         .          .     75:                   clients.database_user_name,
+         .          .     76:                   clients.database_user_pass `).
+         .       90ms     77:           Scan(&clienInfo).Error
+         .          .     78:   return
+         .          .     79:}
+         .          .     80:
+         .          .     81:// InvoiceClientDomainCount 請求を計算するための件数取得用構造体
+         .          .     82:type InvoiceClientDomainCount struct {
+ROUTINE ======================== main.businessProcess in /go/src/github.com/innovation-jp/list-finder-batch/application/tracking/executor.go
+         0      420ms (flat, cum) 23.20% of Total
+         .          .    193:
+         .          .    194:   // TODO: デバック用
+         .          .    195:   //      data.Query.Ti = "LFT-10003-1"
+         .          .    196:
+         .          .    197:   // LFDBに対して計測対象クライアントの存在チェック
+         .       90ms    198:   clientInfo, err := common.ExistTargetClient(mdb, data.Query.Ti)
+         .          .    199:   if err != nil {
+         .          .    200:           if gorm.IsRecordNotFoundError(err) {
+         .          .    201:                   logger.LfLog.Infof(MSG9, "-", msgJSON)
+         .          .    202:           } else {
+         .          .    203:                   logger.LfLog.Errorf("%s %s %s", "-", logger.ConvertStackMsgJson(err), msgJSON)
+         .          .    204:           }
+         .          .    205:           return
+         .          .    206:   }
+         .          .    207:
+         .          .    208:   // アクセスログ登録用構造体定義
+         .          .    209:   insertData := clients.AccessLog{}
+         .          .    210:
+         .          .    211:   // チェック処理
+         .          .    212:   ret, msg := consistencyCheck(data, &insertData)
+         .          .    213:   if !ret {
+         .          .    214:           // 計測データに対するチェックNGはログに出力して終了
+         .          .    215:           logger.LfLog.Infof(msg, "-", msgJSON)
+         .          .    216:           return
+         .          .    217:   }
+         .          .    218:
+         .          .    219:   // アクセスログ登録データ設定
+         .       30ms    220:   if err := logic.SetRequestData(&data, &insertData, clientInfo.TrackingID); err != nil {
+         .          .    221:           // エラーメッセージとスタックトレースを連結してログ出力
+         .          .    222:           logger.LfLog.Infof("%s %s %s", "-", "-", logger.ConvertStackMsgJson(err))
+         .          .    223:           return
+         .          .    224:   }
+         .          .    225:
+         .          .    226:   // アクセスURL解析
+         .          .    227:   if err := logic.AnalyzeAccessURL(&data, &insertData, clientInfo.ThirdpartyCookie); err != nil {
+         .          .    228:           // 計測データのアクセスURLを分解する際のエラー（パラメタ不正）は握りつぶす
+         .          .    229:           logger.LfLog.Infof("%s %s %s", "-", "-", logger.ConvertStackMsgJson(err))
+         .          .    230:           return
+         .          .    231:   }
+         .          .    232:
+         .          .    233:   // アクセスログ登録
+         .      300ms    234:   if err := logic.InsertAccessLogData(clientInfo, &insertData); err != nil {
+         .          .    235:           logger.LfLog.Infof("%s %s %s", "-", "-", logger.ConvertStackMsgJson(err))
+         .          .    236:           return
+         .          .    237:   }
+         .          .    238:
+         .          .    239:}
+ROUTINE ======================== main.mainProcess in /go/src/github.com/innovation-jp/list-finder-batch/application/tracking/executor.go
+         0      650ms (flat, cum) 35.91% of Total
+         .          .    117:
+         .          .    118:   // AzureStorageQueueClient
+         .          .    119:   asqc := common.NewAzureStorageQueueClient()
+         .          .    120:
+         .          .    121:   // Queueの取得
+         .      140ms    122:   queues, err := asqc.GetStorageQueues()
+         .          .    123:   if err != nil {
+         .          .    124:           <-sem
+         .          .    125:           return
+         .          .    126:   }
+         .          .    127:
+         .          .    128:   logger.LfLog.Debugf("GetStorageQueues : %v", queues.NumMessages())
+         .          .    129:
+         .          .    130:   // queueに何もない場合
+         .          .    131:   if queues.NumMessages() == int32(0) {
+         .          .    132:           <-sem
+         .          .    133:           return
+         .          .    134:   }
+         .          .    135:
+         .          .    136:   // 受信したメッセージ全件をtracking処理を実行
+         .          .    137:   for m := int32(0); m < queues.NumMessages(); m++ {
+         .          .    138:
+         .          .    139:           queue := queues.Message(m)
+         .       20ms    140:           htmlEscapeMsg := html.UnescapeString(queue.Text)
+         .       10ms    141:           logger.LfLog.Debug(htmlEscapeMsg)
+         .          .    142:
+         .          .    143:           // DequeueCountが1より大きい場合は、その回数分Dequeueされている。
+         .          .    144:           // 何か不具合が発生している可能性があるためログを出力する
+         .          .    145:           // 考えられる要因）
+         .          .    146:           // 1.何らかの原因で、Dequeue->Deleteまでの時間が、Dequeue時に指定しているvisibilityTimeoutを超えたため他のクライアントに読み出された
+         .          .    147:           // 2.DeleteできずにvisibilityTimeoutを超えたたため、他のクライアントに読み出された。
+         .          .    148:           if queue.DequeueCount > 1 {
+         .          .    149:                   logger.LfLog.Errorf("%s %d %s", "-", queue.DequeueCount, logger.ConvertJson(htmlEscapeMsg))
+         .          .    150:           }
+         .          .    151:
+         .          .    152:           // 業務処理で使う値だけを構造体に設定
+         .          .    153:           data := logic.Body{}
+         .          .    154:
+         .          .    155:           // TODO:性能でstring->[]byte見直し要
+         .       20ms    156:           if err := json.Unmarshal([]byte(htmlEscapeMsg), &data); err != nil {
+         .          .    157:                   logger.LfLog.Errorf("%s %s %s", "-", logger.ConvertStackMsgJson(err), logger.ConvertJson(htmlEscapeMsg))
+         .          .    158:           }
+         .          .    159:
+         .          .    160:           // 計測データに対する整合性チェック実施
+         .      420ms    161:           businessProcess(data, mdb)
+         .          .    162:
+         .          .    163:           // Queueの削除　削除エラーはログを出力して次を処理
+         .       40ms    164:           if err := asqc.DeleteStorageQueues(queue.ID, queue.PopReceipt); err != nil {
+         .          .    165:                   logger.LfLog.Errorf("%s %s %s", "-", logger.ConvertStackMsgJson(err), logger.ConvertJson(htmlEscapeMsg))
+         .          .    166:                   err = nil
+         .          .    167:           }
+         .          .    168:   }
+         .          .    169:
+ROUTINE ======================== net.packDomainName in /usr/local/go/src/net/dnsmsg.go
+      10ms       10ms (flat, cum)  0.55% of Total
+         .          .    328:// Pack a domain name s into msg[off:].
+         .          .    329:// Domain names are a sequence of counted strings
+         .          .    330:// split at the dots. They end with a zero-length string.
+         .          .    331:func packDomainName(s string, msg []byte, off int) (off1 int, ok bool) {
+         .          .    332:   // Add trailing dot to canonicalize name.
+      10ms       10ms    333:   if n := len(s); n == 0 || s[n-1] != '.' {
+         .          .    334:           s += "."
+         .          .    335:   }
+         .          .    336:
+         .          .    337:   // Allow root domain.
+         .          .    338:   if s == "." {
+ROUTINE ======================== net.unpackDomainName in /usr/local/go/src/net/dnsmsg.go
+         0       10ms (flat, cum)  0.55% of Total
+         .          .    407:                   }
+         .          .    408:                   // literal string
+         .          .    409:                   if off+c > len(msg) {
+         .          .    410:                           return "", len(msg), false
+         .          .    411:                   }
+         .       10ms    412:                   s += string(msg[off:off+c]) + "."
+         .          .    413:                   off += c
+         .          .    414:           case 0xC0:
+         .          .    415:                   // pointer to somewhere else in msg.
+         .          .    416:                   // remember location after first ptr,
+         .          .    417:                   // since that's how many bytes we consumed.
+
+</pre> 
+++++
+
+
+
