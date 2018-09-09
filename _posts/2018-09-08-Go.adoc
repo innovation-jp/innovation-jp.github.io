@@ -147,23 +147,23 @@ Showing nodes accounting for 1.81s, 100% of 1.81s total
                                              0.01s   100% |   net.packStruct.func1
      0.01s  0.55%  0.55%      0.01s  0.55%                | net.packDomainName
 ----------------------------------------------------------+-------------
-                                             0.09s   100% |   github.com/innovation-jp/list-finder-batch/library/common.ExistTargetClient
-         0     0%  0.55%      0.09s  4.97%                | github.com/innovation-jp/list-finder-batch/library/database/postgres/masters.(*ClientDomainDB).FindContractClientByTrackingID
-                                             0.09s   100% |   github.com/innovation-jp/list-finder-batch/vendor/github.com/jinzhu/gorm.(*DB).Scan
+                                             0.09s   100% |   業務処理A
+         0     0%  0.55%      0.09s  4.97%                | 業務処理A
+                                             0.09s   100% |   github.com/jinzhu/gorm.(*DB).Scan
 ----------------------------------------------------------+-------------
                                              0.42s   100% |   main.mainProcess
          0     0%  0.55%      0.42s 23.20%                | main.businessProcess
-                                             0.30s 71.43% |   github.com/innovation-jp/list-finder-batch/application/tracking/logic.InsertAccessLogData
-                                             0.09s 21.43% |   github.com/innovation-jp/list-finder-batch/library/common.ExistTargetClient
-                                             0.03s  7.14% |   github.com/innovation-jp/list-finder-batch/application/tracking/logic.SetRequestData
-----------------------------------------------------------+-------------
+                                             0.30s 71.43% |   業務処理B
+                                             0.09s 21.43% |   業務処理C
+                                             0.03s  7.14% |   業務処理D
+----------------------------------------------------------+------------
          0     0%  0.55%      0.65s 35.91%                | main.mainProcess
                                              0.42s 64.62% |   main.businessProcess
-                                             0.14s 21.54% |   github.com/innovation-jp/list-finder-batch/library/common.AzureStorageQueueClient.GetStorageQueues
-                                             0.04s  6.15% |   github.com/innovation-jp/list-finder-batch/library/common.AzureStorageQueueClient.DeleteStorageQueues
+                                             0.14s 21.54% |   キュー取得
+                                             0.04s  6.15% |   キュー削除
                                              0.02s  3.08% |   encoding/json.Unmarshal
                                              0.02s  3.08% |   html.UnescapeString
-                                             0.01s  1.54% |   github.com/innovation-jp/list-finder-batch/vendor/github.com/cihub/seelog.(*commonLogger).Debug
+                                             0.01s  1.54% |   ログ出力
 ----------------------------------------------------------+-------------
                                              0.01s   100% |   net.unpackStruct.func1
          0     0%  0.55%      0.01s  0.55%                | net.unpackDomainName
@@ -176,7 +176,9 @@ Showing nodes accounting for 1.81s, 100% of 1.81s total
 ・listコマンド実行
 関数名をパラメタに指定できます。今回はmainを指定しました。 +
 プログラムのステップ毎に実行時間が出力されます。 +
-数値が２つ出力されていますが、左はその関数自体の実行時間、右はその行で呼んでいる関数の実行時間も合わせた実行時間になります。
+数値が２つ出力されていますが、左はその関数自体の実行時間、右はその行で呼んでいる関数の実行時間も合わせた実行時間になります。 +
+
+一番上は、呼び出しのみなので実行時間が0。その関数が呼び出している処理のトータルは420msとなります。
 
 
 image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/image1.png[] 
