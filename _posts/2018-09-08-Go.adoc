@@ -128,6 +128,9 @@ image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/m
 90msの処理はDBからselectする処理で、300msの処理はDBにInsertする処理が実装されています。 +
 ステップ単位で出力されると、いろいろ分かりますねー
 
+参考）
+https://blog.golang.org/profiling-go-programs
+
 ====== まとめ
 今回は、プロファイラを使ってみることが目的だったのでこれでOKとしました。 + 
 
