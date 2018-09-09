@@ -1,4 +1,4 @@
-# Goのプロファイラ！
+# Goのプロファイラを使おう！
 :hp-tags: NewTsukamoto, mac, Golang, 
 
 こんにちは。
@@ -95,91 +95,32 @@ Entering interactive mode (type "help" for commands, "o" for options)
 (pprof)プロンプトの入力待ちになりました。 +
 
 
-・topコマンド実行
-++++
-<pre style="font-family: Menlo, Courier">
-(pprof) top
-Showing nodes accounting for 1130ms, 62.43% of 1810ms total
-Showing top 10 nodes out of 407
-      flat  flat%   sum%        cum   cum%
-     370ms 20.44% 20.44%      410ms 22.65%  syscall.Syscall
-     270ms 14.92% 35.36%      270ms 14.92%  runtime._ExternalCode
-     160ms  8.84% 44.20%      160ms  8.84%  runtime.usleep
-     110ms  6.08% 50.28%      110ms  6.08%  runtime.futex
-      60ms  3.31% 53.59%       60ms  3.31%  runtime.memmove
-      40ms  2.21% 55.80%       40ms  2.21%  runtime.epollwait
-      30ms  1.66% 57.46%       30ms  1.66%  runtime.epollctl
-      30ms  1.66% 59.12%       30ms  1.66%  runtime.getitab
-      30ms  1.66% 60.77%       30ms  1.66%  runtime.heapBitsSetType
-      30ms  1.66% 62.43%       90ms  4.97%  runtime.mallocgc
-</pre> 
-++++
+・top  +
+関数から呼び出されるサブ関数の実行時間も合わせた合計時間でソートする場合は、cumオプションをつけます。
 
-・top -cumコマンド実行
-++++
-<pre style="font-family: Menlo, Courier">
-(pprof)top -cum
-Showing nodes accounting for 0.65s, 35.91% of 1.81s total
-Showing top 10 nodes out of 407
-      flat  flat%   sum%        cum   cum%
-         0     0%     0%      0.65s 35.91%  main.mainProcess
-         0     0%     0%      0.42s 23.20%  main.businessProcess
-     0.37s 20.44% 20.44%      0.41s 22.65%  syscall.Syscall
-         0     0% 20.44%      0.30s 16.57%  github.com/innovation-jp/list-finder-batch/application/tracking/logic.InsertAccessLogData
-         0     0% 20.44%      0.28s 15.47%  runtime._System
-     0.27s 14.92% 35.36%      0.27s 14.92%  runtime._ExternalCode
-     0.01s  0.55% 35.91%      0.25s 13.81%  github.com/innovation-jp/list-finder-batch/vendor/github.com/jinzhu/gorm.(*Scope).callCallbacks
-         0     0% 35.91%      0.23s 12.71%  net.(*Resolver).goLookupIPCNAMEOrder.func1
-         0     0% 35.91%      0.23s 12.71%  net.(*Resolver).tryOneName
-         0     0% 35.91%      0.22s 12.15%  net.(*Resolver).exchange
+image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/image-top.png[] 
 
-</pre> 
-++++
+top10 -cumと同じ様で、実行時間の上位10件が出力されています。
 
-・peekコマンド実行
-++++
-<pre style="font-family: Menlo, Courier">
-(pprof) peek main.
-Showing nodes accounting for 1.81s, 100% of 1.81s total
-----------------------------------------------------------+-------------
-      flat  flat%   sum%        cum   cum%   calls calls% + context
-----------------------------------------------------------+-------------
-                                             0.01s   100% |   net.packStruct.func1
-     0.01s  0.55%  0.55%      0.01s  0.55%                | net.packDomainName
-----------------------------------------------------------+-------------
-                                             0.09s   100% |   業務処理A
-         0     0%  0.55%      0.09s  4.97%                | 業務処理A
-                                             0.09s   100% |   github.com/jinzhu/gorm.(*DB).Scan
-----------------------------------------------------------+-------------
-                                             0.42s   100% |   main.mainProcess
-         0     0%  0.55%      0.42s 23.20%                | main.businessProcess
-                                             0.30s 71.43% |   業務処理B
-                                             0.09s 21.43% |   業務処理C
-                                             0.03s  7.14% |   業務処理D
-----------------------------------------------------------+------------
-         0     0%  0.55%      0.65s 35.91%                | main.mainProcess
-                                             0.42s 64.62% |   main.businessProcess
-                                             0.14s 21.54% |   キュー取得
-                                             0.04s  6.15% |   キュー削除
-                                             0.02s  3.08% |   encoding/json.Unmarshal
-                                             0.02s  3.08% |   html.UnescapeString
-                                             0.01s  1.54% |   ログ出力
-----------------------------------------------------------+-------------
-                                             0.01s   100% |   net.unpackStruct.func1
-         0     0%  0.55%      0.01s  0.55%                | net.unpackDomainName
-                                             0.01s   100% |   runtime.concatstring3
-----------------------------------------------------------+-------------
 
-</pre> 
-++++
+・peek +
+関数順に出力されます。mainを指定しているので、mainパッケージの全ての関数が出力されます。 +
 
-・listコマンド実行
-関数名をパラメタに指定できます。今回はmainを指定しました。 +
+image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/image-peek.png[]
+
+マスクしていますが、実装している関数の実行時間が出力されています。
+
+・list +
+関数名をパラメタに指定できます。今回はmainを指定しています。 +
 プログラムのステップ毎に実行時間が出力されます。 +
-数値が２つ出力されていますが、左はその関数自体の実行時間、右はその行で呼んでいる関数の実行時間も合わせた実行時間になります。 +
-
-一番上は、呼び出しのみなので実行時間が0。その関数が呼び出している処理のトータルは420msとなります。
 
 
 image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/image1.png[] 
+
+数値が２つ出力されていますが、左はその関数自体の実行時間、右はその行で呼んでいる関数の実行時間も合わせた実行時間になります。 +
+
+一番上は、関数の呼び出しなので実行時間が0。その関数が呼び出している処理のトータルは420msというのが分かります。 + 
+
+９０msの処理はDBからselectする処理で、300msの処理はDBにInsertする処理が実装されています。
+
 
