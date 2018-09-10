@@ -56,6 +56,8 @@ FirebaseはJSON型ですが、Firestoreではコレクション・ドキュメ�
 
 image::/images/hasumi/firestore/data-structure.png[]
 
+（引用：https://developers-jp.googleblog.com/2017/10/cloud-firestore-for-rtdb-developers.html）
+
 詳しくは以下の公式ブログで書かれているので、ぜひ読んでみてください。 +
 https://developers-jp.googleblog.com/2017/10/cloud-firestore-for-rtdb-developers.html
 
