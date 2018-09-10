@@ -1,5 +1,5 @@
 # Goのプロファイラを使おう！ その１
-:hp-tags: NewTsukamoto, mac, Golang,
+:hp-tags: NewTsukamoto, mac, Golang, pprof, CPUProfile, Azure
 
 こんにちは。
 エンジニアのNew塚本です。
