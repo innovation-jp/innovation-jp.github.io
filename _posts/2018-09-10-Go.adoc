@@ -1,0 +1,146 @@
+# Goのプロファイラを使おう！ その１
+:hp-tags: NewTsukamoto, mac, Golang, 
+
+こんにちは。
+エンジニアのNew塚本です。
+
+引き続き、Golangでバッチをゴリゴリ製造している毎日です。 + 
+今回は、プロファイラについてのお話をのせたいと思います。 +
+
+弊社、矢ヶ崎もPHPプロファイラについて触れてますので興味のある方はどうぞ！
+http://tech.innovation.co.jp/2018/07/30/P-H-P.html
+
+
+====== 事前準備
+Goの標準ライブラリのpprofを使うため、特別な準備はありません。
+
+
+====== 使用するプログラム
+現在、製造中のプログラムを使用しました。 +
+Azureキューストレージからデータを取得、ごにょごにょした処理後にDBにInsertして、Azureキューストレージからデータを削除するバッチ処理です。 
+
+今回は、CpuProfile情報を取得してみます。 + 
+
+
+使い方は簡単。 +
+CpuProfile情報を出力するファイルを生成 +
+
+計測開始時にStartCPUProfile(f) を実行。 +
+
+計測終了時にStopCPUProfile()を実行。 +
+
+これだけです。main関数の最初に追記しました。
+
+
+++++
+<pre style="font-family: Menlo, Courier">
+f, _ := os.Create("test.profile")
+pprof.StartCPUProfile(f)
+defer pprof.StopCPUProfile()
+</pre> 
+++++
+
+
+====== プロファイルデータの取得
+
+まず、計測対象の実行モジュール（バッチアプリケーション）を生成します。
+
+++++
+<pre style="font-family: Menlo, Courier">
+go install /**/sample
+</pre> 
+++++
+
+バッチ実行
+
+++++
+<pre style="font-family: Menlo, Courier">
+. ./sample
+</pre> 
+++++
+
+バッチ実行後 +
+同じディレクトリにtest.profileファイルが出力されます。
+
+
+++++
+<pre style="font-family: Menlo, Courier">
+-rwxr-xr-x 1 root root 12446598 Sep  8 12:48 sample
+-rw-r--r-- 1 root root    19163 Sep  8 15:27 test.profile
+</pre> 
+++++
+
+====== プロファイルの解析！
+それでは、見てみましょう。 +
+
+以下のコマンドを実行。
+++++
+<pre style="font-family: Menlo, Courier">
+go tool pprof sample test.profile
+</pre> 
+++++
+
+どん！
+
+++++
+<pre style="font-family: Menlo, Courier">
+File: sample
+Type: cpu
+Time: Sep 8, 2018 at 3:23pm (JST)
+Duration: 4.17mins, Total samples = 1.81s ( 0.72%)
+Entering interactive mode (type "help" for commands, "o" for options)
+(pprof)
+</pre> 
+++++
+(pprof)プロンプトの入力待ちになりました。 +
+
+
+・top  +
+関数から呼び出されるサブ関数の実行時間も合わせた合計時間でソートする場合は、cumオプションをつけます。
+
+image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/image-top.png[] 
+
+top10 -cumと同じ様で、実行時間の上位10件が出力されています。
+
+
+・peek +
+関数順に出力されます。mainを指定しているので、mainパッケージの全ての関数が出力されます。 +
+
+image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/image-peek.png[]
+
+マスクしていますが、実装している関数の実行時間が出力されています。 + 
+
+ちなみに、キューの取得は、0.14s 21.54%、キューの削除は0.04s  6.15% で出力されていることから、取得処理の方がコストがかかってそうです。
+
+
+
+・list +
+関数名をパラメータに指定できます。今回はmainを指定しています。 +
+プログラムのステップ毎に実行時間が出力されます。 +
+
+
+image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/image1.png[] 
+
+数値が２つ出力されていますが、左はその関数自体の実行時間、右はその行で呼んでいる関数の実行時間も合わせた実行時間になります。 +
+
+一番上は、関数の呼び出しなので実行時間が0。その関数が呼び出している処理のトータルは420msというのが分かります。 + 
+
+90msの処理はDBからSelectする処理で、300msの処理はDBにInsertする処理が実装されています。 +
+ステップ単位で出力されると、いろいろ分かりますねー
+
+参考）
+https://blog.golang.org/profiling-go-programs
+
+====== まとめ
+今回は、プロファイラを使ってみることが目的だったのでこれでOKとしました。 + 
+
+プロファイラの一般的な使われ方は、遅い（性能要件を満たしていない）とか、アプリケーションの異常終了などの障害解析で使われるのではないでしょうか？ + 
+
+製造している途中でもプロファイラを確認し、自信を持ってアプリをリリースする。そんな大人になりたいと思います。 + 
+
+おわり。
+
+
+
+
+
