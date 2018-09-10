@@ -51,6 +51,7 @@ FirebaseはJSON型ですが、Firestoreではコレクション・ドキュメ�
 従来のJSON型だと、目的のデータを取ってくるのに、複雑なクエリを書く必要がありました。 +
 また、色々リレーションして取ってくるため、不要なデータ取得があるため取得負荷が大きくなっていました。 +
 一方、コレクション・ドキュメント型を用いることで、目的のデータを低負荷でシンプルなクエリで書けるようになりました。 +
+
 image::/images/hasumi/firestore/data-structure.png[]
 
 詳しくは以下の公式ブログで書かれているので、ぜひ読んでみてください。 +
@@ -78,6 +79,7 @@ npm install -g firebase-tools
 
 Firebaseのコンソールを開いて、プロジェクトを作成します。 +
 https://console.firebase.google.com/u/0/?hl=ja +
+
 image::/images/hasumi/firestore/firebase.png[]
 
 セキュリティルールはtest modeにしておきましょう。 +
@@ -102,6 +104,7 @@ firebase serve
 コマンドを打ち、localhost:5000にアクセスします。 +
 すると以下のようなページになっていることを確認できるかと思います。 +
 簡単ですね。 +
+
 image::/images/hasumi/firestore/restaurants.png[]
 
 ちょっと長くなりそうなので、今回はここまでにしようと思います。 +
