@@ -1,4 +1,4 @@
-# Goのプロファイラを使おう！
+# Goのプロファイラを使おう！（失敗）
 :hp-tags: NewTsukamoto, mac, Golang, 
 
 こんにちは。
