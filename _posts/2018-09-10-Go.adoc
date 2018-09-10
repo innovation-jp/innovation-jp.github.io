@@ -1,6 +1,5 @@
 # Goのプロファイラを使おう！ その１
 :hp-tags: NewTsukamoto, mac, Golang,
-:published_at: 2018-09-10
 
 こんにちは。
 エンジニアのNew塚本です。
