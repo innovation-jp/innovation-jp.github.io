@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Firestoreを触ってみる - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Firestoreを触ってみる">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Firestoreを触ってみる">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/09/10/Firestore.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Firestoreを触ってみる" />
+    <meta property="og:description" content="こんにちは。はすみんです。 先日「GDG DevFest Tokyo 2018」に行ってきました。 https://tokyo2018.gdgjapan.org/ 所感ですが、FlutterとFirestore関連の講演がとても盛り上がっていたように感じました。 また、講演の空いた時間には、Codelabにチャレンジすることもでき、時間を持て余すことはなかったです。 そんな今回はGDGでも盛り上がっていた「Firestore」について調べてみました。 Firestoreとは？ Firestoreは、正式名称「Cloud Firestore」で、 ざっく..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/09/10/Firestore.html" />
+    <meta property="article:published_time" content="2018-09-09T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-09-10T09:05:55.686Z" />
+    <meta property="article:tag" content="Hasumin" />
+    <meta property="article:tag" content="Firestore" />
+    <meta property="article:tag" content="Firebase" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Firestoreを触ってみる" />
+    <meta name="twitter:description" content="こんにちは。はすみんです。 先日「GDG DevFest Tokyo 2018」に行ってきました。 https://tokyo2018.gdgjapan.org/ 所感ですが、FlutterとFirestore関連の講演がとても盛り上がっていたように感じました。 また、講演の空いた時間には、Codelabにチャレンジすることもでき、時間を持て余すことはなかったです。 そんな今回はGDGでも盛り上がっていた「Firestore」について調べてみました。 Firestoreとは？ Firestoreは、正式名称「Cloud Firestore」で、 ざっく..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/09/10/Firestore.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "takuya hasumi",
+        "image": "https://avatars0.githubusercontent.com/u/22537034?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "Firestoreを触ってみる",
+    "url": "http://tech.innovation.co.jp/2018/09/10/Firestore.html",
+    "datePublished": "2018-09-09T15:00:00.000Z",
+    "dateModified": "2018-09-10T09:05:55.686Z",
+    "keywords": "Hasumin,  Firestore,  Firebase",
+    "description": "こんにちは。はすみんです。 先日「GDG DevFest Tokyo 2018」に行ってきました。 https://tokyo2018.gdgjapan.org/ 所感ですが、FlutterとFirestore関連の講演がとても盛り上がっていたように感じました。 また、講演の空いた時間には、Codelabにチャレンジすることもでき、時間を持て余すことはなかったです。 そんな今回はGDGでも盛り上がっていた「Firestore」について調べてみました。 Firestoreとは？ Firestoreは、正式名称「Cloud Firestore」で、 ざっく..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Hasumin tag-Firestore tag-Firebase no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="10 Sep 2018" class="post-meta__date date">10 Sep 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Hasumin">Hasumin</a>, <a href="http://tech.innovation.co.jp/tag/Firestore"> Firestore</a>, <a href="http://tech.innovation.co.jp/tag/Firebase"> Firebase</a></span>
+        <span class="post-meta__author author"><img src="https://avatars0.githubusercontent.com/u/22537034?v=4" alt="profile image for takuya hasumi" class="avatar post-meta__avatar" /> by takuya hasumi</span>
+      </div>
+      <h1 class="post-title">Firestoreを触ってみる</h1>
+    </header>
+
+    <section class="post tag-Hasumin tag-Firestore tag-Firebase">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんにちは。はすみんです。<br></p>
+</div>
+<div class="paragraph">
+<p>先日「GDG DevFest Tokyo 2018」に行ってきました。<br>
+<a href="https://tokyo2018.gdgjapan.org/" class="bare">https://tokyo2018.gdgjapan.org/</a></p>
+</div>
+<div class="paragraph">
+<p>所感ですが、FlutterとFirestore関連の講演がとても盛り上がっていたように感じました。<br>
+また、講演の空いた時間には、Codelabにチャレンジすることもでき、時間を持て余すことはなかったです。<br></p>
+</div>
+<div class="paragraph">
+<p>そんな今回はGDGでも盛り上がっていた「Firestore」について調べてみました。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_firestore">Firestoreとは？</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Firestoreは、正式名称「Cloud Firestore」で、<br>
+ざっくりいうとGoogleのプラットフォームを利用したフルマネージド型のNoSQLデータベースです。<br></p>
+</div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/QcsAb2RR52c" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<div class="paragraph">
+<p>従来のNoSQLデータベースはJSON型を用いてますが、<br>
+Firestoreでは「コレクション・ドキュメント型」を採用しています。<br>
+また、「Cloud Functions」と組み合わせることでサーバーレスを実現しています。<br>
+現在はベータ版でSLA適用外ではありますが、かなり安定して動いているようです。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_firestore_2">Firestoreの特徴</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>特徴を以下にあげました。<br></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>NoSQLデータベース</p>
+</li>
+<li>
+<p>コレクションとドキュメント型</p>
+</li>
+<li>
+<p>オフラインでもデバイス間のデータを同期</p>
+<div class="ulist">
+<ul>
+<li>
+<p>データ取得：キャッシュ済みのデータを返却する</p>
+</li>
+<li>
+<p>データ更新：一旦ローカルに保存され、オンラインになり次第クラウド同期する</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>mBaaS(モバイルに適している、もちろんWebでも使える)</p>
+</li>
+<li>
+<p>サーバーレス</p>
+</li>
+<li>
+<p>Cloud Functionsと組み合わせるのが強力</p>
+</li>
+<li>
+<p>セキュリティが強力、Firebase Authenticationとも連携（マルチプラットフォームログイン）</p>
+</li>
+<li>
+<p>（ほぼ）無料で使える</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_firebase">Firebaseとの違い</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Googleのサービスに「Firebase」がありますが、FirestoreとFirebaseはなにが違うのか疑問に思い、調べてみました。<br>
+特に以下の観点で違いがあるようです。<br>
+・データが構造化、クエリが得意になった<br>
+・モバイルアプリ開発に最適<br>
+・ソートできる種類が増えた<br></p>
+</div>
+<div class="paragraph">
+<p>特にデータ構造が変わったのが大きいようです。 <br>
+FirebaseはJSON型ですが、Firestoreではコレクション・ドキュメント型をとっています。<br>
+従来のJSON型だと、目的のデータを取ってくるのに、複雑なクエリを書く必要がありました。<br>
+また、色々リレーションして取ってくるため、不要なデータ取得があるため取得負荷が大きくなっていました。<br>
+一方、コレクション・ドキュメント型を用いることで、目的のデータを低負荷でシンプルなクエリで書けるようになりました。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/hasumi/firestore/data-structure.png" alt="data structure.png">
+</div>
+</div>
+<div class="paragraph">
+<p>（引用：https://developers-jp.googleblog.com/2017/10/cloud-firestore-for-rtdb-developers.html）</p>
+</div>
+<div class="paragraph">
+<p>詳しくは以下の公式ブログで書かれているので、ぜひ読んでみてください。<br>
+<a href="https://developers-jp.googleblog.com/2017/10/cloud-firestore-for-rtdb-developers.html" class="bare">https://developers-jp.googleblog.com/2017/10/cloud-firestore-for-rtdb-developers.html</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_firestore_3">Firestoreを触ってみよう</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>それでは実際に手を動かしてみました。使ったサイトはCodelabです。<br>
+基本的にCodelabの内容通りに手を動かして解説しているので、詳しくは以下を参照してください。<br>
+<a href="https://codelabs.developers.google.com/codelabs/firestore-web/index.html" class="bare">https://codelabs.developers.google.com/codelabs/firestore-web/index.html</a></p>
+</div>
+<div class="sect3">
+<h4 id="_firebase_2">Firebaseプロジェクトの作成</h4>
+<div class="paragraph">
+<p>このLessonでは、Firebaseを使ったレストランのレコメンドサービスを作ります。<br>
+事前にNode.jsのインストールをしておいてください。<br></p>
+</div>
+<div class="paragraph">
+<p>サンブルプロジェクトをGithubから落としてきます。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>git clone https://github.com/firebase/friendlyeats-web
+cd friendlyeats-web</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>CLI上でFirebaseが使えるようにしておきます。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>npm install -g firebase-tools</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Firebaseのコンソールを開いて、プロジェクトを作成します。<br>
+<a href="https://console.firebase.google.com/u/0/?hl=ja" class="bare">https://console.firebase.google.com/u/0/?hl=ja</a><br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/hasumi/firestore/firebase.png" alt="firebase.png">
+</div>
+</div>
+<div class="paragraph">
+<p>セキュリティルールはtest modeにしておきましょう。<br>
+また、アプリケーションの関連付けをするために以下のコマンドを打ちます。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>firebase use --add</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_firebase_authentication">Firebase Authenticationを有効化する</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>firebase open auth</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>するとFirebaseのConsoleが開きます。<br>
+Authentication &gt; Sign-In Method<br>
+からレイヤー毎の認証設定ができます。<br>
+今回はAnonymousのアクセスを有効化にしておきます。<br></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_run">Run！</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>firebase serve</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>コマンドを打ち、localhost:5000にアクセスします。<br>
+すると以下のようなページになっていることを確認できるかと思います。<br>
+簡単ですね。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/hasumi/firestore/restaurants.png" alt="restaurants.png">
+</div>
+</div>
+<div class="paragraph">
+<p>ちょっと長くなりそうなので、今回はここまでにしようと思います。<br></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">おわりに</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Firestoreのことが少しばかりわかってよかったです。<br>
+Firestore使ってプロトタイプ作ろう！<br></p>
+</div>
+<div class="paragraph">
+<p>参考サイト：<br>
+<a href="https://firebase.google.com/docs/firestore/?hl=ja" class="bare">https://firebase.google.com/docs/firestore/?hl=ja</a><br>
+<a href="https://firebase.google.com/docs/firestore/quickstart?hl=ja" class="bare">https://firebase.google.com/docs/firestore/quickstart?hl=ja</a><br>
+<a href="https://developers-jp.googleblog.com/2017/10/introducing-cloud-firestore.html" class="bare">https://developers-jp.googleblog.com/2017/10/introducing-cloud-firestore.html</a><br>
+<a href="https://developers-jp.googleblog.com/2017/10/cloud-firestore-for-rtdb-developers.html" class="bare">https://developers-jp.googleblog.com/2017/10/cloud-firestore-for-rtdb-developers.html</a><br>
+<a href="https://medium.com/google-cloud-jp/firestore1-a62405a7cd82" class="bare">https://medium.com/google-cloud-jp/firestore1-a62405a7cd82</a><br>
+<a href="https://medium.com/google-cloud-jp/firestore2-920ac799345c" class="bare">https://medium.com/google-cloud-jp/firestore2-920ac799345c</a><br></p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11783-1';
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+</body>
+</html>
