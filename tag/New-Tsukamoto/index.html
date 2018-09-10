@@ -213,6 +213,15 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/09/10/Go.html" title="link to Goのプロファイラを使おう！ その１">Goのプロファイラを使おう！ その１</a></h2>
+        <p class="excerpt">こんにちは。 エンジニアのNew塚本です。 引き続き、Golangでバッチをゴリゴリ製造している毎日です。 今回は、プロファイラについてのお話をのせたいと思います。 弊社、矢ヶ崎もPHPプロファイラについて触れてますので興味のある方はどうぞ！ http://tech.innovation.co.jp/2018/07/30/P-H-P.html 事前準備 Goの標準ライブラリのpprofを使うため、特別な準備はありません。 使用するプログラム 現在、製造中のプログラムを使用しました。 Azureキューストレージからデータを取得、ごにょごにょした処理後にDBにInsertして、Azureキューストレージからデータを削除するバッチ処理です。 今回は、CpuProfile情報を取得してみます。 使&hellip;</p>
+        <div class="post-list__meta">
+            <time datetime="10 Sep 2018" class="post-list__meta--date date">10 Sep 2018</time> &#8226;
+            <span class="post-list__meta--tags tags"><a href="#blog" title="NewTsukamoto">NewTsukamoto</a>, <a href="#blog" title=" mac"> mac</a>, <a href="#blog" title=" Golang"> Golang</a>, <a href="#blog" title=" pprof"> pprof</a>, <a href="#blog" title=" CPUProfile"> CPUProfile</a>, <a href="#blog" title=" Azure"> Azure</a></span>
+        </div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/07/08/Gohttp.html" title="link to Goのhttpクライアント通信！">Goのhttpクライアント通信！</a></h2>
         <p class="excerpt">こんにちは。 エンジニアのNew塚本です。 引き続き、Golangでバッチをゴリゴリ製造しています。 今回は、httpクライアント通信についてのお話をのせたいと思います。 プログラムはこんな感じ エラーと返却値は端折っていますが、大枠はこんな感じです。 // 構造体定義 type Client struct { 	url                     string 	parameterArray map[string]string 	client                  *http.Client } // 通信実行メソッド func (c *Client) Execute() () { 	// Getクエリの組み立て 	queryParam := c.createGet&hellip;</p>
         <div class="post-list__meta">
