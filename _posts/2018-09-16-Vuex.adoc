@@ -1,0 +1,324 @@
+# Vuexを学ぶ
+
+:hp-alt-title: Vuex
+:hp-tags: Masashi Otake, Vue.js, Vuex
+
+こんにちは。「おしゃべりクソメガネ」こと大竹です。
+
+現在List Finderの開発をVue.jsを使って行っているのですが、最近*Vuex*という言葉をよく耳にします。 +
+「ネストの深いコンポーネント間でのデータの受け渡しをいい感じにしてくれるもの」という認識はなんとなく持っていた(事実そうなのかはわからないが)のですが、あまり詳しく理解していなかったので、今後List Finderで活用できそうかも踏まえてVuexについて調べてみます。
+
+## Vuexとは
+「*Vuex*」とは、データとその状態に関する全てを一元管理する「*状態管理*」のための拡張ライブラリです。
+
+Vueのコンポーネント間での値の受け渡しは、親→子であれば`props`(props down)を、子→親であれば`$emit`(event up)を使用するのですが、この方法だけだとコンポーネントが構造化したり、アプリケーションの規模が大きくなったりすると問題が発生します。 +
+具体的には、深くネストされたコンポーネント構造でデータを共有するためには、`props`と`$emit`を繰り返してバケツリレーのようにデータを渡さなければなりません。 これは正直面倒です。
+
+Vuexは、こうしたデータ管理の面倒な処理をよしなにやってくれる上に、全てのコンポーネントから一つのデータを参照するため整合性を保ちやすくなります。
+
+## Vuex導入のメリットとデメリット
+Vuexを導入する上でのメリットとデメリットは以下のとおりです。
+
+【メリット】
+
+- Vuexによって管理されるデータもリアクティブになるため、コンポーネント構造状態に関わらず、使用している場所で常に同期される
+- 状態管理専用のライブラリであるため、データを保持する以外にもアプリケーションレベルでデータを監視したり、いくつかの状態をグループ化して管理できるモジュール機能など、状態管理に便利な様々な機能を持っている
+
+【デメリット】
+
+- 概念理解のコストがかかる(短期的生産性と長期的生産性のトレードオフ)
+- 大規模なSPA(Single Page Application)を構築することなくVuexを導入した場合には冗長に感じる可能性がある(小規模であればVuexは導入する必要性が低い)
+
+## Vuexを使ってみる
+Vuexを使ってみます。ここではVuexを使ってカウンターの数値を増やすだけのシンプルなストア構造を実装してみます。(以下の実装はWebpackを使用している前提で`import`と`export`を使用しています。)
+
+Vuexのインストール方法はこちらを参照してください +
+https://vuex.vuejs.org/ja/installation.html
+
+src/store.js
+```
+import 'babel-polyfill' // Vuexではpromiseを使用しているため対応していないブラウザをサポートする場合はポリフィルも一緒にインストールする必要がある
+import Vue from 'vue'
+import Vuex from 'vuex'
+
+Vue.use(Vuex) // VueにVuexを登録
+
+// ストアを作成
+const store = new Vuex.Store({
+    state: {
+        count: 0
+    },
+    mutations: {
+        // カウントアップするミューテーションを登録
+        increment(state) { // 実装のために必要なプロパティやメソッドは引数として渡される
+            state.count++
+        }
+    }
+})
+export default store
+```
+
+Vuexでは状態を管理するための「*ストア*」を作成します。「ストア」はアプリケーションの状態を保持するコンテナです。 +
+単純なグローバルオブジェクトとの違いは以下の２つです。
+
+1. リアクティブであること。Vueコンポーネントがストアから状態を取り出す時、もしストアの状態が変化したら、ストアはリアクティブかつ効率的に更新を行う +
+2. ストアの状態を直接変更することはできず、変更するためには明示的にミューテーションをコミットする。これによって、
+全ての状態の変更について追跡可能な記録を残すことが保証され、ツールでのアプリケーションの動作の理解を助ける
+
+上記の「src/store.js」ファイルを読み込むことで定義したデータにアクセスすることができます。
+
+```
+import store from './src/store.js'
+console.log(store.state.count) // -> 0
+```
+
+src/store.jsで登録したミューテーション`increment`は`commit`メソッドを使用して呼び出すことができます。
+
+```
+// incrementをコミットする
+store.commit('increment')
+// countの値をチェックしてみる
+console.log(store.state.count) // -> 1
+```
+
+今のままだと単一ファイルコンポーネントごとに「src/sotre.js」を読み込む必要があるため、面倒です。。。 +
+そこで、ストアインスタンスをVueアプリケーションのルートに登録することで、コンポーネントのインスタンスプロパティに`$store`でアクセスすることができるようになり便利です。
+
+src/main.js
+```
+import 'babel-polyfill'
+import Vue from 'vue'
+import App from './App'
+import store from './store.js' // store.jsを読み込み
+
+/* eslint-disable no-new */
+new Vue({
+  el: '#app',
+  store, // storeを登録
+  render: h => h(App)
+})
+```
+
+src/components/App.vue
+```
+export default {
+  name: 'HelloWorld',
+  created() {
+    // ストアの状態を取得
+    console.log(this.$store.state.count); // -> 0
+    // ストアの状態を更新
+    this.$store.commit('increment');
+    // ストアの状態を取得
+    console.log(this.$store.state.count); // -> 1
+  },
+  data () {
+    return {
+      msg: 'Welcome to Your Vue.js App'
+    }
+  }
+}
+```
+
+## Vuexのコアコンセプト
+Vuexのストアには大きく分けて、
+
+- Actions
+- Mutations
+- State
+
+の3つの概念があります。それぞれについて説明します。
+
+##### ステート
+ステートはストアで管理している状態そのもので、コンポーネントにおける`data`です。 +
+ステートはミューテーション以外の場所から変更することはできません。 +
+
+ステートを取得するための算出データとして`getter`が用意されています。これはストアの算出プロパティと考えることができます。 +
+ゲッターは第一引数に`state`を受け取り、第二引数に他のゲッターを受け取ります。
+
+
+```
+// ストアを作成
+const store = new Vuex.Store({
+    state: {
+        count: 0,
+        todos: [
+            { id: 1, text: '...', done: true },
+            { id: 2, text: '...', done: false }
+        ]
+    },
+    getters: {
+        // stateのcountを返す
+        count: state => { // 第一引数にstateを受け取る
+            return state.count;
+        },
+        // 終了したtodoを返す
+        doneTodos: state => { // 第一引数にstateを受け取る
+            return state.todos.filter(todo => todo.done);
+        },
+        // 終了したtodoの数を返す
+        doneTodosCount: (state, getters) => { // 第一引数にstate,第二引数に他のゲッターを受け取る
+            return getters.doneTodos.length;
+        }
+    }
+});
+```
+
+ゲッターの呼び出しは以下のように行います。
+
+```
+// stateを取得
+console.log(this.$store.getters.count); // -> 0
+// 終了したtodoを取得
+console.log(this.$store.getters.doneTodos); // -> { id: 1, text: '...', done: true }
+// 終了したtodoの数を取得
+console.log(this.$store.getters.doneTodosCount); // -> 1
+```
+
+また、引数を持たせてゲッターを呼び出すこともできます。この場合は、関数を返り値とします。
+
+```
+// 指定IDに該当するtodoを返す
+getTodoById: state => {
+	// idを引数としてアロー関数を返り値とする
+	return id => state.todos.find(todo => todo.id === id);
+}
+```
+
+呼び出しは以下のように行います。
+
+```
+// 指定IDに該当するtodoを取得
+console.log(this.$store.getters.getTodoById(2)); // -> { id: 2, text: '...', done: false }
+```
+
+ゲッターを介さず直接ステートにアクセスすることも可能ですが、使う側が混乱しないように常にgettersを介してアクセスするように統一するのが良さそうです。また、メソッドによってアクセスされるゲッターは呼び出す度に実行され、その結果はキャッシュされない点に留意してください。
+
+##### ミューテーション
+ミューテーションは実際に Vuex のストアの状態を変更できる唯一の方法はミューテーションをコミットすることです。ミューテーションはコンポーネントにおける`methods`です。 +
+ミューテーションは第一引数に`state`を受け取り、第二引数にコミットからの引数(`payload`という)を受け取ります。
+
+```
+// ストアを作成
+const store = new Vuex.Store({
+    state: {
+        count: 0,
+        todos: [
+            { id: 1, text: '...', done: true },
+            { id: 2, text: '...', done: false }
+        ]
+    },
+    getters: {
+    	// ...
+    },
+    mutations: {
+        // +1カウントアップするミューテーションを登録
+        increment(state) {
+            state.count++;
+        },
+        // +nカウントアップするミューテーションを登録
+        incrementSome(state, payload) {
+            state.count += payload;
+        }
+    }
+});
+```
+
+呼び出しは以下のように行います。
+
+```
+console.log(this.$store.state.count); // -> 0
+// stateを+1カウントアップする
+this.$store.commit('increment');
+console.log(this.$store.state.count); // -> 1
+// stateを+4カウントアップする
+this.$store.commit('incrementSome', 4);
+console.log(this.$store.state.count); // -> 5
+```
+
+`payload`をオブジェクトにすることで複数のフィールドを含めることができます。
+
+```
+mutations: {
+	// +nカウントアップするミューテーションを登録
+	incrementSome(state, payload) {
+		state.count += payload.amount;
+	}
+}
+```
+
+以下のようにオブジェクトを渡します。
+
+```
+this.$store.commit('incrementSome', {
+	amount: 4
+});
+```
+
+ミューテーションを使用して明示的にストアの状態を変更する理由は、全ての状態の変更について追跡可能な記録を残すことです。つまり、全てのミューテーションをログに記録するためには、ミューテーションの前後の状態のスナップショットを捕捉することが必要です。 +
+しかし、ミューテーション内で非同期コールバックを使用した場合、それを不可能にしてしまいます。 +
+そのため、*ミューテーションは同期的でなければなりません*。
+
+##### アクション
+アクションは状態を変更するのではなく、データの加工や非同期処理を行い、その結果をミューテーションをコミットします。
+ミューテーションは同期的でなければならないですが、非同期で行いたい場合にアクションを使用します。
+
+```
+// ストアを作成
+const store = new Vuex.Store({
+    state: {
+        count: 0
+    },
+    getters: {
+        // ...
+    },
+    mutations: {
+        // +1カウントアップするミューテーションを登録
+        increment(state) {
+            state.count++;
+        }
+    },
+    actions: {
+        increment(context) {
+        	// ここに非同期処理を記述
+           	context.commit('increment');
+        }
+    }
+});
+```
+
+アクションの第一引数は次のようなオブジェクトになっています。
+
+```
+{
+	state, // store.stateと同じ
+	rootState, // store.stateと同じだがモジュール内に限る
+	commit, // store.commitと同じ
+	dispatch, // store.dispatchと同じ
+	getters, // store.gettersと同じ
+	rootGetters // store.gettersと同じだがモジュール内に限る
+}
+```
+
+このため、ES2015の分割代入( https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment )を使えばactionsを以下のように記述することもできます。
+
+```
+actions: {
+	increment({ commit }) {
+		commit('increment');
+	}
+}
+```
+
+アクションの呼び出しはdispatchを使用します。
+
+```
+this.$store.dispatch('increment', payload) // payloadはミューテーションと同様
+```
+
+## まとめ
+Vuexを使うことで状態管理ができ、propsと$emitを繰り返し使用するといった面倒から開放されて良さそうですね！ +
+ぜひ、List Finderでも使用を検討してみたいと思います!(コストを考えないとですが。。。)
+
+## 参考文献
+https://cr-vue.mio3io.com/ [基礎から学ぶVue.js] +
+https://vuex.vuejs.org/ja/ [Vuex]
