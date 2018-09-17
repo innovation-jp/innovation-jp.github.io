@@ -210,6 +210,12 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/09/16/Vuex.html" title="link to Vuexを学ぶ">Vuexを学ぶ</a></h2>
+        <p class="excerpt">こんにちは。「おしゃべりクソメガネ」こと大竹です。 現在List Finderの開発をVue.jsを使って行っているのですが、最近Vuexという言葉をよく耳にします。 「ネストの深いコンポーネント間でのデータの受け渡しをいい感じにしてくれるもの」という認識はなんとなく持っていた(事実そうなのかはわからないが)のですが、あまり詳しく理解していなかったので、今後List Finderで活用できそうかも踏まえてVuexについて調べてみます。 Vuexとは 「Vuex」とは、データとその状態に関する全てを一元管理する「状態管理」のための拡張ライブラリです。 Vueのコンポーネント間での値の受け渡しは、親→子であればprops(props down)を、子→親であれば$emit(event up)を&hellip;</p>
+        <div class="post-list__meta"><time datetime="16 Sep 2018" class="post-list__meta--date date">16 Sep 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Masashi-Otake">Masashi Otake</a>, <a href="http://tech.innovation.co.jp/tag/Vuejs"> Vue.js</a>, <a href="http://tech.innovation.co.jp/tag/Vuex"> Vuex</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/09/16/Introduction-of-Computational-Complexity.html" title="link to Vue.jsを使って量子コンピュータの並列演算を再現してみた ~その2~">Vue.jsを使って量子コンピュータの並列演算を再現してみた ~その2~</a></h2>
         <p class="excerpt">はじめに こんにちは、Yuです。 前回の続きで、量子コンピュータのお話です。 前回はとりあえず形になるものを作って終わりましたが、せっかくなので意味のある計算をしてみたいと思い、機能を追加しました。 詳しい説明は省略しますので、興味のある方はググってください。 やりたかったこと 状態を複素数に拡張 フーリエ変換 （正確には「量子離散的フーリエ変換」というらしいです） 作ったもの 実際にできたものがこちらになります。 レイアウトは特に変わっていません。手打ちで回路を入力するのが面倒になってきたので、フーリエ変換の回路を追加するボタンを実装しました。 書いたコード GitHubにあげていますので、興味のある方はどうぞ。 追加したゲートは以下の2つです。 制御回転ゲート 制御ビット側に「U」また&hellip;</p>
         <div class="post-list__meta"><time datetime="16 Sep 2018" class="post-list__meta--date date">16 Sep 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Java-Script">JavaScript</a>, <a href="http://tech.innovation.co.jp/tag/Vuejs"> Vue.js</a>, <a href="http://tech.innovation.co.jp/tag/Yu"> Yu</a></span></div>
@@ -261,12 +267,6 @@ var _trackingid = 'LFT-10003-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/08/25/Laravel56-Response.html" title="link to Laravel5.6でResponseクラスの勉強してみた">Laravel5.6でResponseクラスの勉強してみた</a></h2>
         <p class="excerpt">こんにちわ、すももです。 日中はまだまだ暑いですが、夜はクーラーなしでも寝れる時期になりましたね〜 鈴虫の鳴き声を聞くと秋がくるなぁとしみじみ感じます。 さて、前回はRequestクラスの勉強をしたので、今回はResponseクラスの勉強をしてみました！ 関連記事はこちら Laravel5.6でRequestクラスの勉強してみた 一番シンプルなレスポンスの返し方 Laravelのレスポンスを返す方法で、一番シンプルなのはルートやコントローラから文字列を返す方法です。 例：/responseにアクセスがきたらレスポンスの勉強中！を返す Route::get('/response', function () { 	return 'レスポンスの勉強中！'; }); わーい、表示されましたー！これ&hellip;</p>
         <div class="post-list__meta"><time datetime="25 Aug 2018" class="post-list__meta--date date">25 Aug 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/sumomo">sumomo</a>, <a href="http://tech.innovation.co.jp/tag/laravel"> laravel</a>, <a href="http://tech.innovation.co.jp/tag/Response"> Response</a>, <a href="http://tech.innovation.co.jp/tag/beginner"> beginner</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/08/12/Prepare-for-Mobile-First-Index.html" title="link to Googlebotのアクセス数を数えてモバイルファーストインデックスに備える">Googlebotのアクセス数を数えてモバイルファーストインデックスに備える</a></h2>
-        <p class="excerpt">お疲れ様です、AMIです。 我々SREチームでは、ハンサム風マーケター男子のMさんからの依頼で Googlebotのアクセス数を数えてマーケのチームのお伝えするという業務を行っており、 このたび、自動化しましたのでそちらを紹介させていただきます！ モバイルファーストインデックス（MFI）って？ そもそも、モバイルファーストインデックスとは、Googleでの検索結果の表示順を決めるのに、 モバイル用のページを優先的に見て、判断するよーという内容みたいです。 ただ、全てのWebサイトに対して一斉に一律モバイルファーストインデックスを適用するのではなく、 準備が完了したWebサイトから順番に適用していく、ということらしいのです。 Googleウェブマスター向け公式ブログ：https://webm&hellip;</p>
-        <div class="post-list__meta"><time datetime="12 Aug 2018" class="post-list__meta--date date">12 Aug 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/A-M-I">AMI</a>, <a href="http://tech.innovation.co.jp/tag/Mobile-First-Index">MobileFirstIndex</a>, <a href="http://tech.innovation.co.jp/tag/M-F-I">MFI</a>, <a href="http://tech.innovation.co.jp/tag/shellscript">shellscript</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
