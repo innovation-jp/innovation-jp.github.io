@@ -282,4 +282,14 @@ Com.prototype.createdCom = function () {
 #### In Conclusion.....to be continued?
 In summary, there are many different ways to utilize classes in Javascript, and with them it can be helpful to reduce redundant code. For the beginnings of my program I now have my Card, User, and Com classes. Hmmm what could be next…Look forward to it! 
 
+###### References
+- https://javascript.info/class
+- https://www.w3schools.com/Js/js_function_parameters.asp
+- https://www.digitalocean.com/community/tutorials/understanding-classes-in-javascript#defining-methods
+- https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Basics#Object_basics
+- https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Details_of_the_Object_Model
+- https://codeburst.io/javascript-pass-by-value-and-pass-by-reference-in-javascript-fcf10305aa9c
+- https://abdulapopoola.com/2013/03/30/static-and-instance-methods-in-javascript/
+
+
 Done
