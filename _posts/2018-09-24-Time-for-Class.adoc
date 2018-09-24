@@ -38,7 +38,7 @@ var Card = function(suit, value, symbol) {
 ----
 |===
 
-###### Constructor
+###### Constructors
 With the class-syntax its easy to see where the constructor is defined, whereas with the function-syntax it's a little more difficult. The constructor is called each time an instance of the class is created. Any JS function can be used for the constructor.
 
 ##### Getters and Setters
