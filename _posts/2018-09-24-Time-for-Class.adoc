@@ -1,14 +1,17 @@
 # Time for Class
 :hp-alt-title: Time for Class
-:hp-tags: AhYung, Javascript, classes
+:hp-tags: AhYung, JavaScript, classes
 
-The lone English writer Ah-Yung here!  Like the three musketeers with PHP comes the need to know Javascript and HTML. After studying the three I thought it would be interesting to see what I could make. This time I will be focusing on Javascript and how classes work within the language.
+The lone English writer Ah-Yung here!  Like the three musketeers with PHP comes the need to know JavaScript and HTML. After studying the three I thought it would be interesting to see what I could make. This time I will be focusing on JavaScript and how classes work within the language.
 
 #### The Complete Puzzle
-My goal is to create a simple game of Blackjack utilizing classes in Javascript. So lets start piecing together this program. In the future I plan to make it possible to play different games so am aiming to make my classes as reusable as possible. 
+My goal is to create a simple game of Blackjack utilizing classes in JavaScript. So lets start piecing together this program. In the future I plan to make it possible to play different games so am aiming to make my classes as reusable as possible. 
 
-#### Overview of Classes in Javascript
-JavaScript being a prototype-based language declares classes based on a function syntax, Basically, you are defining a named object through a function. From 2015, using the keyword class was introduced as a way to create a cleaner syntax for declaring functions. However, this change is only syntax-based and does not change of the class is dealt with behind the scenes. For people with a background in an object-based language such as Java or C++, looking at the function syntax helps explain how JavaScript is actually processing the class through prototype
+#### Overview of Classes in JavaScript
+JavaScript being a prototype-based language declares classes based on a function syntax, Basically, you are defining a named object through a function. From 2015, using the keyword class was introduced as a way to create a cleaner syntax for declaring functions. However, this change is only syntax-based and does not change of the class is dealt with behind the scenes. For people with a background in an object-based language such as Java or C++, looking at the function syntax helps explain how JavaScript is actually processing the class through prototype.
+
+###### Classes in the Console 
+When outputting instances of classes to the console, regardless of the syntax the structure is the same. The class holds the prototype property that is seen in the console output as __proto__. 
 
 ##### Class Definition
 To start, I created a Card class to hold the value, suit, and symbol of each card. 
@@ -224,7 +227,8 @@ class Com extends User {
         this.createdUser();
     }
     createdUser(){
-        alert('Created Com: \nName: ' + this.name + '\nGame:' + this.game + '\nLevel: ' + this.level)
+        alert('Created Com: \nName: ' + this.name + '\nGame:' 
+        + this.game + '\nLevel: ' + this.level)
     }
     //getters
     getLevel(){
@@ -263,7 +267,8 @@ Com.prototype.setLevel = function(level) {
     this.level = level;
 }
 Com.prototype.createdCom = function () {
-    return alert('Created Com: \nName: ' + this.name + '\nGame:' + this.game + '\nLevel: ' + this.level)
+    return alert('Created Com: \nName: ' + this.name + '\nGame:' 
+    + this.game + '\nLevel: ' + this.level)
 }
 ----
 
