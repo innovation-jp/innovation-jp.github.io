@@ -4,50 +4,273 @@
 
 The lone English writer Ah-Yung here!  Like the three musketeers with PHP comes the need to know Javascript and HTML. After studying the three I thought it would be interesting to see what I could make. This time I will be focusing on Javascript and how classes work within the language.
 
-## The Complete Puzzle
+#### The Complete Puzzle
 My goal is to create a simple game of Blackjack utilizing classes in Javascript. So lets start piecing together this program. In the future I plan to make it possible to play different games so am aiming to make my classes as reusable as possible. 
 
-## Overview of Classes in Javascript
+#### Overview of Classes in Javascript
 JavaScript being a prototype-based language declares classes based on a function syntax, Basically, you are defining a named object through a function. From 2015, using the keyword class was introduced as a way to create a cleaner syntax for declaring functions. However, this change is only syntax-based and does not change of the class is dealt with behind the scenes. For people with a background in an object-based language such as Java or C++, looking at the function syntax helps explain how JavaScript is actually processing the class through prototype
 
-## Class Definition
+##### Class Definition
 To start, I created a Card class to hold the value, suit, and symbol of each card. 
 Here is the class definition using the new syntax versus function syntax.
 
 [cols="2*"]
 |===
-a | ----
+a| Class-Syntax
+----
 class Card {										 
     constructor(suit, value, symbol) {
         this.suit = suit;
         this.value = value;
         this.symbol = symbol;
-    }														 
+    }
+ }
 ----
 
-| hi
+a| Function-Syntax
+----
+var Card = function(suit, value, symbol) {
+    this.suit = suit;
+    this.value = value;
+    this.symbol = symbol;
+}
+----
 |===
 
-### Constructor
-On lines == the constructor is defined, which is called each time an instance of the class is created. Any JS function can be used for the constructor.
+###### Constructor
+With the class-syntax its easy to see where the constructor is defined, whereas with the function-syntax it's a little more difficult. The constructor is called each time an instance of the class is created. Any JS function can be used for the constructor.
 
-## Getters and Setters
+##### Getters and Setters
 Those familiar with classes will think of getters and setters, however in JS since all of the lass properties are by default public getters and setters are not regularly used However, they are necessary when JS is run in strict mode. Normally the properties of a JS class are accessed using dot-notation. 
 
 JS is more flexible in that properties can either be added to individual instances of classes or a new property can be added to the constructor even after the class is defined. 
 
-## Static Methods
+[cols="2*"]
+|===
+a| Class-Syntax
+----
+    //getter for each element of the card
+    getSuit() {
+        return this.suit;
+    }
+    getValue() {
+        return this.value;
+    }
+    getSymbol() {
+        return this.symbol;
+    }
+    //setter for each element of the card
+    setSuit(suit) {
+        this.suit = suit;
+    }
+    setValue(value) {
+        this.value = value;
+    }
+    setSymbol(symbol) {
+        this.symbol = symbol;
+    }
+----
+
+a| Function-Syntax
+----
+Card.prototype.setSuit = function(suit) {
+    this.suit = suit;
+} 
+Card.prototype.setValue = function(value) {
+    this.value = value;
+} 
+Card.prototype.setSymbol = function(symbol) {
+    this.symbol = symbol;
+} 
+----
+|===
+
+##### Static Methods
 With classes comes static methods which are useful when functions in direct correlation to the class abstract itself are needed. In this case, when adding up the total of the cards I wanted to specify which property to sum together. 
 
-### Pass By Reference
+[cols="2*"]
+|===
+a| Class-Syntax
+----
+    static sumCards(cards) {
+        var sum = 0;
+        for(var x in cards){
+            sum += cards[x].value;
+        }
+        return sum;
+    }
+----
+
+a| Function-Syntax
+----
+Card.sumCards = function(cards) {
+    var sum = 0;
+    for(var x in cards){
+        sum += cards[x].value;
+    }
+    return sum;
+}
+----
+|===
+
+
+##### Pass By Reference
 In general, with Javascript one point to be careful about when working with classes is that objects are by default always passed by reference. The original object will be affected if a function changes any of the objects properties. 
 
-## Extending Classes
+##### To Put Everything Together...
+[cols="2*"]
+|===
+a| Class-Syntax
+----
+class Card {
+    constructor(suit, value, symbol) {
+        this.suit = suit;
+        this.value = value;
+        this.symbol = symbol;
+    }
+    
+    //getter for each element of the card
+    getSuit() {
+        return this.suit;
+    }
+    getValue() {
+        return this.value;
+    }
+    getSymbol() {
+        return this.symbol;
+    }
+    //setter for each element of the card
+    setSuit(suit) {
+        this.suit = suit;
+    }
+    setValue(value) {
+        this.value = value;
+    }
+    setSymbol(symbol) {
+        this.symbol = symbol;
+    }
+    //sum array of cards
+    static sumCards(cards) {
+        var sum = 0;
+        for(var x in cards){
+            sum += cards[x].value;
+        }
+        return sum;
+    }
+}
+----
+
+a| Function-Syntax
+----
+var Card = function(suit, value, symbol) {
+    this.suit = suit;
+    this.value = value;
+    this.symbol = symbol;
+}
+Card.prototype.setSuit = function(suit) {
+    this.suit = suit;
+} 
+Card.prototype.setValue = function(value) {
+    this.value = value;
+} 
+Card.prototype.setSymbol = function(symbol) {
+    this.symbol = symbol;
+} 
+
+Card.sumCards = function(cards) {
+    var sum = 0;
+    for(var x in cards){
+        sum += cards[x].value;
+    }
+    return sum;
+}
+----
+|===
+
+##### Extending Classes
 One of the main points with classes is being able to extend them and create child classes from parent classes. For my program I wanted a user class that could be then used to define a computer player class.. User, the parent class, has the properties name and game so that the player can input their name and which game they want to play. Whereas the Com class would have an additional Level property in order to set the difficulty level. 
 
-When using function syntax a couple lines need to be added in order for the child class to access the parent class: methods and constructor. 
+When using function syntax a couple lines need to be added in order for the child class to access the parent class: methods and constructor.
 
-## In Conclusion.....to be continued?
+[cols="2*"]
+|===
+a| Class-Syntax
+----
+class User {
+    constructor(name, game) {
+    	 this.name = name \|\| 'Player1';
+        this.game = game;
+    }
+    //getters
+    getName() {
+        return this.name;
+    }
+    getGame() {
+        return this.game;
+    }
+    //setters
+    setName(name) {
+        this.name = name;
+    }
+    setGame(game) {
+        this.game = game;
+    }
+}
+
+class Com extends User {
+    constructor(name, game, level) {
+        super(name, game);
+        this.level = level \|\| 1;
+        this.createdUser();
+    }
+    createdUser(){
+        alert('Created Com: \nName: ' + this.name + '\nGame:' + this.game + '\nLevel: ' + this.level)
+    }
+    //getters
+    getLevel(){
+        return this.level;
+    }
+    //setters
+    setLevel(level){
+        this.level = level;
+    }
+}
+----
+
+a| Function-Syntax
+----
+//make a class user and extend it to be player and com
+var User = function(name, game) {
+    this.name = name \|\| 'Player1';
+    this.game = game;
+}
+User.prototype.setName = function(name) {
+    this.name = name;
+}
+User.prototype.setGame = function(game) {
+    this.game = game;
+}
+
+function Com(name, game, level) {
+    User.call(this, name, game);
+    this.level = level \|\| 1;
+    this.createdCom();
+}
+//this line necessary to allow child classes to access parent methods
+Com.prototype = Object.create(User.prototype);
+
+Com.prototype.setLevel = function(level) {
+    this.level = level;
+}
+Com.prototype.createdCom = function () {
+    return alert('Created Com: \nName: ' + this.name + '\nGame:' + this.game + '\nLevel: ' + this.level)
+}
+----
+
+|===
+
+
+#### In Conclusion.....to be continued?
 In summary, there are many different ways to utilize classes in Javascript, and with them it can be helpful to reduce redundant code. For the beginnings of my program I now have my Card, User, and Com classes. Hmmm what could be next…Look forward to it! 
 
 Done
