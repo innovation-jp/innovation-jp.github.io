@@ -10,8 +10,6 @@ My goal is to create a simple game of Blackjack utilizing classes in JavaScript.
 #### Overview of Classes in JavaScript
 JavaScript being a prototype-based language declares classes based on a function syntax, Basically, you are defining a named object through a function. From 2015, using the keyword class was introduced as a way to create a cleaner syntax for declaring functions. However, this change is only syntax-based and does not change of the class is dealt with behind the scenes. For people with a background in an object-based language such as Java or C++, looking at the function syntax helps explain how JavaScript is actually processing the class through prototype.
 
-###### Classes in the Console 
-When outputting instances of classes to the console, regardless of the syntax the structure is the same. The class holds the prototype property that is seen in the console output as __proto__. 
 
 ##### Class Definition
 To start, I created a Card class to hold the value, suit, and symbol of each card. 
@@ -189,6 +187,12 @@ Card.sumCards = function(cards) {
 }
 ----
 |===
+
+###### Classes in the Console 
+When outputting instances of classes to the console, regardless of the syntax the structure is the same. The class holds the prototype property that is seen in the console output as \___proto___. 
+
+image:/images/ahyung/スクリーンショット 2018-09-24 17.17.53.png[width="250"]
+    
 
 ##### Extending Classes
 One of the main points with classes is being able to extend them and create child classes from parent classes. For my program I wanted a user class that could be then used to define a computer player class.. User, the parent class, has the properties name and game so that the player can input their name and which game they want to play. Whereas the Com class would have an additional Level property in order to set the difficulty level. 
