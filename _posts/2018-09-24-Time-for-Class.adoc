@@ -197,7 +197,14 @@ image:/images/ahyung/スクリーンショット 2018-09-24 17.17.53.png[width="
 ##### Extending Classes
 One of the main points with classes is being able to extend them and create child classes from parent classes. For my program I wanted a user class that could be then used to define a computer player class.. User, the parent class, has the properties name and game so that the player can input their name and which game they want to play. Whereas the Com class would have an additional Level property in order to set the difficulty level. 
 
-When using function syntax a couple lines need to be added in order for the child class to access the parent class: methods and constructor.
+Class-syntax allows the usage of the super keyword to allow child classes to access parent constructors and methods.
+When using function syntax a couple lines need to be added in order for the child class to access the parent class: methods and constructor. 
+----
+//used to allow child classes to access parents properties
+    User.call(this, name, game);
+//used to allow child classes to access parents constructor
+    Com.prototype = Object.create(User.prototype);
+----
 
 [cols="2*"]
 |===
