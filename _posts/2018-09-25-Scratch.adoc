@@ -23,7 +23,9 @@
 バブルソートで昇順に並び替えるプログラムを作ってみました。
 以下に画像を載せておきます。（1枚目、実行後の画面。2枚目、プログラム）
 
-image:/images/yasuhiro/scratch/scratch_sample2.gif[]
+image:/images/yasuhiro/scratch/bubble_sort_result.png
+
+image:/images/yasuhiro/scratch/bubble_sort_script.png
 
 プログラムについては、「〇〇を受け取ったとき」の処理の概要を説明したいと思います。+
 ●initializeAllData・・・利用している全ての変数に初期値を代入する処理
@@ -47,9 +49,9 @@ image:/images/yasuhiro/scratch/scratch_blog_1.gif[]
         
 以下に画像を載せます↓↓↓
 
-image:/images/yasuhiro/scratch/scratch_code.png[width="500"]
+image:/images/yasuhiro/scratch/visual_bubble_sort_script.png
 ↑メインのプログラムとモデル１に対応する位置移動プログラム
-image:/images/yasuhiro/scratch/scratch_code1.png[width="500"]
+image:/images/yasuhiro/scratch/visual_bubble_sort_script_2.png[width="500"]
 ↑モデル２に対応する位置移動プログラム（３〜１０もほぼ同じ）
 
 処理の概要＆変数の説明
