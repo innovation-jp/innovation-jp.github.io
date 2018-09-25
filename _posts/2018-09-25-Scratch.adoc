@@ -38,6 +38,7 @@ image:/images/yasuhiro/scratch/bubble_sort_script.png
 おそらく、これでバブルソートを行えていると思うので、これをもとに可視化に挑戦してみました。
 早速ですが、結果がこちらになります。↓↓↓
 
+image:/images/yasuhiro/scratch/scratch_blog_２.gif[]
 
 プログラムのコードはこんな感じです。ロジックを説明すると長くなるので、
 プログラムの概要と先ほどのように「〇〇を受け取ったとき」の処理の概要を説明したいと思います。
