@@ -191,7 +191,8 @@ Card.sumCards = function(cards) {
 ###### Classes in the Console 
 When outputting instances of classes to the console, regardless of the syntax the structure is the same. The class holds the prototype property that is seen in the console output as \___proto___. 
 
-image:/images/ahyung/スクリーンショット 2018-09-24 17.17.53.png[width="250"]
+image:/images/ahyung/スクリーンショット 2018-09-26 14.10.59.png[width="250"]
+    
     
 
 ##### Extending Classes
