@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Scratchでバブルソートを可視化してみた - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Scratchでバブルソートを可視化してみた">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Scratchでバブルソートを可視化してみた">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/09/25/Scratch.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Scratchでバブルソートを可視化してみた" />
+    <meta property="og:description" content="おはようございます。エンジニア一年目のやすと申します。 今回は、前回に引き続き「Scratch」を利用していきたいと思います。 簡単な前書き 「Scratch」の説明については、前回のブログの前書きで述べているのでよろしければ読んでみてください！ → http://tech.innovation.co.jp/2018/07/26/Scratch.html - Scratchでインスタ映えする図形描画をしてくれるもの作ってみた 前回、「せっかく自分のエンジニアの原点とも呼べるものなので、ゆくゆくは何か作品を作ってみたいと思い、今回は簡単に触れてみました！..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/09/25/Scratch.html" />
+    <meta property="article:published_time" content="2018-09-24T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-09-26T05:30:33.308Z" />
+    <meta property="article:tag" content="Scratch" />
+    <meta property="article:tag" content="Bubble sort" />
+    <meta property="article:tag" content="Yasu" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Scratchでバブルソートを可視化してみた" />
+    <meta name="twitter:description" content="おはようございます。エンジニア一年目のやすと申します。 今回は、前回に引き続き「Scratch」を利用していきたいと思います。 簡単な前書き 「Scratch」の説明については、前回のブログの前書きで述べているのでよろしければ読んでみてください！ → http://tech.innovation.co.jp/2018/07/26/Scratch.html - Scratchでインスタ映えする図形描画をしてくれるもの作ってみた 前回、「せっかく自分のエンジニアの原点とも呼べるものなので、ゆくゆくは何か作品を作ってみたいと思い、今回は簡単に触れてみました！..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/09/25/Scratch.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars2.githubusercontent.com/u/39402426?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "Scratchでバブルソートを可視化してみた",
+    "url": "http://tech.innovation.co.jp/2018/09/25/Scratch.html",
+    "datePublished": "2018-09-24T15:00:00.000Z",
+    "dateModified": "2018-09-26T05:30:33.308Z",
+    "keywords": "Scratch,  Bubble sort,  Yasu",
+    "description": "おはようございます。エンジニア一年目のやすと申します。 今回は、前回に引き続き「Scratch」を利用していきたいと思います。 簡単な前書き 「Scratch」の説明については、前回のブログの前書きで述べているのでよろしければ読んでみてください！ → http://tech.innovation.co.jp/2018/07/26/Scratch.html - Scratchでインスタ映えする図形描画をしてくれるもの作ってみた 前回、「せっかく自分のエンジニアの原点とも呼べるものなので、ゆくゆくは何か作品を作ってみたいと思い、今回は簡単に触れてみました！..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Scratch tag-Bubble-sort tag-Yasu no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="25 Sep 2018" class="post-meta__date date">25 Sep 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Scratch">Scratch</a>, <a href="http://tech.innovation.co.jp/tag/Bubble-sort"> Bubble sort</a>, <a href="http://tech.innovation.co.jp/tag/Yasu"> Yasu</a></span>
+        <span class="post-meta__author author"><img src="https://avatars2.githubusercontent.com/u/39402426?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">Scratchでバブルソートを可視化してみた</h1>
+    </header>
+
+    <section class="post tag-Scratch tag-Bubble-sort tag-Yasu">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>おはようございます。エンジニア一年目のやすと申します。</p>
+</div>
+<div class="paragraph">
+<p>今回は、前回に引き続き「Scratch」を利用していきたいと思います。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">簡単な前書き</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>「Scratch」の説明については、前回のブログの前書きで述べているのでよろしければ読んでみてください！
+→
+<a href="http://tech.innovation.co.jp/2018/07/26/Scratch.html" class="bare">http://tech.innovation.co.jp/2018/07/26/Scratch.html</a> - Scratchでインスタ映えする図形描画をしてくれるもの作ってみた</p>
+</div>
+<div class="paragraph">
+<p>前回、「せっかく自分のエンジニアの原点とも呼べるものなので、ゆくゆくは何か作品を作ってみたいと思い、今回は簡単に触れてみました！」<br>
+ということだったので、今回は色々な機能を使ってみました。
+ブログ内容ですが、最近ソートアルゴリズムを復習した時に色々な方が行っていたソートアルゴリズムの可視化に+
+「Scratch」で挑戦し、出来上がったスクリプトを紹介したいと思います。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">作ってみたもの</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>今回は、バブルソートを「Scratch」で可視化出来ないか挑戦しました。。<br>
+まずは、1から100までの数字でランダムに10個選び、配列に挿入したものを<br>
+バブルソートで昇順に並び替えるプログラムを作ってみました。
+以下に画像を載せておきます。（1枚目、実行後の画面。2枚目、プログラム）</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/yasuhiro/scratch/bubble_sort_result.png" alt="bubble_sort_result.png" width="500"></span>
+　　　　　　　　　　　　　　　　　　　　　　　　　↑dataはソート前の配列、sort_dataはソート後の配列</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/yasuhiro/scratch/bubble_sort_script.png" alt="bubble_sort_script.png" width="500"></span></p>
+</div>
+<div class="paragraph">
+<p>プログラムについては、「〇〇を受け取ったとき」の処理の概要を説明したいと思います。<br>
+●initializeAllData・・・利用している全ての変数に初期値を代入する処理<br>
+●insertData・・・配列に指定した範囲の乱数を挿入する処理<br>
+●bubbleSort・・・バブルソートを行う処理<br>
+●swapData・・・配列のj番目とj-1番目の要素を入れ替える処理</p>
+</div>
+<div class="paragraph">
+<p>おそらく、これでバブルソートを行えていると思うので、これをもとに可視化に挑戦してみました。
+早速ですが、結果がこちらになります。↓↓↓</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/yasuhiro/scratch/scratch_blog_2.gif" alt="scratch_blog_2.gif"></span></p>
+</div>
+<div class="paragraph">
+<p>プログラムのコードはこんな感じです。ロジックを説明すると長くなるので、
+プログラムの概要と先ほどのように「〇〇を受け取ったとき」の処理の概要を説明したいと思います。</p>
+</div>
+<div class="paragraph">
+<p>まず、概要ですが先ほど作ったバブルソートのプログラム内の配列要素に１０個のモデル（画像）を対応させて、
+モデルの大きさや位置を変化させることで、可視化っぽいことを行っています。<br>
+次にプログラムの流れですが、<br>
+１、データの初期化、モデルを初期位置に移動<br>
+２、配列にランダムな数字を挿入<br>
+３、配列の要素に応じてモデルの大きさを変更<br>
+４、バブルソートを行う+
+５、j番目とj-1番目の要素が入れ替わる時、モデルも同様に入れ換える<br></p>
+</div>
+<div class="paragraph">
+<p>　　　　　　　　　　　　　　以下に画像を載せます↓
+<span class="image"><img src="/images/yasuhiro/scratch/visual_bubble_sort_script.png" alt="visual_bubble_sort_script.png" width="500"></span><br>
+　　　　　　　　　　　　↑メインのプログラムとモデル１に対応する位置移動プログラム<br>
+            <span class="image"><img src="/images/yasuhiro/scratch/visual_bubble_sort_script_2.png" alt="visual_bubble_sort_script_2.png" width="500"></span><br>
+　　　　　　　　　　　　↑モデル２に対応する位置移動プログラム（モデル３〜１０もほぼ同じ）<br></p>
+</div>
+<div class="paragraph">
+<p>処理の概要＆変数の説明<br>
+◎「model_number」←モデル名を保持する配列（例えば対応する要素が1番目から２番目になった時、この配列での順番も同様に変更することで、モデルの位置を把握する）<br>
+●<strong>changeSize</strong>・・・モデルと対応する配列の要素によって、モデルの大きさを％単位で変更<br>
+●<strong>swapFirstModel_◯◯</strong>・・・〇〇の部分に移動させるモデル名が入る。入れ替えるモデルのうち、始めに片方の位置を一時的に保存してその片方だけ移動させる。<br>
+●<strong>swapSecondModel_◯◯</strong>　・・・ 〇〇の部分に移動させるモデル名が入る。指定されたモデルの位置を一時的に保存していた位置に移動させる。 <br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">まとめ</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>今回は、イメージしたものを躓かずにサラサラ実装できたのでとてもものづくり精神が活性化されました。<br>
+ある程度、基本的なロジックは完成したので、他のソートアルゴリズムにも挑戦して行こうかなと思います。<br>
+またまた、ニーズのないブログの内容になってしまいましたが、もう少しだけScratch触っていき自己満足できるものを作っていきたいと思います。<br></p>
+</div>
+<div class="paragraph">
+<p>関連サイト：<br>
+<a href="https://scratch.mit.edu/studios/1168062/Scratch" class="bare">https://scratch.mit.edu/studios/1168062/Scratch</a> Studio - Scratchではじめよう！プログラミング入門</p>
+</div>
+<div class="paragraph">
+<p>done</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11783-1';
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+</body>
+</html>
