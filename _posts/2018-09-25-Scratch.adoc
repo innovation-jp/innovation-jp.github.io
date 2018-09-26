@@ -53,7 +53,7 @@ image:/images/yasuhiro/scratch/scratch_blog_2.gif[]
 ４、バブルソートを行う+ 
 ５、j番目とj-1番目の要素が入れ替わる時、モデルも同様に入れ換える +
         
-　　　　　　　　　　　　　　以下に画像を載せます↓+ 
+　　　　　　　　　　　　　　以下に画像を載せます↓
 image:/images/yasuhiro/scratch/visual_bubble_sort_script.png[width="500"] +
 　　　　　　　　　　　　↑メインのプログラムとモデル１に対応する位置移動プログラム +
             image:/images/yasuhiro/scratch/visual_bubble_sort_script_2.png[width="500"] +
