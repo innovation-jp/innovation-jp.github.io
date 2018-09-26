@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Time for Class - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Time for Class">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Time for Class">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/09/24/Time-for-Class.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Time for Class" />
+    <meta property="og:description" content="The lone English writer Ah-Yung here!  Like the three musketeers with PHP comes the need to know JavaScript and HTML. After studying the three I thought it would be interesting to see what I could make. This time I will..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/09/24/Time-for-Class.html" />
+    <meta property="article:published_time" content="2018-09-23T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-09-26T05:54:19.693Z" />
+    <meta property="article:tag" content="AhYung" />
+    <meta property="article:tag" content="JavaScript" />
+    <meta property="article:tag" content="classes" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Time for Class" />
+    <meta name="twitter:description" content="The lone English writer Ah-Yung here!  Like the three musketeers with PHP comes the need to know JavaScript and HTML. After studying the three I thought it would be interesting to see what I could make. This time I will..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/09/24/Time-for-Class.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars1.githubusercontent.com/u/22947387?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "Time for Class",
+    "url": "http://tech.innovation.co.jp/2018/09/24/Time-for-Class.html",
+    "datePublished": "2018-09-23T15:00:00.000Z",
+    "dateModified": "2018-09-26T05:54:19.693Z",
+    "keywords": "AhYung,  JavaScript,  classes",
+    "description": "The lone English writer Ah-Yung here!  Like the three musketeers with PHP comes the need to know JavaScript and HTML. After studying the three I thought it would be interesting to see what I could make. This time I will..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Ah-Yung tag-Java-Script tag-classes no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="24 Sep 2018" class="post-meta__date date">24 Sep 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Ah-Yung">AhYung</a>, <a href="http://tech.innovation.co.jp/tag/Java-Script"> JavaScript</a>, <a href="http://tech.innovation.co.jp/tag/classes"> classes</a></span>
+        <span class="post-meta__author author"><img src="https://avatars1.githubusercontent.com/u/22947387?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">Time for Class</h1>
+    </header>
+
+    <section class="post tag-Ah-Yung tag-Java-Script tag-classes">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The lone English writer Ah-Yung here!  Like the three musketeers with PHP comes the need to know JavaScript and HTML. After studying the three I thought it would be interesting to see what I could make. This time I will be focusing on JavaScript and how classes work within the language.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_the_complete_puzzle">The Complete Puzzle</h4>
+<div class="paragraph">
+<p>My goal is to create a simple game of Blackjack utilizing classes in JavaScript. So lets start piecing together this program. In the future I plan to make it possible to play different games so am aiming to make my classes as reusable as possible.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_overview_of_classes_in_javascript">Overview of Classes in JavaScript</h4>
+<div class="paragraph">
+<p>JavaScript being a prototype-based language declares classes based on a function syntax, Basically, you are defining a named object through a function. From 2015, using the keyword class was introduced as a way to create a cleaner syntax for declaring functions. However, this change is only syntax-based and does not change of the class is dealt with behind the scenes. For people with a background in an object-based language such as Java or C++, looking at the function syntax helps explain how JavaScript is actually processing the class through prototype.</p>
+</div>
+<div class="sect4">
+<h5 id="_class_definition">Class Definition</h5>
+<div class="paragraph">
+<p>To start, I created a Card class to hold the value, suit, and symbol of each card.
+Here is the class definition using the new syntax versus function syntax.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Class-Syntax</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>class Card {
+    constructor(suit, value, symbol) {
+        this.suit = suit;
+        this.value = value;
+        this.symbol = symbol;
+    }
+ }</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Function-Syntax</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>var Card = function(suit, value, symbol) {
+    this.suit = suit;
+    this.value = value;
+    this.symbol = symbol;
+}</pre>
+</div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="sect5">
+<h6 id="_constructors">Constructors</h6>
+<div class="paragraph">
+<p>With the class-syntax its easy to see where the constructor is defined, whereas with the function-syntax it&#8217;s a little more difficult. The constructor is called each time an instance of the class is created. Any JS function can be used for the constructor.</p>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_getters_and_setters">Getters and Setters</h5>
+<div class="paragraph">
+<p>Those familiar with classes will think of getters and setters, however in JS since all of the lass properties are by default public getters and setters are not regularly used However, they are necessary when JS is run in strict mode. Normally the properties of a JS class are accessed using dot-notation.</p>
+</div>
+<div class="paragraph">
+<p>JS is more flexible in that properties can either be added to individual instances of classes or a new property can be added to the constructor even after the class is defined.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Class-Syntax</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>    //getter for each element of the card
+    getSuit() {
+        return this.suit;
+    }
+    getValue() {
+        return this.value;
+    }
+    getSymbol() {
+        return this.symbol;
+    }
+    //setter for each element of the card
+    setSuit(suit) {
+        this.suit = suit;
+    }
+    setValue(value) {
+        this.value = value;
+    }
+    setSymbol(symbol) {
+        this.symbol = symbol;
+    }</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Function-Syntax</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Card.prototype.setSuit = function(suit) {
+    this.suit = suit;
+}
+Card.prototype.setValue = function(value) {
+    this.value = value;
+}
+Card.prototype.setSymbol = function(symbol) {
+    this.symbol = symbol;
+}</pre>
+</div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_static_methods">Static Methods</h5>
+<div class="paragraph">
+<p>With classes comes static methods which are useful when functions in direct correlation to the class abstract itself are needed. In this case, when adding up the total of the cards I wanted to specify which property to sum together.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Class-Syntax</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>    static sumCards(cards) {
+        var sum = 0;
+        for(var x in cards){
+            sum += cards[x].value;
+        }
+        return sum;
+    }</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Function-Syntax</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Card.sumCards = function(cards) {
+    var sum = 0;
+    for(var x in cards){
+        sum += cards[x].value;
+    }
+    return sum;
+}</pre>
+</div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_pass_by_reference">Pass By Reference</h5>
+<div class="paragraph">
+<p>In general, with Javascript one point to be careful about when working with classes is that objects are by default always passed by reference. The original object will be affected if a function changes any of the objects properties.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_put_everything_together">To Put Everything Together&#8230;&#8203;</h5>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Class-Syntax</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>class Card {
+    constructor(suit, value, symbol) {
+        this.suit = suit;
+        this.value = value;
+        this.symbol = symbol;
+    }
+
+    //getter for each element of the card
+    getSuit() {
+        return this.suit;
+    }
+    getValue() {
+        return this.value;
+    }
+    getSymbol() {
+        return this.symbol;
+    }
+    //setter for each element of the card
+    setSuit(suit) {
+        this.suit = suit;
+    }
+    setValue(value) {
+        this.value = value;
+    }
+    setSymbol(symbol) {
+        this.symbol = symbol;
+    }
+    //sum array of cards
+    static sumCards(cards) {
+        var sum = 0;
+        for(var x in cards){
+            sum += cards[x].value;
+        }
+        return sum;
+    }
+}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Function-Syntax</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>var Card = function(suit, value, symbol) {
+    this.suit = suit;
+    this.value = value;
+    this.symbol = symbol;
+}
+Card.prototype.setSuit = function(suit) {
+    this.suit = suit;
+}
+Card.prototype.setValue = function(value) {
+    this.value = value;
+}
+Card.prototype.setSymbol = function(symbol) {
+    this.symbol = symbol;
+}
+
+Card.sumCards = function(cards) {
+    var sum = 0;
+    for(var x in cards){
+        sum += cards[x].value;
+    }
+    return sum;
+}</pre>
+</div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="sect5">
+<h6 id="_classes_in_the_console">Classes in the Console</h6>
+<div class="paragraph">
+<p>When outputting instances of classes to the console, regardless of the syntax the structure is the same. The class holds the prototype property that is seen in the console output as <em>__proto__</em>.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/ahyung/スクリーンショット 2018-09-26 14.10.59.png" alt="スクリーンショット 2018-09-26 14.10.59.png" width="250"></span></p>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_extending_classes">Extending Classes</h5>
+<div class="paragraph">
+<p>One of the main points with classes is being able to extend them and create child classes from parent classes. For my program I wanted a user class that could be then used to define a computer player class.. User, the parent class, has the properties name and game so that the player can input their name and which game they want to play. Whereas the Com class would have an additional Level property in order to set the difficulty level.</p>
+</div>
+<div class="paragraph">
+<p>Class-syntax allows the usage of the super keyword to allow child classes to access parent constructors and methods.
+When using function syntax a couple lines need to be added in order for the child class to access the parent class: methods and constructor.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>//used to allow child classes to access parents properties
+    User.call(this, name, game);
+//used to allow child classes to access parents constructor
+    Com.prototype = Object.create(User.prototype);</pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Class-Syntax</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>class User {
+    constructor(name, game) {
+    	 this.name = name || 'Player1';
+        this.game = game;
+    }
+    //getters
+    getName() {
+        return this.name;
+    }
+    getGame() {
+        return this.game;
+    }
+    //setters
+    setName(name) {
+        this.name = name;
+    }
+    setGame(game) {
+        this.game = game;
+    }
+}
+
+class Com extends User {
+    constructor(name, game, level) {
+        super(name, game);
+        this.level = level || 1;
+        this.createdUser();
+    }
+    createdUser(){
+        alert('Created Com: \nName: ' + this.name + '\nGame:'
+        + this.game + '\nLevel: ' + this.level)
+    }
+    //getters
+    getLevel(){
+        return this.level;
+    }
+    //setters
+    setLevel(level){
+        this.level = level;
+    }
+}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Function-Syntax</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>var User = function(name, game) {
+    this.name = name || 'Player1';
+    this.game = game;
+}
+User.prototype.setName = function(name) {
+    this.name = name;
+}
+User.prototype.setGame = function(game) {
+    this.game = game;
+}
+
+function Com(name, game, level) {
+    User.call(this, name, game);
+    this.level = level || 1;
+    this.createdCom();
+}
+Com.prototype = Object.create(User.prototype);
+
+Com.prototype.setLevel = function(level) {
+    this.level = level;
+}
+Com.prototype.createdCom = function () {
+    return alert('Created Com: \nName: ' + this.name + '\nGame:'
+    + this.game + '\nLevel: ' + this.level)
+}</pre>
+</div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_in_conclusion_to_be_continued">In Conclusion&#8230;&#8203;..to be continued?</h4>
+<div class="paragraph">
+<p>In summary, there are many different ways to utilize classes in Javascript, and with them it can be helpful to reduce redundant code. For the beginnings of my program I now have my Card, User, and Com classes. Hmmm what could be next…Look forward to it!</p>
+</div>
+<div class="sect5">
+<h6 id="_references">References</h6>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://javascript.info/class" class="bare">https://javascript.info/class</a></p>
+</li>
+<li>
+<p><a href="https://www.w3schools.com/Js/js_function_parameters.asp" class="bare">https://www.w3schools.com/Js/js_function_parameters.asp</a></p>
+</li>
+<li>
+<p><a href="https://www.digitalocean.com/community/tutorials/understanding-classes-in-javascript#defining-methods" class="bare">https://www.digitalocean.com/community/tutorials/understanding-classes-in-javascript#defining-methods</a></p>
+</li>
+<li>
+<p><a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Basics#Object_basics" class="bare">https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Basics#Object_basics</a></p>
+</li>
+<li>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Details_of_the_Object_Model" class="bare">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Details_of_the_Object_Model</a></p>
+</li>
+<li>
+<p><a href="https://codeburst.io/javascript-pass-by-value-and-pass-by-reference-in-javascript-fcf10305aa9c" class="bare">https://codeburst.io/javascript-pass-by-value-and-pass-by-reference-in-javascript-fcf10305aa9c</a></p>
+</li>
+<li>
+<p><a href="https://abdulapopoola.com/2013/03/30/static-and-instance-methods-in-javascript/" class="bare">https://abdulapopoola.com/2013/03/30/static-and-instance-methods-in-javascript/</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Done</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11783-1';
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+</body>
+</html>
