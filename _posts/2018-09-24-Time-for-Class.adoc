@@ -191,8 +191,9 @@ Card.sumCards = function(cards) {
 ###### Classes in the Console 
 When outputting instances of classes to the console, regardless of the syntax the structure is the same. The class holds the prototype property that is seen in the console output as \___proto___. 
 
-image:/images/ahyung/スクリーンショット 2018-09-24 17.17.53.png[width="250"]
+image:/images/ahyung/スクリーンショット 2018-09-26 14.10.59.png [width="250"]
     
+     
 
 ##### Extending Classes
 One of the main points with classes is being able to extend them and create child classes from parent classes. For my program I wanted a user class that could be then used to define a computer player class.. User, the parent class, has the properties name and game so that the player can input their name and which game they want to play. Whereas the Com class would have an additional Level property in order to set the difficulty level. 
