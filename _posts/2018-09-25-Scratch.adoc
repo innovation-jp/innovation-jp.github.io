@@ -41,7 +41,7 @@ image:/images/yasuhiro/scratch/bubble_sort_script.png[width="500"]
 
 image:/images/yasuhiro/scratch/scratch_blog_2.gif[]
 
-プログラムのコードはこんな感じです。ロジックを説明すると長くなるので、
+プログラムの以下の画像です。ロジックを説明すると長くなるので、
 プログラムの概要と先ほどのように「〇〇を受け取ったとき」の処理の概要を説明したいと思います。
 
 まず、概要ですが先ほど作ったバブルソートのプログラム内の配列要素に１０個のモデル（画像）を対応させて、
@@ -53,7 +53,6 @@ image:/images/yasuhiro/scratch/scratch_blog_2.gif[]
 ４、バブルソートを行う+ 
 ５、j番目とj-1番目の要素が入れ替わる時、モデルも同様に入れ換える +
         
-　　　　　　　　　　　　　　以下に画像を載せます↓
 image:/images/yasuhiro/scratch/visual_bubble_sort_script.png[width="500"] +
 　　　　　　　　　　　　↑メインのプログラムとモデル１に対応する位置移動プログラム +
             image:/images/yasuhiro/scratch/visual_bubble_sort_script_2.png[width="500"] +
