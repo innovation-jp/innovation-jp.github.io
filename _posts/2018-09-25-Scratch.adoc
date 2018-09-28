@@ -25,8 +25,8 @@ http://tech.innovation.co.jp/2018/07/26/Scratch.html - Scratchでインスタ映
 バブルソートで昇順に並び替えるプログラムを作ってみました。
 以下に画像を載せておきます。（1枚目、実行後の画面。2枚目、プログラム）
 
-image:/images/yasuhiro/scratch/bubble_sort_result.png[width="500"]
-　　　↑dataはソート前の配列、sort_dataはソート後の配列
+image:/images/yasuhiro/scratch/bubble_sort_result.png[width="500"] +
+↑dataはソート前の配列、sort_dataはソート後の配列
 
 image:/images/yasuhiro/scratch/bubble_sort_script.png[width="500"]
 
