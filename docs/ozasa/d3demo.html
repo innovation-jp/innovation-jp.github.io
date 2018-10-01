@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>d3.jsで1日が残り何時間か表示させてみた</title>
+  	<meta charset="utf-8">
+    <!-- ローカルに落として参照することももちろん可能です。 -->
+    <script src="http://d3js.org/d3.v5.min.js"></script>
+    <style type="text/css">
+      #bar div {
+        font: 5px "メイリオ", sans-serif;
+        background-color: teal;
+        text-align: right;
+        padding: 3px;
+        margin: 1px;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div id="bar"></div>
+
+    <script>
+        var data = [];
+        // 1000ミリ秒毎に処理
+        setInterval(function(){
+          // 1日の残り時間を計算
+          var now = new Date();
+          var tomorrow = new Date();
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          tomorrow.setHours(0, 0, 0, 0);
+          var diff = (tomorrow.getTime() - now.getTime()) / 1000;
+          var hoursRemain   = (Math.floor(diff / (60 * 60))) % 24;
+          var minitesRemain = (Math.floor(diff / 60)) % 60;
+          var secondsRemain = Math.floor(diff) % 60;
+          minitesRemain = ("0" + minitesRemain).slice(-2);
+          secondsRemain = ("0" + secondsRemain).slice(-2);
+          // dataに残り時間をセット
+          data[0] = hoursRemain;
+          data[1] = minitesRemain;
+          data[2] = secondsRemain;
+          // mergeを使う場合
+          var bar_data = d3.select("#bar").selectAll("div").data(data);
+          bar_data.enter().append("div")
+              .merge(bar_data)
+              .style("width", function(d) { return d * 10 + "px"; })//グラフを少し大きめにするために*10しておく
+              .text(function(d) { return d; });
+        }, 1000);
+    </script>
+  </body>
+</html>
