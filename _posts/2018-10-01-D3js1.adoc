@@ -33,6 +33,8 @@ ____
 
 ## 作ったもの
 
+http://tech.innovation.co.jp/docs/ozasa/d3demo.html[制作物]
+
 [source, rust]
 ----
 <!DOCTYPE html>
