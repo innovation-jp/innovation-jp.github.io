@@ -1,0 +1,155 @@
+# D3.jsを使ってを「1日が残りどれくらいなのかが分かる時計」を作ってみた
+
+:hp-alt-title: D3.jsを使ってを「1日が残りどれくらいなのかが分かる時計」を作ってみた
+:hp-tags: D3.js, ozasa
+
+
+少しずつ気温が下がってきた今日この頃いかがお過ごしでしょうか。ozasaです。
+もう間も無く秋って感じでしょうかね、
+○○の秋といえば、皆様は何を想像されるでしょう？
+
+私はやはり芸術の秋です！
+
+ということでビジュアル表現を学ぶべく、
+今回はD3.jsを使ってを「1日が残りどれくらいなのかが分かる時計」を作ってみました。
+
+## D3.jsとは
+
+Data-Driven DocumentsでD3と名付けているようです。
+詳しくは
+
+[quote, 'https://d3js.org/[D3.js公式ページ]']
+____
+D3.js is a JavaScript library for manipulating documents based on data. D3 helps you bring data to life using HTML, SVG, and CSS. D3’s emphasis on web standards gives you the full capabilities of modern browsers without tying yourself to a proprietary framework, combining powerful visualization components and a data-driven approach to DOM manipulation.
+____
+
+
+
+ということでした。
+
+データドリブンというのが特徴的ですね。
+サンプルも多くあるので見てみてください。
+
+
+## 作ったもの
+
+[source, rust]
+----
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>d3.jsで1日が残り何時間か表示させてみた</title>
+  	<meta charset="utf-8">
+    <!-- ローカルに落として参照することももちろん可能です。 -->
+    <script src="http://d3js.org/d3.v5.min.js"></script>
+    <style type="text/css">
+      #bar div {
+        font: 5px "メイリオ", sans-serif;
+        background-color: teal;
+        text-align: right;
+        padding: 3px;
+        margin: 1px;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div id="bar"></div>
+
+    <script>
+        var data = [];
+        // 1000ミリ秒毎に処理
+        setInterval(function(){
+          // 1日の残り時間を計算
+          var now = new Date();
+          var tomorrow = new Date();
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          tomorrow.setHours(0, 0, 0, 0);
+          var diff = (tomorrow.getTime() - now.getTime()) / 1000;
+          var hoursRemain   = (Math.floor(diff / (60 * 60))) % 24;
+          var minitesRemain = (Math.floor(diff / 60)) % 60;
+          var secondsRemain = Math.floor(diff) % 60;
+          minitesRemain = ("0" + minitesRemain).slice(-2);
+          secondsRemain = ("0" + secondsRemain).slice(-2);
+          // dataに残り時間をセット
+          data[0] = hoursRemain;
+          data[1] = minitesRemain;
+          data[2] = secondsRemain;
+          // mergeを使う
+          var bar_data = d3.select("#bar").selectAll("div").data(data);
+          bar_data.enter().append("div")
+              .merge(bar_data)
+              .style("width", function(d) { return d * 10 + "px"; })//グラフを少し大きめにするために*10しておく
+              .text(function(d) { return d; });
+        }, 1000);
+    </script>
+  </body>
+</html>
+----
+
+
+## 詰まったところ
+
+### enterとupdataの考え方
+
+enterだけだと最初に入力したものしか反映されません。
+それはenterが新規に追加された要素を扱うものだからなのですが、
+ここをちゃんと理解できておらず、詰まりました！
+
+update処理はenterを記載しなければ良いです。
+mergeを使わない冗長なやり方としては、
+新規追加と更新処理を分けて記述する方法になるでしょうが、
+mergeによってそこを短縮する書き方ができています。
+
+冗長に書くなら以下のような形でしょうか。
+
+[source, rust]
+----
+// enter()だけだと最初に入力したものしか反映されない
+d3.select("#bar")
+  .selectAll("div")
+  .data(data)
+  .enter()
+  .append("div")
+  .style("width", function(d) { return d * 10 + "px"; })
+  .text(function(d) { return d; });
+// update用に同じような内容を記載すればmergeを同じ効果は得られる
+d3.select("#bar")
+  .selectAll("div")
+  .data(data)
+  .style("width", function(d) { return d * 10 + "px"; })
+  .text(function(d) { return d; });
+----
+
+公式にもドキュメントがあるのでご参考までに。
+
+https://github.com/d3/d3-selection/blob/master/README.md#selection_merge
+
+### merge
+
+ちなみにmergeはバージョンが4になった際、新しくなって実装されたものなので、
+バージョン3以下では動作しません。
+
+私は最初バージョン指定を間違えてしまっており、詰まりました！
+
+
+## 作ってみて
+
+思った以上に簡単にビジュアル表現ができるのは魅力的でした。 +
+D3.jsはデータドリブンという通り、やはりデータが肝になってくると思うので、
+もっと複雑なデータをよりリッチな表現で可視化してみたいと思えました！
+
+あと、 +
+作業中1日があとどれくらいかを見続けていたのですが、 +
+時間の有り難みを感じると共に焦りを感じたので、 +
+意外に精神がすり減りました。
+
+こちらからは以上です！
+
+
+*参考URL*
+
+https://kita-note.com/d3-basic-001
+
+https://qiita.com/ebisennet/items/ba7d437bf8165d28fd6d
