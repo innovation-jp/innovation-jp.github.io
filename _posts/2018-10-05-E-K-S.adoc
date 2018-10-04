@@ -1,0 +1,361 @@
+# EKSを触ってみた
+:hp-tags: AWS, EKS, Kubernetes, Shirota
+:published_at: 2018-10-05
+
+## 概要
+2018年10月現在、
+弊社サービスでも本番環境にDockerコンテナを利用している部分が増えてきました。
+
+AWSを利用している部分ではECSを利用していますが、
+今回Kubernetesを試すという意味で、EKSを触ってみることにしました。
+
+ユーザーガイド：
+https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/what-is-eks.html
+
+
+## 前提
+* Dockerの知識はある程度ある
+* 作業端末はMacを使用した（※未検証だがWindowsでも同じはず）
+* 作業端末で最新のawscliが使用できるようになっていること
+* AWSのIAMの知識があり、EKS用にAmazonEKSClusterPolicyとAmazonEKSServicePolicyがアタッチされたIAM roleが作成済みであること
+* AWSのEC2の知識があり、EC2に使えるキーペアが用意されていること
+* AWSのVPCの知識があり、VPCとサブネット2つが別AZで用意されていること
+* 今回はus-east-1リージョンで試しています
+
+# 料金
+1クラスター $0.2/hour（$4.8/day）
+＋
+利用するEC2料金
+
+# やったこと
+* 準備
+** kubectlインストール
+** aws-iam-authenticatorをインストール
+* クラスター作成
+* kubeconfig設定
+* 環境変数設定
+* クラスターの状態を確認
+* クラスターのWorkerノードを作成
+* WorkerノードのIAM roleを確認
+* Workerノードをクラスターに追加するための権限設定
+* サンプルアプリケーションをデプロイ
+* お片付け
+
+# 準備
+## kubectlインストール
+
+作業端末にkubectlをインストールします。
+kubectlコマンドはDockerでいうところのdockerコマンドと私は理解しています。
+
+今回ですが、EKS専用のkubectlがあるようなので、以下のようにインストールしました。
+
+```
+▶ cd
+▶ curl -o kubectl https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-07-26/bin/darwin/amd64/kubectl
+▶ chmod +x ./kubectl
+▶ mkdir bin
+▶ cp ./kubectl $HOME/bin/kubectl && export PATH=$HOME/bin:$PATH
+▶ echo 'export PATH=$HOME/bin:$PATH' >> ~/.zshrc
+▶ source ~/.zshrc
+▶ kubectl version --short --client
+# バージョンが表示されればOK
+```
+
+## aws-iam-authenticatorをインストール
+
+次に作業端末からEKSへの認証に使うaws-iam-authenticatorをインストールします
+
+```
+▶ curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-07-26/bin/darwin/amd64/aws-iam-authenticator
+▶ chmod +x ./aws-iam-authenticator
+▶ cp ./aws-iam-authenticator $HOME/bin/aws-iam-authenticator
+▶ aws-iam-authenticator help
+# help内容が出力されればOK
+```
+
+# クラスター作成
+
+クラスター作成ですが、
+AWSコンソールからポチポチして行うと、私は認証が上手くいかなかったので、
+awscliを利用して作成しました。
+
+```
+▶ aws eks create-cluster --name ekstest --role-arn arn:aws:iam::xxxxxxxxx:role/eks --resources-vpc-config subnetIds=subnet-xxxxxx,subnet-yyyyyy,securityGroupIds=sg-xxxxxx --region us-east-1
+{
+    "cluster": {
+        "name": "ekstest",
+        "arn": "arn:aws:eks:us-east-1:xxxxxx:cluster/ekstest",
+        "createdAt": 1538681196.817,
+        "version": "1.10",
+        "roleArn": "arn:aws:iam::xxxxxx:role/eks",
+        "resourcesVpcConfig": {
+            "subnetIds": [
+                "subnet-xxxxxx",
+                "subnet-yyyyyy"
+            ],
+            "securityGroupIds": [
+                "sg-xxxxxx"
+            ],
+            "vpcId": "vpc-xxxxxx"
+        },
+        "status": "CREATING",
+        "certificateAuthority": {}
+    }
+}
+```
+
+しばらく待ち、
+以下のようにstatus ACTIVEになればクラスターが作成されています。
+
+```
+▶ aws eks describe-cluster --name ekstest
+{
+    "cluster": {
+        "name": "ekstest",
+        "arn": "arn:aws:eks:us-east-1:xxxxxx:cluster/ekstest",
+        "createdAt": 1538681196.817,
+        "version": "1.10",
+        "endpoint": "https://4D96E0D0B3BB26EE15D7A25B8E26A0E2.yl4.us-east-1.eks.amazonaws.com",
+        "roleArn": "arn:aws:iam::xxxxxx:role/eks",
+        "resourcesVpcConfig": {
+            "subnetIds": [
+                "subnet-xxxxxx",
+                "subnet-yyyyyy"
+            ],
+            "securityGroupIds": [
+                "sg-xxxxxx"
+            ],
+            "vpcId": "vpc-xxxxxx"
+        },
+        "status": "ACTIVE",
+        "certificateAuthority": {
+            "data": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUN5RENDQWJDZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRFNE1UQXdOREU1TXpReU4xb1hEVEk0TVRBd01URTVNelF5TjFvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTUllCmRrV24wbG00MHBQd0VQYlN3TTYwQlgwdTRRUTViTXhTL21ZcjRxbDRqaUNHWDM3S0FtSHozWUdLZU5Lb3FzbEoKejdsb3BiRkdIV0c2TVZ6ZFlTeDMwNXNTeEYrNFBjdExIcTk5TUFPRFBsMDg2eUo3YXNHcW8zTnBML2xuaEFGUgpvdmc1TUVIY1A4UDFKTis4SzZ6ZkpqS09aK3NzUC9ZbUdQVWZsSWNPT2s2L2RHdzlVRFUvZWRFOUhJYmVGdVJKCjZySGRmZHluQk5udXpwZHM3RFRYU1ZSRUpHek9QVlYxVkVLMHdJVWxXcndaUVdHVmJnZUVrdjlPT201VUVsbFEKdmhMbTh6Z1JERktnZURwSFRNSXIvL20yUHRGTkNJemxVakZXRXpDZGVYZGxRSDBaR0xsSkVlTVVoMWs3cS9HNAphTGJwaHduaEk1Rmk0MXYzeE8wQ0F3RUFBYU1qTUNFd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFMMmlaNFhyUTBQNmNDRVJDeHBkMkxYTi81TUEKOWhhOVVVeWFCbGhaS2VXSC9Oa2h6cVNGQXRla3JPZHRNU0ovUzhHMko0dW1tcW5MbnBPZUpFZXM3eDhrd3ZybwpSZnJZQkZhdmxIVFZtWlhxb3pMRXNxSktGWXF2NjRTSmMxWTZoOTIzMll3cWlpU0QrbWUvUzhKM2NSR3NieEtxCmF4dkdKdjhLZG9yaUI2UE5JS25PbFlqbVhDZW45SGJhS1I1cFdQNm5TckQ4dUlTTTBiK2JJaExkSk8yN2ZGYjMKb3B5ZHVMdFZ3VnRzcXB2dS8zbGZQNGs5U3RxSkw3MHZOTmg2blJvcVhwMW1rZkwzOEsvUk40cW5hcVhLK0JadQpZdEowRE1KZXQyUlFNdTN3RDYvYWtudUIxdk9icUhpREFqcEVCTGYyclNobWRXcTBYQUo1S3pFT3g2UT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo="
+        }
+    }
+}
+```
+
+# kubeconfig設定
+
+設定ファイルを作成します。
+serverとcertificate-authority-dataは先程describeした値に適宜変更します。
+また、以下のekstestの部分はクラスター名になります。
+
+vi ~/.kube/config-ekstest
+
+```
+apiVersion: v1
+clusters:
+- cluster:
+    server: https://4D96E0D0B3BB26EE15D7A25B8E26A0E2.yl4.us-east-1.eks.amazonaws.com
+    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUN5RENDQWJDZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRFNE1UQXdOREU1TXpReU4xb1hEVEk0TVRBd01URTVNelF5TjFvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTUllCmRrV24wbG00MHBQd0VQYlN3TTYwQlgwdTRRUTViTXhTL21ZcjRxbDRqaUNHWDM3S0FtSHozWUdLZU5Lb3FzbEoKejdsb3BiRkdIV0c2TVZ6ZFlTeDMwNXNTeEYrNFBjdExIcTk5TUFPRFBsMDg2eUo3YXNHcW8zTnBML2xuaEFGUgpvdmc1TUVIY1A4UDFKTis4SzZ6ZkpqS09aK3NzUC9ZbUdQVWZsSWNPT2s2L2RHdzlVRFUvZWRFOUhJYmVGdVJKCjZySGRmZHluQk5udXpwZHM3RFRYU1ZSRUpHek9QVlYxVkVLMHdJVWxXcndaUVdHVmJnZUVrdjlPT201VUVsbFEKdmhMbTh6Z1JERktnZURwSFRNSXIvL20yUHRGTkNJemxVakZXRXpDZGVYZGxRSDBaR0xsSkVlTVVoMWs3cS9HNAphTGJwaHduaEk1Rmk0MXYzeE8wQ0F3RUFBYU1qTUNFd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFMMmlaNFhyUTBQNmNDRVJDeHBkMkxYTi81TUEKOWhhOVVVeWFCbGhaS2VXSC9Oa2h6cVNGQXRla3JPZHRNU0ovUzhHMko0dW1tcW5MbnBPZUpFZXM3eDhrd3ZybwpSZnJZQkZhdmxIVFZtWlhxb3pMRXNxSktGWXF2NjRTSmMxWTZoOTIzMll3cWlpU0QrbWUvUzhKM2NSR3NieEtxCmF4dkdKdjhLZG9yaUI2UE5JS25PbFlqbVhDZW45SGJhS1I1cFdQNm5TckQ4dUlTTTBiK2JJaExkSk8yN2ZGYjMKb3B5ZHVMdFZ3VnRzcXB2dS8zbGZQNGs5U3RxSkw3MHZOTmg2blJvcVhwMW1rZkwzOEsvUk40cW5hcVhLK0JadQpZdEowRE1KZXQyUlFNdTN3RDYvYWtudUIxdk9icUhpREFqcEVCTGYyclNobWRXcTBYQUo1S3pFT3g2UT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+  name: kubernetes
+contexts:
+- context:
+    cluster: kubernetes
+    user: aws
+  name: aws
+current-context: aws
+kind: Config
+preferences: {}
+users:
+- name: aws
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1alpha1
+      command: aws-iam-authenticator
+      args:
+        - "token"
+        - "-i"
+        - "ekstest"
+```
+
+# 環境変数設定
+
+作成した設定ファイルが読み込まれるようにします。
+
+```
+▶ export KUBECONFIG=$KUBECONFIG:~/.kube/config-ekstest
+echo 'export KUBECONFIG=$KUBECONFIG:~/.kube/config-ekstest' >> ~/.zshrc
+```
+
+# クラスターの状態を確認
+
+```
+▶ kubectl get svc
+NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+kubernetes   ClusterIP   10.100.0.1   <none>        443/TCP   10m
+```
+
+# クラスターのWorkerノードを作成
+
+ユーザーガイドを参考に以下のCloudFormationスタックを利用して作成していきます。
+ノードにはEC2を利用しています。
+
+※us-east-1の場合、今の所NodeImageIdにはami-dea4d5a1というAMIを指定するようです。
+
+```
+▶ aws cloudformation create-stack \
+  --template-body https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-06-05/amazon-eks-nodegroup.yaml \
+  --stack-name ekstest \
+  --capabilities CAPABILITY_IAM \
+  --parameters \
+    ParameterKey=ClusterName,ParameterValue=ekstest \
+    ParameterKey=ClusterControlPlaneSecurityGroup,ParameterValue=sg-xxxxxx \
+    ParameterKey=NodeGroupName,ParameterValue=ekstest \
+    ParameterKey=NodeAutoScalingGroupMinSize,ParameterValue=1 \
+    ParameterKey=NodeAutoScalingGroupMaxSize,ParameterValue=2 \
+    ParameterKey=NodeInstanceType,ParameterValue=t2.small \
+    ParameterKey=NodeImageId,ParameterValue=ami-dea4d5a1 \
+    ParameterKey=KeyName,ParameterValue=<EC2ノードへログインするキーペア名> \
+    ParameterKey=VpcId,ParameterValue=vpc-xxxxxx \
+    ParameterKey=Subnets,ParameterValue=\"subnet-xxxxxx,subnet-yyyyyy\"
+{
+    "StackId": "arn:aws:cloudformation:us-east-1:xxxxxx:stack/ekstest/5005eb70-c80f-11e8-ac03-50fae583dcd2"
+}
+```
+
+# WorkerノードのIAM roleを確認
+
+生成されたWorkerノードインスタンスへのIAMロールが作成されているので、ARNを確認しておきます。
+
+```
+▶ aws iam get-role --role-name $(aws cloudformation describe-stack-resources --stack-name ekstest --logical-resource-id NodeInstanceRole --query "StackResources[0].PhysicalResourceId" --output text) --query Role.Arn --output text
+arn:aws:iam::xxxxxx:role/ekstest-NodeInstanceRole-XXXXXX
+```
+
+# Workerノードをクラスターに追加するための権限設定
+
+Workerノードをクラスターに追加するため以下のテンプレートに従ってconfigmapを作成します。
+
+```
+▶ curl -O https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-06-05/aws-auth-cm.yaml
+```
+
+vi aws-auth-cm.yaml
+
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aws-auth
+  namespace: kube-system
+data:
+  mapRoles: |
+    - rolearn: arn:aws:iam::xxxxxx:role/ekstest-NodeInstanceRole-XXXXXX
+      username: system:node:{{EC2PrivateDNSName}}
+      groups:
+        - system:bootstrappers
+        - system:nodes
+```
+
+```
+▶ kubectl apply -f aws-auth-cm.yaml
+configmap "aws-auth" created
+```
+
+ノードを確認してstatus Readyを確認します。
+
+```
+▶ kubectl get nodes
+NAME                           STATUS    ROLES     AGE       VERSION
+ip-172-31-14-51.ec2.internal   Ready     <none>    4m        v1.10.3
+ip-172-31-25-37.ec2.internal   Ready     <none>    4m        v1.10.3
+```
+
+これでクラスターが整いました。
+
+# サンプルアプリケーションをデプロイ
+
+サンプルで用意されていたアプリケーションをデプロイしてみました。
+
+```
+▶ kubectl apply -f https://raw.githubusercontent.com/kubernetes/kubernetes/v1.10.3/examples/guestbook-go/redis-master-controller.json
+replicationcontroller "redis-master" created
+▶ kubectl apply -f https://raw.githubusercontent.com/kubernetes/kubernetes/v1.10.3/examples/guestbook-go/redis-master-service.json
+service "redis-master" created
+▶ kubectl apply -f https://raw.githubusercontent.com/kubernetes/kubernetes/v1.10.3/examples/guestbook-go/redis-slave-controller.json
+replicationcontroller "redis-slave" created
+▶ kubectl apply -f https://raw.githubusercontent.com/kubernetes/kubernetes/v1.10.3/examples/guestbook-go/redis-slave-service.json
+service "redis-slave" created
+▶ kubectl apply -f https://raw.githubusercontent.com/kubernetes/kubernetes/v1.10.3/examples/guestbook-go/guestbook-controller.json
+replicationcontroller "guestbook" created
+▶ kubectl apply -f https://raw.githubusercontent.com/kubernetes/kubernetes/v1.10.3/examples/guestbook-go/guestbook-service.json
+service "guestbook" created
+```
+
+以下のようにNAMEがguestbookのサービスを確認すると、
+
+```
+▶ kubectl get services -o wide
+NAME           TYPE           CLUSTER-IP       EXTERNAL-IP                                                             PORT(S)          AGE       SELECTOR
+guestbook      LoadBalancer   10.100.150.88    aad4a790bc81011e890480e587b61c77-32413494.us-east-1.elb.amazonaws.com   3000:31467/TCP   1m        app=guestbook
+kubernetes     ClusterIP      10.100.0.1       <none>                                                                  443/TCP          30m       <none>
+redis-master   ClusterIP      10.100.216.161   <none>                                                                  6379/TCP         1m        app=redis,role=master
+redis-slave    ClusterIP      10.100.62.186    <none>                                                                  6379/TCP         1m        app=redis,role=slave
+```
+
+3000番ポートにELBが出来上がっていますのでアクセスしてみます。
+http://aad4a790bc81011e890480e587b61c77-32413494.us-east-1.elb.amazonaws.com:3000
+
+[画像]
+
+Guestbootアプリがデプロイされました。
+
+# お片付け
+
+作成したものを全て削除しておきます。
+
+```
+▶ kubectl delete rc --all
+replicationcontroller "guestbook" deleted
+replicationcontroller "redis-master" deleted
+replicationcontroller "redis-slave" deleted
+
+▶ kubectl delete services --all
+service "guestbook" deleted
+service "kubernetes" deleted
+service "redis-master" deleted
+service "redis-slave" deleted
+
+▶ aws cloudformation delete-stack --stack-name ekstest
+
+▶ aws eks delete-cluster --name ekstest
+{
+    "cluster": {
+        "name": "ekstest",
+        "arn": "arn:aws:eks:us-east-1:xxxxxx:cluster/ekstest",
+        "createdAt": 1538681196.817,
+        "version": "1.10",
+        "endpoint": "https://4D96E0D0B3BB26EE15D7A25B8E26A0E2.yl4.us-east-1.eks.amazonaws.com",
+        "roleArn": "arn:aws:iam::xxxxxx:role/eks",
+        "resourcesVpcConfig": {
+            "subnetIds": [
+                "subnet-xxxxxx",
+                "subnet-yyyyyy"
+            ],
+            "securityGroupIds": [
+                "sg-xxxxxx"
+            ],
+            "vpcId": "vpc-xxxxxx"
+        },
+        "status": "DELETING",
+        "certificateAuthority": {
+            "data": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUN5RENDQWJDZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRFNE1UQXdOREU1TXpReU4xb1hEVEk0TVRBd01URTVNelF5TjFvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTUllCmRrV24wbG00MHBQd0VQYlN3TTYwQlgwdTRRUTViTXhTL21ZcjRxbDRqaUNHWDM3S0FtSHozWUdLZU5Lb3FzbEoKejdsb3BiRkdIV0c2TVZ6ZFlTeDMwNXNTeEYrNFBjdExIcTk5TUFPRFBsMDg2eUo3YXNHcW8zTnBML2xuaEFGUgpvdmc1TUVIY1A4UDFKTis4SzZ6ZkpqS09aK3NzUC9ZbUdQVWZsSWNPT2s2L2RHdzlVRFUvZWRFOUhJYmVGdVJKCjZySGRmZHluQk5udXpwZHM3RFRYU1ZSRUpHek9QVlYxVkVLMHdJVWxXcndaUVdHVmJnZUVrdjlPT201VUVsbFEKdmhMbTh6Z1JERktnZURwSFRNSXIvL20yUHRGTkNJemxVakZXRXpDZGVYZGxRSDBaR0xsSkVlTVVoMWs3cS9HNAphTGJwaHduaEk1Rmk0MXYzeE8wQ0F3RUFBYU1qTUNFd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFMMmlaNFhyUTBQNmNDRVJDeHBkMkxYTi81TUEKOWhhOVVVeWFCbGhaS2VXSC9Oa2h6cVNGQXRla3JPZHRNU0ovUzhHMko0dW1tcW5MbnBPZUpFZXM3eDhrd3ZybwpSZnJZQkZhdmxIVFZtWlhxb3pMRXNxSktGWXF2NjRTSmMxWTZoOTIzMll3cWlpU0QrbWUvUzhKM2NSR3NieEtxCmF4dkdKdjhLZG9yaUI2UE5JS25PbFlqbVhDZW45SGJhS1I1cFdQNm5TckQ4dUlTTTBiK2JJaExkSk8yN2ZGYjMKb3B5ZHVMdFZ3VnRzcXB2dS8zbGZQNGs5U3RxSkw3MHZOTmg2blJvcVhwMW1rZkwzOEsvUk40cW5hcVhLK0JadQpZdEowRE1KZXQyUlFNdTN3RDYvYWtudUIxdk9icUhpREFqcEVCTGYyclNobWRXcTBYQUo1S3pFT3g2UT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo="
+        }
+    }
+}
+```
+
+# 所感
+
+今回AWSのユーザガイドなどを元にサンプルアプリケーションをデプロイしてみましたが、
+ECSを試した時のような取っ付き易さが無くて、自分にとっては難しく感じました。
+
+個人的にはもっとAWSコンソールからボタンをポチポチして作成できる部分が増えて欲しいな
+というのが正直な感想です。
+
+ただ、YAMLやJSONなどのファイルを利用してkubectlなどのコマンドだけで
+インフラ構築やデプロイまでできるのはやはり便利です。
+
+今後もKubernetesのお勉強をしていきたいです。
