@@ -2,18 +2,17 @@
 :hp-tags: AWS, EKS, Kubernetes, Shirota
 :published_at: 2018-10-05
 
-## 概要
-2018年10月現在、
-弊社サービスでも本番環境にDockerコンテナを利用している部分が増えてきました。
+2018年10月現在、 +
+弊社サービスでも本番環境にDockerコンテナを利用している部分が増えてきました。 +
 
-AWSを利用している部分ではECSを利用していますが、
-今回Kubernetesを試すという意味で、EKSを触ってみることにしました。
+AWSを利用している部分ではECSを利用していますが、 +
+今回Kubernetesを試すという意味で、EKSを触ってみることにしました。 +
 
-ユーザーガイド：
+ユーザーガイド： +
 https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/what-is-eks.html
 
 
-## 前提
+# 前提
 * Dockerの知識はある程度ある
 * 作業端末はMacを使用した（※未検証だがWindowsでも同じはず）
 * 作業端末で最新のawscliが使用できるようになっていること
@@ -22,10 +21,10 @@ https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/what-is-eks.html
 * AWSのVPCの知識があり、VPCとサブネット2つが別AZで用意されていること
 * 今回はus-east-1リージョンで試しています
 
-# 料金
-1クラスター $0.2/hour（$4.8/day）
-＋
-利用するEC2料金
+# かかった費用
+1クラスター $0.2/hour（$4.8/day） +
+＋ +
+利用するEC2料金 +
 
 # やったこと
 * 準備
@@ -44,10 +43,10 @@ https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/what-is-eks.html
 # 準備
 ## kubectlインストール
 
-作業端末にkubectlをインストールします。
-kubectlコマンドはDockerでいうところのdockerコマンドと私は理解しています。
+作業端末にkubectlをインストールします。 +
+kubectlコマンドはDockerでいうところのdockerコマンドと私は理解しています。 +
 
-今回ですが、EKS専用のkubectlがあるようなので、以下のようにインストールしました。
+今回ですが、EKS専用のkubectlがあるようなので、以下のようにインストールしました。 +
 
 ```
 ▶ cd
@@ -63,7 +62,7 @@ kubectlコマンドはDockerでいうところのdockerコマンドと私は理�
 
 ## aws-iam-authenticatorをインストール
 
-次に作業端末からEKSへの認証に使うaws-iam-authenticatorをインストールします
+次に作業端末からEKSへの認証に使うaws-iam-authenticatorをインストールします。 +
 
 ```
 ▶ curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-07-26/bin/darwin/amd64/aws-iam-authenticator
@@ -75,9 +74,9 @@ kubectlコマンドはDockerでいうところのdockerコマンドと私は理�
 
 # クラスター作成
 
-クラスター作成ですが、
-AWSコンソールからポチポチして行うと、私は認証が上手くいかなかったので、
-awscliを利用して作成しました。
+クラスター作成ですが、 +
+AWSコンソールからポチポチして行うと、私は認証が上手くいかなかったので、 +
+awscliを利用して作成しました。 +
 
 ```
 ▶ aws eks create-cluster --name ekstest --role-arn arn:aws:iam::xxxxxxxxx:role/eks --resources-vpc-config subnetIds=subnet-xxxxxx,subnet-yyyyyy,securityGroupIds=sg-xxxxxx --region us-east-1
@@ -104,8 +103,8 @@ awscliを利用して作成しました。
 }
 ```
 
-しばらく待ち、
-以下のようにstatus ACTIVEになればクラスターが作成されています。
+しばらく待ち、 +
+以下のようにstatus ACTIVEになればクラスターが作成されています。 +
 
 ```
 ▶ aws eks describe-cluster --name ekstest
@@ -137,11 +136,11 @@ awscliを利用して作成しました。
 
 # kubeconfig設定
 
-設定ファイルを作成します。
-serverとcertificate-authority-dataは先程describeした値に適宜変更します。
-また、以下のekstestの部分はクラスター名になります。
+設定ファイルを作成します。 +
+serverとcertificate-authority-dataは先程describeした値に適宜変更します。 +
+また、以下のekstestの部分はクラスター名になります。 +
 
-vi ~/.kube/config-ekstest
+vi ~/.kube/config-ekstest +
 
 ```
 apiVersion: v1
@@ -172,7 +171,7 @@ users:
 
 # 環境変数設定
 
-作成した設定ファイルが読み込まれるようにします。
+作成した設定ファイルが読み込まれるようにします。 +
 
 ```
 ▶ export KUBECONFIG=$KUBECONFIG:~/.kube/config-ekstest
@@ -189,10 +188,10 @@ kubernetes   ClusterIP   10.100.0.1   <none>        443/TCP   10m
 
 # クラスターのWorkerノードを作成
 
-ユーザーガイドを参考に以下のCloudFormationスタックを利用して作成していきます。
-ノードにはEC2を利用しています。
+ユーザーガイドを参考に以下のCloudFormationスタックを利用して作成していきます。 +
+ノードにはEC2を利用しています。 +
 
-※us-east-1の場合、今の所NodeImageIdにはami-dea4d5a1というAMIを指定するようです。
+※us-east-1の場合、今の所NodeImageIdにはami-dea4d5a1というAMIを指定するようです。 +
 
 ```
 ▶ aws cloudformation create-stack \
@@ -217,7 +216,7 @@ kubernetes   ClusterIP   10.100.0.1   <none>        443/TCP   10m
 
 # WorkerノードのIAM roleを確認
 
-生成されたWorkerノードインスタンスへのIAMロールが作成されているので、ARNを確認しておきます。
+生成されたWorkerノードインスタンスへのIAMロールが作成されているので、ARNを確認しておきます。 +
 
 ```
 ▶ aws iam get-role --role-name $(aws cloudformation describe-stack-resources --stack-name ekstest --logical-resource-id NodeInstanceRole --query "StackResources[0].PhysicalResourceId" --output text) --query Role.Arn --output text
@@ -226,7 +225,7 @@ arn:aws:iam::xxxxxx:role/ekstest-NodeInstanceRole-XXXXXX
 
 # Workerノードをクラスターに追加するための権限設定
 
-Workerノードをクラスターに追加するため以下のテンプレートに従ってconfigmapを作成します。
+Workerノードをクラスターに追加するため以下のテンプレートに従ってconfigmapを作成します。 +
 
 ```
 ▶ curl -O https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-06-05/aws-auth-cm.yaml
@@ -254,7 +253,7 @@ data:
 configmap "aws-auth" created
 ```
 
-ノードを確認してstatus Readyを確認します。
+ノードを確認してstatus Readyを確認します。 +
 
 ```
 ▶ kubectl get nodes
@@ -263,11 +262,11 @@ ip-172-31-14-51.ec2.internal   Ready     <none>    4m        v1.10.3
 ip-172-31-25-37.ec2.internal   Ready     <none>    4m        v1.10.3
 ```
 
-これでクラスターが整いました。
+これでクラスターが整いました。 +
 
 # サンプルアプリケーションをデプロイ
 
-サンプルで用意されていたアプリケーションをデプロイしてみました。
+サンプルで用意されていたアプリケーションをデプロイしてみました。 +
 
 ```
 ▶ kubectl apply -f https://raw.githubusercontent.com/kubernetes/kubernetes/v1.10.3/examples/guestbook-go/redis-master-controller.json
@@ -284,7 +283,7 @@ replicationcontroller "guestbook" created
 service "guestbook" created
 ```
 
-以下のようにNAMEがguestbookのサービスを確認すると、
+以下のようにNAMEがguestbookのサービスを確認すると、 +
 
 ```
 ▶ kubectl get services -o wide
@@ -295,16 +294,16 @@ redis-master   ClusterIP      10.100.216.161   <none>                           
 redis-slave    ClusterIP      10.100.62.186    <none>                                                                  6379/TCP         1m        app=redis,role=slave
 ```
 
-3000番ポートにELBが出来上がっていますのでアクセスしてみます。
+3000番ポートにELBが出来上がっていますのでアクセスしてみます。 +
 http://aad4a790bc81011e890480e587b61c77-32413494.us-east-1.elb.amazonaws.com:3000
 
-[画像]
+image:shirota/20181005/guestbook.png[]
 
-Guestbootアプリがデプロイされました。
+Guestbootアプリがデプロイされました。 +
 
 # お片付け
 
-作成したものを全て削除しておきます。
+作成したものを全て削除しておきます。 +
 
 ```
 ▶ kubectl delete rc --all
@@ -349,13 +348,13 @@ service "redis-slave" deleted
 
 # 所感
 
-今回AWSのユーザガイドなどを元にサンプルアプリケーションをデプロイしてみましたが、
-ECSを試した時のような取っ付き易さが無くて、自分にとっては難しく感じました。
+今回AWSのユーザガイドなどを元にサンプルアプリケーションをデプロイしてみましたが、 +
+ECSを試した時のような取っ付き易さが無くて、自分にとっては難しく感じました。 +
 
-個人的にはもっとAWSコンソールからボタンをポチポチして作成できる部分が増えて欲しいな
-というのが正直な感想です。
+個人的にはもっとAWSコンソールからボタンをポチポチして作成できる部分が増えて欲しいな +
+というのが正直な感想です。 +
 
-ただ、YAMLやJSONなどのファイルを利用してkubectlなどのコマンドだけで
-インフラ構築やデプロイまでできるのはやはり便利です。
+ただ、YAMLやJSONなどのファイルを利用してkubectlなどのコマンドだけで +
+インフラ構築やデプロイまでできるのはやはり便利です。 +
 
-今後もKubernetesのお勉強をしていきたいです。
+今後もKubernetesのお勉強をしていきたいです。 +
