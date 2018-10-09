@@ -211,6 +211,12 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/03/30/google-cloud-container-builder-with-docker-mysql.html" title="link to Google Cloud Container Builderで常に最新のデータが入ったDockerイメージ(MySQL)をビルドする">Google Cloud Container Builderで常に最新のデータが入ったDockerイメージ(MySQL)をビルドする</a></h2>
+        <p class="excerpt">こんにちは、加藤です。 サービスの開発をしていると「本番環境」「テスト環境」「開発環境」など、 必要に応じて複数の環境を用意すると思いますが、 下記のような状態になりがちではないでしょうか？ 「テスト環境」や「開発環境」は、古いデータが入っている 手動で本番環境のデータを「テスト環境」や「開発環境」に反映している 予算が取りづらい 今回は、この状況を改善すべく、Google Cloud Container Builderを使って Dockerイメージ(MySQL)の自動更新にチャレンジしたいと思います。 目標は、次のとおりです。 Dockerイメージ(MySQL)には、最新のバックアップデータが入っている ログなど開発に不要なデータは必要な量だけあり、余計なデータは入っていない 個人情報は&hellip;</p>
+        <div class="post-list__meta"><time datetime="30 Mar 2018" class="post-list__meta--date date">30 Mar 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/kato-K">katoK</a>, <a href="http://tech.innovation.co.jp/tag/Google-Cloud-Container-Builder"> GoogleCloudContainerBuilder</a>, <a href="http://tech.innovation.co.jp/tag/Docker"> Docker</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/03/23/E-C2-Spring-Boot.html" title="link to EC2 + SpringBoot でLINE@のBotアプリを作る（Google Cloud Vision API）　その３">EC2 + SpringBoot でLINE@のBotアプリを作る（Google Cloud Vision API）　その３</a></h2>
         <p class="excerpt">こんにちは。 エンジニアのNew塚本です。 近頃はGolangでコーディングをしているので、久々にJavaで何かしたくなりました！ 私のまわりでは画像解析ブームが来ているようなので、その流れにのります。 今回は、Google Cloud Vision APIを使ってみようと思います。 画像の中の顔を認識するFACE_DETECTIONを試してみます。 Google Cloud Vision API って？ APIに画像を送信すると、機械学習によって画像解析した結果を返してくれます。 詳細はこちら） https://cloud.google.com/vision/docs/?hl=ja プログラムの流れ LINEへ画像を送信し、Webサーバでメッセージを受信（Webhook） Webサーバで&hellip;</p>
         <div class="post-list__meta"><time datetime="23 Mar 2018" class="post-list__meta--date date">23 Mar 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/New-Tsukamoto">NewTsukamoto</a>, <a href="http://tech.innovation.co.jp/tag/E-C2"> EC2</a>, <a href="http://tech.innovation.co.jp/tag/Spring-Boot"> SpringBoot</a>, <a href="http://tech.innovation.co.jp/tag/Java8"> Java8</a></span></div>
@@ -262,12 +268,6 @@ var _trackingid = 'LFT-10003-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/02/26/make-book-manage-App.html" title="link to 本の管理アプリをVue.js,Laravel,Docker,GCP,gitlab,ElementUIを使って作った話。">本の管理アプリをVue.js,Laravel,Docker,GCP,gitlab,ElementUIを使って作った話。</a></h2>
         <p class="excerpt">こへです。 そろそろ Vue.js Laravel Docker  GCP gitlab を使って社内の本の管理アプリを作りたい時期が来ましたので作成することにしました。 お金を1円もかけたくない と言う裏目標も持ちます。 完成物 Version管理 version管理に githubではなくgitlabを使います。 理由: private repository が無料 Container Registory が使える デザイン Vue.js用のライブラリElementを使います。 簡単にいい感じのデザインを作れる予感がするので選択。 http://element.eleme.io/#/en-US/component/installation 構成 ├── docker-compose.y&hellip;</p>
         <div class="post-list__meta"><time datetime="26 Feb 2018" class="post-list__meta--date date">26 Feb 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/kohe">kohe</a>, <a href="http://tech.innovation.co.jp/tag/Vuejs"> Vuejs</a>, <a href="http://tech.innovation.co.jp/tag/Laravel">Laravel</a>, <a href="http://tech.innovation.co.jp/tag/Docker">Docker</a>, <a href="http://tech.innovation.co.jp/tag/G-C-P">GCP</a>, <a href="http://tech.innovation.co.jp/tag/gitlab">gitlab</a>, <a href="http://tech.innovation.co.jp/tag/Element-U-I">ElementUI</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/02/26/Firebae-Ui.html" title="link to FirebaseUIを使ってTwitter loginを実装したお話。">FirebaseUIを使ってTwitter loginを実装したお話。</a></h2>
-        <p class="excerpt">皆様こんばんは。 こへです。 そろそろFirebaseUIを試用して、Twitter login機能の開発をしたい時期が来ましたので、作成。 完成品 Firebase https://firebase.google.com/docs/ios/setup?hl=ja 初期の設定は公式の通り行う。 Twitter Developer 登録 Callback以外の情報を入力していく。 Callbackの箇所はFirebaseを自身のアプリと連携した際に、 表示されるので、それを取得後登録する。 FirebaseUI TwitterやGoogle,Mail,FBログインなどのUIを要してくれてFirebaseとつなげてくれるやつ。 https://github.com/firebase/Fireb&hellip;</p>
-        <div class="post-list__meta"><time datetime="26 Feb 2018" class="post-list__meta--date date">26 Feb 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Swift">Swift</a>, <a href="http://tech.innovation.co.jp/tag/Firebase">Firebase</a>, <a href="http://tech.innovation.co.jp/tag/Firebase-U-I">FirebaseUI</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
