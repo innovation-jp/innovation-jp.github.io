@@ -1,6 +1,6 @@
 # EKSを触ってみた
 :hp-tags: AWS, EKS, Kubernetes, Shirota
-:published_at: 2018-10-05
+:published_at: 2018-10-09
 
 2018年10月現在、 +
 弊社サービスでも本番環境にDockerコンテナを利用している部分が増えてきました。 +
