@@ -213,6 +213,15 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/10/09/E-K-S.html" title="link to EKSを触ってみた">EKSを触ってみた</a></h2>
+        <p class="excerpt">2018年10月現在、 弊社サービスでも本番環境にDockerコンテナを利用している部分が増えてきました。 AWSを利用している部分ではECSを利用していますが、 今回Kubernetesを試すという意味で、EKSを触ってみることにしました。 ユーザーガイド： https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/what-is-eks.html 前提 Dockerの知識はある程度ある 作業端末はMacを使用した（※未検証だがWindowsでも同じはず） 作業端末で最新のawscliが使用できるようになっていること AWSのIAMの知識があり、EKS用にAmazonEKSClusterPolicyとAmazonEKSServicePo&hellip;</p>
+        <div class="post-list__meta">
+            <time datetime="09 Oct 2018" class="post-list__meta--date date">09 Oct 2018</time> &#8226;
+            <span class="post-list__meta--tags tags"><a href="#blog" title="AWS">AWS</a>, <a href="#blog" title=" EKS"> EKS</a>, <a href="#blog" title=" Kubernetes"> Kubernetes</a>, <a href="#blog" title=" Shirota"> Shirota</a></span>
+        </div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/09/06/A-W-S-A-L-B-Java-Script.html" title="link to AWS ALBに追加された固定レスポンスを返す機能を使ってJavaScriptでパスワード生成してみた">AWS ALBに追加された固定レスポンスを返す機能を使ってJavaScriptでパスワード生成してみた</a></h2>
         <p class="excerpt">概要 先日、AWSのALB(Application Load Balancer)から直接固定レスポンスを返せる機能が付きました。 これは、ウェブサーバを用意せずともALBだけでsorryページなどを表示したりできる という想定で主に使用する機能だと思います。 しかし、 この機能は Content-Type text/html だけでなく、application/javascript などもレスポンスすることができ、 レスポンスコードは503や404など以外にも、もちろん200も返すことができます。 ということは、この部分にJavaScriptを記述すれば動かすことができるはずなので、 それを使って簡単なパスワード生成スクリプトをALBに直接置いてみて、 動作するのか検証してみました。 前提&hellip;</p>
         <div class="post-list__meta">
