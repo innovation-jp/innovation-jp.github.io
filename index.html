@@ -210,6 +210,12 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/10/09/E-K-S.html" title="link to EKSを触ってみた">EKSを触ってみた</a></h2>
+        <p class="excerpt">2018年10月現在、 弊社サービスでも本番環境にDockerコンテナを利用している部分が増えてきました。 AWSを利用している部分ではECSを利用していますが、 今回Kubernetesを試すという意味で、EKSを触ってみることにしました。 ユーザーガイド： https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/what-is-eks.html 前提 Dockerの知識はある程度ある 作業端末はMacを使用した（※未検証だがWindowsでも同じはず） 作業端末で最新のawscliが使用できるようになっていること AWSのIAMの知識があり、EKS用にAmazonEKSClusterPolicyとAmazonEKSServicePo&hellip;</p>
+        <div class="post-list__meta"><time datetime="09 Oct 2018" class="post-list__meta--date date">09 Oct 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/A-W-S">AWS</a>, <a href="http://tech.innovation.co.jp/tag/E-K-S"> EKS</a>, <a href="http://tech.innovation.co.jp/tag/Kubernetes"> Kubernetes</a>, <a href="http://tech.innovation.co.jp/tag/Shirota"> Shirota</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/09/25/Scratch.html" title="link to Scratchでバブルソートを可視化してみた">Scratchでバブルソートを可視化してみた</a></h2>
         <p class="excerpt">おはようございます。エンジニア一年目のやすと申します。 今回は、前回に引き続き「Scratch」を利用していきたいと思います。 簡単な前書き 「Scratch」の説明については、前回のブログの前書きで述べているのでよろしければ読んでみてください！ → http://tech.innovation.co.jp/2018/07/26/Scratch.html - Scratchでインスタ映えする図形描画をしてくれるもの作ってみた 前回、「せっかく自分のエンジニアの原点とも呼べるものなので、ゆくゆくは何か作品を作ってみたいと思い、今回は簡単に触れてみました！」 ということだったので、今回は色々な機能を使ってみました。 ブログ内容ですが、最近ソートアルゴリズムを復習した時に色々な方が行っていたソー&hellip;</p>
         <div class="post-list__meta"><time datetime="25 Sep 2018" class="post-list__meta--date date">25 Sep 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Scratch">Scratch</a>, <a href="http://tech.innovation.co.jp/tag/Bubble-sort"> Bubble sort</a>, <a href="http://tech.innovation.co.jp/tag/Yasu"> Yasu</a></span></div>
@@ -261,12 +267,6 @@ var _trackingid = 'LFT-10003-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/08/30/naming-of-functions-that-return-boolean.html" title="link to 今更あえて真偽値を返す関数の命名について">今更あえて真偽値を返す関数の命名について</a></h2>
         <p class="excerpt">どうも、bigenです。 語り尽くされた話題だとは思いますが、真偽値を返す関数の命名についてあえて考えてみようかと思います。 1.はじめに この時代ですので、googleで調べて上位に出てくる情報は前提に進めたいと思います。 今回は、「真偽値　関数 命名」と検索して上位10位に出てきた下記のサイトを参照しました。 各記事の筆者方、ありがとうございます！ 真偽値を返す関数のネーミング Boolean型の変数名・メソッド名に主語を含めたい時はどうしたらいいか やはりお前らの真偽値メソッド名は間違っている。 〜「Xxx できる？」系メソッドの命名〜 プログラミング ワンポイント – boolean型の変数の名前は命題にする boolean 値を返却するメソッド名、変数名の付け方 booleanの&hellip;</p>
         <div class="post-list__meta"><time datetime="30 Aug 2018" class="post-list__meta--date date">30 Aug 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/naming">naming</a>, <a href="http://tech.innovation.co.jp/tag/prgoraming"> prgoraming</a>, <a href="http://tech.innovation.co.jp/tag/function"> function</a>, <a href="http://tech.innovation.co.jp/tag/boolean"> boolean</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/08/30/Exception.html" title="link to 例外のお話">例外のお話</a></h2>
-        <p class="excerpt">お久しぶりです、SRE チームの syoga です 今年の夏は激アツでしたが皆様いかがお過ごしでしょうか？ ふわふわなかき氷が流行っているという事で、天然氷を使ったかき氷が人気だそうです、天然氷だと知らなければ食べてる人はあまり意識しないと思われますが、こだわりをもった職人さんがいるという話を聞きました。 上記のこだわりについては、今回の話にあまり関係ありませんが、皆様ログ出力していますか？ という訳で今回は運用・保守をする側から見てこんなコードはイヤだ！ というテーマで記事をしたためたいと思います。 ある日の出来事 弊社のサービスではアプリケーションエラーが発生した場合は、メールや Slack で通知が来ますが、通知が来たらまずはアプリケーションサーバでログを確認します。 さしずめ死体（&hellip;</p>
-        <div class="post-list__meta"><time datetime="30 Aug 2018" class="post-list__meta--date date">30 Aug 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/syoga">syoga</a>, <a href="http://tech.innovation.co.jp/tag/log"> log</a>, <a href="http://tech.innovation.co.jp/tag/exception"> exception</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
