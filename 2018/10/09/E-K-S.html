@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>EKSを触ってみた - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="EKSを触ってみた">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="EKSを触ってみた">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/10/09/E-K-S.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="EKSを触ってみた" />
+    <meta property="og:description" content="2018年10月現在、 弊社サービスでも本番環境にDockerコンテナを利用している部分が増えてきました。 AWSを利用している部分ではECSを利用していますが、 今回Kubernetesを試すという意味で、EKSを触ってみることにしました。 ユーザーガイド： https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/what-is-eks.html 前提 Dockerの知識はある程度ある 作業端末はMacを使用した（※未検証だがWindowsでも同じはず） 作業端末で最新のawscliが使用できるよ..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/10/09/E-K-S.html" />
+    <meta property="article:published_time" content="2018-10-08T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-10-09T12:42:08.808Z" />
+    <meta property="article:tag" content="AWS" />
+    <meta property="article:tag" content="EKS" />
+    <meta property="article:tag" content="Kubernetes" />
+    <meta property="article:tag" content="Shirota" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="EKSを触ってみた" />
+    <meta name="twitter:description" content="2018年10月現在、 弊社サービスでも本番環境にDockerコンテナを利用している部分が増えてきました。 AWSを利用している部分ではECSを利用していますが、 今回Kubernetesを試すという意味で、EKSを触ってみることにしました。 ユーザーガイド： https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/what-is-eks.html 前提 Dockerの知識はある程度ある 作業端末はMacを使用した（※未検証だがWindowsでも同じはず） 作業端末で最新のawscliが使用できるよ..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/10/09/E-K-S.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "Junichi Shirota",
+        "image": "https://avatars2.githubusercontent.com/u/26893225?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "EKSを触ってみた",
+    "url": "http://tech.innovation.co.jp/2018/10/09/E-K-S.html",
+    "datePublished": "2018-10-08T15:00:00.000Z",
+    "dateModified": "2018-10-09T12:42:08.808Z",
+    "keywords": "AWS,  EKS,  Kubernetes,  Shirota",
+    "description": "2018年10月現在、 弊社サービスでも本番環境にDockerコンテナを利用している部分が増えてきました。 AWSを利用している部分ではECSを利用していますが、 今回Kubernetesを試すという意味で、EKSを触ってみることにしました。 ユーザーガイド： https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/what-is-eks.html 前提 Dockerの知識はある程度ある 作業端末はMacを使用した（※未検証だがWindowsでも同じはず） 作業端末で最新のawscliが使用できるよ..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-A-W-S tag-E-K-S tag-Kubernetes tag-Shirota no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="09 Oct 2018" class="post-meta__date date">09 Oct 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/A-W-S">AWS</a>, <a href="http://tech.innovation.co.jp/tag/E-K-S"> EKS</a>, <a href="http://tech.innovation.co.jp/tag/Kubernetes"> Kubernetes</a>, <a href="http://tech.innovation.co.jp/tag/Shirota"> Shirota</a></span>
+        <span class="post-meta__author author"><img src="https://avatars2.githubusercontent.com/u/26893225?v=4" alt="profile image for Junichi Shirota" class="avatar post-meta__avatar" /> by Junichi Shirota</span>
+      </div>
+      <h1 class="post-title">EKSを触ってみた</h1>
+    </header>
+
+    <section class="post tag-A-W-S tag-E-K-S tag-Kubernetes tag-Shirota">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>2018年10月現在、<br>
+弊社サービスでも本番環境にDockerコンテナを利用している部分が増えてきました。<br></p>
+</div>
+<div class="paragraph">
+<p>AWSを利用している部分ではECSを利用していますが、<br>
+今回Kubernetesを試すという意味で、EKSを触ってみることにしました。<br></p>
+</div>
+<div class="paragraph">
+<p>ユーザーガイド：<br>
+<a href="https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/what-is-eks.html" class="bare">https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/what-is-eks.html</a></p>
+</div>
+</div>
+</div>
+<h1 id="__" class="sect0">前提</h1>
+<div class="ulist">
+<ul>
+<li>
+<p>Dockerの知識はある程度ある</p>
+</li>
+<li>
+<p>作業端末はMacを使用した（※未検証だがWindowsでも同じはず）</p>
+</li>
+<li>
+<p>作業端末で最新のawscliが使用できるようになっていること</p>
+</li>
+<li>
+<p>AWSのIAMの知識があり、EKS用にAmazonEKSClusterPolicyとAmazonEKSServicePolicyがアタッチされたIAM roleが作成済みであること</p>
+</li>
+<li>
+<p>AWSのEC2の知識があり、EC2に使えるキーペアが用意されていること</p>
+</li>
+<li>
+<p>AWSのVPCの知識があり、VPCとサブネット2つが別AZで用意されていること</p>
+</li>
+<li>
+<p>今回はus-east-1リージョンで試しています</p>
+</li>
+</ul>
+</div>
+<h1 id="___2" class="sect0">かかった費用</h1>
+<div class="paragraph">
+<p>1クラスター $0.2/hour（$4.8/day）<br>
+＋<br>
+利用するEC2料金<br></p>
+</div>
+<h1 id="___3" class="sect0">やったこと</h1>
+<div class="ulist">
+<ul>
+<li>
+<p>準備</p>
+<div class="ulist">
+<ul>
+<li>
+<p>kubectlインストール</p>
+</li>
+<li>
+<p>aws-iam-authenticatorをインストール</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>クラスター作成</p>
+</li>
+<li>
+<p>kubeconfig設定</p>
+</li>
+<li>
+<p>環境変数設定</p>
+</li>
+<li>
+<p>クラスターの状態を確認</p>
+</li>
+<li>
+<p>クラスターのWorkerノードを作成</p>
+</li>
+<li>
+<p>WorkerノードのIAM roleを確認</p>
+</li>
+<li>
+<p>Workerノードをクラスターに追加するための権限設定</p>
+</li>
+<li>
+<p>サンプルアプリケーションをデプロイ</p>
+</li>
+<li>
+<p>お片付け</p>
+</li>
+</ul>
+</div>
+<h1 id="___4" class="sect0">準備</h1>
+<div class="sect1">
+<h2 id="_kubectl">kubectlインストール</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>作業端末にkubectlをインストールします。<br>
+kubectlコマンドはDockerでいうところのdockerコマンドと私は理解しています。<br></p>
+</div>
+<div class="paragraph">
+<p>今回ですが、EKS専用のkubectlがあるようなので、以下のようにインストールしました。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>▶ cd
+▶ curl -o kubectl https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-07-26/bin/darwin/amd64/kubectl
+▶ chmod +x ./kubectl
+▶ mkdir bin
+▶ cp ./kubectl $HOME/bin/kubectl &amp;&amp; export PATH=$HOME/bin:$PATH
+▶ echo 'export PATH=$HOME/bin:$PATH' &gt;&gt; ~/.zshrc
+▶ source ~/.zshrc
+▶ kubectl version --short --client
+# バージョンが表示されればOK</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_aws_iam_authenticator">aws-iam-authenticatorをインストール</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>次に作業端末からEKSへの認証に使うaws-iam-authenticatorをインストールします。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>▶ curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-07-26/bin/darwin/amd64/aws-iam-authenticator
+▶ chmod +x ./aws-iam-authenticator
+▶ cp ./aws-iam-authenticator $HOME/bin/aws-iam-authenticator
+▶ aws-iam-authenticator help
+# help内容が出力されればOK</code></pre>
+</div>
+</div>
+</div>
+</div>
+<h1 id="___5" class="sect0">クラスター作成</h1>
+<div class="paragraph">
+<p>クラスター作成ですが、<br>
+AWSコンソールからポチポチして行うと、私は認証が上手くいかなかったので、<br>
+awscliを利用して作成しました。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>▶ aws eks create-cluster --name ekstest --role-arn arn:aws:iam::xxxxxxxxx:role/eks --resources-vpc-config subnetIds=subnet-xxxxxx,subnet-yyyyyy,securityGroupIds=sg-xxxxxx --region us-east-1
+{
+    "cluster": {
+        "name": "ekstest",
+        "arn": "arn:aws:eks:us-east-1:xxxxxx:cluster/ekstest",
+        "createdAt": 1538681196.817,
+        "version": "1.10",
+        "roleArn": "arn:aws:iam::xxxxxx:role/eks",
+        "resourcesVpcConfig": {
+            "subnetIds": [
+                "subnet-xxxxxx",
+                "subnet-yyyyyy"
+            ],
+            "securityGroupIds": [
+                "sg-xxxxxx"
+            ],
+            "vpcId": "vpc-xxxxxx"
+        },
+        "status": "CREATING",
+        "certificateAuthority": {}
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>しばらく待ち、<br>
+以下のようにstatus ACTIVEになればクラスターが作成されています。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>▶ aws eks describe-cluster --name ekstest
+{
+    "cluster": {
+        "name": "ekstest",
+        "arn": "arn:aws:eks:us-east-1:xxxxxx:cluster/ekstest",
+        "createdAt": 1538681196.817,
+        "version": "1.10",
+        "endpoint": "https://4D96E0D0B3BB26EE15D7A25B8E26A0E2.yl4.us-east-1.eks.amazonaws.com",
+        "roleArn": "arn:aws:iam::xxxxxx:role/eks",
+        "resourcesVpcConfig": {
+            "subnetIds": [
+                "subnet-xxxxxx",
+                "subnet-yyyyyy"
+            ],
+            "securityGroupIds": [
+                "sg-xxxxxx"
+            ],
+            "vpcId": "vpc-xxxxxx"
+        },
+        "status": "ACTIVE",
+        "certificateAuthority": {
+            "data": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUN5RENDQWJDZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRFNE1UQXdOREU1TXpReU4xb1hEVEk0TVRBd01URTVNelF5TjFvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTUllCmRrV24wbG00MHBQd0VQYlN3TTYwQlgwdTRRUTViTXhTL21ZcjRxbDRqaUNHWDM3S0FtSHozWUdLZU5Lb3FzbEoKejdsb3BiRkdIV0c2TVZ6ZFlTeDMwNXNTeEYrNFBjdExIcTk5TUFPRFBsMDg2eUo3YXNHcW8zTnBML2xuaEFGUgpvdmc1TUVIY1A4UDFKTis4SzZ6ZkpqS09aK3NzUC9ZbUdQVWZsSWNPT2s2L2RHdzlVRFUvZWRFOUhJYmVGdVJKCjZySGRmZHluQk5udXpwZHM3RFRYU1ZSRUpHek9QVlYxVkVLMHdJVWxXcndaUVdHVmJnZUVrdjlPT201VUVsbFEKdmhMbTh6Z1JERktnZURwSFRNSXIvL20yUHRGTkNJemxVakZXRXpDZGVYZGxRSDBaR0xsSkVlTVVoMWs3cS9HNAphTGJwaHduaEk1Rmk0MXYzeE8wQ0F3RUFBYU1qTUNFd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFMMmlaNFhyUTBQNmNDRVJDeHBkMkxYTi81TUEKOWhhOVVVeWFCbGhaS2VXSC9Oa2h6cVNGQXRla3JPZHRNU0ovUzhHMko0dW1tcW5MbnBPZUpFZXM3eDhrd3ZybwpSZnJZQkZhdmxIVFZtWlhxb3pMRXNxSktGWXF2NjRTSmMxWTZoOTIzMll3cWlpU0QrbWUvUzhKM2NSR3NieEtxCmF4dkdKdjhLZG9yaUI2UE5JS25PbFlqbVhDZW45SGJhS1I1cFdQNm5TckQ4dUlTTTBiK2JJaExkSk8yN2ZGYjMKb3B5ZHVMdFZ3VnRzcXB2dS8zbGZQNGs5U3RxSkw3MHZOTmg2blJvcVhwMW1rZkwzOEsvUk40cW5hcVhLK0JadQpZdEowRE1KZXQyUlFNdTN3RDYvYWtudUIxdk9icUhpREFqcEVCTGYyclNobWRXcTBYQUo1S3pFT3g2UT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo="
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<h1 id="_kubeconfig" class="sect0">kubeconfig設定</h1>
+<div class="paragraph">
+<p>設定ファイルを作成します。<br>
+serverとcertificate-authority-dataは先程describeした値に適宜変更します。<br>
+また、以下のekstestの部分はクラスター名になります。<br></p>
+</div>
+<div class="paragraph">
+<p>vi ~/.kube/config-ekstest<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>apiVersion: v1
+clusters:
+- cluster:
+    server: https://4D96E0D0B3BB26EE15D7A25B8E26A0E2.yl4.us-east-1.eks.amazonaws.com
+    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUN5RENDQWJDZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRFNE1UQXdOREU1TXpReU4xb1hEVEk0TVRBd01URTVNelF5TjFvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTUllCmRrV24wbG00MHBQd0VQYlN3TTYwQlgwdTRRUTViTXhTL21ZcjRxbDRqaUNHWDM3S0FtSHozWUdLZU5Lb3FzbEoKejdsb3BiRkdIV0c2TVZ6ZFlTeDMwNXNTeEYrNFBjdExIcTk5TUFPRFBsMDg2eUo3YXNHcW8zTnBML2xuaEFGUgpvdmc1TUVIY1A4UDFKTis4SzZ6ZkpqS09aK3NzUC9ZbUdQVWZsSWNPT2s2L2RHdzlVRFUvZWRFOUhJYmVGdVJKCjZySGRmZHluQk5udXpwZHM3RFRYU1ZSRUpHek9QVlYxVkVLMHdJVWxXcndaUVdHVmJnZUVrdjlPT201VUVsbFEKdmhMbTh6Z1JERktnZURwSFRNSXIvL20yUHRGTkNJemxVakZXRXpDZGVYZGxRSDBaR0xsSkVlTVVoMWs3cS9HNAphTGJwaHduaEk1Rmk0MXYzeE8wQ0F3RUFBYU1qTUNFd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFMMmlaNFhyUTBQNmNDRVJDeHBkMkxYTi81TUEKOWhhOVVVeWFCbGhaS2VXSC9Oa2h6cVNGQXRla3JPZHRNU0ovUzhHMko0dW1tcW5MbnBPZUpFZXM3eDhrd3ZybwpSZnJZQkZhdmxIVFZtWlhxb3pMRXNxSktGWXF2NjRTSmMxWTZoOTIzMll3cWlpU0QrbWUvUzhKM2NSR3NieEtxCmF4dkdKdjhLZG9yaUI2UE5JS25PbFlqbVhDZW45SGJhS1I1cFdQNm5TckQ4dUlTTTBiK2JJaExkSk8yN2ZGYjMKb3B5ZHVMdFZ3VnRzcXB2dS8zbGZQNGs5U3RxSkw3MHZOTmg2blJvcVhwMW1rZkwzOEsvUk40cW5hcVhLK0JadQpZdEowRE1KZXQyUlFNdTN3RDYvYWtudUIxdk9icUhpREFqcEVCTGYyclNobWRXcTBYQUo1S3pFT3g2UT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+  name: kubernetes
+contexts:
+- context:
+    cluster: kubernetes
+    user: aws
+  name: aws
+current-context: aws
+kind: Config
+preferences: {}
+users:
+- name: aws
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1alpha1
+      command: aws-iam-authenticator
+      args:
+        - "token"
+        - "-i"
+        - "ekstest"</code></pre>
+</div>
+</div>
+<h1 id="___6" class="sect0">環境変数設定</h1>
+<div class="paragraph">
+<p>作成した設定ファイルが読み込まれるようにします。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>▶ export KUBECONFIG=$KUBECONFIG:~/.kube/config-ekstest
+echo 'export KUBECONFIG=$KUBECONFIG:~/.kube/config-ekstest' &gt;&gt; ~/.zshrc</code></pre>
+</div>
+</div>
+<h1 id="___7" class="sect0">クラスターの状態を確認</h1>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>▶ kubectl get svc
+NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+kubernetes   ClusterIP   10.100.0.1   &lt;none&gt;        443/TCP   10m</code></pre>
+</div>
+</div>
+<h1 id="__worker" class="sect0">クラスターのWorkerノードを作成</h1>
+<div class="paragraph">
+<p>ユーザーガイドを参考に以下のCloudFormationスタックを利用して作成していきます。<br>
+ノードにはEC2を利用しています。<br></p>
+</div>
+<div class="paragraph">
+<p>※us-east-1の場合、今の所NodeImageIdにはami-dea4d5a1というAMIを指定するようです。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>▶ aws cloudformation create-stack \
+  --template-body https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-06-05/amazon-eks-nodegroup.yaml \
+  --stack-name ekstest \
+  --capabilities CAPABILITY_IAM \
+  --parameters \
+    ParameterKey=ClusterName,ParameterValue=ekstest \
+    ParameterKey=ClusterControlPlaneSecurityGroup,ParameterValue=sg-xxxxxx \
+    ParameterKey=NodeGroupName,ParameterValue=ekstest \
+    ParameterKey=NodeAutoScalingGroupMinSize,ParameterValue=1 \
+    ParameterKey=NodeAutoScalingGroupMaxSize,ParameterValue=2 \
+    ParameterKey=NodeInstanceType,ParameterValue=t2.small \
+    ParameterKey=NodeImageId,ParameterValue=ami-dea4d5a1 \
+    ParameterKey=KeyName,ParameterValue=&lt;EC2ノードへログインするキーペア名&gt; \
+    ParameterKey=VpcId,ParameterValue=vpc-xxxxxx \
+    ParameterKey=Subnets,ParameterValue=\"subnet-xxxxxx,subnet-yyyyyy\"
+{
+    "StackId": "arn:aws:cloudformation:us-east-1:xxxxxx:stack/ekstest/5005eb70-c80f-11e8-ac03-50fae583dcd2"
+}</code></pre>
+</div>
+</div>
+<h1 id="_worker_iam_role" class="sect0">WorkerノードのIAM roleを確認</h1>
+<div class="paragraph">
+<p>生成されたWorkerノードインスタンスへのIAMロールが作成されているので、ARNを確認しておきます。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>▶ aws iam get-role --role-name $(aws cloudformation describe-stack-resources --stack-name ekstest --logical-resource-id NodeInstanceRole --query "StackResources[0].PhysicalResourceId" --output text) --query Role.Arn --output text
+arn:aws:iam::xxxxxx:role/ekstest-NodeInstanceRole-XXXXXX</code></pre>
+</div>
+</div>
+<h1 id="_worker" class="sect0">Workerノードをクラスターに追加するための権限設定</h1>
+<div class="paragraph">
+<p>Workerノードをクラスターに追加するため以下のテンプレートに従ってconfigmapを作成します。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>▶ curl -O https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-06-05/aws-auth-cm.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>vi aws-auth-cm.yaml</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aws-auth
+  namespace: kube-system
+data:
+  mapRoles: |
+    - rolearn: arn:aws:iam::xxxxxx:role/ekstest-NodeInstanceRole-XXXXXX
+      username: system:node:{{EC2PrivateDNSName}}
+      groups:
+        - system:bootstrappers
+        - system:nodes</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>▶ kubectl apply -f aws-auth-cm.yaml
+configmap "aws-auth" created</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>ノードを確認してstatus Readyを確認します。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>▶ kubectl get nodes
+NAME                           STATUS    ROLES     AGE       VERSION
+ip-172-31-14-51.ec2.internal   Ready     &lt;none&gt;    4m        v1.10.3
+ip-172-31-25-37.ec2.internal   Ready     &lt;none&gt;    4m        v1.10.3</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>これでクラスターが整いました。<br></p>
+</div>
+<h1 id="___8" class="sect0">サンプルアプリケーションをデプロイ</h1>
+<div class="paragraph">
+<p>サンプルで用意されていたアプリケーションをデプロイしてみました。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>▶ kubectl apply -f https://raw.githubusercontent.com/kubernetes/kubernetes/v1.10.3/examples/guestbook-go/redis-master-controller.json
+replicationcontroller "redis-master" created
+▶ kubectl apply -f https://raw.githubusercontent.com/kubernetes/kubernetes/v1.10.3/examples/guestbook-go/redis-master-service.json
+service "redis-master" created
+▶ kubectl apply -f https://raw.githubusercontent.com/kubernetes/kubernetes/v1.10.3/examples/guestbook-go/redis-slave-controller.json
+replicationcontroller "redis-slave" created
+▶ kubectl apply -f https://raw.githubusercontent.com/kubernetes/kubernetes/v1.10.3/examples/guestbook-go/redis-slave-service.json
+service "redis-slave" created
+▶ kubectl apply -f https://raw.githubusercontent.com/kubernetes/kubernetes/v1.10.3/examples/guestbook-go/guestbook-controller.json
+replicationcontroller "guestbook" created
+▶ kubectl apply -f https://raw.githubusercontent.com/kubernetes/kubernetes/v1.10.3/examples/guestbook-go/guestbook-service.json
+service "guestbook" created</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>以下のようにNAMEがguestbookのサービスを確認すると、<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>▶ kubectl get services -o wide
+NAME           TYPE           CLUSTER-IP       EXTERNAL-IP                                                             PORT(S)          AGE       SELECTOR
+guestbook      LoadBalancer   10.100.150.88    aad4a790bc81011e890480e587b61c77-32413494.us-east-1.elb.amazonaws.com   3000:31467/TCP   1m        app=guestbook
+kubernetes     ClusterIP      10.100.0.1       &lt;none&gt;                                                                  443/TCP          30m       &lt;none&gt;
+redis-master   ClusterIP      10.100.216.161   &lt;none&gt;                                                                  6379/TCP         1m        app=redis,role=master
+redis-slave    ClusterIP      10.100.62.186    &lt;none&gt;                                                                  6379/TCP         1m        app=redis,role=slave</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>3000番ポートにELBが出来上がっていますのでアクセスしてみます。<br>
+<a href="http://aad4a790bc81011e890480e587b61c77-32413494.us-east-1.elb.amazonaws.com:3000" class="bare">http://aad4a790bc81011e890480e587b61c77-32413494.us-east-1.elb.amazonaws.com:3000</a></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/shirota/20181005/guestbook.png" alt="guestbook.png"></span></p>
+</div>
+<div class="paragraph">
+<p>Guestbootアプリがデプロイされました。<br></p>
+</div>
+<h1 id="___9" class="sect0">お片付け</h1>
+<div class="paragraph">
+<p>作成したものを全て削除しておきます。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>▶ kubectl delete rc --all
+replicationcontroller "guestbook" deleted
+replicationcontroller "redis-master" deleted
+replicationcontroller "redis-slave" deleted
+
+▶ kubectl delete services --all
+service "guestbook" deleted
+service "kubernetes" deleted
+service "redis-master" deleted
+service "redis-slave" deleted
+
+▶ aws cloudformation delete-stack --stack-name ekstest
+
+▶ aws eks delete-cluster --name ekstest
+{
+    "cluster": {
+        "name": "ekstest",
+        "arn": "arn:aws:eks:us-east-1:xxxxxx:cluster/ekstest",
+        "createdAt": 1538681196.817,
+        "version": "1.10",
+        "endpoint": "https://4D96E0D0B3BB26EE15D7A25B8E26A0E2.yl4.us-east-1.eks.amazonaws.com",
+        "roleArn": "arn:aws:iam::xxxxxx:role/eks",
+        "resourcesVpcConfig": {
+            "subnetIds": [
+                "subnet-xxxxxx",
+                "subnet-yyyyyy"
+            ],
+            "securityGroupIds": [
+                "sg-xxxxxx"
+            ],
+            "vpcId": "vpc-xxxxxx"
+        },
+        "status": "DELETING",
+        "certificateAuthority": {
+            "data": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUN5RENDQWJDZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRFNE1UQXdOREU1TXpReU4xb1hEVEk0TVRBd01URTVNelF5TjFvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTUllCmRrV24wbG00MHBQd0VQYlN3TTYwQlgwdTRRUTViTXhTL21ZcjRxbDRqaUNHWDM3S0FtSHozWUdLZU5Lb3FzbEoKejdsb3BiRkdIV0c2TVZ6ZFlTeDMwNXNTeEYrNFBjdExIcTk5TUFPRFBsMDg2eUo3YXNHcW8zTnBML2xuaEFGUgpvdmc1TUVIY1A4UDFKTis4SzZ6ZkpqS09aK3NzUC9ZbUdQVWZsSWNPT2s2L2RHdzlVRFUvZWRFOUhJYmVGdVJKCjZySGRmZHluQk5udXpwZHM3RFRYU1ZSRUpHek9QVlYxVkVLMHdJVWxXcndaUVdHVmJnZUVrdjlPT201VUVsbFEKdmhMbTh6Z1JERktnZURwSFRNSXIvL20yUHRGTkNJemxVakZXRXpDZGVYZGxRSDBaR0xsSkVlTVVoMWs3cS9HNAphTGJwaHduaEk1Rmk0MXYzeE8wQ0F3RUFBYU1qTUNFd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFMMmlaNFhyUTBQNmNDRVJDeHBkMkxYTi81TUEKOWhhOVVVeWFCbGhaS2VXSC9Oa2h6cVNGQXRla3JPZHRNU0ovUzhHMko0dW1tcW5MbnBPZUpFZXM3eDhrd3ZybwpSZnJZQkZhdmxIVFZtWlhxb3pMRXNxSktGWXF2NjRTSmMxWTZoOTIzMll3cWlpU0QrbWUvUzhKM2NSR3NieEtxCmF4dkdKdjhLZG9yaUI2UE5JS25PbFlqbVhDZW45SGJhS1I1cFdQNm5TckQ4dUlTTTBiK2JJaExkSk8yN2ZGYjMKb3B5ZHVMdFZ3VnRzcXB2dS8zbGZQNGs5U3RxSkw3MHZOTmg2blJvcVhwMW1rZkwzOEsvUk40cW5hcVhLK0JadQpZdEowRE1KZXQyUlFNdTN3RDYvYWtudUIxdk9icUhpREFqcEVCTGYyclNobWRXcTBYQUo1S3pFT3g2UT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo="
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<h1 id="___10" class="sect0">所感</h1>
+<div class="paragraph">
+<p>今回AWSのユーザガイドなどを元にサンプルアプリケーションをデプロイしてみましたが、<br>
+ECSを試した時のような取っ付き易さが無くて、自分にとっては難しく感じました。<br></p>
+</div>
+<div class="paragraph">
+<p>個人的にはもっとAWSコンソールからボタンをポチポチして作成できる部分が増えて欲しいな<br>
+というのが正直な感想です。<br></p>
+</div>
+<div class="paragraph">
+<p>ただ、YAMLやJSONなどのファイルを利用してkubectlなどのコマンドだけで<br>
+インフラ構築やデプロイまでできるのはやはり便利です。<br></p>
+</div>
+<div class="paragraph">
+<p>今後もKubernetesのお勉強をしていきたいです。<br></p>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11783-1';
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+</body>
+</html>
