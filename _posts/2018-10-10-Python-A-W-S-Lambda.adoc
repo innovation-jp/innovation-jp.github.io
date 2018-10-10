@@ -37,16 +37,60 @@ get_recommend.zip というファイルをLambda関数の作成時に使用し�
 
 では早速Lambda関数を作成していきましょう。
 
+image:/images/nakamura/lambda/01.png[]
+関数の作成をクリック。
 
+
+image:/images/nakamura/lambda/02.png[]
+「一から作成」を選びます。（デフォルトで選択済み）
+
+
+image:/images/nakamura/lambda/03.png[]
+名前は分かりやすいものでOK。 +
+ランタイムには前回Python3系で作成したので、「Python 3.6」を選択します。
+
+
+image:/images/nakamura/lambda/04.png[]
+今回新規のロールを作成するので、「テンプレートから新しいロールを作成」を選択。 +
+ロール名も分かりやすいものであれば適当でOKです。
+
+
+image:/images/nakamura/lambda/05.png[]
+Lambda関数が無事作成されました。
+
+
+=== コードをアップロードする
+
+それでは前回作成したコードをアップロードしていきます。
+
+image:/images/nakamura/lambda/06.png[]
+関数コードというパネルのコードエントリタイプから「.ZIPファイルをアップロード」を選択し、先ほど作成した「get_recommend.zip」を選択します。
+
+
+image:/images/nakamura/lambda/07.png[]
+右上の「保存」ボタンをクリックするとアップロードされた内容が表示され、コンソール上で編集が可能になります。
+
+
+image:/images/nakamura/lambda/08.png[]
+
+
+=== コードを修正する
+
+前回作成したプログラムはコンソール上から実行させるものでしたので、修正する必要があります。
+
+```
+・ コマンドライン引数は使用しない
+・ メイン部分をハンドラーへ変更
+```
+
+それぞれ修正していきましょう。
+image:/images/nakamura/lambda/09.png[]
 
 
 
 
 
 === 感想
-
-難しそうなイメージが先行してしまっていたのですが、思っていたよりも簡単に作成することができました。 +
-（もちろん精度をあげていくためにはカスタマイズが必要となりそうですが）
 
 
 
