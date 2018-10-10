@@ -125,12 +125,155 @@ def lambda_handler(event, context):
 ```
 
 
+image:/images/nakamura/lambda/14.png[]
+作成したテストイベントが選択されているはずなので、テストボタンをクリックしてみましょう。
 
+。。。エラーがでますね（笑）
+
+
+=== ライブラリをアップロードする
+
+前回プログラムを作成した際には、pipにてライブラリをインストールしました。が、Lambdaではpipを使ってインストールすることは出来ないため以下の手順でライブラリをアップロードしていきます。
+
+```
+1. ローカル環境のプロジェクトディレクトリに保存するようにライブラリをインストールし直す
+
+2. 再度全てのファイルを圧縮
+
+3. Lambdaにてファイルをアップロード
+```
+
+今回エラーが発生したライブラリは「nltk」というライブラリだったので、以下のようなコマンドになります。
+
+```
+$ pip install nltk -t . 　←現在のディレクトリにパスを指定して保存
+$ zip -r get_recommend.zip * ←全ファイルを圧縮
+```
+
+再度AWSのコンソールからZIPファイルをアップロードしてみましょう。
+
+
+image:/images/nakamura/lambda/15.png[]
+ライブラリがアップロードされました。これで実行できるはずです。
+
+。。。できませんでした（汗）
+
+=== _sqlite3なんて使ってないけど？
+
+image:/images/nakamura/lambda/16.png[]
+ログとして出力しているものの、先ほどとは違い心当たりがない。。。
+
+とりあえず調べてみると、以下のサイトを見つけました。
+https://stackoverflow.com/questions/44058239/sqlite3-error-on-aws-lambda-with-python-3
+
+なるほど、例のnltkライブラリの依存関係でエラーが発生しているようです。 + 
+またこちらの回答にあるように、sqlite3を使っていない場合の対応を行えば上手くいけそうです。
+
+image:/images/nakamura/lambda/17.png[]
+
+結果
+
+image:/images/nakamura/lambda/18.png[]
+ようやく完成しました！
+
+最終的なコードはこんな感じ。
+
+```
+import collections
+import imp
+import sys
+sys.modules["sqlite"] = imp.new_module("sqlite")
+sys.modules["sqlite3.dbapi2"] = imp.new_module("sqlite.dbapi2")
+from nltk.metrics import jaccard_distance
+from data import data_set
+
+def get_similar_user(product_ids, cv_data):
+	"""
+	類似度が高いユーザーを、指定した製品idから抽出する
+
+	Parameters
+	----------
+	product_ids : list
+		指定した製品id
+	cv_data : dict
+		CVしたユーザーデータ
+
+	Returns
+	-------
+	target_users : list
+		類似度が高い順にソートされたユーザー情報
+	"""
+	target_users = {};
+
+	# CVデータ分類似度を検証させる
+	for user in cv_data:
+		# 類似度を算出
+		jaccard = jaccard_distance(set(product_ids), set(cv_data[user]))
+
+		# 全く同じデータは省く
+		if jaccard != 1.0:
+			target_users[jaccard] = user
+
+	# 類似度が高い順にソートして返す
+	return sorted(target_users.items())
+
+
+def get_target_product_ids(product_ids, target_user, cv_data):
+	"""
+	類似度が高いユーザーを対象に、非選択の製品idを抽出する
+
+	Parameters
+	----------
+	product_ids : list
+		指定した製品id
+	target_user : list
+		類似度の高いユーザー
+	cv_data : dict
+		CVしたユーザーデータ
+
+	Returns
+	-------
+	target_product_ids : list
+		非選択の製品id
+	"""
+	target_product_ids = []
+
+	# 類似度が高いユーザー分処理
+	for jaccard, user in target_user:
+		# 指定した製品id以外の製品idを取得
+		diff = list(set(cv_data[user]) - set(product_ids))
+
+		# 取得した製品idをリストに追加
+		target_product_ids.extend(diff)
+
+	return target_product_ids
+
+
+def lambda_handler(event, context):
+	# イベントから渡したデータをセット
+	product_ids = [int(id.strip()) for id in event["product_ids"].split(',')]
+
+	# 類似度が高いユーザーを、指定した製品idから抽出する
+	target_users = get_similar_user(product_ids, data_set)
+
+	# 類似度が高いユーザーを対象に、非選択の製品idを抽出する
+	target_product_ids = get_target_product_ids(product_ids, target_users, data_set)
+
+	# 選択数を算出
+	counter = collections.Counter(target_product_ids).most_common()
+
+	# 製品idのみをカンマ区切りの文字列として返すなら以下のようにする
+	return (','.join([str(id) for id, count in counter]))
+
+```
 
 === 感想
 
+前回作成したプログラムをそのままLambda関数として使用することはできず、結構修正が必要でした。
 
+最終的にAPI化するのであれば、最初からLambda関数として作成した方が断然早いなーと思いました。
 
+次回はAPI Gatewayの設定をする予定です！ + 
 こちらからは以上です！
 
 
