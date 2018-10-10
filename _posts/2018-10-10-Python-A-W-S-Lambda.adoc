@@ -78,6 +78,7 @@ image:/images/nakamura/lambda/08.png[]
 
 前回作成したプログラムはコンソール上から実行させるものでしたので、修正する必要があります。
 
+大まかに説明すると、以下の2点になります。
 ```
 ・ コマンドライン引数は使用しない
 ・ メイン部分をハンドラーへ変更
@@ -88,12 +89,42 @@ image:/images/nakamura/lambda/09.png[]
 
 
 image:/images/nakamura/lambda/10.png[]
+メイン部分も変更していきます。 +
+コマンドライン引数にて渡していた「対象製品ID」は、handlerのeventから取得するようにします。
 
 image:/images/nakamura/lambda/11.png[]
+最後に関数コードパネルの上部にあるハンドラ部分を、今回のプログラムに合うように変更します。
+
+get_recommend.pyのlambda_handlerを実行させたいので、
+```
+get_recommend.lambda_handler
+```
+とします。
+
+
+=== テストイベントの設定
+
+修正したコードをデバッグしていきたいので、テストイベントを設定していきましょう。
 
 image:/images/nakamura/lambda/12.png[]
+画面上部にある「テスト」ボタンをクリックします。
+
 
 image:/images/nakamura/lambda/13.png[]
+イベントテンプレートは「Hello World」でOK。（デフォルトで選択済み） 
+
+イベント名は何でも良いです。 + 
+（個人的には渡す値などが判別できる名称にしたかったのですが、英数字のみに限定されているため上手く表現できませんでした）
+
+最下部の編集エリアには、テスト時に渡したい値などを記入しておきます。 
+
+上記のように記述しておくと、Lambda関数側で以下のように値を渡すことができます。
+```
+def lambda_handler(event, context):
+    print(event.product_ids) ←"111,222"
+```
+
+
 
 
 === 感想
