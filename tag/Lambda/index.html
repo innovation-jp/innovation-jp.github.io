@@ -213,20 +213,11 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/06/04/Route53-S-E-S-S3-Lambda-Gmail.html" title="link to Route53 + SES + S3 + Lambda で 独自ドメイン宛のメールをGmailに転送する">Route53 + SES + S3 + Lambda で 独自ドメイン宛のメールをGmailに転送する</a></h2>
-        <p class="excerpt">SREチームの城田です。 今回は城田のプライベート環境の話ですが、 AWSを使った独自ドメイン宛のメールの転送設定を行ったので紹介します。 ※当記事の内容はSESを利用しますが、何らかの理由でメールがループしてしまった場合の料金増加など、 当記事内容を利用したことによるトラブルに関して一切責任を負えませんのでご注意ください。 背景 独自ドメイン宛のメール受信は、某ドメインレジストラのメール転送機能を使って、Gmailアドレス宛に転送していた。 その某ドメインレジストラからAWS Route53にドメイン移管したので、そのメール転送機能が使えなくなった。 メール転送をAWSで行うが、それだけの為にEC2にMTAを入れてメール転送するということはしたくない。 ということで、メール転送機能（と同&hellip;</p>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/10/10/Python-A-W-S-Lambda.html" title="link to Pythonで購入履歴を使ったレコメンドを作成してみた②　〜AWS Lambda編〜">Pythonで購入履歴を使ったレコメンドを作成してみた②　〜AWS Lambda編〜</a></h2>
+        <p class="excerpt">どうも、中村です。 前回に作成したプログラムだけでは実際に利用するのが難しいので、AWS Lambda + API Gatewayを使ってAPI化していきたいと思います。 ※ちょっと長くなりそうだったので、API Gateway編は次回書きます。 前回作成した構成 ├── data.py ← 履歴データ └── get_recommend.py ← レコメンド取得プログラム こちらをAWS Lambdaに設定していくのですが、デプロイするためにファイルを圧縮したものを作成しましょう。 上記ディレクトリへ移動した後に以下コマンドを実行すれば、全てのファイルを圧縮したものが作成されます。 $ zip -r get_recommend.zip * 実行後 ├── data.py ├── get_&hellip;</p>
         <div class="post-list__meta">
-            <time datetime="04 Jun 2017" class="post-list__meta--date date">04 Jun 2017</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="Shirota">Shirota</a>, <a href="#blog" title=" Route53"> Route53</a>, <a href="#blog" title=" SES"> SES</a>, <a href="#blog" title=" S3"> S3</a>, <a href="#blog" title=" Lambda"> Lambda</a></span>
-        </div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/04/14/Azure-3.html" title="link to LINEとLambdaでパンケーキ！ なお話">LINEとLambdaでパンケーキ！ なお話</a></h2>
-        <p class="excerpt">お久しぶりです、SREと呼ぶ方も呼ばれる方もまだ慣れていない syoga です。 最近 SRE というチーム名に恥じない業務をするには何をすべきか… DevOpsってなんでも自動化するだけじゃないよね…等 日々の業務について悶々としていたところ、ドラゴンクエストXIの発売日が決まりました！！ 3DSとPS4 というマルチ展開なのでとりあえず両方購入する事にします！ Azure Machine Learning のお話 その3 Azure シリーズの第3段となります、前回までのあらすじはこちらです。 機械学習を学ぶため Azure Machin Training を体験したが、 自分が「作るより使う方が好きマン」だという事に気付き、 Computer Vision API を使ってみた sy&hellip;</p>
-        <div class="post-list__meta">
-            <time datetime="14 Apr 2017" class="post-list__meta--date date">14 Apr 2017</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="syoga">syoga</a>, <a href="#blog" title=" log"> log</a>, <a href="#blog" title=" Azure"> Azure</a>, <a href="#blog" title=" Computer Vision API"> Computer Vision API</a>, <a href="#blog" title=" Node.js"> Node.js</a>, <a href="#blog" title=" AWS"> AWS</a>, <a href="#blog" title=" Lambda"> Lambda</a>, <a href="#blog" title=" LINE"> LINE</a></span>
+            <time datetime="10 Oct 2018" class="post-list__meta--date date">10 Oct 2018</time> &#8226;
+            <span class="post-list__meta--tags tags"><a href="#blog" title="nakamura">nakamura</a>, <a href="#blog" title="AWS">AWS</a>, <a href="#blog" title="Lambda">Lambda</a>, <a href="#blog" title="Python">Python</a>, <a href="#blog" title="レコメンド">レコメンド</a>, <a href="#blog" title="Recommend">Recommend</a></span>
         </div>
         <hr class="post-list__divider" />
       </li>
@@ -252,7 +243,7 @@ var _trackingid = 'LFT-10003-1';
 
 
             <footer class="footer">
-                <span class="footer__copyright">&copy; 2017. All rights reserved.</span>
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
                 <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
                 <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
             </footer>
@@ -284,6 +275,15 @@ var _trackingid = 'LFT-10003-1';
     ga('send', 'pageview');
 
     </script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11783-1';
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
 
 </body>
 </html>
