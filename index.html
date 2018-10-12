@@ -210,6 +210,18 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/10/12/Laravel-D-B.html" title="link to Laravelでテストする前に行ったテストDBの準備">Laravelでテストする前に行ったテストDBの準備</a></h2>
+        <p class="excerpt">どうも、小柳津です。 最近ようやく自社のプロダクトにもテストを書くようになってきました。 その時テストDBを準備のためにすることを予習していたので、行ったことを書いていきます。 実行環境 Laravel: 5.7 MySQL : 8.0 PHP: 7.1 PHPUnit: 7.3 設定方法 DBの準備自体は割愛します。 LaravelのテストDBを用意をしたあとに .env.testing を用意します。 これはデフォルトで用意されている phpunit.xml に以下の設定がされているためです。(一部抜粋)     &lt;php&gt;         &lt;env name="APP_ENV" value="testing"/&gt;         &lt;env name="B&hellip;</p>
+        <div class="post-list__meta"><time datetime="12 Oct 2018" class="post-list__meta--date date">12 Oct 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/oyaizu">oyaizu</a>, <a href="http://tech.innovation.co.jp/tag/P-H-P-Unit">PHPUnit</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/10/10/Python-A-W-S-Lambda.html" title="link to Pythonで購入履歴を使ったレコメンドを作成してみた②　〜AWS Lambda編〜">Pythonで購入履歴を使ったレコメンドを作成してみた②　〜AWS Lambda編〜</a></h2>
+        <p class="excerpt">どうも、中村です。 前回に作成したプログラムだけでは実際に利用するのが難しいので、AWS Lambda + API Gatewayを使ってAPI化していきたいと思います。 ※ちょっと長くなりそうだったので、API Gateway編は次回書きます。 前回作成した構成 ├── data.py ← 履歴データ └── get_recommend.py ← レコメンド取得プログラム こちらをAWS Lambdaに設定していくのですが、デプロイするためにファイルを圧縮したものを作成しましょう。 上記ディレクトリへ移動した後に以下コマンドを実行すれば、全てのファイルを圧縮したものが作成されます。 $ zip -r get_recommend.zip * 実行後 ├── data.py ├── get_&hellip;</p>
+        <div class="post-list__meta"><time datetime="10 Oct 2018" class="post-list__meta--date date">10 Oct 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/nakamura">nakamura</a>, <a href="http://tech.innovation.co.jp/tag/A-W-S">AWS</a>, <a href="http://tech.innovation.co.jp/tag/Lambda">Lambda</a>, <a href="http://tech.innovation.co.jp/tag/Python">Python</a>, <a href="http://tech.innovation.co.jp/tag/">レコメンド</a>, <a href="http://tech.innovation.co.jp/tag/Recommend">Recommend</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/10/09/E-K-S.html" title="link to EKSを触ってみた">EKSを触ってみた</a></h2>
         <p class="excerpt">2018年10月現在、 弊社サービスでも本番環境にDockerコンテナを利用している部分が増えてきました。 AWSを利用している部分ではECSを利用していますが、 今回Kubernetesを試すという意味で、EKSを触ってみることにしました。 ユーザーガイド： https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/what-is-eks.html 前提 Dockerの知識はある程度ある 作業端末はMacを使用した（※未検証だがWindowsでも同じはず） 作業端末で最新のawscliが使用できるようになっていること AWSのIAMの知識があり、EKS用にAmazonEKSClusterPolicyとAmazonEKSServicePo&hellip;</p>
         <div class="post-list__meta"><time datetime="09 Oct 2018" class="post-list__meta--date date">09 Oct 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/A-W-S">AWS</a>, <a href="http://tech.innovation.co.jp/tag/E-K-S"> EKS</a>, <a href="http://tech.innovation.co.jp/tag/Kubernetes"> Kubernetes</a>, <a href="http://tech.innovation.co.jp/tag/Shirota"> Shirota</a></span></div>
@@ -255,18 +267,6 @@ var _trackingid = 'LFT-10003-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/09/10/Firestore.html" title="link to Firestoreを触ってみる">Firestoreを触ってみる</a></h2>
         <p class="excerpt">こんにちは。はすみんです。 先日「GDG DevFest Tokyo 2018」に行ってきました。 https://tokyo2018.gdgjapan.org/ 所感ですが、FlutterとFirestore関連の講演がとても盛り上がっていたように感じました。 また、講演の空いた時間には、Codelabにチャレンジすることもでき、時間を持て余すことはなかったです。 そんな今回はGDGでも盛り上がっていた「Firestore」について調べてみました。 Firestoreとは？ Firestoreは、正式名称「Cloud Firestore」で、 ざっくりいうとGoogleのプラットフォームを利用したフルマネージド型のNoSQLデータベースです。 従来のNoSQLデータベースはJSON型を用&hellip;</p>
         <div class="post-list__meta"><time datetime="10 Sep 2018" class="post-list__meta--date date">10 Sep 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Hasumin">Hasumin</a>, <a href="http://tech.innovation.co.jp/tag/Firestore"> Firestore</a>, <a href="http://tech.innovation.co.jp/tag/Firebase"> Firebase</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/09/06/A-W-S-A-L-B-Java-Script.html" title="link to AWS ALBに追加された固定レスポンスを返す機能を使ってJavaScriptでパスワード生成してみた">AWS ALBに追加された固定レスポンスを返す機能を使ってJavaScriptでパスワード生成してみた</a></h2>
-        <p class="excerpt">概要 先日、AWSのALB(Application Load Balancer)から直接固定レスポンスを返せる機能が付きました。 これは、ウェブサーバを用意せずともALBだけでsorryページなどを表示したりできる という想定で主に使用する機能だと思います。 しかし、 この機能は Content-Type text/html だけでなく、application/javascript などもレスポンスすることができ、 レスポンスコードは503や404など以外にも、もちろん200も返すことができます。 ということは、この部分にJavaScriptを記述すれば動かすことができるはずなので、 それを使って簡単なパスワード生成スクリプトをALBに直接置いてみて、 動作するのか検証してみました。 前提&hellip;</p>
-        <div class="post-list__meta"><time datetime="06 Sep 2018" class="post-list__meta--date date">06 Sep 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/A-W-S">AWS</a>, <a href="http://tech.innovation.co.jp/tag/A-L-B"> ALB</a>, <a href="http://tech.innovation.co.jp/tag/Java-Script"> JavaScript</a>, <a href="http://tech.innovation.co.jp/tag/Shirota"> Shirota</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/09/04/vr-comic.html" title="link to VR空間のスクショで漫画や画像素材作成をする">VR空間のスクショで漫画や画像素材作成をする</a></h2>
-        <p class="excerpt">画像素材作成は簡単 VRが生活の一部になってます あっという間に9月です。 新卒2年目エンジニアの小畑です。 ってことで、もう前回のブログから2ヶ月経つんですね。 生活の中にVRが入ってもう2ヶ月経つとも言います。はっや・・・ 某カオスななんとかチャットで、また交友の幅が広がったりしてました。 知り合った人がWeb系エンジニアで、技術力高い人とかはむしろしょっちゅうあるくらいでした。 いやー時代が変わってきてるのを感じます。 こんな挑戦をしました 前回の記事で使ったVirtualCastというソフトを使うと、Vtuberのように、自分が3Dモデルになりきることが出来ます。腕を動かしたら、３Dキャラも動く感じです。 ■バーチャル空間LTとスライドオンリーLTを比べてみた http://tech&hellip;</p>
-        <div class="post-list__meta"><time datetime="04 Sep 2018" class="post-list__meta--date date">04 Sep 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/obata">obata</a>, <a href="http://tech.innovation.co.jp/tag/vr"> vr</a>, <a href="http://tech.innovation.co.jp/tag/Virtual-Cast"> Virtual Cast</a>, <a href="http://tech.innovation.co.jp/tag/comic"> comic</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
