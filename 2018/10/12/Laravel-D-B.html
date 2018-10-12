@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Laravelでテストする前に行ったテストDBの準備 - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Laravelでテストする前に行ったテストDBの準備">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Laravelでテストする前に行ったテストDBの準備">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/10/12/Laravel-D-B.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Laravelでテストする前に行ったテストDBの準備" />
+    <meta property="og:description" content="どうも、小柳津です。 最近ようやく自社のプロダクトにもテストを書くようになってきました。 その時テストDBを準備のためにすることを予習していたので、行ったことを書いていきます。 実行環境 Laravel: 5.7 MySQL : 8.0 PHP: 7.1 PHPUnit: 7.3 設定方法 DBの準備自体は割愛します。 LaravelのテストDBを用意をしたあとに .env.testing を用意します。 これはデフォルトで用意されている phpunit.xml に以下の設定がされているためです。(一部抜粋)     &amp;lt;php&amp;gt;..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/10/12/Laravel-D-B.html" />
+    <meta property="article:published_time" content="2018-10-11T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-10-12T04:45:07.937Z" />
+    <meta property="article:tag" content="oyaizu" />
+    <meta property="article:tag" content="PHPUnit" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Laravelでテストする前に行ったテストDBの準備" />
+    <meta name="twitter:description" content="どうも、小柳津です。 最近ようやく自社のプロダクトにもテストを書くようになってきました。 その時テストDBを準備のためにすることを予習していたので、行ったことを書いていきます。 実行環境 Laravel: 5.7 MySQL : 8.0 PHP: 7.1 PHPUnit: 7.3 設定方法 DBの準備自体は割愛します。 LaravelのテストDBを用意をしたあとに .env.testing を用意します。 これはデフォルトで用意されている phpunit.xml に以下の設定がされているためです。(一部抜粋)     &amp;lt;php&amp;gt;..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/10/12/Laravel-D-B.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "m_nakamura",
+        "image": "https://avatars1.githubusercontent.com/u/7381448?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "Laravelでテストする前に行ったテストDBの準備",
+    "url": "http://tech.innovation.co.jp/2018/10/12/Laravel-D-B.html",
+    "datePublished": "2018-10-11T15:00:00.000Z",
+    "dateModified": "2018-10-12T04:45:07.937Z",
+    "keywords": "oyaizu, PHPUnit",
+    "description": "どうも、小柳津です。 最近ようやく自社のプロダクトにもテストを書くようになってきました。 その時テストDBを準備のためにすることを予習していたので、行ったことを書いていきます。 実行環境 Laravel: 5.7 MySQL : 8.0 PHP: 7.1 PHPUnit: 7.3 設定方法 DBの準備自体は割愛します。 LaravelのテストDBを用意をしたあとに .env.testing を用意します。 これはデフォルトで用意されている phpunit.xml に以下の設定がされているためです。(一部抜粋)     &amp;lt;php&amp;gt;..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-oyaizu tag-P-H-P-Unit no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="12 Oct 2018" class="post-meta__date date">12 Oct 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/oyaizu">oyaizu</a>, <a href="http://tech.innovation.co.jp/tag/P-H-P-Unit">PHPUnit</a></span>
+        <span class="post-meta__author author"><img src="https://avatars1.githubusercontent.com/u/7381448?v=4" alt="profile image for m_nakamura" class="avatar post-meta__avatar" /> by m_nakamura</span>
+      </div>
+      <h1 class="post-title">Laravelでテストする前に行ったテストDBの準備</h1>
+    </header>
+
+    <section class="post tag-oyaizu tag-P-H-P-Unit">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>どうも、小柳津です。</p>
+</div>
+<div class="paragraph">
+<p>最近ようやく自社のプロダクトにもテストを書くようになってきました。<br>
+その時テストDBを準備のためにすることを予習していたので、行ったことを書いていきます。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">実行環境</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Laravel: 5.7</p>
+</li>
+<li>
+<p>MySQL : 8.0</p>
+</li>
+<li>
+<p>PHP: 7.1</p>
+</li>
+<li>
+<p>PHPUnit: 7.3</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">設定方法</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>DBの準備自体は割愛します。<br>
+LaravelのテストDBを用意をしたあとに <code>.env.testing</code> を用意します。<br>
+これはデフォルトで用意されている <code>phpunit.xml</code> に以下の設定がされているためです。(一部抜粋)<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>    &lt;php&gt;
+        &lt;env name="APP_ENV" value="testing"/&gt;
+        &lt;env name="BCRYPT_ROUNDS" value="4"/&gt;
+        &lt;env name="CACHE_DRIVER" value="array"/&gt;
+        &lt;env name="SESSION_DRIVER" value="array"/&gt;
+        &lt;env name="QUEUE_DRIVER" value="sync"/&gt;
+        &lt;env name="MAIL_DRIVER" value="array"/&gt;
+    &lt;/php&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>これはPHPUnitを実行時には通常の envファイルの設定を見るのではなく、<br>
+APP_ENVのvalueに指定される値を付け加えた <code>.env.{APP_ENVのvalue}</code> を仕組みになっているからです。<br></p>
+</div>
+<div class="paragraph">
+<p>用意した  <code>.env.testing</code>  (一部抜粋)</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>APP_ENV=test
+
+DB_CONNECTION=mysql
+DB_HOST={テストDBのホスト}
+DB_PORT={テストDBのポート}
+DB_DATABASE={テストDBのデータベース}
+DB_USERNAME={テストDBのユーザーネーム}
+DB_PASSWORD={テストDBのパスワード}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>もともとあった開発環境用の  <code>.env</code>  (一部抜粋)</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>APP_ENV=local
+
+DB_CONNECTION=mysql
+DB_HOST={開発環境のDBのホスト}
+DB_PORT={開発環境のDBのポート}
+DB_DATABASE={開発環境のDBのデータベース}
+DB_USERNAME={開発環境ののユーザーネーム}
+DB_PASSWORD={開発環境ののパスワード}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>これで2種類のenvファイルが出来上がりました。<br>
+それではPHPUnitを実行時に見ているenvファイルが <code>.env.testing</code> になっているか確認しましょう。<br></p>
+</div>
+<div class="paragraph">
+<p>任意のテストクラスのsetUpメソッドに以下のようなものを書いてみます。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>    public function setUp()
+    {
+        dd(env('APP_ENV'), env('DB_HOST'));
+        parent::setUp();
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>見ているenvファイルが <code>.env.testing</code> であれば上記で設定した値がコンソールに表示されます。<br></p>
+</div>
+<div class="paragraph">
+<p>以下のテストコードをコマンドで実行します。<br>
+<code>./vendor/bin/phpunit</code></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/oyaizu/test01.png" alt="test01.png"></span></p>
+</div>
+<div class="paragraph">
+<p>表示されていますね！<br>
+上記の設定でPHPUnit時のみenvファイルを切り替えることができました。<br></p>
+</div>
+<div class="paragraph">
+<p>またLaravelは設定ファイルをキャッシュして高速化しているため、DBを扱うテストコードを実行する前に <code>php artisan config:clear</code> を実行することが勧められています。<br></p>
+</div>
+<div class="paragraph">
+<p>これを忘れるとテストDBではないDBに変更が加わってしまうので気をつけましょう<br>
+私は以下のようなShell Scriptを用意して、それ経由でテストを実行しています。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>#!/bin/bash
+
+php artisan config:clear
+./vendor/bin/phpunit</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">テストコード実行時</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>上記の設定を行ったことでDBを使用したコードのテストが行えるようになりました。<br></p>
+</div>
+<div class="paragraph">
+<p>DBを活用したテストで気をつけることは各テストが後のテストに影響がないように、各テストの後にデータをもとに戻さなければならないことです。<br></p>
+</div>
+<div class="paragraph">
+<p>上記は公式のドキュメントにもあるように、RefreshDatabaseトレイで解決することができます。<br>
+<a href="https://readouble.com/laravel/5.7/ja/database-testing.html">Laravel 5.7 データベースのテスト</a><br></p>
+</div>
+<div class="paragraph">
+<p>RefreshDatabaseトレイトにより、マイグレーションに最適なアプローチが取れます。テストクラスにてこのトレイトを使えば、全てが処理されます。
+RefreshDatabaseトレイトはテスト前に未実行のマイグレーションを実行し、テスト終了後にはデータベースが初期状態に復元します。<br>
+なので、DBを行うてすとコードはRefreshDatabaseトレイトを使用しましょう。<br></p>
+</div>
+<div class="sect2">
+<h3 id="_refreshdatabase_db">RefreshDatabaseトレイトを使用してDBを用いたテストを実行した場合</h3>
+<div class="paragraph">
+<p>実行するテストコード</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>namespace Tests\Unit\Lesson;
+
+
+use App\Eloquent\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+use Illuminate\Support\Facades\Schema;
+
+class UserTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function testFirstYaizuuuuNameUser()
+    {
+        $index = 0;
+
+        $users = factory(User::class, 3)-&gt;create()
+            -&gt;each(function ($user) use (&amp;$index) {
+                $name = ['yaizuuuu', 'yaizu', 'yaizuu',];
+                $user-&gt;name = $name[$index++];
+                $user-&gt;save();
+            });
+
+
+        $actual = (new User)-&gt;firstYaizuuuuNameUser();
+
+        $this-&gt;assertSame('yaizuuuu', $actual-&gt;name);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>実行後のDB</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/oyaizu/test02.png" alt="test02.png"></span></p>
+</div>
+<div class="paragraph">
+<p>テストコード内ではファクトリーを使用してテストデータを実行していますが、データは残っていませんね！<br></p>
+</div>
+<div class="paragraph">
+<p>それに対してマイグレーションは実行されているので、テストDBにテーブルなどは残っています。<br></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/oyaizu/test03.png" alt="test03.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_refreshdatabase_db_2">RefreshDatabaseトレイトを使用しないでDBを用いたテストを実行した場合</h3>
+<div class="paragraph">
+<p>実行するテストコードは先程と同じ。<br>
+ですが、そもそもマイグレーションを実行されないのでテーブルがエラーになってしまいます。<br></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/oyaizu/test04.png" alt="test04.png"></span></p>
+</div>
+<div class="paragraph">
+<p>テーブルが見つかりませんとなっていますね。<br></p>
+</div>
+<div class="paragraph">
+<p>なのでテスト実行前に手動でマイグレーションを実行してテストを行いますが、テスト後もDBにデータが残ってしまっています。<br></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/oyaizu/test05.png" alt="test05.png"></span></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___4">まとめ</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><code>.env.testing</code>を作成</p>
+</li>
+<li>
+<p>DBを扱うテストではRefreshDatabaseトレイトを使用する</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>とても簡単できて便利ですね！</p>
+</div>
+<div class="paragraph">
+<p>今回はこれで失礼します。<br></p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11783-1';
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+</body>
+</html>
