@@ -1,0 +1,134 @@
+= Laravelでテストする前に行ったテストDBの準備
+:hp-tags: oyaizu,PHPUnit
+
+どうも、小柳津です。
+
+最近ようやく自社のプロダクトにもテストを書くようになってきました。 +
+その時テストDBを準備のためにすることを予習していたので、そのこと行ったことを書いていきます。 +
+
+## 実行環境
+
+- Laravel: 5.7
+- MySQL : 8.0
+- PHP: 7.1
+- PHPUnit: 7.3
+
+## 設定方法
+
+DBの準備自体は割愛します。 +
+LaravelのテストDBを用意をしたあとに `.env.testing` を用意します。 +
+これはデフォルトで用意されている `phpunit.xml` に以下の設定がされているためです。(一部抜粋) +
+
+```
+    <php>
+        <env name="APP_ENV" value="testing"/>
+        <env name="BCRYPT_ROUNDS" value="4"/>
+        <env name="CACHE_DRIVER" value="array"/>
+        <env name="SESSION_DRIVER" value="array"/>
+        <env name="QUEUE_DRIVER" value="sync"/>
+        <env name="MAIL_DRIVER" value="array"/>
+    </php>
+```
+
+これはPHPUnitを実行時には通常の envファイルの設定を見るのではなく、 +
+APP_ENVのvalueに指定される値を付け加えた `.env.{APP_ENVのvalue}` を仕組みになっているからです。 +
+
+用意した  `.env.testing`  (一部抜粋)
+
+```
+APP_ENV=test
+
+DB_CONNECTION=mysql
+DB_HOST={テストDBのホスト}
+DB_PORT={テストDBのポート}
+DB_DATABASE={テストDBのデータベース}
+DB_USERNAME={テストDBのユーザーネーム}
+DB_PASSWORD={テストDBのパスワード}
+```
+
+もともとあった開発環境用の  `.env`  (一部抜粋)
+
+```
+APP_ENV=local
+
+DB_CONNECTION=mysql
+DB_HOST={開発環境のDBのホスト}
+DB_PORT={開発環境のDBのポート}
+DB_DATABASE={開発環境のDBのデータベース}
+DB_USERNAME={開発環境ののユーザーネーム}
+DB_PASSWORD={開発環境ののパスワード}
+```
+
+これで2種類のenvファイルが出来上がりました。 +
+それではPHPUnitを実行時に見ているenvファイルが `.env.testing` になっているか確認しましょう。 +
+
+任意のテストクラスのsetUpメソッドに以下のようなものを書いてみます。 +
+
+```
+    public function setUp()
+    {
+        dd(env('APP_ENV'), env('DB_HOST'));
+        parent::setUp();
+    }
+```
+
+見ているenvファイルが `.env.testing` であれば上記で設定した値がコンソールに表示されます。 +
+
+以下のテストコードをコマンドで実行します。 +
+`./vendor/bin/phpunit`
+
+image:/images/nakamura/lambda/14.png[]
+
+表示されていますね！ +
+上記の設定でPHPUnit時のみenvファイルを切り替えることができました。 +
+
+## テストコード実行時
+
+上記の設定を行ったことでDBを使用したコードのテストが行えるようになりました。 +
+
+DBを活用したテストで気をつけることは各テストが後のテストに影響がないように、各テストの後にデータをもとに戻さなければならないことです。 +
+
+上記は公式のドキュメントにもあるように、RefreshDatabaseトレイで解決することができます。 +
+https://readouble.com/laravel/5.7/ja/database-testing.html[Laravel 5.7 データベースのテスト] +
+
+
+RefreshDatabaseトレイトにより、マイグレーションに最適なアプローチが取れます。テストクラスにてこのトレイトを使えば、全てが処理されます。
+RefreshDatabaseトレイトはテスト前に未実行のマイグレーションを実行し、テスト終了後にはデータベースが初期状態に復元します。 +
+なので、DBを行うてすとコードはRefreshDatabaseトレイトを使用しましょう。 +
+
+### RefreshDatabaseトレイトを使用してDBを用いたテストを実行した場合
+
+実行するテストコード
+```
+テストコード
+```
+実行後のDB
+
+image:/images/nakamura/lambda/14.png[]
+
+テストコード内ではファクトリーを使用してテストデータを実行していますが、データは残っていませんね！ +
+それに対してマイグレーションは実行されているので、テストDBにテーブルなどは残っています。 +
+
+### RefreshDatabaseトレイトを使用しないでDBを用いたテストを実行した場合
+
+実行するテストコード
+```
+テストコード
+```
+
+そもそもマイグレーションを実行されないのでテーブルがエラーになってしまいます。 +
+
+image:/images/nakamura/lambda/14.png[]
+
+なのでテスト実行前に手動でマイグレーションを実行してテストを行いますが、テストDBにデータが残ってしまっています。 +
+
+image:/images/nakamura/lambda/14.png[]
+
+## まとめ
+
+- `.env.testing`を作成
+- DBを扱うテストではRefreshDatabaseトレイトを使用する
+
+とても簡単できて便利ですね！
+
+今回はこれで失礼します。 +
