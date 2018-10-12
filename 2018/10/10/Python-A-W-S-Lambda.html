@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Pythonで購入履歴を使ったレコメンドを作成してみた②　〜AWS Lambda編〜 - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Pythonで購入履歴を使ったレコメンドを作成してみた②　〜AWS Lambda編〜">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Pythonで購入履歴を使ったレコメンドを作成してみた②　〜AWS Lambda編〜">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/10/10/Python-A-W-S-Lambda.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Pythonで購入履歴を使ったレコメンドを作成してみた②　〜AWS Lambda編〜" />
+    <meta property="og:description" content="どうも、中村です。 前回に作成したプログラムだけでは実際に利用するのが難しいので、AWS Lambda + API Gatewayを使ってAPI化していきたいと思います。 ※ちょっと長くなりそうだったので、API Gateway編は次回書きます。 前回作成した構成 ├── data.py ← 履歴データ └── get_recommend.py ← レコメンド取得プログラム こちらをAWS Lambdaに設定していくのですが、デプロイするためにファイルを圧縮したものを作成しましょう。 上記ディレクトリへ移動した後に以下コマンドを実行すれば、全てのファイ..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/10/10/Python-A-W-S-Lambda.html" />
+    <meta property="article:published_time" content="2018-10-09T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-10-12T04:43:17.344Z" />
+    <meta property="article:tag" content="nakamura" />
+    <meta property="article:tag" content="AWS" />
+    <meta property="article:tag" content="Lambda" />
+    <meta property="article:tag" content="Python" />
+    <meta property="article:tag" content="レコメンド" />
+    <meta property="article:tag" content="Recommend" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Pythonで購入履歴を使ったレコメンドを作成してみた②　〜AWS Lambda編〜" />
+    <meta name="twitter:description" content="どうも、中村です。 前回に作成したプログラムだけでは実際に利用するのが難しいので、AWS Lambda + API Gatewayを使ってAPI化していきたいと思います。 ※ちょっと長くなりそうだったので、API Gateway編は次回書きます。 前回作成した構成 ├── data.py ← 履歴データ └── get_recommend.py ← レコメンド取得プログラム こちらをAWS Lambdaに設定していくのですが、デプロイするためにファイルを圧縮したものを作成しましょう。 上記ディレクトリへ移動した後に以下コマンドを実行すれば、全てのファイ..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/10/10/Python-A-W-S-Lambda.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars3.githubusercontent.com/u/16201452?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "Pythonで購入履歴を使ったレコメンドを作成してみた②　〜AWS Lambda編〜",
+    "url": "http://tech.innovation.co.jp/2018/10/10/Python-A-W-S-Lambda.html",
+    "datePublished": "2018-10-09T15:00:00.000Z",
+    "dateModified": "2018-10-12T04:43:17.344Z",
+    "keywords": "nakamura, AWS, Lambda, Python, レコメンド, Recommend",
+    "description": "どうも、中村です。 前回に作成したプログラムだけでは実際に利用するのが難しいので、AWS Lambda + API Gatewayを使ってAPI化していきたいと思います。 ※ちょっと長くなりそうだったので、API Gateway編は次回書きます。 前回作成した構成 ├── data.py ← 履歴データ └── get_recommend.py ← レコメンド取得プログラム こちらをAWS Lambdaに設定していくのですが、デプロイするためにファイルを圧縮したものを作成しましょう。 上記ディレクトリへ移動した後に以下コマンドを実行すれば、全てのファイ..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-nakamura tag-A-W-S tag-Lambda tag-Python tag- tag-Recommend no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="10 Oct 2018" class="post-meta__date date">10 Oct 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/nakamura">nakamura</a>, <a href="http://tech.innovation.co.jp/tag/A-W-S">AWS</a>, <a href="http://tech.innovation.co.jp/tag/Lambda">Lambda</a>, <a href="http://tech.innovation.co.jp/tag/Python">Python</a>, <a href="http://tech.innovation.co.jp/tag/">レコメンド</a>, <a href="http://tech.innovation.co.jp/tag/Recommend">Recommend</a></span>
+        <span class="post-meta__author author"><img src="https://avatars3.githubusercontent.com/u/16201452?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">Pythonで購入履歴を使ったレコメンドを作成してみた②　〜AWS Lambda編〜</h1>
+    </header>
+
+    <section class="post tag-nakamura tag-A-W-S tag-Lambda tag-Python tag- tag-Recommend">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>どうも、中村です。</p>
+</div>
+<div class="paragraph">
+<p>前回に作成したプログラムだけでは実際に利用するのが難しいので、AWS Lambda + API Gatewayを使ってAPI化していきたいと思います。</p>
+</div>
+<div class="paragraph">
+<p>※ちょっと長くなりそうだったので、API Gateway編は次回書きます。</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__">前回作成した構成</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>├── data.py ← 履歴データ
+└── get_recommend.py ← レコメンド取得プログラム</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>こちらをAWS Lambdaに設定していくのですが、デプロイするためにファイルを圧縮したものを作成しましょう。</p>
+</div>
+<div class="paragraph">
+<p>上記ディレクトリへ移動した後に以下コマンドを実行すれば、全てのファイルを圧縮したものが作成されます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ zip -r get_recommend.zip *</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>実行後</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>├── data.py
+├── get_recommend.py
+└── get_recommend.zip</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>get_recommend.zip というファイルをLambda関数の作成時に使用していきます。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_aws_lambda">AWS Lambda関数の作成</h3>
+<div class="paragraph">
+<p>では早速Lambda関数を作成していきましょう。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/nakamura/lambda/01.png" alt="01.png"></span>
+関数の作成をクリック。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/nakamura/lambda/02.png" alt="02.png"></span>
+「一から作成」を選びます。（デフォルトで選択済み）</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/nakamura/lambda/03.png" alt="03.png"></span>
+名前は分かりやすいものでOK。<br>
+ランタイムには前回Python3系で作成したので、「Python 3.6」を選択します。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/nakamura/lambda/04.png" alt="04.png"></span>
+今回新規のロールを作成するので、「テンプレートから新しいロールを作成」を選択。<br>
+ロール名も分かりやすいものであれば適当でOKです。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/nakamura/lambda/05.png" alt="05.png"></span>
+Lambda関数が無事作成されました。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___2">コードをアップロードする</h3>
+<div class="paragraph">
+<p>それでは前回作成したコードをアップロードしていきます。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/nakamura/lambda/06.png" alt="06.png"></span>
+関数コードというパネルのコードエントリタイプから「.ZIPファイルをアップロード」を選択し、先ほど作成した「get_recommend.zip」を選択します。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/nakamura/lambda/07.png" alt="07.png"></span>
+右上の「保存」ボタンをクリックするとアップロードされた内容が表示され、コンソール上で編集が可能になります。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/nakamura/lambda/08.png" alt="08.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___3">コードを修正する</h3>
+<div class="paragraph">
+<p>前回作成したプログラムはコンソール上から実行させるものでしたので、修正する必要があります。</p>
+</div>
+<div class="paragraph">
+<p>大まかに説明すると、以下の2点になります。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>・ コマンドライン引数は使用しない
+・ メイン部分をハンドラーへ変更</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>それぞれ修正していきましょう。
+<span class="image"><img src="/images/nakamura/lambda/09.png" alt="09.png"></span></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/nakamura/lambda/10.png" alt="10.png"></span>
+メイン部分も変更していきます。<br>
+コマンドライン引数にて渡していた「対象製品ID」は、handlerのeventから取得するようにします。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/nakamura/lambda/11.png" alt="11.png"></span>
+最後に関数コードパネルの上部にあるハンドラ部分を、今回のプログラムに合うように変更します。</p>
+</div>
+<div class="paragraph">
+<p>get_recommend.pyのlambda_handlerを実行させたいので、</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>get_recommend.lambda_handler</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>とします。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___4">テストイベントの設定</h3>
+<div class="paragraph">
+<p>修正したコードをデバッグしていきたいので、テストイベントを設定していきましょう。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/nakamura/lambda/12.png" alt="12.png"></span>
+画面上部にある「テスト」ボタンをクリックします。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/nakamura/lambda/13.png" alt="13.png"></span>
+イベントテンプレートは「Hello World」でOK。（デフォルトで選択済み）</p>
+</div>
+<div class="paragraph">
+<p>イベント名は何でも良いです。<br>
+（個人的には渡す値などが判別できる名称にしたかったのですが、英数字のみに限定されているため上手く表現できませんでした）</p>
+</div>
+<div class="paragraph">
+<p>最下部の編集エリアには、テスト時に渡したい値などを記入しておきます。</p>
+</div>
+<div class="paragraph">
+<p>上記のように記述しておくと、Lambda関数側で以下のように値を渡すことができます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>def lambda_handler(event, context):
+    print(event.product_ids) ←"111,222"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/nakamura/lambda/14.png" alt="14.png"></span>
+作成したテストイベントが選択されているはずなので、テストボタンをクリックしてみましょう。</p>
+</div>
+<div class="paragraph">
+<p>。。。エラーがでますね（笑）</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___5">ライブラリをアップロードする</h3>
+<div class="paragraph">
+<p>前回プログラムを作成した際には、pipにてライブラリをインストールしました。が、Lambdaではpipを使ってインストールすることは出来ないため以下の手順でライブラリをアップロードしていきます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>1. ローカル環境のプロジェクトディレクトリに保存するようにライブラリをインストールし直す
+
+2. 再度全てのファイルを圧縮
+
+3. Lambdaにてファイルをアップロード</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>今回エラーが発生したライブラリは「nltk」というライブラリだったので、以下のようなコマンドになります。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ pip install nltk -t . 　←現在のディレクトリにパスを指定して保存
+$ zip -r get_recommend.zip * ←全ファイルを圧縮</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>再度AWSのコンソールからZIPファイルをアップロードしてみましょう。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/nakamura/lambda/15.png" alt="15.png"></span>
+ライブラリがアップロードされました。これで実行できるはずです。</p>
+</div>
+<div class="paragraph">
+<p>。。。できませんでした（汗）</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__sqlite3">_sqlite3なんて使ってないけど？</h3>
+<div class="paragraph">
+<p><span class="image"><img src="/images/nakamura/lambda/16.png" alt="16.png"></span>
+ログとして出力しているものの、先ほどとは違い心当たりがない。。。</p>
+</div>
+<div class="paragraph">
+<p>とりあえず調べてみると、以下のサイトを見つけました。
+<a href="https://stackoverflow.com/questions/44058239/sqlite3-error-on-aws-lambda-with-python-3" class="bare">https://stackoverflow.com/questions/44058239/sqlite3-error-on-aws-lambda-with-python-3</a></p>
+</div>
+<div class="paragraph">
+<p>なるほど、例のnltkライブラリの依存関係でエラーが発生しているようです。<br>
+またこちらの回答にあるように、sqlite3を使っていない場合の対応を行えば上手くいけそうです。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/nakamura/lambda/17.png" alt="17.png"></span></p>
+</div>
+<div class="paragraph">
+<p>結果</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/nakamura/lambda/18.png" alt="18.png"></span>
+ようやく完成しました！</p>
+</div>
+<div class="paragraph">
+<p>最終的なコードはこんな感じ。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import collections
+import imp
+import sys
+sys.modules["sqlite"] = imp.new_module("sqlite")
+sys.modules["sqlite3.dbapi2"] = imp.new_module("sqlite.dbapi2")
+from nltk.metrics import jaccard_distance
+from data import data_set
+
+def get_similar_user(product_ids, cv_data):
+	"""
+	類似度が高いユーザーを、指定した製品idから抽出する
+
+	Parameters
+	----------
+	product_ids : list
+		指定した製品id
+	cv_data : dict
+		CVしたユーザーデータ
+
+	Returns
+	-------
+	target_users : list
+		類似度が高い順にソートされたユーザー情報
+	"""
+	target_users = {};
+
+	# CVデータ分類似度を検証させる
+	for user in cv_data:
+		# 類似度を算出
+		jaccard = jaccard_distance(set(product_ids), set(cv_data[user]))
+
+		# 全く同じデータは省く
+		if jaccard != 1.0:
+			target_users[jaccard] = user
+
+	# 類似度が高い順にソートして返す
+	return sorted(target_users.items())
+
+
+def get_target_product_ids(product_ids, target_user, cv_data):
+	"""
+	類似度が高いユーザーを対象に、非選択の製品idを抽出する
+
+	Parameters
+	----------
+	product_ids : list
+		指定した製品id
+	target_user : list
+		類似度の高いユーザー
+	cv_data : dict
+		CVしたユーザーデータ
+
+	Returns
+	-------
+	target_product_ids : list
+		非選択の製品id
+	"""
+	target_product_ids = []
+
+	# 類似度が高いユーザー分処理
+	for jaccard, user in target_user:
+		# 指定した製品id以外の製品idを取得
+		diff = list(set(cv_data[user]) - set(product_ids))
+
+		# 取得した製品idをリストに追加
+		target_product_ids.extend(diff)
+
+	return target_product_ids
+
+
+def lambda_handler(event, context):
+	# イベントから渡したデータをセット
+	product_ids = [int(id.strip()) for id in event["product_ids"].split(',')]
+
+	# 類似度が高いユーザーを、指定した製品idから抽出する
+	target_users = get_similar_user(product_ids, data_set)
+
+	# 類似度が高いユーザーを対象に、非選択の製品idを抽出する
+	target_product_ids = get_target_product_ids(product_ids, target_users, data_set)
+
+	# 選択数を算出
+	counter = collections.Counter(target_product_ids).most_common()
+
+	# 製品idのみをカンマ区切りの文字列として返すなら以下のようにする
+	return (','.join([str(id) for id, count in counter]))</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___6">感想</h3>
+<div class="paragraph">
+<p>前回作成したプログラムをそのままLambda関数として使用することはできず、結構修正が必要でした。</p>
+</div>
+<div class="paragraph">
+<p>最終的にAPI化するのであれば、最初からLambda関数として作成した方が断然早いなーと思いました。</p>
+</div>
+<div class="paragraph">
+<p>次回はAPI Gatewayの設定をする予定です！<br>
+こちらからは以上です！</p>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11783-1';
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+</body>
+</html>
