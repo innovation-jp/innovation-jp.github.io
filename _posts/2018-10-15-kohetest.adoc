@@ -1,0 +1,14 @@
+= kohetest
+:hp-tags: kohe,PHPUnit
+
+
+image:/images/oyaizu/test05.png[]
+
+## まとめ
+
+- `.env.testing`を作成
+- DBを扱うテストではRefreshDatabaseトレイトを使用する
+
+とても簡単できて便利ですね！
+
+今回はこれで失礼します。 +
