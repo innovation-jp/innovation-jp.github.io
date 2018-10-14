@@ -1,0 +1,99 @@
+= NEMのAPIをDockerで使ってみる
+:hp-tags: kohe,NEM,Dcoker
+
+
+
+
+# そろそろ肌寒くなってきましたね。
+こんににはこへです。
+ということで今回はNEMで遊びます。
+
+#環境構築
+
+doker-compose.yml
+
+```
+version: '3.7'
+services:
+  node:
+    image: node
+    tty: true
+    volumes:
+      - ./app:/var/www/app:cached
+    working_dir: /var/www/app
+    ports:
+      - 80:80
+
+```
+
+`docker-compose up -d` で起動
+
+コンテナに入る
+`docker exec -it コンテナ名 bash`
+
+`yarn add nem-library`
+
+`yarn add -D babel-cli babel-preset-env`
+
+
+_.babelrc_
+
+```
+{
+  "presets": ["env"]
+}
+
+```
+
+_pakage.json_　に追加
+```
+ "scripts": {
+   "build": "babel src -d lib"
+ },
+
+```
+
+
+## コード
+app配下にindex.jsを作る
+
+```
+
+import {AccountHttp, NEMLibrary, NetworkTypes, Address} from "nem-library";
+
+NEMLibrary.bootstrap(NetworkTypes.MAIN_NET);
+
+const address = new Address("NB3SSP-4MANHQ-RAK76S-FMMVOP-HFK6EP-NBKRYV-RU2V");
+
+const accountHttp = new AccountHttp();
+accountHttp.getFromAddress(address).subscribe(accountInfoWithMetaData => {
+    console.log(accountInfoWithMetaData);
+});
+
+```
+
+もっかいコンテナに入り、
+`yarn build`
+
+node lib/index.jsで
+
+```
+AccountInfoWithMetaData {
+  balance:
+   Balance {
+     balance: 15000000,
+     vestedBalance: 15000000,
+     unvestedBalance: 0 },
+  importance: 0,
+  harvestedBlocks: 0,
+  cosignatoriesCount: undefined,
+  minCosignatories: undefined,
+  status: 'LOCKED',
+  remoteStatus: 'INACTIVE',
+  cosignatoryOf: [],
+  cosignatories: [] }
+
+```
+
+情報がみれた！これは簡単！
+THE END
