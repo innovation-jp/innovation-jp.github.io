@@ -8,6 +8,9 @@
 こんににはこへです。
 ということで今回はNEMで遊びます。
 
+image:/images/kohe/nem_1.png[]
+
+
 # 環境構築
 
 doker-compose.yml
