@@ -57,7 +57,7 @@ _pakage.json_　に追加
 ```
 
 
-## コード
+## ウォレット情報取得
 app配下にindex.jsを作る
 
 ```
@@ -99,4 +99,52 @@ AccountInfoWithMetaData {
 ```
 
 情報がみれた！これは簡単！
+
+# 送金
+
+```
+//送金元の秘密鍵が入っているファイルをインポート
+let tmp = require("./mydata.js")
+
+import {AccountHttp, NEMLibrary, NetworkTypes, Account, Address, TimeWindow, XEM, PlainMessage, TransferTransaction, TransactionHttp} from "nem-library";
+
+NEMLibrary.bootstrap(NetworkTypes.MAIN_NET);
+
+// 送金先
+const address = "NB3SSP-4MANHQ-RAK76S-FMMVOP-HFK6EP-NBKRYV-RU2V"
+
+// 送金元
+const PRIVATE_KEY = tmp.key
+
+const amount = 0.1;
+const message = "";
+
+const transferTransaction = TransferTransaction.create(
+  TimeWindow.createWithDeadline(),
+  new Address(address),
+  new XEM(amount),
+  PlainMessage.create(message)
+);
+
+const account = Account.createWithPrivateKey(PRIVATE_KEY);
+
+// トランザクションを署名
+const signedTransaction = account.signTransaction(transferTransaction);
+const transactionHttp = new TransactionHttp();
+
+// 送金実行
+transactionHttp.announceTransaction(signedTransaction)
+  .subscribe(
+    value => {console.log(value.message);},
+    err => {console.log(err.toString());}
+);;
+
+```
+
+image:/images/kohe/nem_2.png[]
+ちゃんと支払われている！！
+
+今は最低0.05XEM(現在価値で0.5円程度)で送金できるのでお得ですね。
+にしても簡単
+
 THE END
