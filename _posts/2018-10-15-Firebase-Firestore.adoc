@@ -58,8 +58,26 @@ image:/images/kohe/firebase_1.png[]
 
 # Firestoreリアルタイムデータ更新
 
+```
+  listenDataFromScoreDB () {
+    const unsub = firebase.firestore().db.collection('koooohe').doc("bbb")
+      .onSnapshot((doc) => {
+      		this.Item = doc.Item
+       }
+      })
+  },
 
-Swiftとかですと、こういった変更の種類に応じて、処理を変えれるのですが、NodeJSにはまだ対応していないため今回は断念。
+
+```
+
+`kooooohe`collection の `bbb` documentが変わるたびに、this.Itemに値が代入され続けます。
+
+データの監視を止めるには `unsub()`　を実行
+↑を適切なタイミングで行わないと悲惨なことになるので注意。
+
+
+ちなみに +
+Swiftとかだと、こういった変更の種類に応じて、処理を変えれるのですが、NodeJSにはまだ対応していないため今回は断念。
 ```
 db.collection("cities").whereField("state", isEqualTo: "CA")
     .addSnapshotListener { querySnapshot, error in
