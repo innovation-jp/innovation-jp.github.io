@@ -1,8 +1,15 @@
-= kohetest
-:hp-tags: kohe,PHPUnit
+= Firebaseの匿名認証とFirestoreのリアルタイム更新で遊んでみたお話
+:hp-tags: kohe,Firebase,Firestroe
 
 
-image:/images/oyaizu/test05.png[]
+# 涼しくなってきましたね。
+koheです。
+
+今回はFirebaseの *匿名認証*　と  *リアルタイムデータ更新* 機能をVueで遊んで見ました。
+
+image:/images/kohe/firebase_1.png[]
+
+image:/images/kohe/firebase_2.png[]
 
 ## まとめ
 
