@@ -100,6 +100,8 @@ db.collection("cities").whereField("state", isEqualTo: "CA")
 
 
 ```
+弊社の遠山がすでにブログで公開しているが、こんなものが作れたりする
+
 image::http://tech.innovation.co.jp/images/kohe/toyama_swift_gif.gif[]
 
 THE END 
