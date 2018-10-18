@@ -7,15 +7,82 @@ koheです。
 
 今回はFirebaseの *匿名認証*　と  *リアルタイムデータ更新* 機能をVueで遊んで見ました。
 
-image:/images/kohe/firebase_1.png[]
+
+
+
+# 匿名認証
+GoogleやTwitterの認証を使わずに、匿名の認証をし、UUIDを発行したい！！
 
 image:/images/kohe/firebase_2.png[]
 
+まずfirebaseのコンソール画面から匿名ログインを有効にします。
+
+
+
+```
+
+ <button  label="Use without login"  @click="signupByAnonymous" color="primary" />
+
+methods :{
+    checkLogin () {
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          this.setMyUID(user.uid)
+          this.goScorePage()
+        }
+        this.isProgress = false
+      })
+    },
+
+    signupByAnonymous () {
+      this.isProgress = true
+      firebase.auth().signInAnonymously().catch(function (error) {
+        console.log(error.code)
+        console.log(error.message)
+        alert('匿名ログインに失敗しました')
+        this.isProgress = false
+      })
+    },
+ }
+
+```
+そしてこのメソッドを起動すると…
+
+image:/images/kohe/firebase_1.png[]
+
+匿名ユーザができてる！！
+
+匿名ユーザの情報をその後のGoogleAuthなどの認証に紐付けることもできるそう。
+それはまた後ほど。
+
+
+# Firestoreリアルタイムデータ更新
+
+
+Swiftとかですと、こういった変更の種類に応じて、処理を変えれるのですが、NodeJSにはまだ対応していないため今回は断念。
+```
+db.collection("cities").whereField("state", isEqualTo: "CA")
+    .addSnapshotListener { querySnapshot, error in
+        guard let snapshot = querySnapshot else {
+            print("Error fetching snapshots: \(error!)")
+            return
+        }
+        snapshot.documentChanges.forEach { diff in
+            if (diff.type == .added) {
+                print("New city: \(diff.document.data())")
+            }
+            if (diff.type == .modified) {
+                print("Modified city: \(diff.document.data())")
+            }
+            if (diff.type == .removed) {
+                print("Removed city: \(diff.document.data())")
+            }
+        }
+    }
+
+
+```
+
 ## まとめ
 
-- `.env.testing`を作成
-- DBを扱うテストではRefreshDatabaseトレイトを使用する
-
-とても簡単できて便利ですね！
-
-今回はこれで失礼します。 +
+THE END 
