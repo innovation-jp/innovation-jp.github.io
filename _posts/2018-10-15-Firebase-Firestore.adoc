@@ -101,6 +101,5 @@ db.collection("cities").whereField("state", isEqualTo: "CA")
 
 ```
 
-## まとめ
 
 THE END 
