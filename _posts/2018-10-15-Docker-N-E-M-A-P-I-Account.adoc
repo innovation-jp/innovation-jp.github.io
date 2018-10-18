@@ -1,4 +1,4 @@
-= NEMのAPIをDockerで使ってみる
+= DockerでNEMのAPIを使いAccount情報取得から送金まで使ってみる
 :hp-tags: kohe,NEM,Docker
 
 
