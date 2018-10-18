@@ -137,7 +137,7 @@ transactionHttp.announceTransaction(signedTransaction)
   .subscribe(
     value => {console.log(value.message);},
     err => {console.log(err.toString());}
-);;
+);
 
 ```
 
