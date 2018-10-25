@@ -1,6 +1,6 @@
 = リクルートコミュニケーションズのコーディング試験の過去問を題材にOPPの練習してみた
-:hp-alt-title: exercise_of_OOP
-:hp-tags: bigen, recruit, coding test, OOP
+:hp-alt-title:exercise_of_OOP
+:hp-tags:bigen, recruit, coding test, OOP
 
 == はじめに
 どうも、bigenです。 +
