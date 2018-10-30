@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>HTMLメールを送るときにはメーラの対応状況が気になる - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="HTMLメールを送るときにはメーラの対応状況が気になる">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="HTMLメールを送るときにはメーラの対応状況が気になる">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/10/31/H-T-M-L.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="HTMLメールを送るときにはメーラの対応状況が気になる" />
+    <meta property="og:description" content="おはようございます！ 最高の気候のなか、みなさまいかがお過ごしでしょうか？ 矢ヶ崎です。 改めてHTMLについて考えてみる 突然ですが、昨今はHTMLでのメール作成がデフォルトになってる場面が多くなってきている気がしています。 プレーンテキストで書くよりも、いろいろな表現ができて、とても良いですよね。そう思います！ まるでWebSiteのようなメールが届くことも少なくなくなってきており、特に海外のツールのアップセルを促すメールはHTMLでのパターン化が進んでいる所感です。 しかし！ メーラによって見え方がかなり違ったりしますね。+ 私は、Gmail(W..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/10/31/H-T-M-L.html" />
+    <meta property="article:published_time" content="2018-10-30T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-10-30T10:19:27.467Z" />
+    <meta property="article:tag" content="Yagasaki" />
+    <meta property="article:tag" content="CSS" />
+    <meta property="article:tag" content="Outlook" />
+    <meta property="article:tag" content="Mail" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="HTMLメールを送るときにはメーラの対応状況が気になる" />
+    <meta name="twitter:description" content="おはようございます！ 最高の気候のなか、みなさまいかがお過ごしでしょうか？ 矢ヶ崎です。 改めてHTMLについて考えてみる 突然ですが、昨今はHTMLでのメール作成がデフォルトになってる場面が多くなってきている気がしています。 プレーンテキストで書くよりも、いろいろな表現ができて、とても良いですよね。そう思います！ まるでWebSiteのようなメールが届くことも少なくなくなってきており、特に海外のツールのアップセルを促すメールはHTMLでのパターン化が進んでいる所感です。 しかし！ メーラによって見え方がかなり違ったりしますね。+ 私は、Gmail(W..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/10/31/H-T-M-L.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "Akihiro YAGASAKI",
+        "image": "https://avatars1.githubusercontent.com/u/13131599?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "HTMLメールを送るときにはメーラの対応状況が気になる",
+    "url": "http://tech.innovation.co.jp/2018/10/31/H-T-M-L.html",
+    "datePublished": "2018-10-30T15:00:00.000Z",
+    "dateModified": "2018-10-30T10:19:27.467Z",
+    "keywords": "Yagasaki, CSS, Outlook, Mail",
+    "description": "おはようございます！ 最高の気候のなか、みなさまいかがお過ごしでしょうか？ 矢ヶ崎です。 改めてHTMLについて考えてみる 突然ですが、昨今はHTMLでのメール作成がデフォルトになってる場面が多くなってきている気がしています。 プレーンテキストで書くよりも、いろいろな表現ができて、とても良いですよね。そう思います！ まるでWebSiteのようなメールが届くことも少なくなくなってきており、特に海外のツールのアップセルを促すメールはHTMLでのパターン化が進んでいる所感です。 しかし！ メーラによって見え方がかなり違ったりしますね。+ 私は、Gmail(W..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Yagasaki tag-C-S-S tag-Outlook tag-Mail no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="31 Oct 2018" class="post-meta__date date">31 Oct 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Yagasaki">Yagasaki</a>, <a href="http://tech.innovation.co.jp/tag/C-S-S">CSS</a>, <a href="http://tech.innovation.co.jp/tag/Outlook">Outlook</a>, <a href="http://tech.innovation.co.jp/tag/Mail">Mail</a></span>
+        <span class="post-meta__author author"><img src="https://avatars1.githubusercontent.com/u/13131599?v=4" alt="profile image for Akihiro YAGASAKI" class="avatar post-meta__avatar" /> by Akihiro YAGASAKI</span>
+      </div>
+      <h1 class="post-title">HTMLメールを送るときにはメーラの対応状況が気になる</h1>
+    </header>
+
+    <section class="post tag-Yagasaki tag-C-S-S tag-Outlook tag-Mail">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>おはようございます！<br>
+最高の気候のなか、みなさまいかがお過ごしでしょうか？<br>
+矢ヶ崎です。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__html">改めてHTMLについて考えてみる</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>突然ですが、昨今はHTMLでのメール作成がデフォルトになってる場面が多くなってきている気がしています。<br>
+プレーンテキストで書くよりも、いろいろな表現ができて、とても良いですよね。そう思います！<br>
+まるでWebSiteのようなメールが届くことも少なくなくなってきており、特に海外のツールのアップセルを促すメールはHTMLでのパターン化が進んでいる所感です。</p>
+</div>
+<div class="paragraph">
+<p>しかし！<br>
+メーラによって見え方がかなり違ったりしますね。+
+私は、Gmail(Web)をメインに、他にはGmailアプリ(Android/iOS)、iPhoneのメール、Outlook(Web)、Thunderbird（MacおよびWindowsクライアント）を利用しているのですが、同じメールでも見え方が結構違います。</p>
+</div>
+<div class="paragraph">
+<p>そこで、改めてメーラのHTML/CSSなどの対応状況を調べてみました。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">王道(?)のこのサイトで調べる</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>CSS Support Guide for Email Clients | Campaign Monitor
+<a href="https://www.campaignmonitor.com/css/" class="bare">https://www.campaignmonitor.com/css/</a></p>
+</div>
+<div class="paragraph">
+<p>こちら、すばらしいですね！</p>
+</div>
+<div class="paragraph">
+<p>いろいろなメーラでのCSSの対応状況がわかります。</p>
+</div>
+<div class="paragraph">
+<p>HTMLタグや、CSSからメーラの対応状況を調べることもできますし、<br>
+逆に、特定メーラからHTMLタグやCSSの対応状況を調べることもできます。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">他の情報も補足しておく</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>HTMLメールの対応状況を検索すると、やはりOutlookでの注意点が多く出てきます。</p>
+</div>
+<div class="paragraph">
+<p>一部記載しておくと、</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>mso-line-height-rule: exactly;
+を書くと、メイリオフォントでline-heightがpxで指定すると効くようになる
+
+画像にwidth="size" height="size"を指定しないと、オリジナルサイズで表示されてしまう
+
+&lt;P&gt;タグのパディングが効かない</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>などがありますので、これらを踏まえておきます。</p>
+</div>
+<div class="paragraph">
+<p>特に、本気でOutlookの各バージョンに対応させようとする場合は、</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>&lt;!--[if gte mso 9]&gt;
+    &lt;style type="text/css"&gt;
+      Office Ver.9(Outlook 2000)以上に適用させたいCSSを書く
+    &lt;/style&gt;
+&lt;![endif]--&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>というようにすれば、対象のメーラに対応するCSSを書くことも可能ですが、めちゃめちゃ大変ですね。。。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">メールを作成してみる</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>順番としては、</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>ターゲットとするメーラをある程度決める(例：今回はPC向けでGmailとOutlook(Web)とOutlook2007以降とThunderbirdにしよう　など)</p>
+</li>
+<li>
+<p>上記の方法などで、ざっと各メーラの対応状況を見て気をつけるところを覚えておく</p>
+</li>
+<li>
+<p>ざっと全体を作成する</p>
+</li>
+<li>
+<p>使っているCSSなどが対応しているかを再度確認しておく</p>
+</li>
+<li>
+<p>完成まで作る</p>
+</li>
+<li>
+<p>可能であれば、テスト配信して各メーラでの表示を実際の表示を確認する</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>とここまでやれば、とりあえず安心かと思います。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___4">ツールを使うともっと簡単</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>やはり、いろいろなメーラに対応させるHTMLを作成するのはかなり大変です。</p>
+</div>
+<div class="paragraph">
+<p>特に、最後の各メーラでの確認はなかなか大変で、しかも対応させるメーラの種類を増やすとさらに大変になります。</p>
+</div>
+<div class="paragraph">
+<p>そこで、特定のメールアドレスに送ると各メーラでの見た目がどのように見えるのかを確認できるという、お手軽なクラウドサービスがありますので、こちらを利用するのも有効かもしれません。</p>
+</div>
+<div class="paragraph">
+<p>たとえば、
+<a href="https://www.emailonacid.com/" class="bare">https://www.emailonacid.com/</a>
+このようなサービスなどがありますので、たくさんメールを作成する方は使ってみると良いかもしれません。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___5">何れにせよ大変です</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>また、メーラの種類が増えたりシェアが変わってきたときには、さらに作り方を変えたり考えたりしないといけないので、大変さは増すばかりです。。。</p>
+</div>
+<div class="paragraph">
+<p>エンジニアとしても、これらをキャッチアップし続けるのもしんどいですが、メールの文化が他のコミュニケーションツールに変わっていくまでは、がんばって付き合っていきたいと思います。</p>
+</div>
+<div class="paragraph">
+<p>こちらからは以上です。</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11783-1';
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+</body>
+</html>
