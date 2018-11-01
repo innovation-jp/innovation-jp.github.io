@@ -1,6 +1,6 @@
 = 静的ウェブサイトをhugo+netlifyで作るのは結構簡単！
 :hp-alt-title: gohu_netlify
-:hp-tags: obata, gohu, netlify
+:hp-tags: obata, hugo, netlify
 
 ### 飛ばしても良い雑談
 もう社会人一年半なんですね。 +
@@ -45,7 +45,7 @@
 https://themes.gohugo.io/
 
 
-### netlifyとは
+### Netlifyとは
 静的なページを公開するのに使えるサービス。
 
 github pages知ってたら、似たイメージを持っても大丈夫です。
@@ -61,7 +61,7 @@ githubにコードを上げたら、コンパイルして、ページ公開し�
 1. hugoをローカルにインストール
 2. hugoプロジェクト作る
 3. githubで管理する
-4. netlifyにgithub登録する
+4. Netlifyにgithub登録する
 
 でおしまい。今回はmac基準で。
 
@@ -94,7 +94,7 @@ git push origin master
 
 いつもどおりですね！
 
-#### 4.netlifyにgithub登録する
+#### 4.Netlifyにgithub登録する
 
 https://www.netlify.com/
 
@@ -114,6 +114,6 @@ new site from gitを選択。
 
 このあと、ドメインの変更とかも出来ます。
 
-また、静的ウェブサイトなのに、formの内容をnetlifyの管理画面で受け取ることが出来ます。
+また、静的ウェブサイトなのに、formの内容をNetlifyの管理画面で受け取ることが出来ます。
 
 簡単なサイトを作るのには凄く便利なので、一度使ってみてください！
