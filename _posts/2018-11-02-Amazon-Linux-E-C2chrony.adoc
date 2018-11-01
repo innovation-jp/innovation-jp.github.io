@@ -1,0 +1,312 @@
+# 古いAmazonLinux EC2インスタンスの時刻をchronyで合わせた件
+:hp-tags: AWS, EC2, chrony, Shirota
+:published_at: 2018-11-02
+
+今は昔のお話ですが、 +
+かなり昔に作成したAmazonLinuxがあり、 +
+時刻が何故か10分程度ズレてしまう現象に見舞われたことがありました。 +
+
+ntpdの自動時刻補正の時点でズレてしまっているようで、 +
+dateコマンドで一時的に合わせたとしてもすぐに同じ状態に戻ってしまっていました。 +
+
+これを解消した際の手順を公開したいと思います。 +
+
+# やったこと
+* 状況確認
+* ntpdの停止
+* chronyをインストール
+* chronyを設定
+* chronyのmakestepを実行
+* 自動起動設定
+
+# 状況確認
+
+何はともあれSSHログイン。 +
+作業時間が深夜なのは気にせず行きましょう。
+
+```
+# SSHで該当インスタンスにログイン
+Warning: Permanently added 'xxx.xxx.xxx.xxx' (RSA) to the list of known hosts.
+Last login: Wed Oct 31 02:08:37 2018 from xxx.xxx.xxx.xxx
+[root@ip-10-0-0-97 ~]# date
+2018年 10月 31日 水曜日 02:09:16 JST
+```
+
+dateコマンドを発行すると上記の表示ですが、 +
+この時 1:57:44 でした。 +
+11分32秒程 *未来* を指しています。 +
+
+ちょっとまずいですね。 +
+
+# ntpdの停止
+
+まずズレて同期するntpdを停止させました。 +
+
+```
+[root@ip-10-0-0-97 ~]# service ntpd stop
+ntpd を停止中:                                             [  OK  ]
+[root@ip-10-0-0-97 ~]# yum erase -y ntp*
+Loaded plugins: downloadonly, fastestmirror
+Repository base is listed more than once in the configuration
+Repository addons is listed more than once in the configuration
+Repository centosplus is listed more than once in the configuration
+Repository extras is listed more than once in the configuration
+Repository updates is listed more than once in the configuration
+Setting up Remove Process
+Resolving Dependencies
+--> Running transaction check
+# CentOS-Base.repo
+---> Package ntp.i386 0:4.2.2p1-18.el5.centos set to be erased
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+==========================================================================================================================================================================
+ Package                           Arch                               Version                                               Repository                               Size
+==========================================================================================================================================================================
+Removing:
+ ntp                               i386                               4.2.2p1-18.el5.centos                                 installed                               2.4 M
+
+Transaction Summary
+==========================================================================================================================================================================
+[updates]
+Remove        1 Package(s)
+Reinstall     0 Package(s)
+Downgrade     0 Package(s)
+
+Downloading Packages:
+Running rpm_check_debug
+Running Transaction Test
+Finished Transaction Test
+Transaction Test Succeeded
+Running Transaction
+  Erasing        : ntp                                                                                                                                                1/1
+警告: /etc/sysconfig/ntpd は /etc/sysconfig/ntpd.rpmsave として保存されました。
+
+Removed:
+  ntp.i386 0:4.2.2p1-18.el5.centos
+
+Complete!
+```
+
+i386 el5.centos という表記に哀愁が漂いますが気にせず行きます。
+
+# chronyをインストール
+
+ntpdに代わるchronyなるものをインストールします。 +
+
+```
+[root@ip-10-0-0-97 ~]# yum install -y chrony
+Loaded plugins: downloadonly, fastestmirror
+Repository base is listed more than once in the configuration
+Repository addons is listed more than once in the configuration
+Repository centosplus is listed more than once in the configuration
+Repository extras is listed more than once in the configuration
+Repository updates is listed more than once in the configuration
+Determining fastest mirrors
+YumRepo Error: All mirror URLs are not using ftp, http[s] or file.
+ Eg. Invalid release/repo/arch combination/
+removing mirrorlist with no valid mirrors: /var/cache/yum/addons/mirrorlist.txt
+Error: Cannot find a valid baseurl for repo: addons
+```
+
+失敗しました。 +
+
+yumリポジトリが古く、そもそもインストールできません。 +
+そこでいろいろ事情があり、 +
+今回yumの設定はせずに、 +
+このAmazonLinuxに適合するchronyのrpmパッケージを持ってきました。 +
+
+```
+[root@ip-10-0-0-97 ~]# wget https://dl.fedoraproject.org/pub/archive/epel/5/i386/chrony-1.31.1-1.el5.i386.rpm
+--2018-10-31 02:43:54--  https://dl.fedoraproject.org/pub/archive/epel/5/i386/chrony-1.31.1-1.el5.i386.rpm
+
+(中略)
+
+HTTP による接続要求を送信しました、応答を待っています... 200 OK
+長さ: 291049 (284K) [application/x-rpm]
+`chrony-1.31.1-1.el5.i386.rpm' に保存中
+
+100%[================================================================================================================================>] 291,049      318K/s 時間 0.9s
+
+2018-10-31 02:43:57 (318 KB/s) - `chrony-1.31.1-1.el5.i386.rpm' へ保存完了 [291049/291049]
+```
+
+fedoraprojectってところに少し怖みがありますが気にせず行ってみます。
+
+```
+[root@ip-10-0-0-97 ~]# yum localinstall chrony-1.31.1-1.el5.i386.rpm
+Loaded plugins: downloadonly, fastestmirror
+Repository base is listed more than once in the configuration
+Repository addons is listed more than once in the configuration
+Repository centosplus is listed more than once in the configuration
+Repository extras is listed more than once in the configuration
+Repository updates is listed more than once in the configuration
+Setting up Local Package Process
+Examining chrony-1.31.1-1.el5.i386.rpm: chrony-1.31.1-1.el5.i386
+Marking chrony-1.31.1-1.el5.i386.rpm to be installed
+Loading mirror speeds from cached hostfile
+Resolving Dependencies
+--> Running transaction check
+---> Package chrony.i386 0:1.31.1-1.el5 set to be updated
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+==========================================================================================================================================================================
+ Package                            Arch                             Version                                  Repository                                             Size
+==========================================================================================================================================================================
+Installing:
+ chrony                             i386                             1.31.1-1.el5                             /chrony-1.31.1-1.el5.i386                             588 k
+
+Transaction Summary
+==========================================================================================================================================================================
+Install       1 Package(s)
+Upgrade       0 Package(s)
+
+Total size: 588 k
+Is this ok [y/N]: y
+Downloading Packages:
+Running rpm_check_debug
+Running Transaction Test
+Finished Transaction Test
+Transaction Test Succeeded
+Running Transaction
+  Installing     : chrony                                                                                                                                             1/1
+
+Installed:
+  chrony.i386 0:1.31.1-1.el5
+
+Complete!
+```
+
+入りました！ +
+
+# chronyを設定
+
+以下、 +
+時刻合わせのサーバに*169.254.169.123*を指定します！ +
+AWSが用意しているものだそうです。 +
+
+```
+[root@ip-10-0-0-97 ~]# vi /etc/chrony.conf
+# Use public servers from the pool.ntp.org project.
+# Please consider joining the pool (http://www.pool.ntp.org/join.html).
+
+server 169.254.169.123 prefer iburst #<<<<<< これを追加しました
+
+server 0.fedora.pool.ntp.org iburst
+server 1.fedora.pool.ntp.org iburst
+server 2.fedora.pool.ntp.org iburst
+server 3.fedora.pool.ntp.org iburst
+
+(以下略)
+```
+
+chronydをstartさせ、状況を確認します。 +
+
+```
+[root@ip-10-0-0-97 ~]# service chronyd start
+Generating chrony command key:                             [  OK  ]
+chronyd を起動中:                                          [  OK  ]
+[root@ip-10-0-0-97 ~]# chronyc sources -v
+210 Number of sources = 5
+
+  .-- Source mode  '^' = server, '=' = peer, '#' = local clock.
+ / .- Source state '*' = current synced, '+' = combined , '-' = not combined,
+| /   '?' = unreachable, 'x' = time may be in error, '~' = time too variable.
+||                                                 .- xxxx [ yyyy ] +/- zzzz
+||                                                /   xxxx = adjusted offset,
+||         Log2(Polling interval) -.             |    yyyy = measured offset,
+||                                  \            |    zzzz = estimated error.
+||                                   |           |
+MS Name/IP address         Stratum Poll Reach LastRx Last sample
+===============================================================================
+^* 169.254.169.123               3   6   177    51     -1ns[-6148us] +/-  656us
+^- masao.paina.net               2   6   357    53   +693us[ +746us] +/-   54ms
+^- t2.time.gq1.yahoo.com         2   6   177    51  -6871us[-6871us] +/-  102ms
+^- 122x215x240x51.ap122.ftth     2   6   357    52  +1444us[-4703us] +/-   34ms
+^- host189-248-2-81.serverde     2   6   357    50  +5881us[+5881us] +/-  139ms
+```
+
+これで合ったのかと思い、dateコマンドを叩いてみますが、まだズレておりました。 +
+
+```
+[root@ip-10-0-0-97 ~]# date
+2018年 10月 31日 水曜日 02:57:11 JST
+```
+
+# chronyのmakestepを実行
+
+一気に時間が補正されますと、 +
+様々な箇所で不具合が起きかねません。 +
+
+ましてや過去に戻るとなるとなおさらです。 +
+
+以下の徐々に時刻を合わせていくmakestepというモードで +
+chronyのsyncコマンドを打ってみました。 +
+
+```
+[root@ip-10-0-0-97 ~]# chronyc -a makestep
+200 OK
+200 OK
+```
+
+以下、 +
+dateコマンドを打つ度に少しずつですが時間が合って行くのがわかりました。 +
+
+```
+[root@ip-10-0-0-97 ~]# date
+2018年 10月 31日 水曜日 03:07:54 JST
+[root@ip-10-0-0-97 ~]# date
+2018年 10月 31日 水曜日 03:07:57 JST
+[root@ip-10-0-0-97 ~]# date
+2018年 10月 31日 水曜日 03:07:59 JST
+[root@ip-10-0-0-97 ~]# date
+2018年 10月 31日 水曜日 03:08:01 JST
+[root@ip-10-0-0-97 ~]# date
+2018年 10月 31日 水曜日 03:08:03 JST
+[root@ip-10-0-0-97 ~]# date
+2018年 10月 31日 水曜日 03:08:06 JST
+[root@ip-10-0-0-97 ~]# date
+2018年 10月 31日 水曜日 03:08:08 JST
+[root@ip-10-0-0-97 ~]# date
+2018年 10月 31日 水曜日 03:08:11 JST
+[root@ip-10-0-0-97 ~]# date
+2018年 10月 31日 水曜日 03:08:14 JST
+[root@ip-10-0-0-97 ~]# date
+2018年 10月 31日 水曜日 03:08:17 JST
+[root@ip-10-0-0-97 ~]# date
+2018年 10月 31日 水曜日 03:08:20 JST
+```
+
+恐らく1.0秒を0.9秒として処理するなどして、 +
+過去の時間に巻き戻しているのだと思います。 +
+
+# 自動起動設定
+
+忘れずに自動起動設定を行っておきます。 +
+
+```
+[root@ip-10-0-0-97 ~]# chkconfig --list | grep chronyd
+chronyd        	0:off	1:off	2:off	3:off	4:off	5:off	6:off
+[root@ip-10-0-0-97 ~]# chkconfig chronyd on
+[root@ip-10-0-0-97 ~]# chkconfig --list | grep chronyd
+chronyd        	0:off	1:off	2:on	3:on	4:on	5:on	6:off
+```
+
+# 翌朝。。。
+
+*時刻、合ってました！*
+
+# 所感
+chronyを使ったのがポイントだったのかなと思います。 +
+
+古いOSだったため、 +
+OSに合わせて古いバージョンのミドルウェアを使わざるを得ませんでした。 +
+
+同じ症状でお困りの人がいれば参考にしていただければ嬉しいです。 +
+
+## 参考サイト
+現行OSでのchronyを使った設定方法 +
+https://dev.classmethod.jp/cloud/aws/aws-reinvent-time-sync-service/
