@@ -48,6 +48,7 @@ var _trackingid = 'LFT-10003-1';
     <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
 
     <link rel="canonical" href="http://tech.innovation.co.jp" />
+    <link rel="next" href="http://tech.innovation.co.jp/page/2/" />
     <meta name="generator" content="Ghost ?" />
     <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
@@ -213,11 +214,29 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/10/15/Docker-N-E-M-A-P-I-Account.html" title="link to DockerでNEMのAPIを使いAccount情報取得から送金まで使ってみる">DockerでNEMのAPIを使いAccount情報取得から送金まで使ってみる</a></h2>
+        <p class="excerpt">そろそろ肌寒くなってきましたね。 こんににはこへです。 ということで今回はNEMで遊びます。 環境構築 doker-compose.yml version: '3.7' services:   node:     image: node     tty: true     volumes:       - ./app:/var/www/app:cached     working_dir: /var/www/app     ports:       - 80:80 docker-compose up -d で起動 コンテナに入る docker exec -it コンテナ名 bash yarn add nem-library yarn add -D babel-cli babel-preset&hellip;</p>
+        <div class="post-list__meta">
+            <time datetime="15 Oct 2018" class="post-list__meta--date date">15 Oct 2018</time> &#8226;
+            <span class="post-list__meta--tags tags"><a href="#blog" title="kohe">kohe</a>, <a href="#blog" title="NEM">NEM</a>, <a href="#blog" title="Docker">Docker</a></span>
+        </div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/08/09/constructing-enviroment-for-Elasticsearch-and-Kibana.html" title="link to Elasticsearch, KibanaをDocker環境で動かしてみた">Elasticsearch, KibanaをDocker環境で動かしてみた</a></h2>
         <p class="excerpt">こんにちは！小柳津です。 社内から「サイト内検索の精度を高めたい！」と要望を受けてElasticsearchとKibanaをDocker環境で触ったので、今回はそれの方法を共有したいと思います。 動作環境 以下が動作環境です。 Docker: 18.06.0-ce Elasticsearch: 6.3.2 Kibana: 6.3.2 Docker環境作成 環境を構築するためにまず以下のようなディレクトリ構成にします。 |----docker-compose.yml |----Elasticsearch |         |----Dockerfile |----Kibana           |----Dockerfile それぞれのファイルの中身は以下です。 docker-compo&hellip;</p>
         <div class="post-list__meta">
             <time datetime="09 Aug 2018" class="post-list__meta--date date">09 Aug 2018</time> &#8226;
             <span class="post-list__meta--tags tags"><a href="#blog" title="Docker">Docker</a>, <a href="#blog" title="Elasticesearch">Elasticesearch</a>, <a href="#blog" title="Kibana">Kibana</a></span>
+        </div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/03/30/google-cloud-container-builder-with-docker-mysql.html" title="link to Google Cloud Container Builderで常に最新のデータが入ったDockerイメージ(MySQL)をビルドする">Google Cloud Container Builderで常に最新のデータが入ったDockerイメージ(MySQL)をビルドする</a></h2>
+        <p class="excerpt">こんにちは、加藤です。 サービスの開発をしていると「本番環境」「テスト環境」「開発環境」など、 必要に応じて複数の環境を用意すると思いますが、 下記のような状態になりがちではないでしょうか？ 「テスト環境」や「開発環境」は、古いデータが入っている 手動で本番環境のデータを「テスト環境」や「開発環境」に反映している 予算が取りづらい 今回は、この状況を改善すべく、Google Cloud Container Builderを使って Dockerイメージ(MySQL)の自動更新にチャレンジしたいと思います。 目標は、次のとおりです。 Dockerイメージ(MySQL)には、最新のバックアップデータが入っている ログなど開発に不要なデータは必要な量だけあり、余計なデータは入っていない 個人情報は&hellip;</p>
+        <div class="post-list__meta">
+            <time datetime="30 Mar 2018" class="post-list__meta--date date">30 Mar 2018</time> &#8226;
+            <span class="post-list__meta--tags tags"><a href="#blog" title="katoK">katoK</a>, <a href="#blog" title=" GoogleCloudContainerBuilder"> GoogleCloudContainerBuilder</a>, <a href="#blog" title=" Docker"> Docker</a></span>
         </div>
         <hr class="post-list__divider" />
       </li>
@@ -249,6 +268,15 @@ var _trackingid = 'LFT-10003-1';
         <hr class="post-list__divider" />
       </li>
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/11/23/Azure-8.html" title="link to Azure Container Service（AKS）で人生というコンテナもオーケストレーションしてもらいたい話">Azure Container Service（AKS）で人生というコンテナもオーケストレーションしてもらいたい話</a></h2>
+        <p class="excerpt">お久しぶりです、年のせいか風邪がなかなか完治しない自分に若干引き気味な SRE チームの syoga です。 今年も後少しで終わってしまいますが、皆様やり残した事はありますか？ 私は Microsoft 社の新型ゲームハード Xbox One X を買いそびれてしまい悶々としております。 日本で売れる訳ないとたかをくくっていたのですが、まさかの転売屋需要により予約が出来ず今にいたっております。 この悔しさを10月に Preview 版がリリースされた Azure Container Service - AKS（以下AKS）へぶつけてみようと思います。 Kubernetes の詳細については Google 先生に確認下さい。 Azure Container Service とは？ ACS 以&hellip;</p>
+        <div class="post-list__meta">
+            <time datetime="23 Nov 2017" class="post-list__meta--date date">23 Nov 2017</time> &#8226;
+            <span class="post-list__meta--tags tags"><a href="#blog" title="syoga">syoga</a>, <a href="#blog" title=" log"> log</a>, <a href="#blog" title=" Azure"> Azure</a>, <a href="#blog" title=" Container"> Container</a>, <a href="#blog" title=" Kubernetes"> Kubernetes</a>, <a href="#blog" title=" Docker"> Docker</a></span>
+        </div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/11/13/Mautic-Docker-Kohe.html" title="link to Docker上でMauticを動かしたお話。">Docker上でMauticを動かしたお話。</a></h2>
         <p class="excerpt">こへです。 そろそろ紅葉を見に行きたくなる季節になり Docker上でMauticを動かしたい気分になってきましたのでやってみました。 そして、いずれかはMauticのcontributorに・・・ Mauticとは？ オープンソースのマーティングオートメーションツールです。 https://www.ossnews.jp/oss_info/Mautic　　より引用 今回必要なツール ・Docker (↓のリンクからDLしておいてください。) https://store.docker.com/editions/community/docker-ce-desktop-mac 早速やっていこう！ Dockerfileをゴリゴリ書いていこうと思ったのですが、Docker HubにすでにMautic&hellip;</p>
         <div class="post-list__meta">
@@ -275,21 +303,13 @@ var _trackingid = 'LFT-10003-1';
         </div>
         <hr class="post-list__divider" />
       </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2016/05/17/docker-clouster-with-rancher.html" title="link to Rancher OSとRancherでDockerクラスタを組んでみた">Rancher OSとRancherでDockerクラスタを組んでみた</a></h2>
-        <p class="excerpt">こんにちは！加藤です。 勢いで買ったNUC４台と、RancherOS + Rancherで、 Dockerのクラスタを組んでみます。 これです！！！ Rancher OSとRancherについて Rancher OSとは？ http://rancher.com/rancher-os/ RancherOSは、Docker専用のOSで、主な特徴は、 OSのサイズが小さい 　→v0.4.5時点で32.5MB(ただしSYSTEM DOCKER部分は含まれません) 5〜10秒程度で起動 オープンソース ntpd, syslog, consoleなど、Linuxカーネル以外の部分は出来るだけコンテナで動かすコンセプト となっています。 出典:Rancher Labs. http://rancher.c&hellip;</p>
-        <div class="post-list__meta">
-            <time datetime="17 May 2016" class="post-list__meta--date date">17 May 2016</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="SecondPost">SecondPost</a>, <a href="#blog" title="KatoK">KatoK</a>, <a href="#blog" title="Docker">Docker</a>, <a href="#blog" title="Rancher">Rancher</a>, <a href="#blog" title="RancherOS">RancherOS</a></span>
-        </div>
-        <hr class="post-list__divider" />
-      </li>
     </ol>
 
     <hr class="post-list__divider " />
 
 <nav class="pagination" role="navigation">
-    <span class="pagination__page-number">Page 1 of 1</span>
+    <span class="pagination__page-number">Page 1 of 2</span>
+        <a class="older-posts pagination__older btn btn-small btn-tertiary" href="http://tech.innovation.co.jp/tag/Docker/page/2/#blog">Older Posts &rarr;</a>
 </nav>
 
 
