@@ -234,12 +234,6 @@ var _trackingid = 'LFT-10003-1';
         <hr class="post-list__divider" />
       </li>
       <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/10/21/.html" title="link to リクルートコミュニケーションズのコーディング試験の過去問を題材にオブジェクト指向プログラミングの練習してみた">リクルートコミュニケーションズのコーディング試験の過去問を題材にオブジェクト指向プログラミングの練習してみた</a></h2>
-        <p class="excerpt">はじめに どうも、bigenです。 10月に入って、僕もとうとう入社後2年が経過しました。やっと3年目です。 最近めっきりコーディングをする機会が減ってしまったので、練習もかねてリクルートコミュニケーションズさんのコーディング試験の過去問を題材にプログラミングしてみました。 問題はこちら https://www.rco.recruit.co.jp/career/engineer/entry/ 問題文を引用すると、 A,B,Cの3人が1～5の5枚のカードを使ってインディアンポーカーをします。 3人は、ランダムに1枚のカードを引いて額にかざします。相手のカードは見えますが、自分のカードは見えません。 この状態で、A-&gt;B-&gt;Cの順番に、自分が1番大きい（MAX）、自分は2番目に大き&hellip;</p>
-        <div class="post-list__meta"><time datetime="21 Oct 2018" class="post-list__meta--date date">21 Oct 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/bigen">bigen</a>, <a href="http://tech.innovation.co.jp/tag/recruit"> recruit</a>, <a href="http://tech.innovation.co.jp/tag/coding-test"> coding test</a>, <a href="http://tech.innovation.co.jp/tag/O-O-P"> OOP</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/10/15/Firebase-Firestore.html" title="link to Firebaseの匿名認証とFirestoreのリアルタイム更新で遊んでみたお話">Firebaseの匿名認証とFirestoreのリアルタイム更新で遊んでみたお話</a></h2>
         <p class="excerpt">涼しくなってきましたね。 koheです。 今回はFirebaseの 匿名認証　と  リアルタイムデータ更新 機能をVueで遊んで見ました。 匿名認証 GoogleやTwitterの認証を使わずに、匿名の認証をし、UUIDを発行したい！！ まずfirebaseのコンソール画面から匿名ログインを有効にします。  &lt;button  label="Use without login"  @click="signupByAnonymous" color="primary" /&gt; methods :{     checkLogin () {       firebase.auth().onAuthStateChanged((user) =&gt; {         if (user) {&hellip;</p>
         <div class="post-list__meta"><time datetime="15 Oct 2018" class="post-list__meta--date date">15 Oct 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/kohe">kohe</a>, <a href="http://tech.innovation.co.jp/tag/Firebase">Firebase</a>, <a href="http://tech.innovation.co.jp/tag/Firestroe">Firestroe</a></span></div>
@@ -267,6 +261,12 @@ var _trackingid = 'LFT-10003-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/10/09/E-K-S.html" title="link to EKSを触ってみた">EKSを触ってみた</a></h2>
         <p class="excerpt">2018年10月現在、 弊社サービスでも本番環境にDockerコンテナを利用している部分が増えてきました。 AWSを利用している部分ではECSを利用していますが、 今回Kubernetesを試すという意味で、EKSを触ってみることにしました。 ユーザーガイド： https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/what-is-eks.html 前提 Dockerの知識はある程度ある 作業端末はMacを使用した（※未検証だがWindowsでも同じはず） 作業端末で最新のawscliが使用できるようになっていること AWSのIAMの知識があり、EKS用にAmazonEKSClusterPolicyとAmazonEKSServicePo&hellip;</p>
         <div class="post-list__meta"><time datetime="09 Oct 2018" class="post-list__meta--date date">09 Oct 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/A-W-S">AWS</a>, <a href="http://tech.innovation.co.jp/tag/E-K-S"> EKS</a>, <a href="http://tech.innovation.co.jp/tag/Kubernetes"> Kubernetes</a>, <a href="http://tech.innovation.co.jp/tag/Shirota"> Shirota</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/10/09/D3js1.html" title="link to D3.jsを使ってを「1日が残りどれくらいなのかが分かる時計」を作ってみた">D3.jsを使ってを「1日が残りどれくらいなのかが分かる時計」を作ってみた</a></h2>
+        <p class="excerpt">少しずつ気温が下がってきた今日この頃いかがお過ごしでしょうか。ozasaです。 もう間も無く秋って感じでしょうかね、 ○○の秋といえば、皆様は何を想像されるでしょう？ 私はやはり芸術の秋です！ ということでビジュアル表現を学ぶべく、 今回はD3.jsを使ってを「1日が残りどれくらいなのかが分かる時計」を作ってみました。 D3.jsとは Data-Driven DocumentsでD3と名付けているようです。 詳しくは D3.js is a JavaScript library for manipulating documents based on data. D3 helps you bring data to life using HTML, SVG, and CSS. D3’s emp&hellip;</p>
+        <div class="post-list__meta"><time datetime="09 Oct 2018" class="post-list__meta--date date">09 Oct 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/D3js">D3.js</a>, <a href="http://tech.innovation.co.jp/tag/ozasa"> ozasa</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
