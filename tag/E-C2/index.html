@@ -213,6 +213,15 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/11/02/Amazon-Linux-E-C2chrony.html" title="link to 古いAmazonLinux EC2インスタンスの時刻をchronyで合わせた件">古いAmazonLinux EC2インスタンスの時刻をchronyで合わせた件</a></h2>
+        <p class="excerpt">今は昔のお話ですが、 かなり昔に作成したAmazonLinuxがあり、 時刻が何故か10分程度ズレてしまう現象に見舞われたことがありました。 ntpdの自動時刻補正の時点でズレてしまっているようで、 dateコマンドで一時的に合わせたとしてもすぐに同じ状態に戻ってしまっていました。 これを解消した際の手順を公開したいと思います。 やったこと 状況確認 ntpdの停止 chronyをインストール chronyを設定 chronyのmakestepを実行 自動起動設定 状況確認 作業時間が深夜なのは気にせず行きましょう。 # SSHで該当インスタンスにログイン Warning: Permanently added 'xxx.xxx.xxx.xxx' (RSA) to the list of k&hellip;</p>
+        <div class="post-list__meta">
+            <time datetime="02 Nov 2018" class="post-list__meta--date date">02 Nov 2018</time> &#8226;
+            <span class="post-list__meta--tags tags"><a href="#blog" title="AWS">AWS</a>, <a href="#blog" title=" EC2"> EC2</a>, <a href="#blog" title=" chrony"> chrony</a>, <a href="#blog" title=" Shirota"> Shirota</a></span>
+        </div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/03/23/E-C2-Spring-Boot.html" title="link to EC2 + SpringBoot でLINE@のBotアプリを作る（Google Cloud Vision API）　その３">EC2 + SpringBoot でLINE@のBotアプリを作る（Google Cloud Vision API）　その３</a></h2>
         <p class="excerpt">こんにちは。 エンジニアのNew塚本です。 近頃はGolangでコーディングをしているので、久々にJavaで何かしたくなりました！ 私のまわりでは画像解析ブームが来ているようなので、その流れにのります。 今回は、Google Cloud Vision APIを使ってみようと思います。 画像の中の顔を認識するFACE_DETECTIONを試してみます。 Google Cloud Vision API って？ APIに画像を送信すると、機械学習によって画像解析した結果を返してくれます。 詳細はこちら） https://cloud.google.com/vision/docs/?hl=ja プログラムの流れ LINEへ画像を送信し、Webサーバでメッセージを受信（Webhook） Webサーバで&hellip;</p>
         <div class="post-list__meta">
@@ -284,6 +293,15 @@ var _trackingid = 'LFT-10003-1';
     ga('send', 'pageview');
 
     </script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11783-1';
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
 
 </body>
 </html>
