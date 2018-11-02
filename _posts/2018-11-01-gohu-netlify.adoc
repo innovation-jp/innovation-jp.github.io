@@ -1,4 +1,4 @@
-= 静的ウェブサイトをhugo+netlifyで作るのは結構簡単！
+= 静的ウェブサイトをHugo+Netlifyで作るのは結構簡単！
 :hp-alt-title: gohu_netlify
 :hp-tags: obata, hugo, netlify
 
@@ -21,7 +21,7 @@
 ココらへんからわかるのは。
 
 ・DBいらないな +
-・wordpressやガッツリPHP書いたりしなくていいな +
+・WordpressやガッツリPHP書いたりしなくていいな +
 ・更新にリリースが必要でもいいな +
 ・さくっと作るのが必要か +
 
@@ -33,11 +33,11 @@
 
 さくっといい感じのサイトが作れるよ！
 
-### hugoとは
+### Hugoとは
 これは、静的サイトジェネレイターと呼ばれるものです +
 テンプレとマークダウン使って、簡単にHTMLやJS使ってきれいなサイトが！
 
-管理画面のないwordpressとかイメージしても良いかもしれないです。 +
+管理画面のないWordpressとかイメージしても良いかもしれないです。 +
 記事とかをマークダウンで書いたりも出来ます。
 
 ちなみに、テンプレートとかは以下にいろんなものがあります。すごい。
@@ -48,9 +48,9 @@ https://themes.gohugo.io/
 ### Netlifyとは
 静的なページを公開するのに使えるサービス。
 
-github pages知ってたら、似たイメージを持っても大丈夫です。
+GitHub Pages知ってたら、似たイメージを持っても大丈夫です。
 
-githubにコードを上げたら、コンパイルして、ページ公開してくれて、オリジナルドメインとかも設定できて・・・ +
+GitHubにコードを上げたら、コンパイルして、ページ公開してくれて、オリジナルドメインとかも設定できて・・・ +
 まあいろいろ便利。
 
 これらを組み合わせると、一時間かからずに、上のテーマみたいなサイトの基礎が出来ます！
@@ -58,24 +58,24 @@ githubにコードを上げたら、コンパイルして、ページ公開し�
 
 ### 実際にやってみよう
 
-1. hugoをローカルにインストール
-2. hugoプロジェクト作る
-3. githubで管理する
-4. Netlifyにgithub登録する
+1. Hugoをローカルにインストール
+2. Hugoプロジェクト作る
+3. GitHubで管理する
+4. NetlifyにGitHub登録する
 
-でおしまい。今回はmac基準で。
+でおしまい。今回はMac基準で。
 
 ではそれぞれを説明します！
 
 
-#### 1.hugoのインストール
+#### 1.Hugoのインストール
 ```
 brew install hugo
 ```
 
 おしまい！
 
-#### 2.hugoプロジェクト作る
+#### 2.Hugoプロジェクト作る
 ```
 hugo new site project-hugo
 cd project-hugo
@@ -83,7 +83,7 @@ cd project-hugo
 
 おしまい！一応次のためにproject-hugoに入っておきましょう
 
-#### 3.githubで管理する
+#### 3.GitHubで管理する
 ```
 git init
 git add .
@@ -94,13 +94,13 @@ git push origin master
 
 いつもどおりですね！
 
-#### 4.Netlifyにgithub登録する
+#### 4.NetlifyにGitHub登録する
 
 https://www.netlify.com/
 
 こちら。get startedをどうぞ。
 
-githubと連携。
+GitHubと連携。
 
 new site from gitを選択。
 
