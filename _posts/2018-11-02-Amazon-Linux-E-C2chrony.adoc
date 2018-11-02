@@ -27,7 +27,7 @@ dateコマンドで一時的に合わせたとしてもすぐに同じ状態に�
 # SSHで該当インスタンスにログイン
 Warning: Permanently added 'xxx.xxx.xxx.xxx' (RSA) to the list of known hosts.
 Last login: Wed Oct 31 02:08:37 2018 from xxx.xxx.xxx.xxx
-[root@ip-10-0-0-97 ~]# date
+$ date
 2018年 10月 31日 水曜日 02:09:16 JST
 ```
 
@@ -42,9 +42,9 @@ dateコマンドを発行すると上記の表示ですが、 +
 まずズレて同期するntpdを停止させました。 +
 
 ```
-[root@ip-10-0-0-97 ~]# service ntpd stop
+# service ntpd stop
 ntpd を停止中:                                             [  OK  ]
-[root@ip-10-0-0-97 ~]# yum erase -y ntp*
+$ yum erase -y ntp*
 Loaded plugins: downloadonly, fastestmirror
 Repository base is listed more than once in the configuration
 Repository addons is listed more than once in the configuration
@@ -95,7 +95,7 @@ i386 el5.centos という表記に哀愁が漂いますが気にせず行きま�
 ntpdに代わるchronyなるものをインストールします。 +
 
 ```
-[root@ip-10-0-0-97 ~]# yum install -y chrony
+$ yum install -y chrony
 Loaded plugins: downloadonly, fastestmirror
 Repository base is listed more than once in the configuration
 Repository addons is listed more than once in the configuration
@@ -117,7 +117,7 @@ yumリポジトリが古く、そもそもインストールできません。 +
 このAmazonLinuxに適合するchronyのrpmパッケージを持ってきました。 +
 
 ```
-[root@ip-10-0-0-97 ~]# wget https://dl.fedoraproject.org/pub/archive/epel/5/i386/chrony-1.31.1-1.el5.i386.rpm
+$ wget https://dl.fedoraproject.org/pub/archive/epel/5/i386/chrony-1.31.1-1.el5.i386.rpm
 --2018-10-31 02:43:54--  https://dl.fedoraproject.org/pub/archive/epel/5/i386/chrony-1.31.1-1.el5.i386.rpm
 
 (中略)
@@ -134,7 +134,7 @@ HTTP による接続要求を送信しました、応答を待っています...
 fedoraprojectってところに少し怖みがありますが気にせず行ってみます。
 
 ```
-[root@ip-10-0-0-97 ~]# yum localinstall chrony-1.31.1-1.el5.i386.rpm
+$ yum localinstall chrony-1.31.1-1.el5.i386.rpm
 Loaded plugins: downloadonly, fastestmirror
 Repository base is listed more than once in the configuration
 Repository addons is listed more than once in the configuration
@@ -188,7 +188,7 @@ Complete!
 AWSが用意しているものだそうです。 +
 
 ```
-[root@ip-10-0-0-97 ~]# vi /etc/chrony.conf
+$ vi /etc/chrony.conf
 # Use public servers from the pool.ntp.org project.
 # Please consider joining the pool (http://www.pool.ntp.org/join.html).
 
@@ -205,10 +205,11 @@ server 3.fedora.pool.ntp.org iburst
 chronydをstartさせ、状況を確認します。 +
 
 ```
-[root@ip-10-0-0-97 ~]# service chronyd start
+$ service chronyd start
 Generating chrony command key:                             [  OK  ]
 chronyd を起動中:                                          [  OK  ]
-[root@ip-10-0-0-97 ~]# chronyc sources -v
+
+$ chronyc sources -v
 210 Number of sources = 5
 
   .-- Source mode  '^' = server, '=' = peer, '#' = local clock.
@@ -231,7 +232,7 @@ MS Name/IP address         Stratum Poll Reach LastRx Last sample
 これで合ったのかと思い、dateコマンドを叩いてみますが、まだズレておりました。 +
 
 ```
-[root@ip-10-0-0-97 ~]# date
+$ date
 2018年 10月 31日 水曜日 02:57:11 JST
 ```
 
@@ -246,7 +247,7 @@ MS Name/IP address         Stratum Poll Reach LastRx Last sample
 chronyのsyncコマンドを打ってみました。 +
 
 ```
-[root@ip-10-0-0-97 ~]# chronyc -a makestep
+$ chronyc -a makestep
 200 OK
 200 OK
 ```
@@ -255,27 +256,27 @@ chronyのsyncコマンドを打ってみました。 +
 dateコマンドを打つ度に少しずつですが時間が合って行くのがわかりました。 +
 
 ```
-[root@ip-10-0-0-97 ~]# date
+$ date
 2018年 10月 31日 水曜日 03:07:54 JST
-[root@ip-10-0-0-97 ~]# date
+$ date
 2018年 10月 31日 水曜日 03:07:57 JST
-[root@ip-10-0-0-97 ~]# date
+$ date
 2018年 10月 31日 水曜日 03:07:59 JST
-[root@ip-10-0-0-97 ~]# date
+$ date
 2018年 10月 31日 水曜日 03:08:01 JST
-[root@ip-10-0-0-97 ~]# date
+$ date
 2018年 10月 31日 水曜日 03:08:03 JST
-[root@ip-10-0-0-97 ~]# date
+$ date
 2018年 10月 31日 水曜日 03:08:06 JST
-[root@ip-10-0-0-97 ~]# date
+$ date
 2018年 10月 31日 水曜日 03:08:08 JST
-[root@ip-10-0-0-97 ~]# date
+$ date
 2018年 10月 31日 水曜日 03:08:11 JST
-[root@ip-10-0-0-97 ~]# date
+$ date
 2018年 10月 31日 水曜日 03:08:14 JST
-[root@ip-10-0-0-97 ~]# date
+$ date
 2018年 10月 31日 水曜日 03:08:17 JST
-[root@ip-10-0-0-97 ~]# date
+$ date
 2018年 10月 31日 水曜日 03:08:20 JST
 ```
 
@@ -287,10 +288,12 @@ dateコマンドを打つ度に少しずつですが時間が合って行くの�
 忘れずに自動起動設定を行っておきます。 +
 
 ```
-[root@ip-10-0-0-97 ~]# chkconfig --list | grep chronyd
+$ chkconfig --list | grep chronyd
 chronyd        	0:off	1:off	2:off	3:off	4:off	5:off	6:off
-[root@ip-10-0-0-97 ~]# chkconfig chronyd on
-[root@ip-10-0-0-97 ~]# chkconfig --list | grep chronyd
+
+$ chkconfig chronyd on
+
+$ chkconfig --list | grep chronyd
 chronyd        	0:off	1:off	2:on	3:on	4:on	5:on	6:off
 ```
 
