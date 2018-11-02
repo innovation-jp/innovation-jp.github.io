@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>古いAmazonLinux EC2インスタンスの時刻をchronyで合わせた件 - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="古いAmazonLinux EC2インスタンスの時刻をchronyで合わせた件">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="古いAmazonLinux EC2インスタンスの時刻をchronyで合わせた件">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/11/02/Amazon-Linux-E-C2chrony.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="古いAmazonLinux EC2インスタンスの時刻をchronyで合わせた件" />
+    <meta property="og:description" content="今は昔のお話ですが、 かなり昔に作成したAmazonLinuxがあり、 時刻が何故か10分程度ズレてしまう現象に見舞われたことがありました。 ntpdの自動時刻補正の時点でズレてしまっているようで、 dateコマンドで一時的に合わせたとしてもすぐに同じ状態に戻ってしまっていました。 これを解消した際の手順を公開したいと思います。 やったこと 状況確認 ntpdの停止 chronyをインストール chronyを設定 chronyのmakestepを実行 自動起動設定 状況確認 作業時間が深夜なのは気にせず行きましょう。 # SSHで該当インスタンスにログ..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/11/02/Amazon-Linux-E-C2chrony.html" />
+    <meta property="article:published_time" content="2018-11-01T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-11-02T09:59:40.344Z" />
+    <meta property="article:tag" content="AWS" />
+    <meta property="article:tag" content="EC2" />
+    <meta property="article:tag" content="chrony" />
+    <meta property="article:tag" content="Shirota" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="古いAmazonLinux EC2インスタンスの時刻をchronyで合わせた件" />
+    <meta name="twitter:description" content="今は昔のお話ですが、 かなり昔に作成したAmazonLinuxがあり、 時刻が何故か10分程度ズレてしまう現象に見舞われたことがありました。 ntpdの自動時刻補正の時点でズレてしまっているようで、 dateコマンドで一時的に合わせたとしてもすぐに同じ状態に戻ってしまっていました。 これを解消した際の手順を公開したいと思います。 やったこと 状況確認 ntpdの停止 chronyをインストール chronyを設定 chronyのmakestepを実行 自動起動設定 状況確認 作業時間が深夜なのは気にせず行きましょう。 # SSHで該当インスタンスにログ..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/11/02/Amazon-Linux-E-C2chrony.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "Junichi Shirota",
+        "image": "https://avatars2.githubusercontent.com/u/26893225?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "古いAmazonLinux EC2インスタンスの時刻をchronyで合わせた件",
+    "url": "http://tech.innovation.co.jp/2018/11/02/Amazon-Linux-E-C2chrony.html",
+    "datePublished": "2018-11-01T15:00:00.000Z",
+    "dateModified": "2018-11-02T09:59:40.344Z",
+    "keywords": "AWS,  EC2,  chrony,  Shirota",
+    "description": "今は昔のお話ですが、 かなり昔に作成したAmazonLinuxがあり、 時刻が何故か10分程度ズレてしまう現象に見舞われたことがありました。 ntpdの自動時刻補正の時点でズレてしまっているようで、 dateコマンドで一時的に合わせたとしてもすぐに同じ状態に戻ってしまっていました。 これを解消した際の手順を公開したいと思います。 やったこと 状況確認 ntpdの停止 chronyをインストール chronyを設定 chronyのmakestepを実行 自動起動設定 状況確認 作業時間が深夜なのは気にせず行きましょう。 # SSHで該当インスタンスにログ..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-A-W-S tag-E-C2 tag-chrony tag-Shirota no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="02 Nov 2018" class="post-meta__date date">02 Nov 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/A-W-S">AWS</a>, <a href="http://tech.innovation.co.jp/tag/E-C2"> EC2</a>, <a href="http://tech.innovation.co.jp/tag/chrony"> chrony</a>, <a href="http://tech.innovation.co.jp/tag/Shirota"> Shirota</a></span>
+        <span class="post-meta__author author"><img src="https://avatars2.githubusercontent.com/u/26893225?v=4" alt="profile image for Junichi Shirota" class="avatar post-meta__avatar" /> by Junichi Shirota</span>
+      </div>
+      <h1 class="post-title">古いAmazonLinux EC2インスタンスの時刻をchronyで合わせた件</h1>
+    </header>
+
+    <section class="post tag-A-W-S tag-E-C2 tag-chrony tag-Shirota">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>今は昔のお話ですが、<br>
+かなり昔に作成したAmazonLinuxがあり、<br>
+時刻が何故か10分程度ズレてしまう現象に見舞われたことがありました。<br></p>
+</div>
+<div class="paragraph">
+<p>ntpdの自動時刻補正の時点でズレてしまっているようで、<br>
+dateコマンドで一時的に合わせたとしてもすぐに同じ状態に戻ってしまっていました。<br></p>
+</div>
+<div class="paragraph">
+<p>これを解消した際の手順を公開したいと思います。<br></p>
+</div>
+</div>
+</div>
+<h1 id="__" class="sect0">やったこと</h1>
+<div class="ulist">
+<ul>
+<li>
+<p>状況確認</p>
+</li>
+<li>
+<p>ntpdの停止</p>
+</li>
+<li>
+<p>chronyをインストール</p>
+</li>
+<li>
+<p>chronyを設定</p>
+</li>
+<li>
+<p>chronyのmakestepを実行</p>
+</li>
+<li>
+<p>自動起動設定</p>
+</li>
+</ul>
+</div>
+<h1 id="___2" class="sect0">状況確認</h1>
+<div class="paragraph">
+<p>作業時間が深夜なのは気にせず行きましょう。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code># SSHで該当インスタンスにログイン
+Warning: Permanently added 'xxx.xxx.xxx.xxx' (RSA) to the list of known hosts.
+Last login: Wed Oct 31 02:08:37 2018 from xxx.xxx.xxx.xxx
+$ date
+2018年 10月 31日 水曜日 02:09:16 JST</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>dateコマンドを発行すると上記の表示ですが、<br>
+この時実際は 1:57:44 でした。<br>
+11分32秒程 <strong>未来</strong> を示しています。<br></p>
+</div>
+<div class="paragraph">
+<p>ちょっとまずいですね。<br></p>
+</div>
+<h1 id="_ntpd" class="sect0">ntpdの停止</h1>
+<div class="paragraph">
+<p>まずズレて同期するntpdを停止させました。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code># service ntpd stop
+ntpd を停止中:                                             [  OK  ]
+$ yum erase -y ntp*
+Loaded plugins: downloadonly, fastestmirror
+Repository base is listed more than once in the configuration
+Repository addons is listed more than once in the configuration
+Repository centosplus is listed more than once in the configuration
+Repository extras is listed more than once in the configuration
+Repository updates is listed more than once in the configuration
+Setting up Remove Process
+Resolving Dependencies
+--&gt; Running transaction check
+# CentOS-Base.repo
+---&gt; Package ntp.i386 0:4.2.2p1-18.el5.centos set to be erased
+--&gt; Finished Dependency Resolution
+
+Dependencies Resolved
+
+==========================================================================================================================================================================
+ Package                           Arch                               Version                                               Repository                               Size
+==========================================================================================================================================================================
+Removing:
+ ntp                               i386                               4.2.2p1-18.el5.centos                                 installed                               2.4 M
+
+Transaction Summary
+==========================================================================================================================================================================
+[updates]
+Remove        1 Package(s)
+Reinstall     0 Package(s)
+Downgrade     0 Package(s)
+
+Downloading Packages:
+Running rpm_check_debug
+Running Transaction Test
+Finished Transaction Test
+Transaction Test Succeeded
+Running Transaction
+  Erasing        : ntp                                                                                                                                                1/1
+警告: /etc/sysconfig/ntpd は /etc/sysconfig/ntpd.rpmsave として保存されました。
+
+Removed:
+  ntp.i386 0:4.2.2p1-18.el5.centos
+
+Complete!</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>i386 el5.centos という表記に哀愁が漂いますが気にせず行きます。</p>
+</div>
+<h1 id="_chrony" class="sect0">chronyをインストール</h1>
+<div class="paragraph">
+<p>ntpdに代わるchronyなるものをインストールします。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ yum install -y chrony
+Loaded plugins: downloadonly, fastestmirror
+Repository base is listed more than once in the configuration
+Repository addons is listed more than once in the configuration
+Repository centosplus is listed more than once in the configuration
+Repository extras is listed more than once in the configuration
+Repository updates is listed more than once in the configuration
+Determining fastest mirrors
+YumRepo Error: All mirror URLs are not using ftp, http[s] or file.
+ Eg. Invalid release/repo/arch combination/
+removing mirrorlist with no valid mirrors: /var/cache/yum/addons/mirrorlist.txt
+Error: Cannot find a valid baseurl for repo: addons</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>失敗しました。<br></p>
+</div>
+<div class="paragraph">
+<p>yumリポジトリが古く、そもそもインストールできません。<br>
+そこでいろいろ事情があり、<br>
+今回yumの設定はせずに、<br>
+このAmazonLinuxに適合するchronyのrpmパッケージを持ってきました。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ wget https://dl.fedoraproject.org/pub/archive/epel/5/i386/chrony-1.31.1-1.el5.i386.rpm
+--2018-10-31 02:43:54--  https://dl.fedoraproject.org/pub/archive/epel/5/i386/chrony-1.31.1-1.el5.i386.rpm
+
+(中略)
+
+HTTP による接続要求を送信しました、応答を待っています... 200 OK
+長さ: 291049 (284K) [application/x-rpm]
+`chrony-1.31.1-1.el5.i386.rpm' に保存中
+
+100%[================================================================================================================================&gt;] 291,049      318K/s 時間 0.9s
+
+2018-10-31 02:43:57 (318 KB/s) - `chrony-1.31.1-1.el5.i386.rpm' へ保存完了 [291049/291049]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>fedoraprojectってところに少し怖みがありますが気にせず行ってみます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ yum localinstall chrony-1.31.1-1.el5.i386.rpm
+Loaded plugins: downloadonly, fastestmirror
+Repository base is listed more than once in the configuration
+Repository addons is listed more than once in the configuration
+Repository centosplus is listed more than once in the configuration
+Repository extras is listed more than once in the configuration
+Repository updates is listed more than once in the configuration
+Setting up Local Package Process
+Examining chrony-1.31.1-1.el5.i386.rpm: chrony-1.31.1-1.el5.i386
+Marking chrony-1.31.1-1.el5.i386.rpm to be installed
+Loading mirror speeds from cached hostfile
+Resolving Dependencies
+--&gt; Running transaction check
+---&gt; Package chrony.i386 0:1.31.1-1.el5 set to be updated
+--&gt; Finished Dependency Resolution
+
+Dependencies Resolved
+
+==========================================================================================================================================================================
+ Package                            Arch                             Version                                  Repository                                             Size
+==========================================================================================================================================================================
+Installing:
+ chrony                             i386                             1.31.1-1.el5                             /chrony-1.31.1-1.el5.i386                             588 k
+
+Transaction Summary
+==========================================================================================================================================================================
+Install       1 Package(s)
+Upgrade       0 Package(s)
+
+Total size: 588 k
+Is this ok [y/N]: y
+Downloading Packages:
+Running rpm_check_debug
+Running Transaction Test
+Finished Transaction Test
+Transaction Test Succeeded
+Running Transaction
+  Installing     : chrony                                                                                                                                             1/1
+
+Installed:
+  chrony.i386 0:1.31.1-1.el5
+
+Complete!</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>入りました！<br></p>
+</div>
+<h1 id="_chrony_2" class="sect0">chronyを設定</h1>
+<div class="paragraph">
+<p>以下、<br>
+時刻合わせのサーバに<strong>169.254.169.123</strong>を指定します！<br>
+AWSが用意しているものだそうです。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ vi /etc/chrony.conf
+# Use public servers from the pool.ntp.org project.
+# Please consider joining the pool (http://www.pool.ntp.org/join.html).
+
+server 169.254.169.123 prefer iburst #&lt;&lt;&lt;&lt;&lt;&lt; これを追加しました
+
+server 0.fedora.pool.ntp.org iburst
+server 1.fedora.pool.ntp.org iburst
+server 2.fedora.pool.ntp.org iburst
+server 3.fedora.pool.ntp.org iburst
+
+(以下略)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>chronydをstartさせ、状況を確認します。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ service chronyd start
+Generating chrony command key:                             [  OK  ]
+chronyd を起動中:                                          [  OK  ]
+
+$ chronyc sources -v
+210 Number of sources = 5
+
+  .-- Source mode  '^' = server, '=' = peer, '#' = local clock.
+ / .- Source state '*' = current synced, '+' = combined , '-' = not combined,
+| /   '?' = unreachable, 'x' = time may be in error, '~' = time too variable.
+||                                                 .- xxxx [ yyyy ] +/- zzzz
+||                                                /   xxxx = adjusted offset,
+||         Log2(Polling interval) -.             |    yyyy = measured offset,
+||                                  \            |    zzzz = estimated error.
+||                                   |           |
+MS Name/IP address         Stratum Poll Reach LastRx Last sample
+===============================================================================
+^* 169.254.169.123               3   6   177    51     -1ns[-6148us] +/-  656us
+^- masao.paina.net               2   6   357    53   +693us[ +746us] +/-   54ms
+^- t2.time.gq1.yahoo.com         2   6   177    51  -6871us[-6871us] +/-  102ms
+^- 122x215x240x51.ap122.ftth     2   6   357    52  +1444us[-4703us] +/-   34ms
+^- host189-248-2-81.serverde     2   6   357    50  +5881us[+5881us] +/-  139ms</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>これで合ったのかと思い、dateコマンドを叩いてみますが、まだズレておりました。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ date
+2018年 10月 31日 水曜日 02:57:11 JST</code></pre>
+</div>
+</div>
+<h1 id="_chrony_makestep" class="sect0">chronyのmakestepを実行</h1>
+<div class="paragraph">
+<p>一気に時間が補正されますと、<br>
+様々な箇所で不具合が起きかねません。<br></p>
+</div>
+<div class="paragraph">
+<p>ましてや過去に戻るとなるとなおさらです。<br></p>
+</div>
+<div class="paragraph">
+<p>以下の徐々に時刻を合わせていくmakestepというモードで<br>
+chronyのsyncコマンドを打ってみました。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ chronyc -a makestep
+200 OK
+200 OK</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>以下、<br>
+dateコマンドを打つ度に少しずつですが時間が合って行くのがわかりました。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ date
+2018年 10月 31日 水曜日 03:07:54 JST
+$ date
+2018年 10月 31日 水曜日 03:07:57 JST
+$ date
+2018年 10月 31日 水曜日 03:07:59 JST
+$ date
+2018年 10月 31日 水曜日 03:08:01 JST
+$ date
+2018年 10月 31日 水曜日 03:08:03 JST
+$ date
+2018年 10月 31日 水曜日 03:08:06 JST
+$ date
+2018年 10月 31日 水曜日 03:08:08 JST
+$ date
+2018年 10月 31日 水曜日 03:08:11 JST
+$ date
+2018年 10月 31日 水曜日 03:08:14 JST
+$ date
+2018年 10月 31日 水曜日 03:08:17 JST
+$ date
+2018年 10月 31日 水曜日 03:08:20 JST</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>恐らく1.0秒を0.9秒として処理するなどして、<br>
+過去の時間に巻き戻しているのだと思います。<br></p>
+</div>
+<h1 id="___3" class="sect0">自動起動設定</h1>
+<div class="paragraph">
+<p>忘れずに自動起動設定を行っておきます。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ chkconfig --list | grep chronyd
+chronyd        	0:off	1:off	2:off	3:off	4:off	5:off	6:off
+
+$ chkconfig chronyd on
+
+$ chkconfig --list | grep chronyd
+chronyd        	0:off	1:off	2:on	3:on	4:on	5:on	6:off</code></pre>
+</div>
+</div>
+<h1 id="___4" class="sect0">翌朝。。。</h1>
+<div class="paragraph">
+<p><strong>時刻、合ってました！</strong></p>
+</div>
+<h1 id="___5" class="sect0">所感</h1>
+<div class="paragraph">
+<p>chronyを使ったのがポイントだったのかなと思います。<br></p>
+</div>
+<div class="paragraph">
+<p>古いOSだったため、<br>
+OSに合わせて古いバージョンのミドルウェアを使わざるを得ませんでした。<br></p>
+</div>
+<div class="paragraph">
+<p>同じ症状でお困りの人がいれば参考にしていただければ嬉しいです。<br></p>
+</div>
+<div class="sect1">
+<h2 id="___6">参考サイト</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>現行OSでのchronyを使った設定方法<br>
+<a href="https://dev.classmethod.jp/cloud/aws/aws-reinvent-time-sync-service/" class="bare">https://dev.classmethod.jp/cloud/aws/aws-reinvent-time-sync-service/</a></p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11783-1';
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+</body>
+</html>
