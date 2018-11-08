@@ -1,5 +1,5 @@
 = developが更新されたらお知らせしてくれるシェルスクリプトを作りたい！
-:hp-tags: sumomo, GAS, GoogleAppsScript, Spreadsheet, slack
+:hp-tags: sumomo, ShellScript, Git, Linux
 
 
 はじめまして！未経験中途の新人、すももです。 +
