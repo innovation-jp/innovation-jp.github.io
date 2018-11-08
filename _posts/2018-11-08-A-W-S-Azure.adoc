@@ -1,6 +1,6 @@
-= AWS Fargate で Azure の BLOB Storage をチラ見してみた
+= カスタムコンテナイメージを使った AWS Fargate で Azure の BLOB Storage をチラ見してみた
 :hp-alt-title: AWS+Azure
-:hp-tags: syoga, Azure, AWS, Fargate, ECS
+:hp-tags: syoga, Azure, AWS, Fargate, ECS, Docker
 
 お久しぶりです。 +
 プライベートで Azure を使っている SRE チームの syoga です。
@@ -8,3 +8,256 @@
 もうすぐ今年も終わりですね！ という訳で、 +
 今回は AWS Fargate を使ってみようと思います。
 
+## Fargate で何をしようかな
+Fargate は AWS が提供する ECS でインスタンスを意識せず利用できる、フルマネージドなコンテナ実行環境です。
+詳細は AWS の公式ページ等で要チェックください。
+
+今年の冬は激寒でしたが、やっと春の陽気を感じる季節になってきたなと思います、これからお花見等の行楽シーズンに突入しますので、写真を取る機会も多くなるのではないでしょうか。
+
+そんな中、以前の http://tech.innovation.co.jp/2017/07/04/Azure-5.html[ブログ] で作成した LINE Bot を色々な人に使ってもらおうと思い、新機能を追加しましたので、今回はそちらについて記事にしたいと思います。
+
+※ 前回の http://tech.innovation.co.jp/2018/01/16/Azure-9.html[ブログ] で Go で DB にログを出力するのが遅い件は、ログ出力関数に DB コネクションを渡す事で改善できたので触れません！！
+
+## お金が…ない！！
+Line Bot では Repl-AI のユーザ ID や ぐるなび API に渡す検索料理名を、Azure Redis Cache に保存していましたが、Azure Redis Cache は起動しているだけで料金が発生するため、LINE Bot を利用していなくてもまぁまぁのお値段になっていました（3000円くらい）。
+
+それが理由ではないと思いますが、最近ランチもままなりません。
+
+という訳でお安い Azure Table Storage を利用しデータを保存するようにソースを改修をしました、
+汎用の Azure Storage を以前の http://tech.innovation.co.jp/2017/07/04/Azure-5.html[ブログ] で作成しているので、早速 Azure Table Storage 使っていきます。
+
+Azure Table Storage はその名の通り、テーブルとして利用できる Azure Storage です、作成したテーブルの中には PartitionKey 、RowKey、Timestamp という固定の項目が存在します。
+
+Repl-AI のユーザ ID 払出しのデータを登録する際には text という PartitionKey で、 RowKey は LINE のユーザ ID を登録し、Desc という項目に Repl-AI のユーザ ID を格納するようにしました、以下はソースの抜粋です。
+
+処理としては Azure Redis Cache を利用していた時と同じです、上記の情報を格納する line テーブルを作成しているので、PartitionKey 、RowKey で検索した結果、すでにデータがあれば Repl-AI ユーザ登録済なので Repl-AI とお話をします。
+
+存在しなければ Repl-AI のユーザ ID を払出して Azure Table Storage にユーザ ID を登録します、登録時にエラーが発生した場合はユーザにエラー発生メッセージを LINE で送信します。
+
+```
+async.waterfall([
+    // Repl-AI のユーザID登録確認
+    function(callback) {
+        // Table Storage の検索
+        tableSvc.retrieveEntity('line', 'text', userId, function(error, result, response){
+            let replUserId = '';
+            if(response.statusCode == '200'){
+                replUserId = response.body.desc;
+            }
+            callback(null, replUserId);
+        });
+    },
+    // 未登録なら Repl-AI ユーザID登録
+    function(replUserId, callback) {
+        let initFlag = false;
+
+        if(replUserId == '') {
+            getReplAiUserid(context, function(result) {
+                let initFlag = true;
+                let insData = {
+                    PartitionKey  : 'text',
+                    RowKey        : userId,
+                    desc          : result
+                };
+
+                tableSvc.insertEntity('line', insData, function (error, result, response) {
+                    if(error){
+                        context.log('[Error] tableSvc.insertEntity', error);
+                        pushTexeMessage('アプリケーションエラーが発生したかな？', userId, context, function(result) {});
+                        context.done();
+                    }
+                });
+                callback(null, result, initFlag);
+            });
+        } else {
+            // 登録済ならお話
+            callback(null, replUserId, initFlag);  
+        } 
+    },
+
+```
+
+## OCR … したい！！
+以前の http://tech.innovation.co.jp/2017/07/04/Azure-5.html[ブログ] で、Azure Computer Vision API を利用し人物解析していましたが、次は OCR 機能（光学的文字認識）を追加したいと思います。
+
+しかしこのままでは画像を送ると人物解析をしてしまうので、文字認識をしたい場合は一度 「文字認識」 と送って貰う事にします、前回の ぐるなび API 呼出しと同じで手法です。
+
+```
+// メッセージが「文字解析」の場合
+        if(text.match(/文字認識/)) {
+            // 「文字認識」メッセージが送られているか履歴を検索
+            tableSvc.retrieveEntity('line', 'img', userId, function(error, result, response){
+                if(response.statusCode == '200'){
+                    pushTexeMessage('まだ文字の入った画像が送られていないかな？', userId, context, function(result) {});
+                } else {
+                    // 「文字認識」メッセージの履歴を登録
+                    let insData = {
+                        PartitionKey  : 'img',
+                        RowKey        : userId,
+                        desc          : ''
+                    }
+                    tableSvc.insertEntity('line', insData, function (error, result, response) {
+                        if(error){
+                            context.log('[Error] tableSvc.insertEntity', error);
+                            pushTexeMessage('アプリケーションエラーが発生したかな？', userId, context, function(result) {});
+                            context.done();
+                        }
+                        pushTexeMessage('文字の入った画像を送ってくれるかな？', userId, context, function(result) {});
+                    });
+                }
+            });
+        // メッセージが「文字認識」以外の場合
+        } else {
+        ・・・・　
+```
+こちらも Azure Table Storage を利用し「文字認識」というメッセージが送信されているかを検索します。
+
+次に画像が送られてきた場合に、「文字認識」メッセージが存在すれば OCR 機能を呼び出します、存在しなければ今まで通りの人物解析を実行します。
+```
+function(imageName, callback) {
+    // 「文字認識」のメッセージが送られているか
+    tableSvc.retrieveEntity('line', 'img', userId, function(error, result, response) {
+        let apiStatus = false;
+        
+        if(response.statusCode == '200') {
+            apiStatus = true;  
+        }
+        callback(null, imageName, apiStatus);
+    });
+},
+function(imageName, apiStatus, callback) {
+    // ComputerVisionAPI 呼出し
+    callMSComputerVisionAPI(imageName, apiStatus, context, function(result) {
+        callback(null, result, apiStatus);
+    });
+},
+function(cvResult, apiStatus, callback) {
+    if(apiStatus) {
+        // 文字認識結果送信
+        if(typeof(cvResult.regions) !== 'undefined') {
+
+            let line;
+            let text;
+            let lineCont = 0;                        
+            let message  = 'この画像には以下の文字が含まれていそうかな？\n\n';
+
+            cvResult.regions[0].lines.forEach(function(line) {
+                line.words.forEach(function(text) {
+                    if(cvResult.language == 'ja') {
+                        message +=　iconv.decode(text.text, 'utf-8');
+                    } else {
+                        message +=　iconv.decode(text.text, 'utf-8') + ' ';
+                    }
+                });
+                
+                lineCont++;
+                if(lineCont < cvResult.regions[0].lines.length) {
+                    message += '\n';
+                }       
+            });
+
+            let delData = {
+                PartitionKey: {'_':'img'},
+                RowKey: {'_': userId}
+            };
+
+            // 「文字認識」の登録履歴削除
+            tableSvc.deleteEntity('line', delData, function(error, response){
+                if(error) {
+                    context.log('[Error] tableSvc.deleteEntity', error);
+                    pushTexeMessage('アプリケーションエラーが発生したかな？', userId, context, function(result) {});
+                    context.done();
+                }
+            });
+
+            pushTexeMessage(message, userId, context, function(result) {
+                context.done();
+            });
+        } else{
+            pushTexeMessage('この画像には文字がないからもう一回送ってくれないかな？', userId, context, function(result) {
+                context.done();
+            });
+        }
+    } else {
+        // 顔画像解析結果送信
+    ・・・
+```
+
+Azure Computer Vision API に実際にリクエストを投げる関数部分のソースです、「文字認識」が送られているかをフラグで判断し、処理を分岐させています。
+
+```
+// ComputerVisionAPI 呼出
+function callMSComputerVisionAPI(imageUrl, apiStatus, context, callback) {
+
+    context.log('==== Start:callMSComputerVisionAPI ====');
+
+    let params;
+    let urlObj;
+
+    // Strage 画像 URL
+    let urlImage = process.env.BLOB_HOST + imageUrl;
+
+    if(apiStatus) {
+        // ComputerVisionAPI OCR
+        // クエリパラメータ設定
+        params ='language=unk&detectOrientation=true';
+
+        // URL 作成
+        urlObj = {
+            protocol: 'https',
+            hostname: 'southeastasia.api.cognitive.microsoft.com',
+            pathname: 'vision/v1.0/ocr',
+            search  : params
+        };
+    } else {
+        // ComputerVisionAPI Analayze
+        // クエリパラメータ設定
+        params = 'visualFeatures=Categories, Tags, Description, Faces';
+
+        // URL 作成
+        urlObj = {
+            protocol: 'https',
+            hostname: 'southeastasia.api.cognitive.microsoft.com',
+            pathname: 'vision/v1.0/analyze',
+            search  : params
+        };
+    }
+    
+    // リクエストデータ設定
+    let optCva = {
+    	"headers"  : {
+    		"Content-Type": "application/json",
+    		"Ocp-Apim-Subscription-Key": "KEY"
+    	},
+    	"body"     : '{"url":"' + urlImage + '"}',
+    	"uri"      : url.format(urlObj),
+    	"method"   : "POST",
+    	"type"     : "POST",
+    	"encoding" : "binary"
+    };
+
+    // リクエスト送信
+    requestPromise(optCva).then(function(result) {
+        let cvResult  = JSON.parse(result);
+        callback(cvResult);
+    }).catch(function(e) {
+        context.log(e.stack);
+    }).done();
+
+    context.log('==== End  :callMSComputerVisionAPI ====');
+}
+```
+
+文字認識結果を受信した後は文字列を結合して LINE にメッセージを送信します、という訳で早速…
+
+## 使って…みたい！！
+弊社エンジニアの行動指針が記載されたカードが手元にありましたので、こちらを使ってみます。
+
+*・行動指針のカード*
+
+image::/images/syoga/azure10/azure3.png[]
+
+ 
+*・認識結果*
+
+image::/images/syoga/azure10/azure2.png[]
