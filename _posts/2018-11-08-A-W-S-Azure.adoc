@@ -1,0 +1,3 @@
+= AWS Fargate で Azure の Blob Storage をチラ見してみた
+:hp-alt-title: AWS+Azure
+:hp-tags: syoga, Azure, AWS, Fargate, ECS
