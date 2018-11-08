@@ -75,7 +75,7 @@ if [ -n "$difference" ]; then
 fi
 ```
 * `git log ..origin/develop -n 1` +
-今回は、作業ブランチのもとにしたdevelopブランチとoriginのdevelopブランチの差が1件でもあるかどうかが分かれば良かったので、`-n 1`で1コミット分だけ表示するようにしました！
+今回は、作業ブランチのもとにしたdevelopとorigin/developの差が1件でもあるかどうかが分かれば良かったので、`-n 1`で1コミット分だけ表示するようにしました！
 
 
 
