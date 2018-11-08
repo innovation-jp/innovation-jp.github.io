@@ -1,3 +1,10 @@
-= AWS Fargate で Azure の Blob Storage をチラ見してみた
+= AWS Fargate で Azure の BLOB Storage をチラ見してみた
 :hp-alt-title: AWS+Azure
 :hp-tags: syoga, Azure, AWS, Fargate, ECS
+
+お久しぶりです。 +
+プライベートで Azure を使っている SRE チームの syoga です。
+
+もうすぐ今年も終わりですね！ という訳で、 +
+今回は AWS Fargate を使ってみようと思います。
+
