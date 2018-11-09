@@ -79,7 +79,7 @@ fi
 
 image::/images/sumomo/20181109/1.png[]
 
-↑【リモートのorigin/developをpullする前にcommitしようとした場合】 +
+↑【origin/developをpullする前にcommitしようとした場合】 +
 注意メッセージが表示される！
 
 image::/images/sumomo/20181109/3.png[]
@@ -89,11 +89,11 @@ image::/images/sumomo/20181109/3.png[]
 
 image::/images/sumomo/20181109/2.png[]
 
-↑`[Y]または[y]`以外を入力すればcommit中止
+↑`[Y]または[y]`以外(nなど)を入力すればcommit中止
 
 image::/images/sumomo/20181109/4.png[]
 
-↑【リモートのorigin/developをpullした後にcommitしようとした場合】 +
+↑【origin/developをpullした後にcommitしようとした場合】 +
 そのままコミット出来る！
 
 
