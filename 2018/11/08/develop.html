@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>developが更新されたらお知らせしてくれるシェルスクリプトを作りたい！ - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="developが更新されたらお知らせしてくれるシェルスクリプトを作りたい！">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="developが更新されたらお知らせしてくれるシェルスクリプトを作りたい！">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/11/08/develop.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="developが更新されたらお知らせしてくれるシェルスクリプトを作りたい！" />
+    <meta property="og:description" content="こんにちは、未経験中途エンジニアのすももです。 入社してなんだかんだ1年経ちました〜、本当にあっという間ですね。 出来る事が増えた喜びと、まだまだ何も出来ない哀しみの狭間で生きてます。 &amp;#8230;&amp;#8203;とはいえ元気ですのでご心配なく！笑 今回のテーマは「developが更新されたらお知らせしてくれるシェルスクリプトを作る！」 ということで。 〜なぜ作るのか？〜 私のチームでは、リリースでdevelopを更新した際、メンバーに口頭やSlackで「昨日リリースあったので、developをマージお願いいたします！」と伝えてたりするのですが、言う方..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/11/08/develop.html" />
+    <meta property="article:published_time" content="2018-11-07T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-11-09T07:59:19.037Z" />
+    <meta property="article:tag" content="sumomo" />
+    <meta property="article:tag" content="ShellScript" />
+    <meta property="article:tag" content="Git" />
+    <meta property="article:tag" content="Linux" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="developが更新されたらお知らせしてくれるシェルスクリプトを作りたい！" />
+    <meta name="twitter:description" content="こんにちは、未経験中途エンジニアのすももです。 入社してなんだかんだ1年経ちました〜、本当にあっという間ですね。 出来る事が増えた喜びと、まだまだ何も出来ない哀しみの狭間で生きてます。 &amp;#8230;&amp;#8203;とはいえ元気ですのでご心配なく！笑 今回のテーマは「developが更新されたらお知らせしてくれるシェルスクリプトを作る！」 ということで。 〜なぜ作るのか？〜 私のチームでは、リリースでdevelopを更新した際、メンバーに口頭やSlackで「昨日リリースあったので、developをマージお願いいたします！」と伝えてたりするのですが、言う方..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/11/08/develop.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars0.githubusercontent.com/u/34367516?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "developが更新されたらお知らせしてくれるシェルスクリプトを作りたい！",
+    "url": "http://tech.innovation.co.jp/2018/11/08/develop.html",
+    "datePublished": "2018-11-07T15:00:00.000Z",
+    "dateModified": "2018-11-09T07:59:19.037Z",
+    "keywords": "sumomo,  ShellScript,  Git,  Linux",
+    "description": "こんにちは、未経験中途エンジニアのすももです。 入社してなんだかんだ1年経ちました〜、本当にあっという間ですね。 出来る事が増えた喜びと、まだまだ何も出来ない哀しみの狭間で生きてます。 &amp;#8230;&amp;#8203;とはいえ元気ですのでご心配なく！笑 今回のテーマは「developが更新されたらお知らせしてくれるシェルスクリプトを作る！」 ということで。 〜なぜ作るのか？〜 私のチームでは、リリースでdevelopを更新した際、メンバーに口頭やSlackで「昨日リリースあったので、developをマージお願いいたします！」と伝えてたりするのですが、言う方..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-sumomo tag-Shell-Script tag-Git tag-Linux no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="08 Nov 2018" class="post-meta__date date">08 Nov 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/sumomo">sumomo</a>, <a href="http://tech.innovation.co.jp/tag/Shell-Script"> ShellScript</a>, <a href="http://tech.innovation.co.jp/tag/Git"> Git</a>, <a href="http://tech.innovation.co.jp/tag/Linux"> Linux</a></span>
+        <span class="post-meta__author author"><img src="https://avatars0.githubusercontent.com/u/34367516?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">developが更新されたらお知らせしてくれるシェルスクリプトを作りたい！</h1>
+    </header>
+
+    <section class="post tag-sumomo tag-Shell-Script tag-Git tag-Linux">
+      <div class="paragraph">
+<p>こんにちは、未経験中途エンジニアのすももです。<br>
+入社してなんだかんだ1年経ちました〜、本当にあっという間ですね。<br>
+出来る事が増えた喜びと、まだまだ何も出来ない哀しみの狭間で生きてます。<br>
+&#8230;&#8203;とはいえ元気ですのでご心配なく！笑
+<br>
+<br></p>
+</div>
+<div class="paragraph">
+<p>今回のテーマは「developが更新されたらお知らせしてくれるシェルスクリプトを作る！」<br>
+ということで。<br></p>
+</div>
+<div class="paragraph">
+<p><strong>〜なぜ作るのか？〜</strong><br>
+私のチームでは、リリースでdevelopを更新した際、メンバーに口頭やSlackで「昨日リリースあったので、developをマージお願いいたします！」と伝えてたりするのですが、言う方も言われた方も忘れてしまうことが多く・・・。笑<br>
+「コミットする時とかにdevelopと差分あったら教えてくれるようにしたいね！」という話になりました〜<br>
+<br>
+そして、ちょうどシェルスクリプトの勉強を少ししたところだったので、私が挑戦してみることに！</p>
+</div>
+<div class="paragraph">
+<p><strong>〜今回作りたいもの〜</strong><br>
+・コミットしようとするとシェルスクリプトが動く<br>
+・作業ブランチとorigin/developに差分があったらメッセージを出す<br>
+・差分がある場合はコミットするかしないか選べる<br></p>
+</div>
+<div class="paragraph">
+<p><strong>〜やったこと〜</strong><br>
+<mark><strong>1.Gitディレクトリのhooksサブディレクトリに「pre-commit」ファイルを作成</strong></mark></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ vi .git/hooks/pre-commit</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&lt;Gitフックについてはこちらを参考にしました&gt;<br>
+<a href="https://git-scm.com/book/ja/v1/Git-%E3%81%AE%E3%82%AB%E3%82%B9%E3%82%BF%E3%83%9E%E3%82%A4%E3%82%BA-Git-%E3%83%95%E3%83%83%E3%82%AF" class="bare">https://git-scm.com/book/ja/v1/Git-%E3%81%AE%E3%82%AB%E3%82%B9%E3%82%BF%E3%83%9E%E3%82%A4%E3%82%BA-Git-%E3%83%95%E3%83%83%E3%82%AF</a></p>
+</div>
+<div class="paragraph">
+<p><mark><strong>2.「pre-commit」ファイルの実行権限を追加</strong></mark></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$ chmod u+x .git/hooks/pre-commit</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&lt;実行権限の追加についてはこちらを参考にしました&gt;<br>
+<a href="https://qiita.com/shisama/items/5f4c4fa768642aad9e06" class="bare">https://qiita.com/shisama/items/5f4c4fa768642aad9e06</a></p>
+</div>
+<div class="paragraph">
+<p><mark><strong>3.「pre-commit」ファイルに以下コードを入力</strong></mark></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>#!/bin/bash
+
+# リモートのorigin/developのデータを取ってくる
+git fetch origin develop
+
+# 今いるブランチとorigin/developの差分を取得
+difference=$(git log ..origin/develop -n 1)
+
+# 変数の文字が空じゃなければ注意メッセージを表示する
+if [ -n "$difference" ]; then
+  echo "[注意] developと差分あり！切りの良いとこでpullしてね！"
+  echo "[注意] このままcommitしますか？ [Y/n]"
+
+  exec &lt; /dev/tty
+  read answer
+
+  case $answer in
+    "Y" | "y")
+      echo "commit実行したよ！"
+      exit 0;;
+    * )
+      echo "commit中止したよ！";
+      exit 1;;
+  esac
+fi</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>git log ..origin/develop -n 1</code><br>
+今回は、作業ブランチのもとにしたdevelopとorigin/developの差が1件でもあるかどうかが分かれば良かったので、<code>-n 1</code>で1コミット分だけ表示するようにしました！</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>〜完成したもの〜</strong><br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/sumomo/20181109/1.png" alt="1.png">
+</div>
+</div>
+<div class="paragraph">
+<p>↑【origin/developをpullする前にcommitしようとした場合】<br>
+注意メッセージが表示される！</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/sumomo/20181109/3.png" alt="3.png">
+</div>
+</div>
+<div class="paragraph">
+<p>↑<code>[Y]または[y]</code>を入力すればcommit実行</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/sumomo/20181109/2.png" alt="2.png">
+</div>
+</div>
+<div class="paragraph">
+<p>↑<code>[Y]または[y]</code>以外(nなど)を入力すればcommit中止</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/sumomo/20181109/4.png" alt="4.png">
+</div>
+</div>
+<div class="paragraph">
+<p>↑【origin/developをpullした後にcommitしようとした場合】<br>
+そのままコミット出来る！</p>
+</div>
+<div class="paragraph">
+<p><strong>〜おわりに〜</strong><br>
+最初、差分を取得しようとしても、origin/develop側の変更点だけでなく、作業ブランチの変更点も出てしまったり、上手く変数に入れることが出来なかったりで手こずり頭ぐるぐるしていたのですが、みんなの助けを借りなんとか完成できました〜！<br>
+今後はもっと自分のチカラで解決出来るようになりたいなぁ〜と思いつつ、今回のブログを終わりにしたいと思います！<br></p>
+</div>
+<div class="paragraph">
+<p>ではでは！<br></p>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11783-1';
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+</body>
+</html>
