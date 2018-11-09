@@ -48,7 +48,6 @@ var _trackingid = 'LFT-10003-1';
     <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
 
     <link rel="canonical" href="http://tech.innovation.co.jp" />
-    <link rel="next" href="http://tech.innovation.co.jp/page/2/" />
     <meta name="generator" content="Ghost ?" />
     <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
@@ -214,92 +213,20 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/11/02/Amazon-Linux-E-C2chrony.html" title="link to 古いAmazonLinux EC2インスタンスの時刻をchronyで合わせた件">古いAmazonLinux EC2インスタンスの時刻をchronyで合わせた件</a></h2>
-        <p class="excerpt">今は昔のお話ですが、 かなり昔に作成したAmazonLinuxがあり、 時刻が何故か10分程度ズレてしまう現象に見舞われたことがありました。 ntpdの自動時刻補正の時点でズレてしまっているようで、 dateコマンドで一時的に合わせたとしてもすぐに同じ状態に戻ってしまっていました。 これを解消した際の手順を公開したいと思います。 やったこと 状況確認 ntpdの停止 chronyをインストール chronyを設定 chronyのmakestepを実行 自動起動設定 状況確認 作業時間が深夜なのは気にせず行きましょう。 # SSHで該当インスタンスにログイン Warning: Permanently added 'xxx.xxx.xxx.xxx' (RSA) to the list of k&hellip;</p>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/11/08/A-W-S-Azure.html" title="link to カスタムコンテナイメージを使った AWS Fargate で Azure の BLOB Storage をチラ見してみた">カスタムコンテナイメージを使った AWS Fargate で Azure の BLOB Storage をチラ見してみた</a></h2>
+        <p class="excerpt">お久しぶりです。 プライベートで Azure を使っている SRE チームの syoga です。 もうすぐ今年も終わりですね！ という訳で、 今回は AWS Fargate を使ってみようと思います。 Fargate で何をしようかな Fargate は AWS が提供する ECS でインスタンスを意識せず利用できる、フルマネージドなコンテナ実行環境です。 詳細は AWS の公式ページ等で要チェックください。 で！ 何をしようかと思ったのですが、以前の 記事 で作成した LINE BOT で Azure の Blob Storage にアップロードした 画像ファイルを気軽に参照できるようにしたいという思いがありましたので、そんな仕組みのコンテナイメージを作って Fargate で利用してみ&hellip;</p>
         <div class="post-list__meta">
-            <time datetime="02 Nov 2018" class="post-list__meta--date date">02 Nov 2018</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="AWS">AWS</a>, <a href="#blog" title=" EC2"> EC2</a>, <a href="#blog" title=" chrony"> chrony</a>, <a href="#blog" title=" Shirota"> Shirota</a></span>
+            <time datetime="08 Nov 2018" class="post-list__meta--date date">08 Nov 2018</time> &#8226;
+            <span class="post-list__meta--tags tags"><a href="#blog" title="syoga">syoga</a>, <a href="#blog" title=" Azure"> Azure</a>, <a href="#blog" title=" AWS"> AWS</a>, <a href="#blog" title=" Fargate"> Fargate</a>, <a href="#blog" title=" ECS"> ECS</a>, <a href="#blog" title=" Docker"> Docker</a></span>
         </div>
         <hr class="post-list__divider" />
       </li>
       <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/10/10/Python-A-W-S-Lambda.html" title="link to Pythonで購入履歴を使ったレコメンドを作成してみた②　〜AWS Lambda編〜">Pythonで購入履歴を使ったレコメンドを作成してみた②　〜AWS Lambda編〜</a></h2>
-        <p class="excerpt">どうも、中村です。 前回に作成したプログラムだけでは実際に利用するのが難しいので、AWS Lambda + API Gatewayを使ってAPI化していきたいと思います。 ※ちょっと長くなりそうだったので、API Gateway編は次回書きます。 前回作成した構成 ├── data.py ← 履歴データ └── get_recommend.py ← レコメンド取得プログラム こちらをAWS Lambdaに設定していくのですが、デプロイするためにファイルを圧縮したものを作成しましょう。 上記ディレクトリへ移動した後に以下コマンドを実行すれば、全てのファイルを圧縮したものが作成されます。 $ zip -r get_recommend.zip * 実行後 ├── data.py ├── get_&hellip;</p>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/04/14/Azure-3.html" title="link to LINEとLambdaでパンケーキ！ なお話">LINEとLambdaでパンケーキ！ なお話</a></h2>
+        <p class="excerpt">お久しぶりです、SREと呼ぶ方も呼ばれる方もまだ慣れていない syoga です。 最近 SRE というチーム名に恥じない業務をするには何をすべきか… DevOpsってなんでも自動化するだけじゃないよね…等 日々の業務について悶々としていたところ、ドラゴンクエストXIの発売日が決まりました！！ 3DSとPS4 というマルチ展開なのでとりあえず両方購入する事にします！ Azure Machine Learning のお話 その3 Azure シリーズの第3段となります、前回までのあらすじはこちらです。 機械学習を学ぶため Azure Machin Training を体験したが、 自分が「作るより使う方が好きマン」だという事に気付き、 Computer Vision API を使ってみた sy&hellip;</p>
         <div class="post-list__meta">
-            <time datetime="10 Oct 2018" class="post-list__meta--date date">10 Oct 2018</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="nakamura">nakamura</a>, <a href="#blog" title="AWS">AWS</a>, <a href="#blog" title="Lambda">Lambda</a>, <a href="#blog" title="Python">Python</a>, <a href="#blog" title="レコメンド">レコメンド</a>, <a href="#blog" title="Recommend">Recommend</a></span>
-        </div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/10/09/E-K-S.html" title="link to EKSを触ってみた">EKSを触ってみた</a></h2>
-        <p class="excerpt">2018年10月現在、 弊社サービスでも本番環境にDockerコンテナを利用している部分が増えてきました。 AWSを利用している部分ではECSを利用していますが、 今回Kubernetesを試すという意味で、EKSを触ってみることにしました。 ユーザーガイド： https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/what-is-eks.html 前提 Dockerの知識はある程度ある 作業端末はMacを使用した（※未検証だがWindowsでも同じはず） 作業端末で最新のawscliが使用できるようになっていること AWSのIAMの知識があり、EKS用にAmazonEKSClusterPolicyとAmazonEKSServicePo&hellip;</p>
-        <div class="post-list__meta">
-            <time datetime="09 Oct 2018" class="post-list__meta--date date">09 Oct 2018</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="AWS">AWS</a>, <a href="#blog" title=" EKS"> EKS</a>, <a href="#blog" title=" Kubernetes"> Kubernetes</a>, <a href="#blog" title=" Shirota"> Shirota</a></span>
-        </div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/09/06/A-W-S-A-L-B-Java-Script.html" title="link to AWS ALBに追加された固定レスポンスを返す機能を使ってJavaScriptでパスワード生成してみた">AWS ALBに追加された固定レスポンスを返す機能を使ってJavaScriptでパスワード生成してみた</a></h2>
-        <p class="excerpt">概要 先日、AWSのALB(Application Load Balancer)から直接固定レスポンスを返せる機能が付きました。 これは、ウェブサーバを用意せずともALBだけでsorryページなどを表示したりできる という想定で主に使用する機能だと思います。 しかし、 この機能は Content-Type text/html だけでなく、application/javascript などもレスポンスすることができ、 レスポンスコードは503や404など以外にも、もちろん200も返すことができます。 ということは、この部分にJavaScriptを記述すれば動かすことができるはずなので、 それを使って簡単なパスワード生成スクリプトをALBに直接置いてみて、 動作するのか検証してみました。 前提&hellip;</p>
-        <div class="post-list__meta">
-            <time datetime="06 Sep 2018" class="post-list__meta--date date">06 Sep 2018</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="AWS">AWS</a>, <a href="#blog" title=" ALB"> ALB</a>, <a href="#blog" title=" JavaScript"> JavaScript</a>, <a href="#blog" title=" Shirota"> Shirota</a></span>
-        </div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/12/10/A-W-S-Cloud9-G-A-E-Go.html" title="link to AWS Cloud9でGAE/Goのコードを軽く書いてみる">AWS Cloud9でGAE/Goのコードを軽く書いてみる</a></h2>
-        <p class="excerpt">こんにちは！ いや〜激寒ですね！ 八王子の朝は、いろいろ凍っております。 矢ヶ崎です。 クラウドいろいろ 弊社では現在、AWSはもちろんのこと、Azure、GCP、Bluemixと、いろいろなクラウドプラットフォームを利用しています。 AWSのre:Inventには、うちの規模にしては贅沢に5名も！参加させていただきましたが、実はAWSだけ！という感じではありません。 しか〜し？！ AWS Cloud9という、素敵な開発環境がリリースされたではないですか！ こ、これは？！AWS！さすが！って思っているわけでございます。 開発環境への迷い 昨今のわたくしゴトですが、開発するにあたってのIDEやエディタというのに迷いがありました。 エディタは、vi(の機能しか使わない)ユーザだったのを、とうと&hellip;</p>
-        <div class="post-list__meta">
-            <time datetime="10 Dec 2017" class="post-list__meta--date date">10 Dec 2017</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="Yagasaki">Yagasaki</a>, <a href="#blog" title="AWS">AWS</a>, <a href="#blog" title="Cloud9">Cloud9</a>, <a href="#blog" title="IDE">IDE</a></span>
-        </div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/10/05/making-L-A-M-P-by-A-W-S.html" title="link to AWSのサービスを使ってLAMP環境を構築してみた">AWSのサービスを使ってLAMP環境を構築してみた</a></h2>
-        <p class="excerpt">こんにちは、小柳津です。 先日、 AWS 認定ソリューションアーキテクト – アソシエイト を受験して合格しました！ 今までAWSをほぼ触ったことがなかったのですが、試験を受けるにあたって触ってみることにしました。 具体的には、以下の基本的なサービスを用いて、LAMP環境を構築してみました。 VPC EC2 EBS ELB Route53 そして上記サービス利用して作成したWebアプリケーションがコチラ。 簡単なブログを作ってみました。 こちらのブログは以下のようなLAMP環境で動作しています。 Amazon Linux Nginx PHP(フレームワーク: Laravel) MySQL Webアプリケーションを作成する上では以下のような順番で作成しました。 AWS上でLAMP環境を構築&hellip;</p>
-        <div class="post-list__meta">
-            <time datetime="05 Oct 2017" class="post-list__meta--date date">05 Oct 2017</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="yaizu">yaizu</a>, <a href="#blog" title="AWS">AWS</a>, <a href="#blog" title="LAMP">LAMP</a></span>
-        </div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/06/19/serposcope.html" title="link to AWS(EC2)にSERPOSCOPEを導入してみた">AWS(EC2)にSERPOSCOPEを導入してみた</a></h2>
-        <p class="excerpt">こんにちは、中村です。 6月なのに最近めちゃくちゃ暑いですね〜 私が子供の頃の梅雨は毎日雨がデフォルトでしたが、すっかり変わってしまいました。。。 ちゃんと夏バテ対策(餃子)してくださいね！ さて今回はSEO順位計測をしてくれる「SERPOSCOPE」というツールを EC2に導入した話をしたいと思います。 きっかけ SEO順位計測といえば「GRC」というツールがとても有名なようで 社内でもそちらを使っているようです。 ただこちらのツール、なんと、、、Windowsツールなんです！ そして、毎日順位計測を行うように専用のPCがあり、 24時間365日稼働しているとか。。。 ひょえ〜！！ PCがフリーズしてデータ取得できていなくても気づけないのは怖いですね。 何か別な方法が無いかとマーケチーム&hellip;</p>
-        <div class="post-list__meta">
-            <time datetime="19 Jun 2017" class="post-list__meta--date date">19 Jun 2017</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="SERPOSCOPE">SERPOSCOPE</a>, <a href="#blog" title="SEO">SEO</a>, <a href="#blog" title="AWS">AWS</a>, <a href="#blog" title="EC2">EC2</a>, <a href="#blog" title="Gyo-za">Gyo-za</a>, <a href="#blog" title="Nakamura">Nakamura</a></span>
-        </div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/02/11/Drawatchio.html" title="link to draw.ioで描いたかっこいい図をAmazon CognitoであれしてAmazon CloudWatchとつないでAWS監視ダッシュボードもどきにする！">draw.ioで描いたかっこいい図をAmazon CognitoであれしてAmazon CloudWatchとつないでAWS監視ダッシュボードもどきにする！</a></h2>
-        <p class="excerpt">はてさてこんばんは。 矢ヶ崎です。なんやかんやでもう２月ですね。矢ヶ崎です。矢ヶ崎です。 乾いたアラート 今回は、最近インフラ障害が多く、AWSコンソールを開いてCloudWatchの無機質な画面とにらめっこしている毎日に刺激を加えるべく、かっこいい！(当社比)監視ボードもどきを作りたい！という夢をみて、あれ？ draw.ioって、結構簡単にかっこいいインフラ構成図とか作れるよね？それをそのまま監視ボードとして使えたら、かっこいい図を他人に描いてもらって、それをベースに監視できるのではないのか？そうなのか？！ そんな妄想がよぎったので、ちょっぴりやってみました。 その名も、 Drawatchioです！ 雰囲気 こんな感じで、CloudWatchのメトリクスを表示してくれたり、Alarmがあ&hellip;</p>
-        <div class="post-list__meta">
-            <time datetime="11 Feb 2017" class="post-list__meta--date date">11 Feb 2017</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="Yagasaki">Yagasaki</a>, <a href="#blog" title="drawio">drawio</a>, <a href="#blog" title="CloudWatch">CloudWatch</a>, <a href="#blog" title="Cognito">Cognito</a>, <a href="#blog" title="AWS">AWS</a></span>
-        </div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2016/12/09/re-Invent-and-that-going-abroad.html" title="link to re:Inventひいては海外に行くということ(re:Invent2016シリーズ)">re:Inventひいては海外に行くということ(re:Invent2016シリーズ)</a></h2>
-        <p class="excerpt">こんにちは、オザサです。 さて、行ってきましたre:Inventってことで イベントの最中にもブログを更新しておりましたので、 ざっくりした雰囲気はそちらを見ていただきたのですが、 本ポストでは初の米国滞在と初のre:Inventが僕が何を感じたかを書いてみたいと思います。 まず、日本に帰ってきて感じたこと 道が狭い(色々近い) 人が多いように感じる 思ったより暖かい です。 うん、結構な変化があったようです。 とはいえ、もうちょっと詳細に書きましょう。 初の米国滞在 自分自身、卵・牛乳アレルギーで英語もあまり得意ではないということもあり、 海外に行くことを少し嫌厭している節が正直ありました。 ただ、初の米国は、そんな僕を変えてくれました。 まず街やそれに付随するサービス(仕組み)などなど&hellip;</p>
-        <div class="post-list__meta">
-            <time datetime="09 Dec 2016" class="post-list__meta--date date">09 Dec 2016</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="AWS">AWS</a>, <a href="#blog" title="re:Invent2016">re:Invent2016</a>, <a href="#blog" title="Las Vegas">Las Vegas</a>, <a href="#blog" title="Ozasa">Ozasa</a></span>
-        </div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2016/12/02/exhibition-booth-tour.html" title="link to 展示ブースツアーに参加してみた(re:Invent2016シリーズ④)">展示ブースツアーに参加してみた(re:Invent2016シリーズ④)</a></h2>
-        <p class="excerpt">ラスベガスからこんにちは！ 最近餃子が恋しい中村です。 今回展示ブースツアーに参加してみたので、その内容をレポートさせていただきます。 ※サービスの特徴などを間違って説明してしまうと大問題なので、今回はツアーの様子のみを紹介させていただきます 展示ブースツアーとは こちらのイベントはre:Inventのツアーに組み込まれているものではなく、サーバーワークスの羽柴さんが企画してくださった素晴らしいイベントです！ 私のようなre:Invent初参加者にとっては非常に嬉しい企画！絶対参加！ と思ったら募集が始まるとすぐに定員オーバーとなってしまいました。。。 急遽枠を増やしていただけたのでなんとか参加することができましたが、危なかったです。 ちなみにre:Invent2016の展示ブースの様子が&hellip;</p>
-        <div class="post-list__meta">
-            <time datetime="02 Dec 2016" class="post-list__meta--date date">02 Dec 2016</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="AWS">AWS</a>, <a href="#blog" title="re:Invent2016">re:Invent2016</a>, <a href="#blog" title="Las Vegas">Las Vegas</a>, <a href="#blog" title="Gyoza">Gyoza</a>, <a href="#blog" title="Nakamura">Nakamura</a></span>
+            <time datetime="14 Apr 2017" class="post-list__meta--date date">14 Apr 2017</time> &#8226;
+            <span class="post-list__meta--tags tags"><a href="#blog" title="syoga">syoga</a>, <a href="#blog" title=" log"> log</a>, <a href="#blog" title=" Azure"> Azure</a>, <a href="#blog" title=" Computer Vision API"> Computer Vision API</a>, <a href="#blog" title=" Node.js"> Node.js</a>, <a href="#blog" title=" AWS"> AWS</a>, <a href="#blog" title=" Lambda"> Lambda</a>, <a href="#blog" title=" LINE"> LINE</a></span>
         </div>
         <hr class="post-list__divider" />
       </li>
@@ -308,8 +235,7 @@ var _trackingid = 'LFT-10003-1';
     <hr class="post-list__divider " />
 
 <nav class="pagination" role="navigation">
-    <span class="pagination__page-number">Page 1 of 2</span>
-        <a class="older-posts pagination__older btn btn-small btn-tertiary" href="http://tech.innovation.co.jp/tag/A-W-S/page/2/#blog">Older Posts &rarr;</a>
+    <span class="pagination__page-number">Page 1 of 1</span>
 </nav>
 
 
