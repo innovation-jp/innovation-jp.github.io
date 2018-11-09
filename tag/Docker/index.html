@@ -48,7 +48,6 @@ var _trackingid = 'LFT-10003-1';
     <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
 
     <link rel="canonical" href="http://tech.innovation.co.jp" />
-    <link rel="next" href="http://tech.innovation.co.jp/page/2/" />
     <meta name="generator" content="Ghost ?" />
     <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
@@ -214,20 +213,11 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/10/15/Docker-N-E-M-A-P-I-Account.html" title="link to DockerでNEMのAPIを使いAccount情報取得から送金まで使ってみる">DockerでNEMのAPIを使いAccount情報取得から送金まで使ってみる</a></h2>
-        <p class="excerpt">そろそろ肌寒くなってきましたね。 こんににはこへです。 ということで今回はNEMで遊びます。 環境構築 doker-compose.yml version: '3.7' services:   node:     image: node     tty: true     volumes:       - ./app:/var/www/app:cached     working_dir: /var/www/app     ports:       - 80:80 docker-compose up -d で起動 コンテナに入る docker exec -it コンテナ名 bash yarn add nem-library yarn add -D babel-cli babel-preset&hellip;</p>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/11/08/A-W-S-Azure.html" title="link to カスタムコンテナイメージを使った AWS Fargate で Azure の BLOB Storage をチラ見してみた">カスタムコンテナイメージを使った AWS Fargate で Azure の BLOB Storage をチラ見してみた</a></h2>
+        <p class="excerpt">お久しぶりです。 プライベートで Azure を使っている SRE チームの syoga です。 もうすぐ今年も終わりですね！ という訳で、 今回は AWS Fargate を使ってみようと思います。 Fargate で何をしようかな Fargate は AWS が提供する ECS でインスタンスを意識せず利用できる、フルマネージドなコンテナ実行環境です。 詳細は AWS の公式ページ等で要チェックください。 で！ 何をしようかと思ったのですが、以前の 記事 で作成した LINE BOT で Azure の Blob Storage にアップロードした 画像ファイルを気軽に参照できるようにしたいという思いがありましたので、そんな仕組みのコンテナイメージを作って Fargate で利用してみ&hellip;</p>
         <div class="post-list__meta">
-            <time datetime="15 Oct 2018" class="post-list__meta--date date">15 Oct 2018</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="kohe">kohe</a>, <a href="#blog" title="NEM">NEM</a>, <a href="#blog" title="Docker">Docker</a></span>
-        </div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/08/09/constructing-enviroment-for-Elasticsearch-and-Kibana.html" title="link to Elasticsearch, KibanaをDocker環境で動かしてみた">Elasticsearch, KibanaをDocker環境で動かしてみた</a></h2>
-        <p class="excerpt">こんにちは！小柳津です。 社内から「サイト内検索の精度を高めたい！」と要望を受けてElasticsearchとKibanaをDocker環境で触ったので、今回はそれの方法を共有したいと思います。 動作環境 以下が動作環境です。 Docker: 18.06.0-ce Elasticsearch: 6.3.2 Kibana: 6.3.2 Docker環境作成 環境を構築するためにまず以下のようなディレクトリ構成にします。 |----docker-compose.yml |----Elasticsearch |         |----Dockerfile |----Kibana           |----Dockerfile それぞれのファイルの中身は以下です。 docker-compo&hellip;</p>
-        <div class="post-list__meta">
-            <time datetime="09 Aug 2018" class="post-list__meta--date date">09 Aug 2018</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="Docker">Docker</a>, <a href="#blog" title="Elasticesearch">Elasticesearch</a>, <a href="#blog" title="Kibana">Kibana</a></span>
+            <time datetime="08 Nov 2018" class="post-list__meta--date date">08 Nov 2018</time> &#8226;
+            <span class="post-list__meta--tags tags"><a href="#blog" title="syoga">syoga</a>, <a href="#blog" title=" Azure"> Azure</a>, <a href="#blog" title=" AWS"> AWS</a>, <a href="#blog" title=" Fargate"> Fargate</a>, <a href="#blog" title=" ECS"> ECS</a>, <a href="#blog" title=" Docker"> Docker</a></span>
         </div>
         <hr class="post-list__divider" />
       </li>
@@ -241,33 +231,6 @@ var _trackingid = 'LFT-10003-1';
         <hr class="post-list__divider" />
       </li>
       <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/02/26/make-book-manage-App.html" title="link to 本の管理アプリをVue.js,Laravel,Docker,GCP,gitlab,ElementUIを使って作った話。">本の管理アプリをVue.js,Laravel,Docker,GCP,gitlab,ElementUIを使って作った話。</a></h2>
-        <p class="excerpt">こへです。 そろそろ Vue.js Laravel Docker  GCP gitlab を使って社内の本の管理アプリを作りたい時期が来ましたので作成することにしました。 お金を1円もかけたくない と言う裏目標も持ちます。 完成物 Version管理 version管理に githubではなくgitlabを使います。 理由: private repository が無料 Container Registory が使える デザイン Vue.js用のライブラリElementを使います。 簡単にいい感じのデザインを作れる予感がするので選択。 http://element.eleme.io/#/en-US/component/installation 構成 ├── docker-compose.y&hellip;</p>
-        <div class="post-list__meta">
-            <time datetime="26 Feb 2018" class="post-list__meta--date date">26 Feb 2018</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="kohe">kohe</a>, <a href="#blog" title=" Vuejs"> Vuejs</a>, <a href="#blog" title="Laravel">Laravel</a>, <a href="#blog" title="Docker">Docker</a>, <a href="#blog" title="GCP">GCP</a>, <a href="#blog" title="gitlab">gitlab</a>, <a href="#blog" title="ElementUI">ElementUI</a></span>
-        </div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/01/14/building-environments-laravel-54-with-angular-4-and-crality.html" title="link to Angularを使えるLaravel環境を作る。あとcralityも使う。">Angularを使えるLaravel環境を作る。あとcralityも使う。</a></h2>
-        <p class="excerpt">どうも、bigenです。 わたくし、新卒でListFinder開発チームに配属されてから１年が経ちました。 配属されてからは来る日も来る日もZend FrameworkとjQueryと戦う毎日。 最近では公私ともに社外の方と話す機会もあり、 触発されてもう少し今風の技術にも触れてみたいなぁと思いまして、 Angular4入りLaravel5.4環境の構築 に挑戦しました。 また、デザインフレームワークである Clarity Design Systemも入れて、 盛りだくさんの今風アプリケーションを一つ作ってやろうという算段です。 LaravelもAngularもClarityも、使って開発したことがないので、ゼロからのスタートです。 周囲の人に色々質問しながら進めてみました。 目次 前準備&hellip;</p>
-        <div class="post-list__meta">
-            <time datetime="14 Jan 2018" class="post-list__meta--date date">14 Jan 2018</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="PHP">PHP</a>, <a href="#blog" title="Docker">Docker</a>, <a href="#blog" title="angular">angular</a>, <a href="#blog" title="laravel">laravel</a>, <a href="#blog" title="crality">crality</a></span>
-        </div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/01/05/carry-out-tutorial-on-Laravel-amp-Docker.html" title="link to Vue.js のチュートリアルをLaravel＆Docker環境で行う">Vue.js のチュートリアルをLaravel＆Docker環境で行う</a></h2>
-        <p class="excerpt">2018年になりました。 koheです。 年が明けたということで、そろそろ Vue.jsをLaravelとDocker環境上で使いたい 時期が来ましたので、作成。 環境構築 といっても、Vue.jsはLaravelの環境を作れば既に使えるようになっているため、Laravelの環境をつくれば良いだけ。 ※nginx使います docker-compose.yml version: '3' services:   nginx:     build:       context: ./nginx     depends_on:       - php     ports:       - 80:80     volumes:       - ./www:/var/www:cached   php:&hellip;</p>
-        <div class="post-list__meta">
-            <time datetime="05 Jan 2018" class="post-list__meta--date date">05 Jan 2018</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="kohe">kohe</a>, <a href="#blog" title="Vue.js">Vue.js</a>, <a href="#blog" title="Laravel">Laravel</a>, <a href="#blog" title="Docker">Docker</a></span>
-        </div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/11/23/Azure-8.html" title="link to Azure Container Service（AKS）で人生というコンテナもオーケストレーションしてもらいたい話">Azure Container Service（AKS）で人生というコンテナもオーケストレーションしてもらいたい話</a></h2>
         <p class="excerpt">お久しぶりです、年のせいか風邪がなかなか完治しない自分に若干引き気味な SRE チームの syoga です。 今年も後少しで終わってしまいますが、皆様やり残した事はありますか？ 私は Microsoft 社の新型ゲームハード Xbox One X を買いそびれてしまい悶々としております。 日本で売れる訳ないとたかをくくっていたのですが、まさかの転売屋需要により予約が出来ず今にいたっております。 この悔しさを10月に Preview 版がリリースされた Azure Container Service - AKS（以下AKS）へぶつけてみようと思います。 Kubernetes の詳細については Google 先生に確認下さい。 Azure Container Service とは？ ACS 以&hellip;</p>
         <div class="post-list__meta">
@@ -277,29 +240,11 @@ var _trackingid = 'LFT-10003-1';
         <hr class="post-list__divider" />
       </li>
       <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/11/13/Mautic-Docker-Kohe.html" title="link to Docker上でMauticを動かしたお話。">Docker上でMauticを動かしたお話。</a></h2>
-        <p class="excerpt">こへです。 そろそろ紅葉を見に行きたくなる季節になり Docker上でMauticを動かしたい気分になってきましたのでやってみました。 そして、いずれかはMauticのcontributorに・・・ Mauticとは？ オープンソースのマーティングオートメーションツールです。 https://www.ossnews.jp/oss_info/Mautic　　より引用 今回必要なツール ・Docker (↓のリンクからDLしておいてください。) https://store.docker.com/editions/community/docker-ce-desktop-mac 早速やっていこう！ Dockerfileをゴリゴリ書いていこうと思ったのですが、Docker HubにすでにMautic&hellip;</p>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/08/15/Azure-6.html" title="link to Docker イメージを Azure Container Instances で動かしてみた">Docker イメージを Azure Container Instances で動かしてみた</a></h2>
+        <p class="excerpt">お久しぶりです、ドラゴンクエスト11でカジノのマジスロにハマり過ぎ、全く冒険が進まない syoga です。 以前の 記事 通り、PS4版と3DS版両方購入しましたが、マジスロはPS4版にしか実装されていないため、PS4版を進めざるを得ない状況となっています。 激アツが本当にアツいっていいですね！ さて、最近弊社の某プロダクトでは空前の Docker ブーム（？）が到来しております、そんな中 Microsoft Azure で新たなコンテナサービスが発表されましたので、今回はそちらに触れてみようと思います。 そもそもコンテナって？ 皆様ご存知かとは思いますが、自身の復習も兼ねてざっくり記載したいと思います。 従来の仮想化について 従来の仮想化というと、物理コンピュータ上にソフトウェアで仮想的&hellip;</p>
         <div class="post-list__meta">
-            <time datetime="13 Nov 2017" class="post-list__meta--date date">13 Nov 2017</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="Mautic">Mautic</a>, <a href="#blog" title="Docker">Docker</a>, <a href="#blog" title="kohe">kohe</a></span>
-        </div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/10/27/Nginxngx-small-lightminio-S3-Docker.html" title="link to Nginxのngx_small_lightモジュールでminio(S3互換)にある画像をリサイズしてみる(Docker編)">Nginxのngx_small_lightモジュールでminio(S3互換)にある画像をリサイズしてみる(Docker編)</a></h2>
-        <p class="excerpt">Webサービスを作っていると、ユーザーがアップした画像からサムネイル画像を作ることがよくありますが、  Webアプリケーション側での画像リサイズは少々手間がかかります。  そんな中、画像のリサイズが出来るNginxのモジュールの「ngx_small_light」が便利そうだったので試してみました。 目標 目標、下記のとおりです。 minio(S3互換)に「main」バケットを作成し、「image.png」という名前で画像を用意 http://localhost/image.png　にアクセスするとminioにアップした「image.png」をそのまま表示され、  http://localhost/image.png/small　にアクセスすると「ngx_small_light」モジュールに&hellip;</p>
-        <div class="post-list__meta">
-            <time datetime="27 Oct 2017" class="post-list__meta--date date">27 Oct 2017</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="KatoK">KatoK</a>, <a href="#blog" title="Docker">Docker</a>, <a href="#blog" title="Nginx">Nginx</a>, <a href="#blog" title="minio">minio</a>, <a href="#blog" title="ngx_small_light">ngx_small_light</a></span>
-        </div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/09/22/aa.html" title="link to Laradockを使ってDockerでLaravelの環境構築をし、Container Registryを使いGCPにイメージをおいたお話。">Laradockを使ってDockerでLaravelの環境構築をし、Container Registryを使いGCPにイメージをおいたお話。</a></h2>
-        <p class="excerpt">皆様こんばんは。こへです。 そろそろ寒くなって来ており、 Laradockを使ってDockerでLaravelの環境構築をし、Google Cloud Platform(以下GCP)にimageをおきたい 時期が来ましたので、やってみました。 ※まずDockerが入ってない人は https://docs.docker.com/docker-for-mac/install/#download-docker-for-mac からdownload。私はStable の方をdownloadしました。 Laradock編 巷の噂でLaravelの環境構築はLaradockを使うと楽と言うことを聞いた気がするので使ってみます。 ※あとDockerを使いたかったってのもあります。 適当なディレクトリを作&hellip;</p>
-        <div class="post-list__meta">
-            <time datetime="22 Sep 2017" class="post-list__meta--date date">22 Sep 2017</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="kohe">kohe</a>, <a href="#blog" title="Docker">Docker</a>, <a href="#blog" title="Laradock">Laradock</a>, <a href="#blog" title="GCP">GCP</a>, <a href="#blog" title="Container Registry">Container Registry</a></span>
+            <time datetime="15 Aug 2017" class="post-list__meta--date date">15 Aug 2017</time> &#8226;
+            <span class="post-list__meta--tags tags"><a href="#blog" title="syoga">syoga</a>, <a href="#blog" title=" log"> log</a>, <a href="#blog" title=" Azure"> Azure</a>, <a href="#blog" title=" Container Instances"> Container Instances</a>, <a href="#blog" title=" container"> container</a>, <a href="#blog" title=" Docker"> Docker</a></span>
         </div>
         <hr class="post-list__divider" />
       </li>
@@ -308,8 +253,7 @@ var _trackingid = 'LFT-10003-1';
     <hr class="post-list__divider " />
 
 <nav class="pagination" role="navigation">
-    <span class="pagination__page-number">Page 1 of 2</span>
-        <a class="older-posts pagination__older btn btn-small btn-tertiary" href="http://tech.innovation.co.jp/tag/Docker/page/2/#blog">Older Posts &rarr;</a>
+    <span class="pagination__page-number">Page 1 of 1</span>
 </nav>
 
 
