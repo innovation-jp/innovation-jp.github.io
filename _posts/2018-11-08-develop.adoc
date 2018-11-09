@@ -53,6 +53,9 @@ https://qiita.com/shisama/items/5f4c4fa768642aad9e06
 ```
 #!/bin/bash
 
+# リモートのorigin/developのデータを取ってくる
+git fetch origin develop
+
 # 今いるブランチとorigin/developの差分を取得
 difference=$(git log ..origin/develop -n 1)
 
