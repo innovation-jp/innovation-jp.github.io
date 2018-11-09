@@ -25,16 +25,6 @@
 ・作業ブランチとorigin/developに差分があったらメッセージを出す +
 ・差分がある場合はコミットするかしないか選べる +
 
-*〜完成したもの〜* +
-
-image::/images/sumomo/20181109/1.png[]
-
-image::/images/sumomo/20181109/2.png[]
-
-image::/images/sumomo/20181109/3.png[]
-
-image::/images/sumomo/20181109/4.png[]
-
 
 *〜やったこと〜* +
 #*1.Gitディレクトリのhooksサブディレクトリに「pre-commit」ファイルを作成*# 
@@ -84,6 +74,27 @@ fi
 * `git log ..origin/develop -n 1` +
 今回は、作業ブランチのもとにしたdevelopとorigin/developの差が1件でもあるかどうかが分かれば良かったので、`-n 1`で1コミット分だけ表示するようにしました！
 
+
+*〜完成したもの〜* +
+
+image::/images/sumomo/20181109/1.png[]
+
+↑【リモートのorigin/developをpullする前にcommitしようとした場合】 +
+注意メッセージが表示される！
+
+image::/images/sumomo/20181109/3.png[]
+
+↑`[Y]または[y]`を入力すればcommit実行
+
+
+image::/images/sumomo/20181109/2.png[]
+
+↑`[Y]または[y]`以外を入力すればcommit中止
+
+image::/images/sumomo/20181109/4.png[]
+
+↑【リモートのorigin/developをpullした後にcommitしようとした場合】 +
+そのままコミット出来る！
 
 
 *〜おわりに〜* +
