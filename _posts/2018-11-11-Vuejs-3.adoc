@@ -1,0 +1,21 @@
+# Vue.jsを使って量子コンピュータの並列演算を再現してみた ~その3~
+
+:hp-tags: JavaScript, Vue.js, Yu
+
+## はじめに
+こんにちは、Yuです。 +
+3回目になりますが量子コンピュータのお話です。
+
+前回はフーリエ変換を実装しましたが、今回はそれを応用して位相推定問題を解いてみます。
+
+## 位相推定問題
+
+
+## 作ったもの
+実際にできたものがこちらになります。
+
+image:/images/yu/quantum/calculator_2.png[width="250"]
+
+
+## 書いたコード
+https://github.com/yutakahashi114/imitated_quantum_computer[GitHub]にあげていますので、興味のある方はどうぞ。 +
