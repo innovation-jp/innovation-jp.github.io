@@ -4,8 +4,8 @@
 
 ## はじめに
 こんにちは、Yuです。 +
-3回目になりますが量子コンピュータのお話です。
-以前の記事はこちらになります。 +
+3回目になりますが量子コンピュータのお話です。 +
+よろしければ以前の記事もどうぞ。 +
 http://tech.innovation.co.jp/2018/07/20/Introduction-of-Computational-Complexity.html[その1] +
 http://tech.innovation.co.jp/2018/09/16/Introduction-of-Computational-Complexity.html[その2] +
 
