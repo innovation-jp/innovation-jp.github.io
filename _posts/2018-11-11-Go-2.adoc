@@ -11,8 +11,7 @@
 
 ====== 今回やる事
 
-・プロファイリングデータを可視化する +
-・遅い処理を改善する
+プロファイリングデータを可視化する +
 
 ====== 使用するプログラム
 前回と同じプログラムを使用しました。 +
@@ -31,7 +30,15 @@ defer pprof.StopCPUProfile()
 ++++
 
 
-以下のコマンドを実行。
+グラフ化のためgraphvizを入れます。
+++++
+<pre style="font-family: Menlo, Courier">
+brew install graphviz
+</pre> 
+++++
+
+
+バッチ実行後に以下のコマンドを実行し、画像を生成する。
 ++++
 <pre style="font-family: Menlo, Courier">
 go tool pprof --svg ./tracking test_track.profile > track.svg
@@ -39,18 +46,23 @@ go tool pprof --svg ./tracking test_track.profile > track.svg
 ++++
 
 
-track.svgが出力されるので、ブラウザで見てみ見ましょう。
+track.svgが出力されるので、さっそくブラウザで見てみます。画像が荒いのはすみません。 + 
 
-image:/images/tsukamoto/track.png
+image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/master/images/tsukamoto/track.png[]
 
+
+====== 解析
+・goroutineを使ってるので、runtime系の関数が使われているが遅いのかわからない・・。
+・画像中央のSyscallが120ms of 160msとなってますが遅いのか？
+・time nowも12%位使われてる。ログ出力する際にNow()を使っているからと思われる。
+
+ムムム。目立って遅いとこなくね？
 
 
 ====== まとめ
-今回は、プロファイラを使ってみることが目的だったのでこれでOKとしました。 + 
 
-プロファイラの一般的な使われ方は、遅い（性能要件を満たしていない）とか、アプリケーションの異常終了などの障害解析で使われるのではないでしょうか？ + 
-
-製造している途中でもプロファイラを確認し、自信を持ってアプリをリリースする。そんな大人になりたいと思います。 + 
+ビジュアル化するとスタックが見やすし、簡単にできるところがいいです。 +
+ただし、前回も書きましたが、これ、指標がないとやっただけになるので注意です。+
 
 おわり。
 
