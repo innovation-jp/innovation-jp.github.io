@@ -41,7 +41,7 @@ go tool pprof --svg ./tracking test_track.profile > track.svg
 
 track.svgが出力されるので、ブラウザで見てみ見ましょう。
 
-
+image:/images/tsukamoto/track.png
 
 
 
