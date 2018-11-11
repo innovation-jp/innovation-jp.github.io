@@ -1,0 +1,92 @@
+= 工数申請忘れて怒られた・・・ その1
+:hp-tags: otake, Selenium, Ruby
+
+こんにちは。新卒一年目のオオタケです。 +
+最近同期から「ゴブリン」に似ていると笑われ、傷ついています。ゴブリンってただの悪口ですよね？？？
+
+
+##### 今回のテーマ
+今回は工数入力を自動化したいなと言う内容です。 +
+イノベーションでは勤怠管理システムとしてSalesforceを使用しています。 +
+Salesforce上で工数(何に対してどれくらいの時間働いたか)を入力することがルールとしてあるのですが、忘れがちで、いつも上長に「工数入力した？」と確認されています。 +
+確かに大事なことではあるのですが、作業のため面倒です。 +
+そのため、今回は「工数入力の自動化」に挑戦します。
+
+##### やりたいこと
+- Salesforceにアクセスして工数を入力する
+- 入力する内容(何に対してどれくらいの時間働いたか)はGoogleカレンダーから取得する
+- 上記の処理を毎日2時くらいに走らせる(もしかしたら月の終わりに走らせるかも???)
+
+##### 処理の手順
+1. Chromeを開く
+2. Salesforceにアクセスする
+3. ユーザー名とパスワードを入力してログインボタンを押す
+4. ログインが完了したら勤務表をクリック
+5. その日の工数入力ボタンをクリック
+6. 
+
+##### 調査
+ブラウザの自動化をしないといけないので、その方法を調査しました。 +
+色々と調べた結果Seleniumを使ってみることにします。 +
+SeleniumはブラウザのUIでテストツールです。ブラウザに表示されるHTML要素を操作してフォームに値を入力したり、ボタンをクリックしたり、スクリーンショットを撮ったりなどができます。 +
+以前に先輩のはすみんさんがSeleniumに関するブログを書いていたので詳細はこちらを見て下さい。
+http://tech.innovation.co.jp/2017/12/04/Selenium-Google-Apps-Script.html
+
+##### 環境
+- ブラウザ: Chrome
+- 使用言語: Ruby
+
+ブラウザはなんとなくchromeを使用してみたかったのでchromeにしました。 +
+chromeはMacユーザーであればbrewを使用して簡単にインストールできます。
+```
+brew install chromedriver
+```
+
+##### 実際に書いてみる
+ブラウザを開いてSalesforceにアクセスし、ログインするまでの処理を実装します。 +
+Salesforceに登録しているメールアドレスとパスワードの情報はセキュリティの観点から環境変数に置いています。 +
+環境変数の設定とRubyから環境変数を使用する方法はこちらの記事を参考にさせていただきました。 +
+http://sh-yoshida.hatenablog.com/entry/2016/11/15/080000
+
+
+```
+require 'selenium-webdriver' # seleniumを使用するためのGem
+require 'date'
+
+# chrome用のドライバを生成
+driver = Selenium::WebDriver.for :chrome
+# 特定の要素が表示されるまでの待ち時間を設定
+wait = Selenium::WebDriver::Wait.new(timeout: 10)
+
+# Salesforceにアクセス
+driver.navigate.to "https://innovation.my.salesforce.com/home/home.jsp"
+
+# ユーザー名を入力
+wait.until { driver.find_element(:id, 'username').displayed? }
+driver.find_element(:id, 'username').send_keys ENV['SALESFORCE_MAIL']
+
+# パスワードを入力
+wait.until { driver.find_element(:id, 'password').displayed? }
+driver.find_element(:id, 'password').send_keys ENV['SALESFORCE_PASS']
+
+# ログインボタンをクリック
+driver.find_element(:id, 'Login').click
+```
+
+これで後は工数入力をするだけと思っていたのですが、ここでつまずきました。 +
+理由としては、Salesforceではセキュリティ対策のためにIDの確認を求めるようになっていたからです。具体的には登録しているメールアドレスに認証コードが送信され、それをSalesforceの画面から入力して本人確認をするというものです。 +
+詳細はSalesforceのヘルプページに書いてありました。 +
+https://help.salesforce.com/articleView?id=000232553&language=ja&r=https%3A%2F%2Fwww.google.co.jp%2F&type=1
+
+ヘルプページによると、ユーザのプロファイルにログイン IP アドレスの制限を設定すれば認証確認がされなくなるそうです。 +
+IPアドレスの制限を設定しようと色々やってみたのですが、権限が原因なのかうまくできませんでした。。。 +
+
+
+
+
+
+
+
+
+
+
