@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Seleniumを使用して工数入力を自動化する その1 - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Seleniumを使用して工数入力を自動化する その1">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Seleniumを使用して工数入力を自動化する その1">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/11/11/Selenium-1.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Seleniumを使用して工数入力を自動化する その1" />
+    <meta property="og:description" content="こんにちは。新卒一年目のオオタケです。 最近同期から「ゴブリン」に似ていると笑われ、傷ついています。ゴブリンってただの悪口ですよね？？？ 工数申請忘れすぎて上長に呆れられてる 今回は工数入力を自動化したいなと言う内容です。 イノベーションでは勤怠管理システムとしてSalesforceを使用しています。 Salesforce上で工数(何に対してどれくらいの時間働いたか)を入力することがルールとしてあるのですが、忘れがちでいつも上長に「工数入力した？」と確認されています。 確かに大事なことではあるのですが、作業のため面倒です。 そのため、今回は「工数入力の..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/11/11/Selenium-1.html" />
+    <meta property="article:published_time" content="2018-11-10T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-11-12T11:23:24.739Z" />
+    <meta property="article:tag" content="otake" />
+    <meta property="article:tag" content="Selenium" />
+    <meta property="article:tag" content="Ruby" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Seleniumを使用して工数入力を自動化する その1" />
+    <meta name="twitter:description" content="こんにちは。新卒一年目のオオタケです。 最近同期から「ゴブリン」に似ていると笑われ、傷ついています。ゴブリンってただの悪口ですよね？？？ 工数申請忘れすぎて上長に呆れられてる 今回は工数入力を自動化したいなと言う内容です。 イノベーションでは勤怠管理システムとしてSalesforceを使用しています。 Salesforce上で工数(何に対してどれくらいの時間働いたか)を入力することがルールとしてあるのですが、忘れがちでいつも上長に「工数入力した？」と確認されています。 確かに大事なことではあるのですが、作業のため面倒です。 そのため、今回は「工数入力の..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/11/11/Selenium-1.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars3.githubusercontent.com/u/24224403?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "Seleniumを使用して工数入力を自動化する その1",
+    "url": "http://tech.innovation.co.jp/2018/11/11/Selenium-1.html",
+    "datePublished": "2018-11-10T15:00:00.000Z",
+    "dateModified": "2018-11-12T11:23:24.739Z",
+    "keywords": "otake,  Selenium,  Ruby",
+    "description": "こんにちは。新卒一年目のオオタケです。 最近同期から「ゴブリン」に似ていると笑われ、傷ついています。ゴブリンってただの悪口ですよね？？？ 工数申請忘れすぎて上長に呆れられてる 今回は工数入力を自動化したいなと言う内容です。 イノベーションでは勤怠管理システムとしてSalesforceを使用しています。 Salesforce上で工数(何に対してどれくらいの時間働いたか)を入力することがルールとしてあるのですが、忘れがちでいつも上長に「工数入力した？」と確認されています。 確かに大事なことではあるのですが、作業のため面倒です。 そのため、今回は「工数入力の..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-otake tag-Selenium tag-Ruby no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="11 Nov 2018" class="post-meta__date date">11 Nov 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/otake">otake</a>, <a href="http://tech.innovation.co.jp/tag/Selenium"> Selenium</a>, <a href="http://tech.innovation.co.jp/tag/Ruby"> Ruby</a></span>
+        <span class="post-meta__author author"><img src="https://avatars3.githubusercontent.com/u/24224403?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">Seleniumを使用して工数入力を自動化する その1</h1>
+    </header>
+
+    <section class="post tag-otake tag-Selenium tag-Ruby">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんにちは。新卒一年目のオオタケです。<br>
+最近同期から「ゴブリン」に似ていると笑われ、傷ついています。ゴブリンってただの悪口ですよね？？？</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__">工数申請忘れすぎて上長に呆れられてる</h3>
+<div class="paragraph">
+<p>今回は工数入力を自動化したいなと言う内容です。<br>
+イノベーションでは勤怠管理システムとしてSalesforceを使用しています。<br>
+Salesforce上で工数(何に対してどれくらいの時間働いたか)を入力することがルールとしてあるのですが、忘れがちでいつも上長に「工数入力した？」と確認されています。<br>
+確かに大事なことではあるのですが、作業のため面倒です。<br>
+そのため、今回は「工数入力の自動化」に挑戦します。</p>
+</div>
+<div class="sect4">
+<h5 id="___2">やりたいこと</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>Salesforceにアクセスして工数を入力する</p>
+</li>
+<li>
+<p>入力する内容(何に対してどれくらいの時間働いたか)はGoogleカレンダーから取得する</p>
+</li>
+<li>
+<p>上記の処理を毎日2時くらいに走らせる(もしかしたら月の終わりに走らせるかも???)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="___3">工数入力処理の手順</h5>
+<div class="paragraph">
+<p>Salesforceに工数を入力する手順は以下の通りです。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Chromeを開く</p>
+</li>
+<li>
+<p>Salesforceにアクセスする</p>
+</li>
+<li>
+<p>ユーザー名とパスワードを入力してログインボタンを押す</p>
+</li>
+<li>
+<p>ログインが完了したら勤務表をクリック</p>
+</li>
+<li>
+<p>その日の工数入力ボタンをクリック</p>
+</li>
+<li>
+<p>作業報告を入力</p>
+</li>
+<li>
+<p>各タスクの作業時間を入力</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect4">
+<h5 id="___4">調査</h5>
+<div class="paragraph">
+<p>ブラウザの自動化をしないといけないので、その方法を調査しました。<br>
+色々と調べた結果Seleniumを使ってみることにします。<br>
+SeleniumはブラウザのUIでテストツールです。ブラウザに表示されるHTML要素を操作してフォームに値を入力したり、ボタンをクリックしたり、スクリーンショットを撮ったりなどができます。<br>
+以前に先輩のはすみんさんがSeleniumに関するブログを書いていたので詳細はこちらを見て下さい。
+<a href="http://tech.innovation.co.jp/2017/12/04/Selenium-Google-Apps-Script.html" class="bare">http://tech.innovation.co.jp/2017/12/04/Selenium-Google-Apps-Script.html</a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="___5">環境</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>ブラウザ: Chrome</p>
+</li>
+<li>
+<p>使用言語: Ruby</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>ブラウザはなんとなくchromeを使用してみたかったのでchromeにしました。<br>
+chromeはMacユーザーであればbrewを使用して簡単にインストールできます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>brew install chromedriver</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="___6">実装</h5>
+<div class="sect5">
+<h6 id="_salesforce">Salesforceにログインする</h6>
+<div class="paragraph">
+<p>ブラウザを開いてSalesforceにアクセスし、ログインするまでの処理を実装します。<br>
+Salesforceに登録しているメールアドレスとパスワードの情報はセキュリティの観点から環境変数に置いています。<br>
+環境変数の設定とRubyから環境変数を使用する方法はこちらの記事を参考にさせていただきました。<br>
+<a href="http://sh-yoshida.hatenablog.com/entry/2016/11/15/080000" class="bare">http://sh-yoshida.hatenablog.com/entry/2016/11/15/080000</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>require 'selenium-webdriver' # seleniumを使用するためのGem
+require 'date'
+
+# chrome用のドライバを生成
+driver = Selenium::WebDriver.for :chrome
+# 特定の要素が表示されるまでの待ち時間を設定
+wait = Selenium::WebDriver::Wait.new(timeout: 10)
+
+# Salesforceにアクセス
+driver.navigate.to "https://innovation.my.salesforce.com/home/home.jsp"
+
+# ユーザー名を入力
+wait.until { driver.find_element(:id, 'username').displayed? }
+driver.find_element(:id, 'username').send_keys ENV['SALESFORCE_MAIL']
+
+# パスワードを入力
+wait.until { driver.find_element(:id, 'password').displayed? }
+driver.find_element(:id, 'password').send_keys ENV['SALESFORCE_PASS']
+
+# ログインボタンをクリック
+driver.find_element(:id, 'Login').click</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>これで後は工数入力をするだけと思っていたのですが、ここでつまずきました。<br>
+理由としては、確認されていないデバイスやブラウザを使ってSalesforce にログインするとセキュリティ対策のためにIDの確認を求めるようになっていたからです。具体的には登録しているメールアドレスに認証コードが送信され、それをSalesforceの画面から入力して本人確認をするというものです。<br>
+詳細はSalesforceのヘルプページに書いてありました。<br>
+<a href="https://help.salesforce.com/articleView?id=000232553&amp;language=ja&amp;r=https%3A%2F%2Fwww.google.co.jp%2F&amp;type=1" class="bare">https://help.salesforce.com/articleView?id=000232553&amp;language=ja&amp;r=https%3A%2F%2Fwww.google.co.jp%2F&amp;type=1</a></p>
+</div>
+<div class="paragraph">
+<p>ヘルプページによると、ユーザのプロファイルにログイン IP アドレスの制限を設定すれば認証確認がされなくなるそうです。<br>
+IPアドレスの制限を設定しようと色々やってみたのですが、権限が原因なのかうまくできませんでした。。。<br>
+一人でこの問題を解決するのは無理そう、、、なので強引に進めます。<br></p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_salesforce_2">Salesforceの認証コードを取得する</h6>
+<div class="paragraph">
+<p>GmailにSalesforceからID確認のためのメールが送られてくるので、そのメールから認証コードを取得します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code># 新しいウィンドウを開く
+driver.execute_script("window.open()")
+
+# driverを新しいウィンドウに向ける
+new_window = driver.window_handles.last
+driver.switch_to.window(new_window)
+
+# Gmailを開く
+driver.navigate.to "https://gmail.com/"
+
+# メールアドレスの入力
+wait.until { driver.find_element(:id, 'identifierId').displayed? }
+driver.find_element(:id, 'identifierId').send_keys ENV['GMAIL_MAIL']
+driver.find_element(:id, 'identifierNext').click
+
+#パスワードの入力
+wait.until { driver.find_element(:xpath, '//input[@type="password"]').displayed? }
+driver.find_element(:xpath, '//input[@type="password"]').send_keys ENV['GMAIL_PASS']
+driver.find_element(:id, 'passwordNext').click
+
+# Gmailが開かれるのを待つ
+sleep(7)
+
+# Salesforceから送られてくるID確認のメールから認証コードを取得する
+identification_code = 0
+driver.find_element(:xpath, '//tbody').find_elements(:xpath, '//tr').each { |element|
+    # 該当のメールを件名から判定
+    if element.text.include?("Salesforce で ID を確認") then
+        # 該当のメールを開く
+        element.click
+        # 認証コードを取得
+        wait.until { driver.find_element(:class, 'adn').displayed? }
+        identification_code = driver.find_element(:class, 'adn').text[/確認コード: (\d*).*/, 1]
+        break
+    end
+}
+
+# エラー処理
+if identification_code == 0 then
+    puts('認証コードを取得できませんでした')
+    exit
+end</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Salesforceのウィンドウは残しておきたいので、別ウィンドを開いてドライバを新しいウィンドウに向けて処理をさせています。<br>
+これで無事に認証コードを取得することができたので、この認証コードをSalesforceのページに入力して認証を突破します！</p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_salesforce_3">Salesforceの認証を突破する</h6>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code># driverをSalesforceウィンドウに向ける
+new_window = driver.window_handles.first
+driver.switch_to.window(new_window)
+
+# 認証コードを入力
+wait.until { driver.find_element(:id, 'emc').displayed? }
+driver.find_element(:id, 'emc').send_keys identification_code
+
+# 検証ボタンをクリック
+driver.find_element(:id, 'save').click</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>これで無事に認証を突破できました！<br>
+後は工数入力です！</p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="___7">工数を入力する</h6>
+<div class="paragraph">
+<p>入力する内容はGoogleカレンダーから取得するので、今回は一旦適当に値を設定して入力します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code># 勤務表をクリック
+wait.until { driver.find_element(:id, '01r10000000DwLW_Tab').displayed? }
+driver.find_element(:id, '01r10000000DwLW_Tab').click
+
+# 今日の日付をフォーマットして取得
+today = Date.today.strftime("%Y-%m-%d")
+
+# 今日の工数入力ボタンをクリック
+wait.until { driver.find_element(:id, 'dailyWorkCell' + today).displayed? }
+driver.find_element(:id, 'dailyWorkCell' + today).click
+
+# 作業報告を入力
+wait.until { driver.find_element(:id, 'empWorkTableNote').displayed? }
+driver.find_element(:id, 'empWorkTableNote').clear
+driver.find_element(:id, 'empWorkTableNote').send_keys "テスト"
+
+# 各タスクに作業時間を入力
+driver.find_element(:id, 'empWorkTableBody').find_elements(:xpath, '//tbody[@id="empWorkTableBody"]/tr').each_with_index { |row, index|
+    # clearとsend_keysを使用して値を書き換えようとすると、clearをした段階でSalesforce側で「0:00」の値を入れる処理が動作して結果的に値を削除できないので、JavaScriptを実行して値を書き換える
+    driver.execute_script("document.getElementById('empInputTime" + index.to_s + "').value = '00:10'")
+}
+
+# 登録ボタンをクリック
+driver.find_element(:id, 'empWorkOk').click</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>工数を入力する事ができました！！！</p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="__ip">社内IPからアクセスしてみたら。。。</h6>
+<div class="paragraph">
+<p>認証確認がなく実行する事ができました。そのため、認証確認の処理を条件分岐させます。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code># ログインボタンをクリック
+driver.find_element(:id, 'Login').click
+
+sleep(3)
+
+# ホームが表示されない場合
+if driver.title != "Salesforce - Enterprise Edition"
+    # 新しいウィンドウを開く
+    driver.execute_script("window.open()")
+
+    # driverを新しいウィンドウに向ける
+    new_window = driver.window_handles.last
+    driver.switch_to.window(new_window)
+
+    # Gmailを開く
+    driver.navigate.to "https://gmail.com/"
+
+    # メールアドレスの入力
+    wait.until { driver.find_element(:id, 'identifierId').displayed? }
+    driver.find_element(:id, 'identifierId').send_keys ENV['GMAIL_MAIL']
+    driver.find_element(:id, 'identifierNext').click
+
+    #パスワードの入力
+    wait.until { driver.find_element(:xpath, '//input[@type="password"]').displayed? }
+    driver.find_element(:xpath, '//input[@type="password"]').send_keys ENV['GMAIL_PASS']
+    driver.find_element(:id, 'passwordNext').click
+
+    # Gmailが開かれるのを待つ
+    sleep(7)
+
+    # Salesforceから送られてくるID確認のメールから認証コードを取得する
+    identification_code = 0
+    driver.find_element(:xpath, '//tbody').find_elements(:xpath, '//tr').each { |element|
+        # 該当のメールを件名から判定
+        if element.text.include?("Salesforce で ID を確認") then
+            # 該当のメールを開く
+            element.click
+            # 認証コードを取得
+            wait.until { driver.find_element(:class, 'adn').displayed? }
+            identification_code = driver.find_element(:class, 'adn').text[/確認コード: (\d*).*/, 1]
+            break
+        end
+    }
+
+    # エラー処理
+    if identification_code == 0 then
+        puts('認証コードを取得できませんでした')
+        exit
+    end
+
+    # driverをSalesforceウィンドウに向ける
+    new_window = driver.window_handles.first
+    driver.switch_to.window(new_window)
+
+    # 認証コードを入力
+    wait.until { driver.find_element(:id, 'emc').displayed? }
+    driver.find_element(:id, 'emc').send_keys identification_code
+
+    # 検証ボタンをクリック
+    driver.find_element(:id, 'save').click
+end
+
+# 勤務表をクリック
+wait.until { driver.find_element(:id, '01r10000000DwLW_Tab').displayed? }
+driver.find_element(:id, '01r10000000DwLW_Tab').click</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>無事に工数を入力することができました！</p>
+</div>
+<div class="paragraph">
+<p>次回はGoogleカレンダーから値を取得して工数を入力するまでを取り上げたいと思います。</p>
+</div>
+<div class="paragraph">
+<p>ではでは〜</p>
+</div>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11783-1';
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+</body>
+</html>
