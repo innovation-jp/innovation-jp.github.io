@@ -1,0 +1,263 @@
+= Seleniumを使用して工数入力を自動化する その1
+:hp-tags: otake, Selenium, Ruby
+
+こんにちは。新卒一年目のオオタケです。 +
+最近同期から「ゴブリン」に似ていると笑われ、傷ついています。ゴブリンってただの悪口ですよね？？？
+
+
+### 工数申請忘れすぎて上長に呆れられてる
+今回は工数入力を自動化したいなと言う内容です。 +
+イノベーションでは勤怠管理システムとしてSalesforceを使用しています。 +
+Salesforce上で工数(何に対してどれくらいの時間働いたか)を入力することがルールとしてあるのですが、忘れがちでいつも上長に「工数入力した？」と確認されています。 +
+確かに大事なことではあるのですが、作業のため面倒です。 +
+そのため、今回は「工数入力の自動化」に挑戦します。
+
+##### やりたいこと
+- Salesforceにアクセスして工数を入力する
+- 入力する内容(何に対してどれくらいの時間働いたか)はGoogleカレンダーから取得する
+- 上記の処理を毎日2時くらいに走らせる(もしかしたら月の終わりに走らせるかも???)
+
+##### 工数入力処理の手順
+Salesforceに工数を入力する手順は以下の通りです。
+
+1. Chromeを開く
+2. Salesforceにアクセスする
+3. ユーザー名とパスワードを入力してログインボタンを押す
+4. ログインが完了したら勤務表をクリック
+5. その日の工数入力ボタンをクリック
+6. 作業報告を入力
+7. 各タスクの作業時間を入力
+
+##### 調査
+ブラウザの自動化をしないといけないので、その方法を調査しました。 +
+色々と調べた結果Seleniumを使ってみることにします。 +
+SeleniumはブラウザのUIでテストツールです。ブラウザに表示されるHTML要素を操作してフォームに値を入力したり、ボタンをクリックしたり、スクリーンショットを撮ったりなどができます。 +
+以前に先輩のはすみんさんがSeleniumに関するブログを書いていたので詳細はこちらを見て下さい。
+http://tech.innovation.co.jp/2017/12/04/Selenium-Google-Apps-Script.html
+
+##### 環境
+- ブラウザ: Chrome
+- 使用言語: Ruby
+
+ブラウザはなんとなくchromeを使用してみたかったのでchromeにしました。 +
+chromeはMacユーザーであればbrewを使用して簡単にインストールできます。
+```
+brew install chromedriver
+```
+
+##### 実装
+###### Salesforceにログインする
+ブラウザを開いてSalesforceにアクセスし、ログインするまでの処理を実装します。 +
+Salesforceに登録しているメールアドレスとパスワードの情報はセキュリティの観点から環境変数に置いています。 +
+環境変数の設定とRubyから環境変数を使用する方法はこちらの記事を参考にさせていただきました。 +
+http://sh-yoshida.hatenablog.com/entry/2016/11/15/080000
+
+
+```
+require 'selenium-webdriver' # seleniumを使用するためのGem
+require 'date'
+
+# chrome用のドライバを生成
+driver = Selenium::WebDriver.for :chrome
+# 特定の要素が表示されるまでの待ち時間を設定
+wait = Selenium::WebDriver::Wait.new(timeout: 10)
+
+# Salesforceにアクセス
+driver.navigate.to "https://innovation.my.salesforce.com/home/home.jsp"
+
+# ユーザー名を入力
+wait.until { driver.find_element(:id, 'username').displayed? }
+driver.find_element(:id, 'username').send_keys ENV['SALESFORCE_MAIL']
+
+# パスワードを入力
+wait.until { driver.find_element(:id, 'password').displayed? }
+driver.find_element(:id, 'password').send_keys ENV['SALESFORCE_PASS']
+
+# ログインボタンをクリック
+driver.find_element(:id, 'Login').click
+```
+
+これで後は工数入力をするだけと思っていたのですが、ここでつまずきました。 +
+理由としては、確認されていないデバイスやブラウザを使ってSalesforce にログインするとセキュリティ対策のためにIDの確認を求めるようになっていたからです。具体的には登録しているメールアドレスに認証コードが送信され、それをSalesforceの画面から入力して本人確認をするというものです。 +
+詳細はSalesforceのヘルプページに書いてありました。 +
+https://help.salesforce.com/articleView?id=000232553&language=ja&r=https%3A%2F%2Fwww.google.co.jp%2F&type=1
+
+ヘルプページによると、ユーザのプロファイルにログイン IP アドレスの制限を設定すれば認証確認がされなくなるそうです。 +
+IPアドレスの制限を設定しようと色々やってみたのですが、権限が原因なのかうまくできませんでした。。。 +
+一人でこの問題を解決するのは無理そう、、、なので強引に進めます。 +
+
+###### Salesforceの認証コードを取得する
+GmailにSalesforceからID確認のためのメールが送られてくるので、そのメールから認証コードを取得します。
+
+```
+# 新しいウィンドウを開く
+driver.execute_script("window.open()")
+
+# driverを新しいウィンドウに向ける
+new_window = driver.window_handles.last
+driver.switch_to.window(new_window)
+
+# Gmailを開く
+driver.navigate.to "https://gmail.com/"
+
+# メールアドレスの入力
+wait.until { driver.find_element(:id, 'identifierId').displayed? }
+driver.find_element(:id, 'identifierId').send_keys ENV['GMAIL_MAIL']
+driver.find_element(:id, 'identifierNext').click
+
+#パスワードの入力
+wait.until { driver.find_element(:xpath, '//input[@type="password"]').displayed? }
+driver.find_element(:xpath, '//input[@type="password"]').send_keys ENV['GMAIL_PASS']
+driver.find_element(:id, 'passwordNext').click
+
+# Gmailが開かれるのを待つ
+sleep(7)
+
+# Salesforceから送られてくるID確認のメールから認証コードを取得する
+identification_code = 0
+driver.find_element(:xpath, '//tbody').find_elements(:xpath, '//tr').each { |element|
+    # 該当のメールを件名から判定
+    if element.text.include?("Salesforce で ID を確認") then
+        # 該当のメールを開く
+        element.click
+        # 認証コードを取得
+        wait.until { driver.find_element(:class, 'adn').displayed? }
+        identification_code = driver.find_element(:class, 'adn').text[/確認コード: (\d*).*/, 1]
+        break
+    end
+}
+
+# エラー処理
+if identification_code == 0 then
+    puts('認証コードを取得できませんでした')
+    exit
+end
+```
+Salesforceのウィンドウは残しておきたいので、別ウィンドを開いてドライバを新しいウィンドウに向けて処理をさせています。 +
+これで無事に認証コードを取得することができたので、この認証コードをSalesforceのページに入力して認証を突破します！
+
+###### Salesforceの認証を突破する
+```
+# driverをSalesforceウィンドウに向ける
+new_window = driver.window_handles.first
+driver.switch_to.window(new_window)
+
+# 認証コードを入力
+wait.until { driver.find_element(:id, 'emc').displayed? }
+driver.find_element(:id, 'emc').send_keys identification_code
+
+# 検証ボタンをクリック
+driver.find_element(:id, 'save').click
+```
+これで無事に認証を突破できました！ +
+後は工数入力です！
+
+###### 工数を入力する
+入力する内容はGoogleカレンダーから取得するので、今回は一旦適当に値を設定して入力します。
+```
+# 勤務表をクリック
+wait.until { driver.find_element(:id, '01r10000000DwLW_Tab').displayed? }
+driver.find_element(:id, '01r10000000DwLW_Tab').click
+
+# 今日の日付をフォーマットして取得
+today = Date.today.strftime("%Y-%m-%d")
+
+# 今日の工数入力ボタンをクリック
+wait.until { driver.find_element(:id, 'dailyWorkCell' + today).displayed? }
+driver.find_element(:id, 'dailyWorkCell' + today).click
+
+# 作業報告を入力
+wait.until { driver.find_element(:id, 'empWorkTableNote').displayed? }
+driver.find_element(:id, 'empWorkTableNote').clear
+driver.find_element(:id, 'empWorkTableNote').send_keys "テスト"
+
+# 各タスクに作業時間を入力
+driver.find_element(:id, 'empWorkTableBody').find_elements(:xpath, '//tbody[@id="empWorkTableBody"]/tr').each_with_index { |row, index|
+    # clearとsend_keysを使用して値を書き換えようとすると、clearをした段階でSalesforce側で「0:00」の値を入れる処理が動作して結果的に値を削除できないので、JavaScriptを実行して値を書き換える
+    driver.execute_script("document.getElementById('empInputTime" + index.to_s + "').value = '00:10'")
+}
+
+# 登録ボタンをクリック
+driver.find_element(:id, 'empWorkOk').click
+```
+工数を入力する事ができました！！！
+
+###### 社内IPからアクセスしてみたら。。。
+認証確認がなく実行する事ができました。そのため、認証確認の処理を条件分岐させます。
+```
+# ログインボタンをクリック
+driver.find_element(:id, 'Login').click
+
+sleep(3)
+
+# ホームが表示されない場合
+if driver.title != "Salesforce - Enterprise Edition"
+    # 新しいウィンドウを開く
+    driver.execute_script("window.open()")
+
+    # driverを新しいウィンドウに向ける
+    new_window = driver.window_handles.last
+    driver.switch_to.window(new_window)
+
+    # Gmailを開く
+    driver.navigate.to "https://gmail.com/"
+
+    # メールアドレスの入力
+    wait.until { driver.find_element(:id, 'identifierId').displayed? }
+    driver.find_element(:id, 'identifierId').send_keys ENV['GMAIL_MAIL']
+    driver.find_element(:id, 'identifierNext').click
+
+    #パスワードの入力
+    wait.until { driver.find_element(:xpath, '//input[@type="password"]').displayed? }
+    driver.find_element(:xpath, '//input[@type="password"]').send_keys ENV['GMAIL_PASS']
+    driver.find_element(:id, 'passwordNext').click
+
+    # Gmailが開かれるのを待つ
+    sleep(7)
+
+    # Salesforceから送られてくるID確認のメールから認証コードを取得する
+    identification_code = 0
+    driver.find_element(:xpath, '//tbody').find_elements(:xpath, '//tr').each { |element|
+        # 該当のメールを件名から判定
+        if element.text.include?("Salesforce で ID を確認") then
+            # 該当のメールを開く
+            element.click
+            # 認証コードを取得
+            wait.until { driver.find_element(:class, 'adn').displayed? }
+            identification_code = driver.find_element(:class, 'adn').text[/確認コード: (\d*).*/, 1]
+            break
+        end
+    }
+
+    # エラー処理
+    if identification_code == 0 then
+        puts('認証コードを取得できませんでした')
+        exit
+    end
+
+    # driverをSalesforceウィンドウに向ける
+    new_window = driver.window_handles.first
+    driver.switch_to.window(new_window)
+
+    # 認証コードを入力
+    wait.until { driver.find_element(:id, 'emc').displayed? }
+    driver.find_element(:id, 'emc').send_keys identification_code
+
+    # 検証ボタンをクリック
+    driver.find_element(:id, 'save').click
+end
+
+# 勤務表をクリック
+wait.until { driver.find_element(:id, '01r10000000DwLW_Tab').displayed? }
+driver.find_element(:id, '01r10000000DwLW_Tab').click
+```
+
+無事に工数を入力することができました！
+
+
+次回はGoogleカレンダーから値を取得して工数を入力するまでを取り上げたいと思います。
+
+ではでは〜
+
+
+
