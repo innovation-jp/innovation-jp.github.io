@@ -211,6 +211,12 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/10/05/making-L-A-M-P-by-A-W-S.html" title="link to AWSのサービスを使ってLAMP環境を構築してみた">AWSのサービスを使ってLAMP環境を構築してみた</a></h2>
+        <p class="excerpt">こんにちは、小柳津です。 先日、 AWS 認定ソリューションアーキテクト – アソシエイト を受験して合格しました！ 今までAWSをほぼ触ったことがなかったのですが、試験を受けるにあたって触ってみることにしました。 具体的には、以下の基本的なサービスを用いて、LAMP環境を構築してみました。 VPC EC2 EBS ELB Route53 そして上記サービス利用して作成したWebアプリケーションがコチラ。 簡単なブログを作ってみました。 こちらのブログは以下のようなLAMP環境で動作しています。 Amazon Linux Nginx PHP(フレームワーク: Laravel) MySQL Webアプリケーションを作成する上では以下のような順番で作成しました。 AWS上でLAMP環境を構築&hellip;</p>
+        <div class="post-list__meta"><time datetime="05 Oct 2017" class="post-list__meta--date date">05 Oct 2017</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/yaizu">yaizu</a>, <a href="http://tech.innovation.co.jp/tag/A-W-S">AWS</a>, <a href="http://tech.innovation.co.jp/tag/L-A-M-P">LAMP</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/10/02/Iterator.html" title="link to Iteratorパターンで学ぶ抽象化">Iteratorパターンで学ぶ抽象化</a></h2>
         <p class="excerpt">どうも、bigenです。 最近、GoFのデザインパターンについて勉強してまして、 その中でパーツ化の難しさと抽象化の考え方について感銘を受けたので、 学んだことを残しておこうかなと思います。 本記事ではIteratorパターンを例にとって、 単純なfor文で書いたケースと、Iteratorパターンで書いたケースで、 どのような場合にIteratorパターンのメリットがあるかを考察します。 その後で、何故そのようなメリットを享受できるのかまで考察し、 抽象化・共通化・一般化の思考って大事だね、っていう話にもっていきます。 なお、コードは全てPHPで書いています。業務でよく使うので。 また、Iteratorパターンの概要の説明は各種サイトや本を参照してください。 今回は実践的にIterator&hellip;</p>
         <div class="post-list__meta"><time datetime="02 Oct 2017" class="post-list__meta--date date">02 Oct 2017</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/bigen">bigen</a>, <a href="http://tech.innovation.co.jp/tag/iterator"> iterator</a>, <a href="http://tech.innovation.co.jp/tag/design-pattern">design pattern</a>, <a href="http://tech.innovation.co.jp/tag/Go-F"> GoF</a>, <a href="http://tech.innovation.co.jp/tag/abstraction"> abstraction</a></span></div>
@@ -262,12 +268,6 @@ var _trackingid = 'LFT-10003-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/09/01/E-C2-Spring-Boot-L-I-N-E-Bot.html" title="link to EC2 + SpringBoot でLINE@のBotアプリを作る　その１">EC2 + SpringBoot でLINE@のBotアプリを作る　その１</a></h2>
         <p class="excerpt">SREチームのNew塚本です。 虫歯と視力の低下に日々ビビって過ごしている今日この頃、 皆さまは如何お過ごしでしょうか。 さて、今回のお題はAWS上に実行サーバを構築して、 LINE@のBotアプリをJavaで作ってみようと思います。 概要 今回は LINE Gateway からの WebHookリクエストをWebアプリケーションで受けて、 お返事を返す部分を作成します。 やったこと AWSでネットワークとサーバの準備 -EC2 インスタンス（t2.micro）の作成する -Route 53でドメインの取得する -Certificate Manager (ACM) で証明書を取得する -CloudFrontでCDNを立てる 実行サーバの準備（Linux） -Apache、JDKのインスト&hellip;</p>
         <div class="post-list__meta"><time datetime="01 Sep 2017" class="post-list__meta--date date">01 Sep 2017</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/New-Tsukamoto">NewTsukamoto</a>, <a href="http://tech.innovation.co.jp/tag/E-C2"> EC2</a>, <a href="http://tech.innovation.co.jp/tag/Spring-Boot"> SpringBoot</a>, <a href="http://tech.innovation.co.jp/tag/Java8"> Java8</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/08/26/Kotlin.html" title="link to Kotlinでメモアプリを作る〜環境づくり編〜">Kotlinでメモアプリを作る〜環境づくり編〜</a></h2>
-        <p class="excerpt">こんにちは。 新卒エンジニアのはすみんです。 今回、初！ブログを書くにあたって最初に浮かんだのは、Kotlinでした。 というのも、ぼくがエンジニアになりたいと思ったきっかけはAndroidでして、 せっかくのこの機会にKotlinでアプリを作ってみたい！と思いました。 なのでこの場を借りて、Kotlinの良さが伝わればいいなと思います。 目次です。 ・Kotlinとは ・Kotlinの特徴 ・開発環境 ・まとめ Kotlinとは Kotlinについてピンときてない人に簡単に説明すると、 Kotlinは、JetBrainsが開発したJVM上で動く静的型付けのプログラミング言語です。 http://kotlinlang.org/ JetBrains社といえば、エディタの「IntelliJ I&hellip;</p>
-        <div class="post-list__meta"><time datetime="26 Aug 2017" class="post-list__meta--date date">26 Aug 2017</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Hasumin">Hasumin</a>, <a href="http://tech.innovation.co.jp/tag/Kotlin"> Kotlin</a>, <a href="http://tech.innovation.co.jp/tag/Android"> Android</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
