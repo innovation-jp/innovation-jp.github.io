@@ -52,8 +52,8 @@ image::https://raw.githubusercontent.com/innovation-jp/innovation-jp.github.io/m
 
 
 ====== 解析
-・goroutineを使ってるので、runtime系の関数が使われているが遅いのかわからない・・。
-・画像中央のSyscallが120ms of 160msとなってますが遅いのか？
+・goroutineを使ってるので、runtime系の関数が使われているが遅いのかわからない・・。 +
+・画像中央のSyscallが120ms of 160msとなってますが遅いのだろうか？ +
 ・time nowも12%位使われてる。ログ出力する際にNow()を使っているからと思われる。
 
 ムムム。目立って遅いとこなくね？
