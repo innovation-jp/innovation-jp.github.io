@@ -211,6 +211,12 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/09/04/Ethereum.html" title="link to 社内通貨(風)「いのコイン」をEthereumのスマートコントラクトで作ってみる">社内通貨(風)「いのコイン」をEthereumのスマートコントラクトで作ってみる</a></h2>
+        <p class="excerpt">こんにちは！ いい感じに涼しくなってまいりまして、八王子の朝は寒いくらいです。風邪を引きました。 矢ヶ崎です。 前回のPちゃん(うちのPepperのこと)ブログでは、顔を認識してもらって打刻をしてもらうということをやってみました！ http://tech.innovation.co.jp/2017/07/14/Pepper.html さっそく、社内で実運用をしてみてます。いい感じに打刻されてます！ では、今回は引き続き、 Pepperに「会議室どこ？」と聞くと、次の会議の会議室を教えてくれる をやろうと思った矢先に！ Pちゃんが体調不良になり、起動しなくなってしまいました。。。 カスタマーサポートさんに連絡したところ、ドナドナ決定！ 新しいPちゃん(なぜか少し黄ばんでる)がやってきたばかり&hellip;</p>
+        <div class="post-list__meta"><time datetime="04 Sep 2017" class="post-list__meta--date date">04 Sep 2017</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Yagasaki">Yagasaki</a>, <a href="http://tech.innovation.co.jp/tag/Ethereum">Ethereum</a>, <a href="http://tech.innovation.co.jp/tag/Blockchain">Blockchain</a>, <a href="http://tech.innovation.co.jp/tag/geth">geth</a>, <a href="http://tech.innovation.co.jp/tag/Solidity">Solidity</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/09/01/E-C2-Spring-Boot-L-I-N-E-Bot.html" title="link to EC2 + SpringBoot でLINE@のBotアプリを作る　その１">EC2 + SpringBoot でLINE@のBotアプリを作る　その１</a></h2>
         <p class="excerpt">SREチームのNew塚本です。 虫歯と視力の低下に日々ビビって過ごしている今日この頃、 皆さまは如何お過ごしでしょうか。 さて、今回のお題はAWS上に実行サーバを構築して、 LINE@のBotアプリをJavaで作ってみようと思います。 概要 今回は LINE Gateway からの WebHookリクエストをWebアプリケーションで受けて、 お返事を返す部分を作成します。 やったこと AWSでネットワークとサーバの準備 -EC2 インスタンス（t2.micro）の作成する -Route 53でドメインの取得する -Certificate Manager (ACM) で証明書を取得する -CloudFrontでCDNを立てる 実行サーバの準備（Linux） -Apache、JDKのインスト&hellip;</p>
         <div class="post-list__meta"><time datetime="01 Sep 2017" class="post-list__meta--date date">01 Sep 2017</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/New-Tsukamoto">NewTsukamoto</a>, <a href="http://tech.innovation.co.jp/tag/E-C2"> EC2</a>, <a href="http://tech.innovation.co.jp/tag/Spring-Boot"> SpringBoot</a>, <a href="http://tech.innovation.co.jp/tag/Java8"> Java8</a></span></div>
@@ -262,12 +268,6 @@ var _trackingid = 'LFT-10003-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/08/05/accordion-menu.html" title="link to CSSでアコーディオンメニューを実装">CSSでアコーディオンメニューを実装</a></h2>
         <p class="excerpt">こんにちは、亜美です。 一ヶ月ぶりにブログを書きます。 CSSでaccordionメニューを作りました！ 完成品 &lt;!DCTYPE html&gt; &lt;html lang="ja"&gt;     &lt;head&gt;         &lt;meta charset="UTF-8"&gt;         &lt;style&gt;             .menu {                 width: 320px;                 margin: 0 auto;             }             .menu a {                 display: block;                 paddin&hellip;</p>
         <div class="post-list__meta"><time datetime="05 Aug 2017" class="post-list__meta--date date">05 Aug 2017</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/A-M-I">AMI</a>, <a href="http://tech.innovation.co.jp/tag/H-T-M-L">HTML</a>, <a href="http://tech.innovation.co.jp/tag/C-S-S">CSS</a>, <a href="http://tech.innovation.co.jp/tag/accordion-Menu">accordionMenu</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/07/31/to-reflect-on-the-cache.html" title="link to キャッシュについて深く反省してみる...">キャッシュについて深く反省してみる...</a></h2>
-        <p class="excerpt">こんにちは、小柳津です。 突然ですが、皆様はCSSの修正をしてリリースした後に、 「表示が変わらない！」 「デザインが崩れた！ヤベー！！」 なんて経験はありませんか？ 私はついこないだやらかしてしまいました&#8230;&#8203; 事象(フィクション) 下の画像は例えです。 以下の画像のようにリリース後にデザイン崩れが発生してしまいました&#8230;&#8203; 意図したようにはCSSが作用していないぞ!?!? ※画像はイメージです 原因 原因はCDNのキャッシュとブラウザのキャッシュでした。 ファイルの中身が変わったかどうかはパラメータが変更されているかで判断するように設定していました。 そして、CSSを呼び出しているところのパラメータを更新し忘れていて、 コンテンツ(ここではC&hellip;</p>
-        <div class="post-list__meta"><time datetime="31 Jul 2017" class="post-list__meta--date date">31 Jul 2017</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/yaizu">yaizu</a>, <a href="http://tech.innovation.co.jp/tag/Shell">Shell</a>, <a href="http://tech.innovation.co.jp/tag/git">git</a>, <a href="http://tech.innovation.co.jp/tag/Cache">Cache</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
