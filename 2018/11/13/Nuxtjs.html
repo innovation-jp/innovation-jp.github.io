@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Nuxt.jsについて調べてみたよ - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Nuxt.jsについて調べてみたよ">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Nuxt.jsについて調べてみたよ">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/11/13/Nuxtjs.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Nuxt.jsについて調べてみたよ" />
+    <meta property="og:description" content="どうも。はすみんです。 今回のブログはNuxt.jsについて調べたことを書きました。 Agenda Nuxt.js概要と特徴 個人的に嬉しいなと思ったところ Nuxt.jsを使ったほうがいい場面って？ Nuxt.jsを使うときの注意点 Nuxt.js概要と特徴 Nuxt.jsはVue.jsで書かれたフレームワークです。 本家のドキュメントには以下のように書かれています。 Nuxt.js は Vue アプリケーションを作成するフレームワークです。ユニバーサルアプリケーション、静的に生成されるアプリケーション、シングルページアプリケーションの中から作成す..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/11/13/Nuxtjs.html" />
+    <meta property="article:published_time" content="2018-11-12T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-11-13T15:33:04.067Z" />
+    <meta property="article:tag" content="Hasumin" />
+    <meta property="article:tag" content="Nuxt" />
+    <meta property="article:tag" content="Vue" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Nuxt.jsについて調べてみたよ" />
+    <meta name="twitter:description" content="どうも。はすみんです。 今回のブログはNuxt.jsについて調べたことを書きました。 Agenda Nuxt.js概要と特徴 個人的に嬉しいなと思ったところ Nuxt.jsを使ったほうがいい場面って？ Nuxt.jsを使うときの注意点 Nuxt.js概要と特徴 Nuxt.jsはVue.jsで書かれたフレームワークです。 本家のドキュメントには以下のように書かれています。 Nuxt.js は Vue アプリケーションを作成するフレームワークです。ユニバーサルアプリケーション、静的に生成されるアプリケーション、シングルページアプリケーションの中から作成す..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/11/13/Nuxtjs.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "takuya hasumi",
+        "image": "https://avatars0.githubusercontent.com/u/22537034?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "Nuxt.jsについて調べてみたよ",
+    "url": "http://tech.innovation.co.jp/2018/11/13/Nuxtjs.html",
+    "datePublished": "2018-11-12T15:00:00.000Z",
+    "dateModified": "2018-11-13T15:33:04.067Z",
+    "keywords": "Hasumin,  Nuxt,  Vue",
+    "description": "どうも。はすみんです。 今回のブログはNuxt.jsについて調べたことを書きました。 Agenda Nuxt.js概要と特徴 個人的に嬉しいなと思ったところ Nuxt.jsを使ったほうがいい場面って？ Nuxt.jsを使うときの注意点 Nuxt.js概要と特徴 Nuxt.jsはVue.jsで書かれたフレームワークです。 \b本家のドキュメントには以下のように書かれています。 Nuxt.js は Vue アプリケーションを作成するフレームワークです。ユニバーサルアプリケーション、静的に生成されるアプリケーション、シングルページアプリケーションの中から作成す..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Hasumin tag-Nuxt tag-Vue no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="13 Nov 2018" class="post-meta__date date">13 Nov 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Hasumin">Hasumin</a>, <a href="http://tech.innovation.co.jp/tag/Nuxt"> Nuxt</a>, <a href="http://tech.innovation.co.jp/tag/Vue"> Vue</a></span>
+        <span class="post-meta__author author"><img src="https://avatars0.githubusercontent.com/u/22537034?v=4" alt="profile image for takuya hasumi" class="avatar post-meta__avatar" /> by takuya hasumi</span>
+      </div>
+      <h1 class="post-title">Nuxt.jsについて調べてみたよ</h1>
+    </header>
+
+    <section class="post tag-Hasumin tag-Nuxt tag-Vue">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>どうも。はすみんです。<br>
+今回のブログはNuxt.jsについて調べたことを書きました。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_agenda">Agenda</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Nuxt.js概要と特徴</p>
+</li>
+<li>
+<p>個人的に嬉しいなと思ったところ</p>
+</li>
+<li>
+<p>Nuxt.jsを使ったほうがいい場面って？</p>
+</li>
+<li>
+<p>Nuxt.jsを使うときの注意点</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_nuxt_js">Nuxt.js概要と特徴</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Nuxt.jsはVue.jsで書かれたフレームワークです。<br>
+本家のドキュメントには以下のように書かれています。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>Nuxt.js は Vue アプリケーションを作成するフレームワークです。ユニバーサルアプリケーション、静的に生成されるアプリケーション、シングルページアプリケーションの中から作成するアプリケーションを選ぶことができます。</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a href="https://ja.nuxtjs.org/guide/" class="bare">https://ja.nuxtjs.org/guide/</a></p>
+</div>
+<div class="paragraph">
+<p>また、Nuxt.jsには以下の構成がデフォルトで入っています。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>- Vue 2
+- Vue-Router
+- Vuex（ストアオプションを利用している場合に限る）
+- Vue Server Renderer（mode: 'spa' を利用している場合を除く)
+- vue-meta</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a href="https://ja.nuxtjs.org/guide/#%E3%81%A9%E3%81%AE%E3%82%88%E3%81%86%E3%81%AB%E5%8B%95%E4%BD%9C%E3%81%99%E3%82%8B%E3%81%8B-" class="bare">https://ja.nuxtjs.org/guide/#%E3%81%A9%E3%81%AE%E3%82%88%E3%81%86%E3%81%AB%E5%8B%95%E4%BD%9C%E3%81%99%E3%82%8B%E3%81%8B-</a></p>
+</div>
+<div class="paragraph">
+<p>要は、Vue.jsを作りたいものに合わせて柔軟に、かつ簡単に書けるようにしてくれるのがNuxt.jsなのかなーと。<br></p>
+</div>
+<div class="paragraph">
+<p>主な機能としては以下です。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>- Vue ファイルで記述できること（*.vue）
+- コードを自動的に分割すること
+- サーバーサイドレンダリング
+- 非同期データをハンドリングするパワフルなルーティング
+- 静的ファイルの配信
+- ES6/ES7 のトランスパイレーション
+- JS と CSS のバンドル及びミニファイ化
+- &lt;head&gt; 要素（&lt;title&gt;、&lt;meta&gt; など）の管理
+- 開発モードにおけるホットリローディング
+- プリプロセッサ: Sass, Less, Stylus など
+- HTTP/2 push headers ready
+- モジュール構造で拡張できること</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a href="https://ja.nuxtjs.org/guide/#%E4%B8%BB%E3%81%AA%E6%A9%9F%E8%83%BD" class="bare">https://ja.nuxtjs.org/guide/#%E4%B8%BB%E3%81%AA%E6%A9%9F%E8%83%BD</a></p>
+</div>
+<div class="paragraph">
+<p>機能が多いので、いいなと思ったところをピックアップしていこうと思います。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">個人的に嬉しいなと思ったところ</h2>
+<div class="sectionbody">
+<div class="sect3">
+<h4 id="___2">書きたいことに集中できる</h4>
+<div class="paragraph">
+<p>Nuxt.jsでは、Vue RouterやVuexといった構成がまるっと入っています。<br>
+そのためルーティング処理などが簡単になります。<br>
+例えば、aboutページを作成したい場合、about.vueファイルさえ作成すればOKです。<br>
+Vue.jsで必要なルーティング処理は、Nuxt.js自身がよしなにやってくれます。<br>
+Nuxt.jsの思想として「*.vueの記述だけ、要は書きたいことに集中できるようにする」があり、魅力的に感じました。<br></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___3">設定より規約を重視、複数人で開発するときに迷いづらい</h4>
+<div class="paragraph">
+<p>これはNuxt.jsの魅力というよりフレームワークそのものの魅力ですが、規約がきっちりしています。<br>
+そのため、開発者であれこれ決めなくていいです。<br>
+複数人で開発するときにもスピード感持って開発できるのかなーと思います。<br></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__ssr">（良いか悪いかは別として）SSRを簡単に試せる</h4>
+<div class="paragraph">
+<p>Nuxt.jsでは、サーバーサイドレンダリング(SSR)を簡単に試すことができます。<br>
+アプリケーション作成時にコンソールから聞かれたときにYesと答えるだけで簡単に設定できます。<br>
+また、後から変えたい場合もconfigを1行変更するだけでいいので簡単です。<br>
+SSRという機能自体が不要かは置いておいて、実装が大変なSSRを簡単に導入できるのは魅力ですね。<br></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_nuxt_js_2">Nuxt.jsを使ったほうがいい場面って？</h2>
+<div class="sectionbody">
+<div class="sect3">
+<h4 id="__vue_js">開発メンバーがVue.jsに慣れているとき</h4>
+<div class="paragraph">
+<p>Vue.js経験者が多いのであれば、Nuxt.jsを使ったほうがスピード感持って開発できるかなと思います。<br>
+上記でも触れましたが、<br>
+・設定より規約を重視していること<br>
+・必要な構成がデフォルトで入っていること<br>
+が実現されているので、レールに乗って早く開発できるのかなと思います。<br></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_ssr_or">SSRを使って初期表示を早くさせたい or モバイルサイトを早く表示させたい</h4>
+<div class="paragraph">
+<p>通常のWebサイトでは、リクエストを送ったあとクライアントサイドでレンダリング処理をすることが多いですが、<br>
+SSRではレンダリング処理をサーバーサイドで行います。<br>
+そのためクライアントサイドの負荷が下がり、初期表示を早くすることができます。<br>
+クライアントサイドのスペックに左右されないので、スペックが古いPCやモバイルサイトの場合はSSRが有効なケースが多いです。<br>
+デメリットももちろんあるので、それは後述します。<br></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___4">単純に使ってみたい！</h4>
+<div class="paragraph">
+<p>個人的にはこれが一番大きな理由であってほしいですね。<br>
+せっかく使うなら、<br>
+・Vue.jsはどういうところに課題を持っているのか<br>
+・Nuxt.jsはVue.jsの課題をどのように解決しているのか<br>
+・使うとどんなメリットがあるのか<br>
+などを意識して使うと、より楽しく使えるのではないかなと思います。<br></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_nuxt_js_3">Nuxt.jsを使うときの注意点</h2>
+<div class="sectionbody">
+<div class="sect3">
+<h4 id="__javascript">ユニバーサルJavaScriptであること</h4>
+<div class="paragraph">
+<p>ユニバーサルJavaScriptとは、クライアントサイドでもサーバーサイドでも使えることをいいます。<br>
+なので、例えばサーバーサイドで使えない処理（location.reload()など）を書いてしまうと、思わぬところで落ちるので注意が必要です。<br>
+設計をちゃんとやることで回避できるかと思いますが、注意する管理コストが発生するかと思います。<br></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_ssr_cpu">SSRを使うとCPUの負荷が上がる</h4>
+<div class="paragraph">
+<p>SSRを使うと、サーバーサイドでレンダリング処理をするためCPUが上がります。<br>
+インフラのスペックを上げたり、オートスケールさせることで対応はできますが、天秤ですね。<br></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_vue_cli3_0">Vue CLI3.0との立ち位置は？</h4>
+<div class="paragraph">
+<p>2018年4月にVue CLI3.0が発表され、大きなアップデートとなりました。<br>
+具体的には、Vue CLI3.0でも構成がビルトインされていたり、パッケージのカスタマイズがいい感じにできたりなどです。<br>
+これまでNuxt.jsがカバーしていた分野を、Vue CLI3.0が解決する面も増えています。<br>
+SSRしたいなとか、規約を重視して開発したいな、といったときはNuxt.jsで良いかと思いますが、<br>
+両者の棲み分けを考えて開発しくことが大事かと思います。<br></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___5">おわりに</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>次はNuxt.jsを使ってこんなサービス作ったよ、って紹介したいなと思います〜<br></p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11783-1';
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+</body>
+</html>
