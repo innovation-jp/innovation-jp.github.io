@@ -1,5 +1,5 @@
-# AmazonGo体験して見た
-:hp-alt-title: AmazonGo体験して見た
+# AmazonGo体験してみた
+:hp-alt-title: AmazonGo体験してみた
 :hp-tags: ozasa, amazongo, seattle
 
 こんばんは。オザサです。 +
