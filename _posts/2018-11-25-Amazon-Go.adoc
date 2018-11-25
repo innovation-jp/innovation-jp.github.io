@@ -1,0 +1,116 @@
+# AmazonGo体験して見た
+:hp-alt-title: AmazonGo体験して見た
+:hp-tags: ozasa, amazongo, seattle
+
+こんばんは。オザサです。 +
+唐突ですが、シアトルにあるAmazonGoへ行ってきたので、 +
+レポートしてみたいと思います！
+
+## AmazonGoとは
+
+image::http://tech.innovation.co.jp/images/ozasa/amazongo2018/amazongoFront.JPG[]
+
+[quote, 'https://www.amazon.com/b?ie=UTF8&node=16008589011[AmazonGo]']
+____
+Amazon Go is a new kind of store with no checkout required. We created the world’s most advanced shopping technology so you never have to wait in line. With our Just Walk Out Shopping experience, simply use the Amazon Go app to enter the store, take the products you want, and go! No lines, no checkout. (No, seriously.)
+____
+
+待たなくてよくて歩くだけって謳っています。 +
+日本の記事では無人コンビニなんて言われ方をしていますね。
+
+image::http://tech.innovation.co.jp/images/ozasa/amazongo2018/amazongoapp.JPG[]
+
+入店する前にはアプリのインストールとセットアップが必要です。 +
+入店される際には*事前に準備*しておきましょう。
+
+アプリの画面には個々人用のQRコードのようなものが表示されますが、 +
+セキュリティの観点から*スクショは取れない*ようになっているようです。
+
+## 実際の店内の様子
+
+#### 入り口
+
+image::http://tech.innovation.co.jp/images/ozasa/amazongo2018/amazongoentrance.JPG[]
+
+電車の改札のようです。アプリの画面をかざして入ります。
+
+
+#### 店内
+
+普通のコンビニといった感じで陳列されています。
+
+image::http://tech.innovation.co.jp/images/ozasa/amazongo2018/amazongoshopview2.JPG[]
+
+#### 多数のカメラ
+
+image::http://tech.innovation.co.jp/images/ozasa/amazongo2018/amazongocamera1.JPG[]
+
+image::http://tech.innovation.co.jp/images/ozasa/amazongo2018/amazongocamera2.JPG[]
+
+僕のこともトラッキングしているのでしょう。 
+
+正直事前に写真では見たことがあったのですが、 +
+実際に訪れてみると*「すごい！多い！」*と感じます。 +
+配置の仕方にも工夫があるのだろうと思うと天井が気になってしまいますね。
+
+image::http://tech.innovation.co.jp/images/ozasa/amazongo2018/amazongocamera3.JPG[]
+
+### アルコールについて
+行く前までは*年齢確認の観点からアルコールの販売はないものと思っていましたが*、 +
+*実際には店員さんがいらしてID確認をする形で販売を行なっていました*。
+
+image::http://tech.innovation.co.jp/images/ozasa/amazongo2018/amazongoalcohol.JPG[]
+
+柵を越えたあたりからの写真。
+
+アルコール買えて、嬉しいけど！無人ではないですね。
+
+### 仮説①
+*なるべく商品を手に取らないUXを考えている！？*
+
+image::http://tech.innovation.co.jp/images/ozasa/amazongo2018/amazongooz.JPG[]
+
+見てください。この重さあたりの値段、あまり見ないですよね。
+
+そして、私はアレルギー持ちなので、 +
+よく原材料をみるのですが、AmazonGoでは商品名と並んで原材料が記載してあったりします。
+
+image::http://tech.innovation.co.jp/images/ozasa/amazongo2018/amazongoBreads.JPG[]
+
+これって一々商品を手にとって確かめるような行為を減らすためではないでしょうか？ +
+いくら優れた画像認識とはいえ誤認識のリスクはあるでしょうから、それを低減する施策なのかも？ +
+と思うとテンション上がりますね。
+
+何よりアレルギー持ち的にはその場で原材料が分かるのはとっても嬉しいことなのです。
+
+### 仮説②
+*購入の結果はあえてタイムラグを持たせている！？*
+
+入店から色々とものを手に取りいそいそと退店します。
+
+入店中及び退店時すぐにはアプリに結果は反映されません。 +
+10~15分くらい後に通知がきて購入結果が見られるようになっています。
+
+image::http://tech.innovation.co.jp/images/ozasa/amazongo2018/amazongoapp2.JPG[]
+
+これもよくよく考えたら、 +
+入店中に購入状況が見られたら逆に悪さをしてしまおうとする心理が働いてしまうことを +
+抑制しようとしているのかなと勘ぐってしまいました。
+
+image::http://tech.innovation.co.jp/images/ozasa/amazongo2018/amazongoapp3.JPG[]
+
+実際、購入できているかは不安でしたが、 +
+結果のフィードバックがないため意地悪しつつデータ反映の結果を見るなんてことはできませんでしたしね。
+
+
+## まとめ
+
+う〜んやはりUXが非常にストレスフルで素晴らしいと感じました。 +
+まだまだ実験中な様子は見受けられますが、これからの進歩がより一層楽しみになりましたし、 +
+テクノロジーが未来の生活を変えていく先端を見られて非常に満足でした。
+
+2年前に訪れた時にはまだ発表もされていなかったので、 +
+それを思うと進歩のスピードにも驚きです！！！
+
+仮説は検証できないとしても楽しい！ +
+こちらからは以上です。
