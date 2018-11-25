@@ -91,13 +91,13 @@ image::http://tech.innovation.co.jp/images/ozasa/amazongo2018/amazongoBreads.JPG
 入店中及び退店時すぐにはアプリに結果は反映されません。 +
 10~15分くらい後に通知がきて購入結果が見られるようになっています。
 
-image::http://tech.innovation.co.jp/images/ozasa/amazongo2018/amazongoapp2.JPG[]
+image::http://tech.innovation.co.jp/images/ozasa/amazongo2018/amazongoapp2.PNG[]
 
 これもよくよく考えたら、 +
 入店中に購入状況が見られたら逆に悪さをしてしまおうとする心理が働いてしまうことを +
 抑制しようとしているのかなと勘ぐってしまいました。
 
-image::http://tech.innovation.co.jp/images/ozasa/amazongo2018/amazongoapp3.JPG[]
+image::http://tech.innovation.co.jp/images/ozasa/amazongo2018/amazongoapp3.PNG[]
 
 実際、購入できているかは不安でしたが、 +
 結果のフィードバックがないため意地悪しつつデータ反映の結果を見るなんてことはできませんでしたしね。
