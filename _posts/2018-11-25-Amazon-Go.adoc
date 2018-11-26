@@ -15,12 +15,12 @@ ____
 Amazon Go is a new kind of store with no checkout required. We created the world’s most advanced shopping technology so you never have to wait in line. With our Just Walk Out Shopping experience, simply use the Amazon Go app to enter the store, take the products you want, and go! No lines, no checkout. (No, seriously.)
 ____
 
-待たなくてよくて歩くだけって謳っています。 +
+待たなくてよくて歩くだけお買い物できるって謳っています。 +
 日本の記事では無人コンビニなんて言われ方をしていますね。
 
 image::http://tech.innovation.co.jp/images/ozasa/amazongo2018/amazongoapp.JPG[]
 
-入店する前にはアプリのインストールとセットアップが必要です。 +
+利用するにはアプリのインストールとセットアップが必要です。 +
 入店される際には*事前に準備*しておきましょう。
 
 アプリの画面には個々人用のQRコードのようなものが表示されますが、 +
@@ -55,6 +55,8 @@ image::http://tech.innovation.co.jp/images/ozasa/amazongo2018/amazongocamera2.JP
 
 image::http://tech.innovation.co.jp/images/ozasa/amazongo2018/amazongocamera3.JPG[]
 
+う〜ん、多い！
+
 ### アルコールについて
 行く前までは*年齢確認の観点からアルコールの販売はないものと思っていましたが*、 +
 *実際には店員さんがいらしてID確認をする形で販売を行なっていました*。
@@ -70,10 +72,10 @@ image::http://tech.innovation.co.jp/images/ozasa/amazongo2018/amazongoalcohol.JP
 
 image::http://tech.innovation.co.jp/images/ozasa/amazongo2018/amazongooz.JPG[]
 
-見てください。この重さあたりの値段、あまり見ないですよね。
+見てください。この重さあたりの値段、あまり表側の表示では目にしないですよね。
 
 そして、私はアレルギー持ちなので、 +
-よく原材料をみるのですが、AmazonGoでは商品名と並んで原材料が記載してあったりします。
+よく商品の裏側に記載してある原材料をみるのですが、AmazonGoでは商品名と並んで原材料が記載してあったりします。
 
 image::http://tech.innovation.co.jp/images/ozasa/amazongo2018/amazongoBreads.JPG[]
 
@@ -99,18 +101,18 @@ image::http://tech.innovation.co.jp/images/ozasa/amazongo2018/amazongoapp2.PNG[]
 
 image::http://tech.innovation.co.jp/images/ozasa/amazongo2018/amazongoapp3.PNG[]
 
-実際、購入できているかは不安でしたが、 +
-結果のフィードバックがないため意地悪しつつデータ反映の結果を見るなんてことはできませんでしたしね。
+正直、購入できているかは不安でしたが、 +
+逆に結果のフィードバックがないため、服に隠してみるなど意地悪しつつデータ反映の結果を見るなんてことはできませんでしたしね。
 
 
 ## まとめ
 
-う〜んやはりUXが非常にストレスフルで素晴らしいと感じました。 +
+う〜んやはりUXが非常にストレスレスで素晴らしいと感じました。 +
 まだまだ実験中な様子は見受けられますが、これからの進歩がより一層楽しみになりましたし、 +
 テクノロジーが未来の生活を変えていく先端を見られて非常に満足でした。
 
 2年前に訪れた時にはまだ発表もされていなかったので、 +
 それを思うと進歩のスピードにも驚きです！！！
 
-仮説は検証できないとしても楽しい！ +
+これらの仮説は検証できないとしても楽しい！ +
 こちらからは以上です。
