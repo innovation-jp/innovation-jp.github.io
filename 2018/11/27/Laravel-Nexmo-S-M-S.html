@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Laravel+NexmoでSMSを配信してみた - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Laravel+NexmoでSMSを配信してみた">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Laravel+NexmoでSMSを配信してみた">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/11/27/Laravel-Nexmo-S-M-S.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Laravel+NexmoでSMSを配信してみた" />
+    <meta property="og:description" content="Hello~~一年生のアヤンです。 最近Laravelのメール配信の機能を触ることが多くて、SMSで同じようなことを試して見ました。 また、先週サンクスギビングデーというアメリカの祝日があって、料理をする機会がありました〜 その日のために、様々な料理を作りたくて、気づいたらブラウザーのタブを２０個以上開いてありました&amp;#8230;&amp;#8203; どの料理がどれだけ焼けばいいかをほぼ忘れてしまって、気づいたらパンを肉の加熱する時間分焼いてしまって焦げてしまいました（泣） それを避けるためこれを考えました！ 目的 レシピサイトでタイマーを押して、調理時間が..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/11/27/Laravel-Nexmo-S-M-S.html" />
+    <meta property="article:published_time" content="2018-11-26T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-11-27T08:10:34.808Z" />
+    <meta property="article:tag" content="Laravel" />
+    <meta property="article:tag" content="Nexmo" />
+    <meta property="article:tag" content="AhYung" />
+    <meta property="article:tag" content="SMS" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Laravel+NexmoでSMSを配信してみた" />
+    <meta name="twitter:description" content="Hello~~一年生のアヤンです。 最近Laravelのメール配信の機能を触ることが多くて、SMSで同じようなことを試して見ました。 また、先週サンクスギビングデーというアメリカの祝日があって、料理をする機会がありました〜 その日のために、様々な料理を作りたくて、気づいたらブラウザーのタブを２０個以上開いてありました&amp;#8230;&amp;#8203; どの料理がどれだけ焼けばいいかをほぼ忘れてしまって、気づいたらパンを肉の加熱する時間分焼いてしまって焦げてしまいました（泣） それを避けるためこれを考えました！ 目的 レシピサイトでタイマーを押して、調理時間が..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/11/27/Laravel-Nexmo-S-M-S.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars1.githubusercontent.com/u/22947387?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "Laravel+NexmoでSMSを配信してみた",
+    "url": "http://tech.innovation.co.jp/2018/11/27/Laravel-Nexmo-S-M-S.html",
+    "datePublished": "2018-11-26T15:00:00.000Z",
+    "dateModified": "2018-11-27T08:10:34.808Z",
+    "keywords": "Laravel,  Nexmo,  AhYung,  SMS",
+    "description": "Hello~~一年生のアヤンです。 最近Laravelのメール配信の機能を触ることが多くて、SMSで同じようなことを試して見ました。 また、先週サンクスギビングデーというアメリカの祝日があって、料理をする機会がありました〜 その日のために、様々な料理を作りたくて、気づいたらブラウザーのタブを２０個以上開いてありました&amp;#8230;&amp;#8203; どの料理がどれだけ焼けばいいかをほぼ忘れてしまって、気づいたらパンを肉の加熱する時間分焼いてしまって焦げてしまいました（泣） それを避けるためこれを考えました！ 目的 レシピサイトでタイマーを押して、調理時間が..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Laravel tag-Nexmo tag-Ah-Yung tag-S-M-S no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="27 Nov 2018" class="post-meta__date date">27 Nov 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Laravel">Laravel</a>, <a href="http://tech.innovation.co.jp/tag/Nexmo"> Nexmo</a>, <a href="http://tech.innovation.co.jp/tag/Ah-Yung"> AhYung</a>, <a href="http://tech.innovation.co.jp/tag/S-M-S"> SMS</a></span>
+        <span class="post-meta__author author"><img src="https://avatars1.githubusercontent.com/u/22947387?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">Laravel+NexmoでSMSを配信してみた</h1>
+    </header>
+
+    <section class="post tag-Laravel tag-Nexmo tag-Ah-Yung tag-S-M-S">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Hello~~一年生のアヤンです。</p>
+</div>
+<div class="paragraph">
+<p>最近Laravelのメール配信の機能を触ることが多くて、SMSで同じようなことを試して見ました。
+また、先週サンクスギビングデーというアメリカの祝日があって、料理をする機会がありました〜</p>
+</div>
+<div class="paragraph">
+<p>その日のために、様々な料理を作りたくて、気づいたらブラウザーのタブを２０個以上開いてありました&#8230;&#8203;
+どの料理がどれだけ焼けばいいかをほぼ忘れてしまって、気づいたらパンを肉の加熱する時間分焼いてしまって焦げてしまいました（泣）
+それを避けるためこれを考えました！</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__">目的</h4>
+<div class="paragraph">
+<p>レシピサイトでタイマーを押して、調理時間が終わったらユーザーの携帯に携帯メールが飛んでくる</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="___2">使ったツール</h4>
+<div class="paragraph">
+<p>Laravel 5.7</p>
+</div>
+<div class="paragraph">
+<p>Nexmo (アカウント登録が必要）</p>
+</div>
+<div class="sect5">
+<h6 id="_1">1. 環境構築</h6>
+<div class="paragraph">
+<p>composerでPHPClientLibraryをインストールする</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>composer require nexmo/client</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>config.appのファイルのProvidersにNexmoServiceProviderを追加</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>    'providers' =&gt; [
+
+        /*
+         * Laravel Framework Service Providers...
+         */
+	//他のProviders
+        Illuminate\View\ViewServiceProvider::class,
+       //NexmoのProvider
+        Nexmo\Laravel\NexmoServiceProvider::class,</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>次は.envファイルにNexmoのアカウント情報の追加→Nexmoからコピーペースト</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>NEXMO_KEY= Nexmoのアカウントページに書いてあるAPI Key（「(Master)」なし
+NEXMO_SECRET= Nexmoのアカウントページに書いてあるAPI secret</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>それで環境構築完成！
+ 	希望があればconfig/app.phpファイルにAlliasを設定ができます</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_2_sms">2. SMS用のコントローラー作成</h5>
+<div class="paragraph">
+<p>php artisanでコントローラークラスを作成しましょう</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>php artisan make:controller SMSController</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Nexmoのクラスを使いたいのでnamespaceの下にNexmoのFacadeを追加</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&lt;?php
+
+namespace App\Http\Controllers;
+
+//↓
+use Nexmo\Laravel\Facade\Nexmo;
+use Illuminate\Http\Request;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>次はメッセージの内容と送る先に関数で指定しましょう</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>    public function sendFinishedCookingSMS()
+    {
+        Nexmo::message()-&gt;send([
+            'to' =&gt; '',
+            'from' =&gt; 'Fooood Time',
+            'text' =&gt; 'ビーフシチュー出来上がりました！'
+            'type' =&gt; 'unicode'
+        ]);
+    }</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>テストのため、送る先の'to'のところでNexmoに登録されている携帯番号を追加しました。</p>
+</div>
+<div class="paragraph">
+<p>送る側の方でお好きな値を入れても構わないのですが、携帯の画面で数字になります。</p>
+</div>
+<div class="paragraph">
+<p>'text'のところでメッセージ内容を書きます。</p>
+</div>
+<div class="paragraph">
+<p>日本語のメッセージを書きたい場合では'type'&#8658;'unicode'も必要です。</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_3_vue">3. Vueとコントローラーのルーティングを設定する</h5>
+<div class="paragraph">
+<p>web.phpのファイルでget('好きなURL', 'コントローラー名@関数名')のように指定します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Route::get('/sms/send', 'SMSController@sendFinishedCookingSMS');</pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_4_vue">4. 最後にVue側から呼び出す</h5>
+<div class="listingblock">
+<div class="content">
+<pre>        sendFinishSms() {
+            axios
+                .get('/sms/send')
+                .then(response =&gt; {
+                    this.textResult = 'Text notification was sent!'
+                }).catch(error =&gt; {
+                    this.textResult = 'Error in sending text notification'
+                });
+        }</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>今回作ってみたページに関してはページに表示されているタイマーが終わったら、
+SMSを送る関数を呼ぶ出すようにしています。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/ahyung/スクリーンショット 2018-11-27 14.40.49.png" alt="スクリーンショット 2018-11-27 14.40.49.png" width="300"></span>
+画像：
+<a href="https://www.bbcgoodfood.com/recipes/best-ever-beef-bourguinon" class="bare">https://www.bbcgoodfood.com/recipes/best-ever-beef-bourguinon</a></p>
+</div>
+<div class="paragraph">
+<p>携帯の画面はこちらです↓</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="/images/ahyung/Screenshot_20181127-143037.png" alt="Screenshot_20181127-143037.png" width="250"></span></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="___3">まとめ</h5>
+<div class="paragraph">
+<p>Even though I still have thousands of questions about Laravel with the help of certain very smart person
+everything is becoming more and more clear!</p>
+</div>
+<div class="paragraph">
+<p>最近Laravelの勉強はとても面白くて、毎回新しいFeatureや機能を使えるようにお楽しみしています〜
+もっと勉強頑張りまーす！
+ぜひLaravelの勉強をチャレンジしてみてください〜</p>
+</div>
+<div class="sect5">
+<h6 id="_references">References</h6>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://laravel-news.com/building-vue-spa-laravel-part-2/" class="bare">https://laravel-news.com/building-vue-spa-laravel-part-2/</a></p>
+</li>
+<li>
+<p><a href="https://laravel-news.com/sending-receiving-sms-laravel-nexmo" class="bare">https://laravel-news.com/sending-receiving-sms-laravel-nexmo</a></p>
+</li>
+<li>
+<p><a href="https://developer.nexmo.com/messaging/sms/building-blocks/send-an-sms-with-unicode" class="bare">https://developer.nexmo.com/messaging/sms/building-blocks/send-an-sms-with-unicode</a></p>
+</li>
+<li>
+<p><a href="https://devhub.io/repos/Nexmo-nexmo-laravel" class="bare">https://devhub.io/repos/Nexmo-nexmo-laravel</a></p>
+</li>
+<li>
+<p><a href="https://laravel.com/docs/5.7/notifications#sms-notifications" class="bare">https://laravel.com/docs/5.7/notifications#sms-notifications</a></p>
+</li>
+<li>
+<p><a href="https://laravel-news.com/sending-receiving-sms-laravel-nexmo" class="bare">https://laravel-news.com/sending-receiving-sms-laravel-nexmo</a></p>
+</li>
+<li>
+<p><a href="https://www.bbcgoodfood.com/recipes/best-ever-beef-bourguinon" class="bare">https://www.bbcgoodfood.com/recipes/best-ever-beef-bourguinon</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Done</p>
+</div>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11783-1';
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+</body>
+</html>
