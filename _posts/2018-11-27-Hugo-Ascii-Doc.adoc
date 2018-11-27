@@ -90,9 +90,8 @@ enableRobotsTXT = true
   recent_posts_number = 2
 ```
 
-そして、`hugo server`コマンドでローカルにサーバーを立てます。 +
-
-`http://localhost:1313/`でページを確認することができるになっていると思います。
+そして、`hugo server`コマンドでローカルにサーバーを立てます。
+「http://localhost:1313/」 でページを確認することができるになっていると思います。
 
 #### ２、AsciiDocを使った記事作成
 
@@ -129,7 +128,7 @@ draft: true
 １、`hugo new post/yasu_blog.adoc`で記事用のファイル作成 +
 ２、yasu_blog.adocを編集 +
 ３、draftをfalseに変更 +
-４、`http://localhost:1313/` でページを確認。
+４、http://localhost:1313/ でページを確認。
 
 以下のようなページが確認できました。(元ページlink:http://tech.innovation.co.jp/2018/09/25/Scratch.html[こちら])
 
@@ -151,6 +150,7 @@ image:/images/yasuhiro/scratch/blog_screen_2.png[width="500"] +
 
 #### まとめ
 以上の方法で、ブログのサイトを用意し、Asciidocを記事を書けるようになりました！！ +
+思っていたよりも簡単に作ることができました。テーマ次第で色々なサイトが作れるので、今後色々なテーマを調査するのもいいなと思ってます。
 ブログの公開方法については、まだ勉強中なので次の投稿で報告したいと思います。
 
 
