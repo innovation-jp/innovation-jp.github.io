@@ -1,0 +1,168 @@
+# Hugoを利用してブログ作成、AsciiDocで記事を書けるように挑戦してみた。
+
+:hp-alt-title: Hugoを利用してブログ作成、AsciiDocで記事を書けるように挑戦してみた。
+:hp-tags: Hugo, AsciiDoc, ブログ, YASU
+
+
+おはようございます。エンジニア一年目のやすと申します。
+
+今回は、Hugoを使ったブログ書きにチャレンジした結果を報告します！
+
+### 簡単な前書き
+現在、イノベーションエンジニアブログ（当サイト）で色々と投稿させていただいているのですが、
+ブログの編集に多少の使いずらさを感じています。 +
+そこで、特に書いた記事の反映が遅いという点で、様々な方のブログ作りのブログを閲覧させてもらい +
+今回、試しにHugoを利用したブログ作りにチャレンジしてみました。 +
+また、AsciiDocで今まで記事書いていたので、そちらもちゃんと問題なく動作するものを目指しました。 +
+基本的に他の方のブログを参考に進めたので、私の説明がわかりにくいって時は、リンクをポチってください。
+
+
+
+#### 報告内容
+
+１、Hugoの導入とローカルで表示まで
+
+２、AsciiDocを使った記事作成
+
+
+#### １、Hugoの導入とローカルで表示まで（＊PCはmacを使っています）
+
+まず、Hugoのインストール
+```
+  brew install hugo
+```
+次に、サイトを構成するディレクトリを生成します。
+```
+  hugo new site　NewBlog
+```
+↑先ほどのコマンドを打つと、NewBlogのディレクトリが出来ていることが確認できると思います。
+  
+次に生成したディレクト内のthemesという場所まで移動して、テーマをダウンロードします。 +
+Hugoのテーマ（サイトのテンプレート）を利用することで簡単にブログを作ることが出来ます。 +
+ちなみに今回はシンプルそうだったので、link:https://themes.gohugo.io/gohugo-theme-ananke/[Ananke Gohugo Theme] を利用しました。 +
+Hugoのテーマ一覧はlink:https://themes.gohugo.io/[こちら]
+
+```
+  cd NewBlog/themes
+  git clone https://github.com/budparr/gohugo-theme-ananke.git
+  
+```
+次は、テーマ内のconfigファイルをコピーします。(このテーマを配布しているサイトより)
+```
+cp  NewBlog/themes/gohugo-theme-ananke/exampleSite/config.toml NewBlog/config.toml
+```
+
+ファイル内の一行を削除します。
+```
+//config.toml
+
+title = "Notre-Dame de Paris"
+baseURL = "https://example.com"
+languageCode = "en-us"
+theme = "gohugo-theme-ananke"
+themesDir = "../.."    ←←←←←←←←←ここの一文を削除
+
+MetaDataFormat = "yaml"
+DefaultContentLanguage = "en"
+SectionPagesMenu = "main"
+Paginate = 3 # this is set low for demonstrating with dummy content. Set to a higher number
+googleAnalytics = ""
+enableRobotsTXT = true
+
+[sitemap]
+  changefreq = "monthly"
+  priority = 0.5
+  filename = "sitemap.xml"
+
+[params]
+  favicon = ""
+  description = "The last theme you'll ever need. Maybe."
+  facebook = ""
+  twitter = "https://twitter.com/GoHugoIO"
+  instagram = ""
+  youtube = ""
+  github = ""
+  gitlab = ""
+  linkedin = ""
+  # choose a background color from any on this page: http://tachyons.io/docs/themes/skins/ and preface it with "bg-"
+  background_color_class = "bg-black"
+  featured_image = "/images/gohugo-default-sample-hero-image.jpg"
+  recent_posts_number = 2
+```
+
+そして、`hugo server`コマンドでローカルにサーバーを立てます。 +
+
+`http://localhost:1313/`でページを確認することができるになっていると思います。
+
+#### ２、AsciiDocを使った記事作成
+
+1の工程を終えた状態だと、他のファイルが１つもなくページとして機能しないので、themes/gohugo-theme-ananke/以下のデータを全てコピペで持ってくると公式サイトのDemoとほぼ同じように機能します。 +
+ここから色々変更を加えていけば、オリジナリティのあるブログが作れるのではないかと思います。
+しかし、今回はブログのデザイン等は触れず、AsciiDocの記事投稿に焦点を当てます。
+
+こちらの記事を参考にさせていただきました。→link:http://diary.wshito.com/comp/cms/hugo-asciidoc/[HugoでAsciiDoc 原稿を書く際の留意点]
+
+準備として、AsciidoctorかAsciiDocをインストールしておきます。(今回はAsciidoctorを利用しました。)
+```
+  brew install asciidoctor
+```
+次に、記事作成ですが以下のコマンドで新しい記事を作成できます。
+```
+  hugo new posts/test
+```
+作成後はNewBlog/content/posts/以下にtest.adocが保存されています。
+
+作成時に`NewBolg/archetypes/default.md`をテンプレートとして記事に反映してますが、特にadocファイルを作成時でも`default.md`の設定が反映されてしまうので、新たしく`default.adoc`を作成しておきます。 +
+
+```
+//default.adoc
+---
+title: "{{ replace .Name "-" " " | title }}"
+date: {{ .Date }}
+draft: true
+---
+```
+これで問題なく、記事の作成に取り掛かることができます。 +
+
+以前、私が投稿した記事をこのブログサイトにのせてみたいと思います。
+
+１、`hugo new post/yasu_blog.adoc`で記事用のファイル作成 +
+２、yasu_blog.adocを編集 +
+３、draftをfalseに変更 +
+４、http://localhost:1313/ でページを確認。
+
+以下のようなページが確認できました。(元ページlink:http://tech.innovation.co.jp/2018/09/25/Scratch.html[こちら])
+
+image:/images/yasuhiro/scratch/blog_screen_1.png[width="500"] +
+
+
+image:/images/yasuhiro/scratch/blog_screen_2.png[width="500"] +
+
+
+2枚目の画像をみてもらうとわかるのですが、画像が反映されていません。
+画像を記事に入れる方法ですが、NewBlog/static/imagesに画像ファイルを置いて、
+.adocファイル内で、
+```
+{{< figure src="/images/image.png">}}  //Shortcode 方式
+```
+以上のようにすると画像が反映されます。 +
+こちらのサイトを参考にさせていただきました。link:https://qiita.com/atuyosi/items/4100bd502e373c088c74[Hugoで記事内に画像を貼り付ける方法]
+
+
+#### まとめ
+以上の方法で、ブログのサイトを用意し、Asciidocを記事を書けるようになりました！！ +
+ブログの公開方法については、まだ勉強中なので次の投稿で報告したいと思います。
+
+
+
+関連サイト： +
+
+https://gohugo.io/ Hugo +
+https://themes.gohugo.io/gohugo-theme-ananke/ Ananke Gohugo Theme +
+https://qiita.com/satzz/items/e24bd703fc04fb45f7ef HugoとGitHub Pagesで静的サイトを公開する +
+https://chanmitsu55.github.io/2017/12/25/2017-12-25-create-blog-by-hugo/ HUGOでブログ作成 → GitHub Pagesで公開する手順 +
+http://kohki.hatenablog.jp/entry/hugo-portfolio Hugo + GitHub Pagesでポートフォリオを作る
+ +
+http://diary.wshito.com/comp/cms/hugo-asciidoc/ HugoでAsciiDoc 原稿を書く際の留意点 +
+https://qiita.com/atuyosi/items/4100bd502e373c088c74  Hugoで記事内に画像を貼り付ける方法 +
+done
