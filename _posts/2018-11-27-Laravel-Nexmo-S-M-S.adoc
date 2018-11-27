@@ -1,5 +1,5 @@
-# LaravelとNexmoでSMSを配信してみた
-:hp-alt-title:  LaravelとNexmoでSMSを配信してみた
+# Laravel+NexmoでSMSを配信してみた
+:hp-alt-title:  Laravel+NexmoでSMSを配信してみた
 :hp-tags: Laravel, Nexmo, AhYung, SMS
 
 Hello~~一年生のアヤンです。
