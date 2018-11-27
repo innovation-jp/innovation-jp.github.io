@@ -72,7 +72,8 @@ use Illuminate\Http\Request;
         Nexmo::message()->send([
             'to' => '',
             'from' => 'Fooood Time',
-            'text' => 'Beef Stew is ready!'
+            'text' => 'ビーフシチュー出来上がりました！'
+            'type' => 'unicode'
         ]);
     }
 ----
@@ -102,7 +103,9 @@ Route::get('/sms/send', 'SMSController@sendFinishedCookingSMS');
 ----
 
 今回作ってみたページに関してはページに表示されているタイマーが終わったら、SMSを送る関数を呼ぶ出すようにしています。
-そして、メッセージが正常に送れましたらタイマーの下に結果メッセージが表示してきます。
+携帯の画面はこちらです
+
+
 
 
 ##### Pass By Reference
