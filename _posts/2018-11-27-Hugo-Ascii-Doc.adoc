@@ -129,7 +129,7 @@ draft: true
 １、`hugo new post/yasu_blog.adoc`で記事用のファイル作成 +
 ２、yasu_blog.adocを編集 +
 ３、draftをfalseに変更 +
-４、http://localhost:1313/ でページを確認。
+４、`http://localhost:1313/` でページを確認。
 
 以下のようなページが確認できました。(元ページlink:http://tech.innovation.co.jp/2018/09/25/Scratch.html[こちら])
 
