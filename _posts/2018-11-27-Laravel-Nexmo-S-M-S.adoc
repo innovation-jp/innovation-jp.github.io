@@ -124,7 +124,7 @@ everything is becoming more and more clear!
 
 最近Laravelの勉強はとても面白くて、毎回新しいFeatureや機能を使えるようにお楽しみしています〜
 もっと勉強頑張りまーす！
-
+ぜひLaravelの勉強をチャレンジしてみてください〜
 
 ###### References
 - https://laravel-news.com/building-vue-spa-laravel-part-2/
