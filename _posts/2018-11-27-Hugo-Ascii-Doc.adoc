@@ -1,7 +1,7 @@
 # Hugoを利用してブログ作成、AsciiDocで記事を書けるように挑戦してみた。
 
 :hp-alt-title: Hugoを利用してブログ作成、AsciiDocで記事を書けるように挑戦してみた。
-:hp-tags: Hugo, AsciiDoc, ブログ, YASU
+:hp-tags: Hugo, AsciiDoc, blog, YASU
 
 
 おはようございます。エンジニア一年目のやすと申します。
