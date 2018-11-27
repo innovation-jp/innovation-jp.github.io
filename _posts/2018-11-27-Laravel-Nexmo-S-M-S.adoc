@@ -19,7 +19,6 @@ Hello~~アヤンです
 Laravel 5.7
 Nexmo (別のアカウント登録が必要）
 
-####　流れ
 
 ###### 1. 環境構築
 composerでPHPClientLibraryをインストールする
@@ -34,56 +33,54 @@ config.appのファイルのProvidersにNexmoServiceProviderを追加
         /*
          * Laravel Framework Service Providers...
          */
-			//他のProviders
+	//他のProviders
         Illuminate\View\ViewServiceProvider::class,
-        //NexmoのProvider
+       //NexmoのProvider
         Nexmo\Laravel\NexmoServiceProvider::class,
- ----
-
-##### Getters and Setters
-Those familiar with classes will think of getters and setters, however in JS since all of the lass properties are by default public getters and setters are not regularly used However, they are necessary when JS is run in strict mode. Normally the properties of a JS class are accessed using dot-notation. 
-
-JS is more flexible in that properties can either be added to individual instances of classes or a new property can be added to the constructor even after the class is defined. 
-
-[cols="2*"]
-|===
-a| Class-Syntax
 ----
-    //getter for each element of the card
-    getSuit() {
-        return this.suit;
-    }
-    getValue() {
-        return this.value;
-    }
-    getSymbol() {
-        return this.symbol;
-    }
-    //setter for each element of the card
-    setSuit(suit) {
-        this.suit = suit;
-    }
-    setValue(value) {
-        this.value = value;
-    }
-    setSymbol(symbol) {
-        this.symbol = symbol;
-    }
+ 
+次は.envファイルにNexmoのアカウント情報の追加→Nexmoからコピーペースト
+----
+NEXMO_KEY= Nexmoのアカウントページに書いてあるAPI Key（「(Master)」なし
+NEXMO_SECRET= Nexmoのアカウントページに書いてあるAPI secret
 ----
 
-a| Function-Syntax
+それで環境構築完成！
+ 	希望があればconfig/app.phpファイルにAlliasを設定ができます
+
+##### 2. SMS用のコントローラー作成
+php artisanでコントローラークラスを作成しましょう
 ----
-Card.prototype.setSuit = function(suit) {
-    this.suit = suit;
-} 
-Card.prototype.setValue = function(value) {
-    this.value = value;
-} 
-Card.prototype.setSymbol = function(symbol) {
-    this.symbol = symbol;
-} 
+php artisan make:controller SMSController
 ----
-|===
+
+Nexmoのクラスを使いたいのでnamespaceの下にNexmoのFacadeを追加
+----
+<?php
+
+namespace App\Http\Controllers;
+
+//↓
+use Nexmo\Laravel\Facade\Nexmo;
+use Illuminate\Http\Request;
+----
+
+次はメッセージの内容と送る先に関数で指定しましょう
+----
+    public function sendFinishedCookingSMS()
+    {
+        Nexmo::message()->send([
+            'to' => '',
+            'from' => 'Fooood Time',
+            'text' => 'Beef Stew is ready!'
+        ]);
+    }
+----
+テストのため、送る先の'to'のところでNexmoに登録されている携帯番号を追加しました。
+
+送る側の方でお好きな値を入れても構わないのですが、携帯の画面で数字になります。
+
+
 
 ##### Static Methods
 With classes comes static methods which are useful when functions in direct correlation to the class abstract itself are needed. In this case, when adding up the total of the cards I wanted to specify which property to sum together. 
