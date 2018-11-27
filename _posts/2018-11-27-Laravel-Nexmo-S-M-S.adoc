@@ -83,6 +83,9 @@ use Illuminate\Http\Request;
 
 'text'のところでメッセージ内容を書きます。
 
+日本語のメッセージを書きたい場合では'type'=>'unicode'も必要です。
+
+
 ##### 3. Vueとコントローラーのルーティングを設定する
 web.phpのファイルでget('好きなURL', 'コントローラー名@関数名')のように指定します。
 ----
@@ -102,23 +105,35 @@ Route::get('/sms/send', 'SMSController@sendFinishedCookingSMS');
         }
 ----
 
-今回作ってみたページに関してはページに表示されているタイマーが終わったら、SMSを送る関数を呼ぶ出すようにしています。
-携帯の画面はこちらです
+今回作ってみたページに関してはページに表示されているタイマーが終わったら、
+SMSを送る関数を呼ぶ出すようにしています。
+
+image:/images/ahyung/スクリーンショット 2018-11-27 14.40.49.png[width="300"]
+画像：
+https://www.bbcgoodfood.com/recipes/best-ever-beef-bourguinon
+
+携帯の画面はこちらです↓
+
+image:/images/ahyung/Screenshot_20181127-143037.png[width="250"]
 
 
 
+##### まとめ
+Even though I still have thousands of questions about Laravel with the help of certain very smart person
+everything is becoming more and more clear! 
 
-##### Pass By Reference
+最近Laravelの勉強はとても面白くて、毎回新しいFeatureや機能を使えるようにお楽しみしています〜
+もっと勉強頑張りまーす！
 
 
 ###### References
-- https://javascript.info/class
-- https://www.w3schools.com/Js/js_function_parameters.asp
-- https://www.digitalocean.com/community/tutorials/understanding-classes-in-javascript#defining-methods
-- https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Basics#Object_basics
-- https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Details_of_the_Object_Model
-- https://codeburst.io/javascript-pass-by-value-and-pass-by-reference-in-javascript-fcf10305aa9c
-- https://abdulapopoola.com/2013/03/30/static-and-instance-methods-in-javascript/
+- https://laravel-news.com/building-vue-spa-laravel-part-2/
+- https://laravel-news.com/sending-receiving-sms-laravel-nexmo
+- https://developer.nexmo.com/messaging/sms/building-blocks/send-an-sms-with-unicode
+- https://devhub.io/repos/Nexmo-nexmo-laravel
+- https://laravel.com/docs/5.7/notifications#sms-notifications
+- https://laravel-news.com/sending-receiving-sms-laravel-nexmo
+- https://www.bbcgoodfood.com/recipes/best-ever-beef-bourguinon
 
 
 Done
