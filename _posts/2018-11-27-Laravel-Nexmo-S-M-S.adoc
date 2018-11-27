@@ -82,209 +82,31 @@ use Illuminate\Http\Request;
 
 'text'のところでメッセージ内容を書きます。
 
-##### Static Methods
-With classes comes static methods which are useful when functions in direct correlation to the class abstract itself are needed. In this case, when adding up the total of the cards I wanted to specify which property to sum together. 
-
-[cols="2*"]
-|===
-a| Class-Syntax
+##### 3. Vueとコントローラーのルーティングを設定する
+web.phpのファイルでget('好きなURL', 'コントローラー名@関数名')のように指定します。
 ----
-    static sumCards(cards) {
-        var sum = 0;
-        for(var x in cards){
-            sum += cards[x].value;
+Route::get('/sms/send', 'SMSController@sendFinishedCookingSMS');
+----
+
+##### 4. 最後にVue側から呼び出す
+----
+        sendFinishSms() {
+            axios
+                .get('/sms/send')
+                .then(response => {
+                    this.textResult = 'Text notification was sent!'
+                }).catch(error => {
+                    this.textResult = 'Error in sending text notification'
+                });
         }
-        return sum;
-    }
 ----
 
-a| Function-Syntax
-----
-Card.sumCards = function(cards) {
-    var sum = 0;
-    for(var x in cards){
-        sum += cards[x].value;
-    }
-    return sum;
-}
-----
-|===
+今回作ってみたページに関してはページに表示されているタイマーが終わったら、SMSを送る関数を呼ぶ出すようにしています。
+そして、メッセージが正常に送れましたらタイマーの下に結果メッセージが表示してきます。
 
 
 ##### Pass By Reference
-In general, with Javascript one point to be careful about when working with classes is that objects are by default always passed by reference. The original object will be affected if a function changes any of the objects properties. 
 
-##### To Put Everything Together...
-[cols="2*"]
-|===
-a| Class-Syntax
-----
-class Card {
-    constructor(suit, value, symbol) {
-        this.suit = suit;
-        this.value = value;
-        this.symbol = symbol;
-    }
-    
-    //getter for each element of the card
-    getSuit() {
-        return this.suit;
-    }
-    getValue() {
-        return this.value;
-    }
-    getSymbol() {
-        return this.symbol;
-    }
-    //setter for each element of the card
-    setSuit(suit) {
-        this.suit = suit;
-    }
-    setValue(value) {
-        this.value = value;
-    }
-    setSymbol(symbol) {
-        this.symbol = symbol;
-    }
-    //sum array of cards
-    static sumCards(cards) {
-        var sum = 0;
-        for(var x in cards){
-            sum += cards[x].value;
-        }
-        return sum;
-    }
-}
-----
-
-a| Function-Syntax
-----
-var Card = function(suit, value, symbol) {
-    this.suit = suit;
-    this.value = value;
-    this.symbol = symbol;
-}
-Card.prototype.setSuit = function(suit) {
-    this.suit = suit;
-} 
-Card.prototype.setValue = function(value) {
-    this.value = value;
-} 
-Card.prototype.setSymbol = function(symbol) {
-    this.symbol = symbol;
-} 
-
-Card.sumCards = function(cards) {
-    var sum = 0;
-    for(var x in cards){
-        sum += cards[x].value;
-    }
-    return sum;
-}
-----
-|===
-
-###### Classes in the Console 
-When outputting instances of classes to the console, regardless of the syntax the structure is the same. The class holds the prototype property that is seen in the console output as \___proto___. 
-
-image:/images/ahyung/スクリーンショット 2018-09-26 14.10.59.png[width="250"]
-    
-    
-
-##### Extending Classes
-One of the main points with classes is being able to extend them and create child classes from parent classes. For my program I wanted a user class that could be then used to define a computer player class.. User, the parent class, has the properties name and game so that the player can input their name and which game they want to play. Whereas the Com class would have an additional Level property in order to set the difficulty level. 
-
-Class-syntax allows the usage of the super keyword to allow child classes to access parent constructors and methods.
-When using function syntax a couple lines need to be added in order for the child class to access the parent class: methods and constructor. 
-----
-//used to allow child classes to access parents properties
-    User.call(this, name, game);
-//used to allow child classes to access parents constructor
-    Com.prototype = Object.create(User.prototype);
-----
-
-[cols="2*"]
-|===
-a| Class-Syntax
-----
-class User {
-    constructor(name, game) {
-    	 this.name = name \|\| 'Player1';
-        this.game = game;
-    }
-    //getters
-    getName() {
-        return this.name;
-    }
-    getGame() {
-        return this.game;
-    }
-    //setters
-    setName(name) {
-        this.name = name;
-    }
-    setGame(game) {
-        this.game = game;
-    }
-}
-
-class Com extends User {
-    constructor(name, game, level) {
-        super(name, game);
-        this.level = level \|\| 1;
-        this.createdUser();
-    }
-    createdUser(){
-        alert('Created Com: \nName: ' + this.name + '\nGame:' 
-        + this.game + '\nLevel: ' + this.level)
-    }
-    //getters
-    getLevel(){
-        return this.level;
-    }
-    //setters
-    setLevel(level){
-        this.level = level;
-    }
-}
-----
-
-a| Function-Syntax
-----
-//make a class user and extend it to be player and com
-var User = function(name, game) {
-    this.name = name \|\| 'Player1';
-    this.game = game;
-}
-User.prototype.setName = function(name) {
-    this.name = name;
-}
-User.prototype.setGame = function(game) {
-    this.game = game;
-}
-
-function Com(name, game, level) {
-    User.call(this, name, game);
-    this.level = level \|\| 1;
-    this.createdCom();
-}
-//this line necessary to allow child classes to access parent methods
-Com.prototype = Object.create(User.prototype);
-
-Com.prototype.setLevel = function(level) {
-    this.level = level;
-}
-Com.prototype.createdCom = function () {
-    return alert('Created Com: \nName: ' + this.name + '\nGame:' 
-    + this.game + '\nLevel: ' + this.level)
-}
-----
-
-|===
-
-
-#### In Conclusion.....to be continued?
-In summary, there are many different ways to utilize classes in Javascript, and with them it can be helpful to reduce redundant code. For the beginnings of my program I now have my Card, User, and Com classes. Hmmm what could be next…Look forward to it! 
 
 ###### References
 - https://javascript.info/class
