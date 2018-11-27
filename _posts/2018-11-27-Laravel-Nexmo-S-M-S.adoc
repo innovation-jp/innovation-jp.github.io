@@ -80,7 +80,7 @@ use Illuminate\Http\Request;
 
 送る側の方でお好きな値を入れても構わないのですが、携帯の画面で数字になります。
 
-
+'text'のところでメッセージ内容を書きます。
 
 ##### Static Methods
 With classes comes static methods which are useful when functions in direct correlation to the class abstract itself are needed. In this case, when adding up the total of the cards I wanted to specify which property to sum together. 
