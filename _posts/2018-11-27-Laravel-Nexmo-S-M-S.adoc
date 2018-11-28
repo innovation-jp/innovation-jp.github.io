@@ -99,9 +99,9 @@ Route::get('/sms/send', 'SMSController@sendFinishedCookingSMS');
             axios
                 .get('/sms/send')
                 .then(response => {
-                    this.textResult = 'Text notification was sent!'
+                    this.textResult = '携帯メールを送りました！'
                 }).catch(error => {
-                    this.textResult = 'Error in sending text notification'
+                    this.textResult = '携帯メールにはエラーが起きました。。。'
                 });
         }
 ----
@@ -119,7 +119,7 @@ image:/images/ahyung/Screenshot_20181127-143037.png[width="250"]
 
 
 
-##### まとめ
+#### まとめ
 Even though I still have thousands of questions about Laravel with the help of certain very smart person
 everything is becoming more and more clear! 
 
