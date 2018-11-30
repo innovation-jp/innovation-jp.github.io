@@ -29,7 +29,7 @@ VRでプログラミングできれば良いんじゃね？
 ■Virtual Cast +
 https://virtualcast.jp/
 
-■Chrome リモートデスクトップ
+■Chrome リモートデスクトップ +
 https://chrome.google.com/webstore/detail/chrome-remote-desktop/gbchcmhmhahfdphkhkmpfmihenigjmpp/related?hl=ja
 
 
