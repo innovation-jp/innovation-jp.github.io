@@ -55,7 +55,7 @@ var _trackingid = 'LFT-10003-1';
     <meta property="og:description" content="おはようございます。エンジニア一年目のやすと申します。 今回は、Hugoを使ったブログ書きにチャレンジした結果を報告します！ 簡単な前書き 現在、イノベーションエンジニアブログ（当サイト）で色々と投稿させていただいているのですが、 ブログの編集に多少の使いずらさを感じています。 そこで、特に書いた記事の反映が遅いという点で、様々な方のブログ作りのブログを閲覧させてもらい 今回、試しにHugoを利用したブログ作りにチャレンジしてみました。 また、AsciiDocで今まで記事書いていたので、そちらもちゃんと問題なく動作するものを目指しました。 基本的に他の..." />
     <meta property="og:url" content="http://tech.innovation.co.jp/2018/11/27/Hugo-Ascii-Doc.html" />
     <meta property="article:published_time" content="2018-11-26T15:00:00.000Z" />
-    <meta property="article:modified_time" content="2018-11-28T06:37:45.205Z" />
+    <meta property="article:modified_time" content="2018-11-30T02:11:53.017Z" />
     <meta property="article:tag" content="Hugo" />
     <meta property="article:tag" content="AsciiDoc" />
     <meta property="article:tag" content="blog" />
@@ -81,7 +81,7 @@ var _trackingid = 'LFT-10003-1';
     "headline": "Hugoを利用してブログ作成、AsciiDocで記事を書けるように挑戦してみた。",
     "url": "http://tech.innovation.co.jp/2018/11/27/Hugo-Ascii-Doc.html",
     "datePublished": "2018-11-26T15:00:00.000Z",
-    "dateModified": "2018-11-28T06:37:45.205Z",
+    "dateModified": "2018-11-30T02:11:53.017Z",
     "keywords": "Hugo,  AsciiDoc,  blog,  YASU",
     "description": "おはようございます。エンジニア一年目のやすと申します。 今回は、Hugoを使ったブログ書きにチャレンジした結果を報告します！ 簡単な前書き 現在、イノベーションエンジニアブログ（当サイト）で色々と投稿させていただいているのですが、 ブログの編集に多少の使いずらさを感じています。 そこで、特に書いた記事の反映が遅いという点で、様々な方のブログ作りのブログを閲覧させてもらい 今回、試しにHugoを利用したブログ作りにチャレンジしてみました。 また、AsciiDocで今まで記事書いていたので、そちらもちゃんと問題なく動作するものを目指しました。 基本的に他の..."
 }
@@ -288,6 +288,10 @@ var _trackingid = 'LFT-10003-1';
 <div class="sect3">
 <h4 id="__hugo_pc_mac">１、Hugoの導入とローカルで表示まで（＊PCはmacを使っています）</h4>
 <div class="paragraph">
+<p>Hugoについては、こちらの方がわかりやすくまとめています→
+<a href="http://tech.innovation.co.jp/2018/11/01/gohu-netlify.html">静的ウェブサイトをHugo+Netlifyで作るのは結構簡単！</a></p>
+</div>
+<div class="paragraph">
 <p>まず、Hugoのインストール</p>
 </div>
 <div class="listingblock">
@@ -395,7 +399,7 @@ enableRobotsTXT = true
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>  hugo new posts/test</code></pre>
+<pre class="highlight"><code>  hugo new posts/test.adoc</code></pre>
 </div>
 </div>
 <div class="paragraph">
