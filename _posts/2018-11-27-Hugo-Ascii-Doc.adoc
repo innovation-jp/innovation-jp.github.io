@@ -27,6 +27,9 @@
 
 #### １、Hugoの導入とローカルで表示まで（＊PCはmacを使っています）
 
+Hugoについては、こちらの方がわかりやすくまとめています→
+http://tech.innovation.co.jp/2018/11/01/gohu-netlify.html[静的ウェブサイトをHugo+Netlifyで作るのは結構簡単！]
+
 まず、Hugoのインストール
 ```
   brew install hugo
@@ -107,7 +110,7 @@ enableRobotsTXT = true
 ```
 次に、記事作成ですが以下のコマンドで新しい記事を作成できます。
 ```
-  hugo new posts/test
+  hugo new posts/test.adoc
 ```
 作成後はNewBlog/content/posts/以下にtest.adocが保存されています。
 
