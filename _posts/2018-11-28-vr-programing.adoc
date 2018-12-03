@@ -38,19 +38,19 @@ WindowsPC with Oculus Rift（VR環境用）
 
 MacBook pro
 
-普段の開発をMacBookでやっているので、MacBookの画面をWindowsPCに映すために +
+普段の開発をMacBook Proでやっているので、MacBook Proの画面をWindowsPCに映すために +
 『Chrome リモートデスクトップ』を活用する感じです。
 
-## 1.Macの画面をWindowsPCに映す
+## 1.MacBook Proの画面をWindowsPCに映す
 
 *開発PCとVR用PCが同じの場合はこの項目を飛ばしてください*
 
-1. 開発用PC(以下MacPC)とVR用PC(以下WindowsPC)にChrome リモートデスクトップをインストール
+1. 開発用PC(以下MacBook Pro)とVR用PC(以下WindowsPC)にChrome リモートデスクトップをインストール
 2. 同じネットワーク(Wifi等)に2つのPCを繋ぐ
 3. 2つのPCでChromeリモートデスクトップを起動
 4. PINの入力画面が出るので6桁の数値を適当に入力
-5. WindowsPCでマイコンピューターの項目にある、MacPCを選択
-6. MacPCに設定したPINを入力する
+5. WindowsPCでマイコンピューターの項目にある、MacBook Proを選択
+6. MacBook Proに設定したPINを入力する
 7. 画面が映る！
 
 ## 2.Virtual Castの設定
@@ -61,7 +61,7 @@ MacBook pro
 1. メニューから、ディスプレイ画面を生成。この時にユーザーにも見える設定にする
 2. リアルで椅子に座る
 3. コントローラーでちょうどいい位置に移動する
-4. 膝や机の上にMacPCを置いて操作する
+4. 膝や机の上にMacBook Proを置いて操作する
 
 ## どんな感じ？
 
@@ -70,7 +70,7 @@ image::/images/obata/vr_programing/vr_programing.png[]
 ## やってみた感想
 操作する私は、特に不便はなかったです。
 
-ディスプレイの位置とか好きに移動できるので、むしろ便利だったまであります。
+ディスプレイの位置とか好きに移動できるので、むしろ便利でした。
 
 ただ、スクリーンショットを見てわかるように、文字が見にくく、他の人に画面をシェアするのであれば、 +
 VR空間ではなく、普通に画面のシェアをする方が良いと思います。
