@@ -1,0 +1,19 @@
+= Amazon Aurora Serverless でWordpressを構築してみた話
+:hp-alt-title: vr_programing
+:hp-tags: kohe, aws, aurora, serverless
+
+
+## VRの人です？
+
+
+■Virtual Cast +
+https://virtualcast.jp/
+
+■Chrome リモートデスクトップ +
+https://chrome.google.com/webstore/detail/chrome-remote-desktop/gbchcmhmhahfdphkhkmpfmihenigjmpp/related?hl=ja
+
+
+## 環境
+
+
+image::/images/obata/vr_programing/vr_programing.png[]
