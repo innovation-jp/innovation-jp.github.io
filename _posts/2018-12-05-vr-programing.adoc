@@ -15,6 +15,9 @@ image::/images/kohe/aws_blog_02.png[]
 EC2を２台たて、片方にwordpress,もう片方にmyqlをinstallする
 
 
+そして、これをAurora Serverlessを使う方式に移行
+
+# Wordpress by Aurora Serverless
 ## 構成図
 
 
@@ -24,5 +27,20 @@ image::/images/kohe/aws_blog_01.png[]
 今回はロードバランサやオートスケールの設定はしない。
 
 
-## 環境
+## アクセス
+
+アクセスがなく、Aurora Serverlessが動いてない状態でアクセスしてみる…
+
+image::/images/kohe/aws_blog_04.png[]
+
+↓
+
+image::/images/kohe/aws_blog_03.png[]
+
+表示できた！！
+
+初回表示は20秒程度かかったが、2回目以降は速攻でアクセスできる。
+
+これから新規で作るサービスでRDS使う場合は基本Aurora Serverlessを使っていこうと思う。
+費用をあまり気にせず、サービスをバンバン作れるのは気持ちが良いし、モチベが上がる。
 
