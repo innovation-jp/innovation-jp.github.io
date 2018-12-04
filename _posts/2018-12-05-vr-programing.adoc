@@ -2,8 +2,10 @@
 :hp-alt-title: vr_programing
 :hp-tags: kohe, aws, aurora, serverless
 
+こんにちは。koheです。
+そろそろ寒くなってきたので、Aamazon Aurora ServerlessでWordpressを構築したいと思います。
 
-## VRの人です？
+## 構成図
 
 
 ■Virtual Cast +
