@@ -5,6 +5,8 @@
 こんにちは。koheです。
 そろそろ寒くなってきたので、Aamazon Aurora ServerlessでWordpressを構築したいと思います。
 
+コスパが良いサービスが好きなので、Aurora Serverlessは発表があってから使って見たいとずっと思っていました。
+
 ## 構成図
 
 
