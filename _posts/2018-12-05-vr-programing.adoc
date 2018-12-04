@@ -18,4 +18,4 @@ https://chrome.google.com/webstore/detail/chrome-remote-desktop/gbchcmhmhahfdphk
 ## 環境
 
 
-image::/images/obata/vr_programing/vr_programing.png[]
+image::/images/kohe/aws_blog_01.png[]
