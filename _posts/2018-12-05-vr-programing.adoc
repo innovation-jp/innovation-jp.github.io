@@ -7,6 +7,14 @@
 
 コスパが良いサービスが好きなので、Aurora Serverlessは発表があってから使って見たいとずっと思っていました。
 
+# まずはRDSを使わずに構築する
+## 構成図
+
+image::/images/kohe/aws_blog_02.png[]
+
+EC2を２台たて、片方にwordpress,もう片方にmyqlをinstallする
+
+
 ## 構成図
 
 
