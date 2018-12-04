@@ -8,14 +8,11 @@
 ## 構成図
 
 
-■Virtual Cast +
-https://virtualcast.jp/
+image::/images/kohe/aws_blog_01.png[]
 
-■Chrome リモートデスクトップ +
-https://chrome.google.com/webstore/detail/chrome-remote-desktop/gbchcmhmhahfdphkhkmpfmihenigjmpp/related?hl=ja
+一般的な感じ。
+今回はロードバランサやオートスケールの設定はしない。
 
 
 ## 環境
 
-
-image::/images/kohe/aws_blog_01.png[]
