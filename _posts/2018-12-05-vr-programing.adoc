@@ -26,6 +26,16 @@ image::/images/kohe/aws_blog_01.png[]
 一般的な感じ。
 今回はロードバランサやオートスケールの設定はしない。
 
+## Aurora Serverless for Mysql
+
+image::/images/kohe/aws_blog_05.png[]
+
+image::/images/kohe/aws_blog_06.png[]
+
+image::/images/kohe/aws_blog_07.png[]
+
+image::/images/kohe/aws_blog_08.png[]
+
 
 ## アクセス
 
