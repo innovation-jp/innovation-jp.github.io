@@ -28,11 +28,17 @@ image::/images/kohe/aws_blog_01.png[]
 
 ## Aurora Serverless for Mysql
 
+Auroraを選択
+
 image::/images/kohe/aws_blog_05.png[]
+設定を `Serverless`にする
 
 image::/images/kohe/aws_blog_06.png[]
+3306ポートを開けてあるSecurityRuleを指定
 
 image::/images/kohe/aws_blog_07.png[]
+
+最後にCapacityのMinとMaxを設定して作成！！
 
 image::/images/kohe/aws_blog_08.png[]
 
