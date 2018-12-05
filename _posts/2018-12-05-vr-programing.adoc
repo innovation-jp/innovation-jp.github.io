@@ -51,6 +51,10 @@ image::/images/kohe/aws_blog_08.png[]
 
 ※次からはCloud9を使ってAuroraにアクセスしたい
 
+## その他諸々
+このままではwordpress内のmysqlアクセス先が、EC2にできていたRDBを見てしまっているので、
+wp_config.phpのhost名をの箇所を、Aurora ServerlessのEndPointを見るよに変更する
+
 ## アクセス
 
 アクセスがなく、Aurora Serverlessが動いてない状態でアクセスしてみる…
