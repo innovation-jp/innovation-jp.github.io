@@ -43,6 +43,14 @@ image::/images/kohe/aws_blog_07.png[]
 image::/images/kohe/aws_blog_08.png[]
 
 
+
+そして、dastabaseを作成したいので
+踏み台サーバから mysqlクライアントでアクセスし、 +
+`CREATE DATABASE wordpress`
+を実行！
+
+※次からはCloud9を使ってAuroraにアクセスしたい
+
 ## アクセス
 
 アクセスがなく、Aurora Serverlessが動いてない状態でアクセスしてみる…
