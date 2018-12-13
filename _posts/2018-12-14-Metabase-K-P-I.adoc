@@ -6,7 +6,7 @@
 最近、開発しているプロダクトの機能が増え、見たいKPIが増えてきました。 +
 現在社内で活用しているKPIを可視化するダッシュボードがすでにあるのですが、自作したもので以下のようになっています。 +
 
-[画像1]
+image::/images/oyaizu/metabase1.png[]
 
 普通に可愛いくていい感じです。 +
 KPIが調子いいと動物が笑顔になったりします。 +
@@ -17,7 +17,7 @@ KPIが調子いいと動物が笑顔になったりします。 +
 
 設定後の画面は以下のようになっています。 +
 
-[画像2]
+image::/images/oyaizu/metabase2.png[]
 
 オシャレでいい感じですね！ +
 もとのダッシュボードに比べれば動物がいなくなって可愛さは失われましたが、SELECT文を追加するだけで簡単にKPIを可視化したパーツが増やせるツールなので、可愛さを失う以上のメリットはありそうです。 +
@@ -48,7 +48,7 @@ MySQLイメージが内包されるdocker-compose.ymlに以下の記述を追記
 
 そして`http://localhost:3000`にアクセスしましょう。以下の画面がでれば成功です。 +
 
-[画像3]
+image::/images/oyaizu/metabase3.png[]
 
 ## 設定方法
 
@@ -56,22 +56,22 @@ MySQLイメージが内包されるdocker-compose.ymlに以下の記述を追記
 
 まずアカウントの設定から始まります。 +
 
-[画像4]
+image::/images/oyaizu/metabase4.png[]
 
 アカウントの設定が終わると連携するDBを設定します。 +
 今回はMySQLを選択し、DBにアクセスするための情報を入力します。 +
 MySQL以外にもPostgresSQLやAmazon Redshift, MongoDB, SQLiteなど様々なDBが選択できます。 + 
 
-[画像5]
+image::/images/oyaizu/metabase5.png[]
 
 接続設定にSSHトンネルやスキャン(=DBの更新タイミング)のタイミングなどが設定できます。 +
 その後、匿名データを送信するか否かの質問に答えた後に以下のような画面になります。 +
 
-[画像6]
+image::/images/oyaizu/metabase6.png[]
 
 使い始めるのボタンをクリックすれば、設定完了です。 +
 
-[画像7]
+image::/images/oyaizu/metabase7.png[]
 
 ## ダッシュボードの作成
 
@@ -79,46 +79,46 @@ MySQL以外にもPostgresSQLやAmazon Redshift, MongoDB, SQLiteなど様々なDB
 そうすると、ダッシュボードの名前などを聞かれるので、入力しましょう。 +
 コレクションですが、「個人のコレクション」か「分析」のどちらかを選ぶのですが、「分析」にすると他のユーザーとダッシュボードを共有できるようです。 +
 
-[画像8]
-[画像9]
+image::/images/oyaizu/metabase8.png[]
+image::/images/oyaizu/metabase9.png[]
 
 作成をクリックすると空のダッシュボードが出来上がりました。 +
 
-[画像10]
+image::/images/oyaizu/metabase10.png[]
 
 次にダッシュボードに追加するパーツを作成しましょう。 +
 右上の照会するボタンをクリックします。 +
 
-[画像11]
+image::/images/oyaizu/metabase11.png[]
 
 SELECT文を直接保存できるネイティブクエリを選択します。 +
 そうすると以下なようなエディターページに遷移します。 +
 
-[画像12]
+image::/images/oyaizu/metabase12.png[]
 
 SELECT文を入力し更新をクリックすると実行結果が得られました。 +
 
-[画像13]
+image::/images/oyaizu/metabase13.png[]
 
 実行結果後どのように可視化するのを選ぶことができます。 +
 
-[画像14]
+image::/images/oyaizu/metabase14.png[]
 
 その後「保存」クリックすると名前や説明、どのコレクションに保存するかを聞かれます。 +
 それらに回答し、再度保存をクリックします。 +
 保存をするとダッシュボードに追加するかどうかを聞かれるので、追加してみましょう。 +
 さきほど追加したダッシュボードを選択するとこのようなダッシュボード編集画面に遷移します。 +
 
-[画像15]
+image::/images/oyaizu/metabase15.png[]
 
 これでパーツをどの大きさにするかどこに配置をするか選択できます。 +
 またパーツをどのよう表示するかを細かく設定もできます。 +
 
-[画像16]
+image::/images/oyaizu/metabase16.png[]
 
 パーツをどんどん追加していき、最終的にはこうなりました。 +
 
-[画像2]
+image::/images/oyaizu/metabase2.png[]
 
 とっても簡単です。 +
 
