@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Metabaseで社内のKPIを可視化してみた - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Metabaseで社内のKPIを可視化してみた">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Metabaseで社内のKPIを可視化してみた">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/12/14/Metabase-K-P-I.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Metabaseで社内のKPIを可視化してみた" />
+    <meta property="og:description" content="どうも、小柳津です。 最近、開発しているプロダクトの機能が増え、見たいKPIが増えてきました。 現在社内で活用しているKPIを可視化するダッシュボードがすでにあるのですが、自作したもので以下のようになっています。 普通に可愛いくていい感じです。 KPIが調子いいと動物が笑顔になったりします。 こんなにいい感じのダッシュボードですが、見たいKPIを増やしたい場合はHTML/CSS周りの開発を行わなければなりません。 さらに最近マーケーターがいい感じにSQLを習得していっているので、開発者でなくとも気軽に可視化したKPIを追加できないかと思いました。 そこ..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/12/14/Metabase-K-P-I.html" />
+    <meta property="article:published_time" content="2018-12-13T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-12-14T01:33:25.209Z" />
+    <meta property="article:tag" content="oyaizu" />
+    <meta property="article:tag" content="Metabase" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Metabaseで社内のKPIを可視化してみた" />
+    <meta name="twitter:description" content="どうも、小柳津です。 最近、開発しているプロダクトの機能が増え、見たいKPIが増えてきました。 現在社内で活用しているKPIを可視化するダッシュボードがすでにあるのですが、自作したもので以下のようになっています。 普通に可愛いくていい感じです。 KPIが調子いいと動物が笑顔になったりします。 こんなにいい感じのダッシュボードですが、見たいKPIを増やしたい場合はHTML/CSS周りの開発を行わなければなりません。 さらに最近マーケーターがいい感じにSQLを習得していっているので、開発者でなくとも気軽に可視化したKPIを追加できないかと思いました。 そこ..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/12/14/Metabase-K-P-I.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars3.githubusercontent.com/u/16201452?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "Metabaseで社内のKPIを可視化してみた",
+    "url": "http://tech.innovation.co.jp/2018/12/14/Metabase-K-P-I.html",
+    "datePublished": "2018-12-13T15:00:00.000Z",
+    "dateModified": "2018-12-14T01:33:25.209Z",
+    "keywords": "oyaizu, Metabase",
+    "description": "どうも、小柳津です。 最近、開発しているプロダクトの機能が増え、見たいKPIが増えてきました。 現在社内で活用しているKPIを可視化するダッシュボードがすでにあるのですが、自作したもので以下のようになっています。 普通に可愛いくていい感じです。 KPIが調子いいと動物が笑顔になったりします。 こんなにいい感じのダッシュボードですが、見たいKPIを増やしたい場合はHTML/CSS周りの開発を行わなければなりません。 さらに最近マーケーターがいい感じにSQLを習得していっているので、開発者でなくとも気軽に可視化したKPIを追加できないかと思いました。 そこ..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-oyaizu tag-Metabase no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="14 Dec 2018" class="post-meta__date date">14 Dec 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/oyaizu">oyaizu</a>, <a href="http://tech.innovation.co.jp/tag/Metabase">Metabase</a></span>
+        <span class="post-meta__author author"><img src="https://avatars3.githubusercontent.com/u/16201452?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">Metabaseで社内のKPIを可視化してみた</h1>
+    </header>
+
+    <section class="post tag-oyaizu tag-Metabase">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>どうも、小柳津です。</p>
+</div>
+<div class="paragraph">
+<p>最近、開発しているプロダクトの機能が増え、見たいKPIが増えてきました。<br>
+現在社内で活用しているKPIを可視化するダッシュボードがすでにあるのですが、自作したもので以下のようになっています。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/metabase1.png" alt="metabase1.png">
+</div>
+</div>
+<div class="paragraph">
+<p>普通に可愛いくていい感じです。<br>
+KPIが調子いいと動物が笑顔になったりします。<br>
+こんなにいい感じのダッシュボードですが、見たいKPIを増やしたい場合はHTML/CSS周りの開発を行わなければなりません。<br>
+さらに最近マーケーターがいい感じにSQLを習得していっているので、開発者でなくとも気軽に可視化したKPIを追加できないかと思いました。<br></p>
+</div>
+<div class="paragraph">
+<p>そこで今回はデータベースの内容を簡単に可視化できるMetabaseというものを使ってみました。<br></p>
+</div>
+<div class="paragraph">
+<p>設定後の画面は以下のようになっています。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/metabase2.png" alt="metabase2.png">
+</div>
+</div>
+<div class="paragraph">
+<p>オシャレでいい感じですね！<br>
+もとのダッシュボードに比べれば動物がいなくなって可愛さは失われましたが、SELECT文を追加するだけで簡単にKPIを可視化したパーツが増やせるツールなので、可愛さを失う以上のメリットはありそうです。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">環境構築</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>それではMetabaseの環境構築を書いていきます。<br>
+今回は検証のために開発環境内にMetabaseを立ち上げていきます。<br></p>
+</div>
+<div class="paragraph">
+<p>弊社では開発環境をDockerで構築しています。<br>
+開発環境の中にMySQLコンテナがあるため、そのコンテナに接続をして、データの可視化がどのように行えるかを検証しました。<br></p>
+</div>
+<div class="paragraph">
+<p>今回細かいDockerの説明は省いていきます。<br></p>
+</div>
+<div class="paragraph">
+<p>MySQLイメージが内包されるdocker-compose.ymlに以下の記述を追記します。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>  metabase:
+    image         : metabase/metabase
+    container_name: test-metabase #例
+    hostname      : test-metabase #例
+    ports:
+    - 3000:3000</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>設定後 <code>docker-compose up</code>でMetabase・MySQLコンテナを立ち上げましょう</p>
+</div>
+<div class="paragraph">
+<p>そして<code><a href="http://localhost:3000" class="bare">http://localhost:3000</a></code>にアクセスしましょう。以下の画面がでれば成功です。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/metabase3.png" alt="metabase3.png">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">設定方法</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>開始のボタンをクリックすると設定画面になります。<br></p>
+</div>
+<div class="paragraph">
+<p>まずアカウントの設定から始まります。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/metabase4.png" alt="metabase4.png">
+</div>
+</div>
+<div class="paragraph">
+<p>アカウントの設定が終わると連携するDBを設定します。<br>
+今回はMySQLを選択し、DBにアクセスするための情報を入力します。<br>
+MySQL以外にもPostgresSQLやAmazon Redshift, MongoDB, SQLiteなど様々なDBが選択できます。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/metabase5.png" alt="metabase5.png">
+</div>
+</div>
+<div class="paragraph">
+<p>接続設定にSSHトンネルやスキャン(=DBの更新タイミング)のタイミングなどが設定できます。<br>
+その後、匿名データを送信するか否かの質問に答えた後に以下のような画面になります。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/metabase6.png" alt="metabase6.png">
+</div>
+</div>
+<div class="paragraph">
+<p>使い始めるのボタンをクリックすれば、設定完了です。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/metabase7.png" alt="metabase7.png">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">ダッシュボードの作成</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ダッシュボードは右上のプラスアイコンからクリックし、「新しいダッシュボード」を選択します。<br>
+そうすると、ダッシュボードの名前などを聞かれるので、入力しましょう。<br>
+コレクションですが、「個人のコレクション」か「分析」のどちらかを選ぶのですが、「分析」にすると他のユーザーとダッシュボードを共有できるようです。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/metabase8.png" alt="metabase8.png">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/metabase9.png" alt="metabase9.png">
+</div>
+</div>
+<div class="paragraph">
+<p>作成をクリックすると空のダッシュボードが出来上がりました。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/metabase10.png" alt="metabase10.png">
+</div>
+</div>
+<div class="paragraph">
+<p>次にダッシュボードに追加するパーツを作成しましょう。<br>
+右上の照会するボタンをクリックします。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/metabase11.png" alt="metabase11.png">
+</div>
+</div>
+<div class="paragraph">
+<p>SELECT文を直接保存できるネイティブクエリを選択します。<br>
+そうすると以下なようなエディターページに遷移します。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/metabase12.png" alt="metabase12.png">
+</div>
+</div>
+<div class="paragraph">
+<p>SELECT文を入力し更新をクリックすると実行結果が得られました。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/metabase13.png" alt="metabase13.png">
+</div>
+</div>
+<div class="paragraph">
+<p>実行結果後どのように可視化するのを選ぶことができます。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/metabase14.png" alt="metabase14.png">
+</div>
+</div>
+<div class="paragraph">
+<p>その後「保存」クリックすると名前や説明、どのコレクションに保存するかを聞かれます。<br>
+それらに回答し、再度保存をクリックします。<br>
+保存をするとダッシュボードに追加するかどうかを聞かれるので、追加してみましょう。<br>
+さきほど追加したダッシュボードを選択するとこのようなダッシュボード編集画面に遷移します。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/metabase15.png" alt="metabase15.png">
+</div>
+</div>
+<div class="paragraph">
+<p>これでパーツをどの大きさにするかどこに配置をするか選択できます。<br>
+またパーツをどのよう表示するかを細かく設定もできます。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/metabase16.png" alt="metabase16.png">
+</div>
+</div>
+<div class="paragraph">
+<p>パーツをどんどん追加していき、最終的にはこうなりました。<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/oyaizu/metabase2.png" alt="metabase2.png">
+</div>
+</div>
+<div class="paragraph">
+<p>とっても簡単です。<br></p>
+</div>
+<div class="paragraph">
+<p>画面をいろいろ見ているとユーザーごとの権限設定や重要KPIをSlackに通知する機能など、様々な機能があるらしいので、いろいろ試してみたいですね。<br></p>
+</div>
+<div class="paragraph">
+<p>ドキュメントが英語なのですが、とても充実していて画像が散りばめられているので、読めそうな雰囲気です。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___4">まとめ</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ダッシュボードもどんどん自分で簡単に追加できるので、今まで可視化できていなかったKPIを簡単に可視化できそうです。<br>
+SQLさえ分かれば、誰でも追加できるのも魅力ですね。<br></p>
+</div>
+<div class="paragraph">
+<p>今回はこれで失礼します。<br></p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11783-1';
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+</body>
+</html>
