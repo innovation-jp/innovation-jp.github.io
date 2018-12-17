@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>社内で行われた第一回アルゴリズム大会で優勝しました！ - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="社内で行われた第一回アルゴリズム大会で優勝しました！">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="社内で行われた第一回アルゴリズム大会で優勝しました！">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/12/16/adams-method.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="社内で行われた第一回アルゴリズム大会で優勝しました！" />
+    <meta property="og:description" content="どうも、Anti-Pattern初代テックリードのbigenです。 先日、社内で第一回アルゴリズム大会が開催されました。 社内エンジニアを対象に、参加者全員で同じ問題を解き、もっとも短い時間で解答を出力するコードを書いた人が優勝です。 なんとこの大会で僕が優勝しまして、初代テックリードの称号を頂きました。 数カ月後に第二回をするそうなので、次回も今から楽しみです。 今日はその大会で出題された問題について解説してみようと思います。 問題 各都道府県の人口が下記配列で与えられ、議席数の合計が289の時、アダムズ方式で各都道府県ごとの議席数を割り振る時、計算..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/12/16/adams-method.html" />
+    <meta property="article:published_time" content="2018-12-15T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-12-17T03:01:13.463Z" />
+    <meta property="article:tag" content="bigen" />
+    <meta property="article:tag" content="adams" />
+    <meta property="article:tag" content="algorithm" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="社内で行われた第一回アルゴリズム大会で優勝しました！" />
+    <meta name="twitter:description" content="どうも、Anti-Pattern初代テックリードのbigenです。 先日、社内で第一回アルゴリズム大会が開催されました。 社内エンジニアを対象に、参加者全員で同じ問題を解き、もっとも短い時間で解答を出力するコードを書いた人が優勝です。 なんとこの大会で僕が優勝しまして、初代テックリードの称号を頂きました。 数カ月後に第二回をするそうなので、次回も今から楽しみです。 今日はその大会で出題された問題について解説してみようと思います。 問題 各都道府県の人口が下記配列で与えられ、議席数の合計が289の時、アダムズ方式で各都道府県ごとの議席数を割り振る時、計算..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/12/16/adams-method.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars1.githubusercontent.com/u/23183770?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "社内で行われた第一回アルゴリズム大会で優勝しました！",
+    "url": "http://tech.innovation.co.jp/2018/12/16/adams-method.html",
+    "datePublished": "2018-12-15T15:00:00.000Z",
+    "dateModified": "2018-12-17T03:01:13.463Z",
+    "keywords": "bigen,  adams,  algorithm",
+    "description": "どうも、Anti-Pattern初代テックリードのbigenです。 先日、社内で第一回アルゴリズム大会が開催されました。 社内エンジニアを対象に、参加者全員で同じ問題を解き、もっとも短い時間で解答を出力するコードを書いた人が優勝です。 なんとこの大会で僕が優勝しまして、初代テックリードの称号を頂きました。 数カ月後に第二回をするそうなので、次回も今から楽しみです。 今日はその大会で出題された問題について解説してみようと思います。 問題 各都道府県の人口が下記配列で与えられ、議席数の合計が289の時、アダムズ方式で各都道府県ごとの議席数を割り振る時、計算..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-bigen tag-adams tag-algorithm no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="16 Dec 2018" class="post-meta__date date">16 Dec 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/bigen">bigen</a>, <a href="http://tech.innovation.co.jp/tag/adams"> adams</a>, <a href="http://tech.innovation.co.jp/tag/algorithm"> algorithm</a></span>
+        <span class="post-meta__author author"><img src="https://avatars1.githubusercontent.com/u/23183770?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">社内で行われた第一回アルゴリズム大会で優勝しました！</h1>
+    </header>
+
+    <section class="post tag-bigen tag-adams tag-algorithm">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>どうも、Anti-Pattern初代テックリードのbigenです。<br>
+先日、社内で第一回アルゴリズム大会が開催されました。<br>
+社内エンジニアを対象に、参加者全員で同じ問題を解き、もっとも短い時間で解答を出力するコードを書いた人が優勝です。<br>
+なんとこの大会で僕が優勝しまして、初代テックリードの称号を頂きました。<br>
+数カ月後に第二回をするそうなので、次回も今から楽しみです。<br>
+<br>
+今日はその大会で出題された問題について解説してみようと思います。<br>
+<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">問題</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>各都道府県の人口が下記配列で与えられ、議席数の合計が289の時、アダムズ方式で各都道府県ごとの議席数を割り振る時、計算に用いる「各都道府県の人口を割る、ある整数」を求めよ。（制限時間30分くらい）</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-php" data-lang="php">// 各都道府県の人口
+$pref = [5381733, 1308265, 1279594, 2333899, 1023119, 1123891,
+    1914039, 2916976, 1974255, 1973115, 7266534, 6222666,
+    13515271, 9126214, 2304264, 1066328, 1154008, 786740,
+    834930, 2098804, 2031903, 3700305, 7483128, 1815865,
+    1412916, 2610353, 8839469, 5534800, 1364316, 963579,
+    573441, 694352, 1921525, 2843990, 1404729, 755733,
+    976263, 1385262, 728276, 5101556, 832832, 1377187,
+    1786170, 1166338, 1104069, 1648177, 1433566];</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>※この問題は、次のURLの問題を参考に作成されています。アダムズ方式の計算方法についてもそちらを参照ください。<br>
+<a href="https://news.goo.ne.jp/article/codeiq/trend/codeiq-49286.html" class="bare">https://news.goo.ne.jp/article/codeiq/trend/codeiq-49286.html</a><br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">考え方</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>「人口を割る、ある整数」をRとします。<br>
+Rが大きくなったり小さくなったり変化した時なにが起きるかを考えてみると、総議席数が変化することがわかります。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>例1 ） R=10000のとき
+// 各都道府源の議席数
+$seats = [539, 131, 128, 234, 103, 113,
+    192, 292, 198, 198, 727, 623,
+    1352, 913, 231, 107, 116, 79,
+    84, 210, 204, 371, 749, 182,
+    142, 262, 884, 554, 137, 97,
+    58, 70, 193, 285, 141, 76,
+    98, 139, 73, 511, 84, 138,
+    179, 117, 111, 165, 144];
+// 総議席数
+$total = count(seats); // 12734
+
+例2 ) R=100000のとき
+// 各都道府源の議席数
+$seats = [54, 14, 13, 24, 11, 12,
+    20, 30, 20, 20, 73, 63,
+    136, 92, 24, 11, 12, 8,
+    9, 22, 21, 38, 75, 19,
+    15, 27, 89, 56, 14, 10,
+    6, 8, 20, 29, 15, 8,
+    10, 14, 8, 52, 9, 14,
+    18, 12, 12, 17, 15];
+// 総議席数
+$total = count(seats); // 1299</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>ですので、今回の問題はRを順番に試していって、総議席数がぴったり289になるRを探すという探索問題だということがわかります。<br></p>
+</div>
+<div class="paragraph">
+<p>しかも、総議席数はRに対して単調減少（Rを大きくすると、必ず総議席数は変わらないか小さくなる。増えることはない。）になっているので、リスト探索問題として扱えそうです。<br>
+つまり、</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">R</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">総議席数（単調減少なので、降順にソートされているのと同じ）</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">127094745</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">…</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">…</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">…</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">12734</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">…</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">…</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">100000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1299</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">…</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">…</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">???</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">289</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>とソート済みのリストあるいはDBのようなものがあって、目的のRを発見すればよいということですね<br>
+<br>
+リスト探索問題で代表的な解法は
+<a href="https://ja.wikipedia.org/wiki/%E6%8E%A2%E7%B4%A2#%E3%83%AA%E3%82%B9%E3%83%88%E6%8E%A2%E7%B4%A2" class="bare">https://ja.wikipedia.org/wiki/%E6%8E%A2%E7%B4%A2#%E3%83%AA%E3%82%B9%E3%83%88%E6%8E%A2%E7%B4%A2</a>
+こちらを参照してください<br>
+<br>
+細かなテクニック（おおまかなアタリをつけてからやるとか）は色々あるとして、大きな方針としては<br></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>線形探索</p>
+</li>
+<li>
+<p>二分探索</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>のどちらかになるでしょう。今回のようにデータ量が多いリストを考える時は、ほぼ迷わず二分探索を選んでいいと思います。<br>
+線形探索の計算量は <em>O</em>(<em>n</em>)ですが、二分探索では<em>O</em>(log <em>n</em>)だからです。<br>
+<br>
+データ量が少ない探索であれば、テクニックを駆使した線形探索でも二分探索を上回る速さを出せることはありますが、データ量が多くなればなるほど、ちょっとやそっとで追いつけない計算量の差ができてしまいます。<br>
+計算量については過去のブログ（ <a href="http://tech.innovation.co.jp/2018/06/26/Introduction-of-Computational-Complexity.html">アルゴリズム計算量入門　〜　①</a>）でわりと詳細に触れています。<br>
+<br>
+というわけで何も考えず二分探索で書いてみました。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">二分探索とチューニング</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title">adams.php</div>
+<div class="content">
+<pre class="highlight"><code class="language-php" data-lang="php">&lt;?php
+// number of seats
+$n = 289;
+// population of each prefecture
+$pref = [5381733, 1308265, 1279594, 2333899, 1023119, 1123891,
+    1914039, 2916976, 1974255, 1973115, 7266534, 6222666,
+    13515271, 9126214, 2304264, 1066328, 1154008, 786740,
+    834930, 2098804, 2031903, 3700305, 7483128, 1815865,
+    1412916, 2610353, 8839469, 5534800, 1364316, 963579,
+    573441, 694352, 1921525, 2843990, 1404729, 755733,
+    976263, 1385262, 728276, 5101556, 832832, 1377187,
+    1786170, 1166338, 1104069, 1648177, 1433566];
+
+$start = microtime(true);
+
+// main logic
+$sum = array_sum($pref);
+
+// initial span
+$from = 1;
+$to = $sum;
+
+// binary search
+while (true) {
+    $mid = ceil(($from + $to) / 2);
+    $seats = array_map(function ($value) use ($mid) {
+        return ceil($value / $mid);
+    }, $pref);
+
+    $total = array_sum($seats);
+
+    if ($total == $n) {
+        $result = $mid;
+        break;
+    } elseif ($total &lt; $n) {
+        $to = $mid;
+    } elseif ($total &gt; $n) {
+        $from = $mid;
+    }
+}
+
+
+$end = microtime(true);
+
+$interval = $end - $start;
+
+echo "R: " . $result . "\n";
+echo "interval: " . $interval . "\n";
+echo "iteration: " . $i . "\n";
+
+// R: 478528
+// interval: 0.00014901161193848
+// iteration: 18</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>というわけで、二分探索の範囲の初期値は余裕をもって1 ~ 総人口と適当において動かしてみると、<br>
+反復回数18回で約0.000149秒くらいでした。<br>
+<br>
+なかなかいいスコアです。<br>
+「二分探索」というスキームで戦う以上は、あとは初期値くらいしかチューニングできないので、初期値を工夫してみます。<br>
+<br>
+<br>
+「答えって大体この辺に近そうだよね」という指標をまず考えてみます。<br>
+直感的に、人口をRで割ったあとの配列（切り上げる前）の合計が289になってると、切り上げたあとの合計も289に近そうです。 そしかも必ず289より大きくなります。<br>
+<br>
+これをもとにちょろっと計算してみると、R=（総人口/289）とすると、総議席数は289~(289+47)の間にくることがわかりました。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>例） 簡単のため、
+$array = [10, 15, 25]
+について考えると、配列の合計50で値を全部わると、
+$array = [0.2, 0.3, 0.5]
+となり、全て合計すると1になる配列になります。さらに全部に289をかけると、
+$array = [57.8, 86.7, 144.5]
+となり、合計すると289になる配列になります。
+このあと各要素を切り上げていくんですが、その合計は289より大きくなってるのは自明ですね。
+
+ちなみに、切り上げたときに増える議席数は1要素あたり０〜1の間でしか増えないはずです。
+「(合計)で割って(289)をかける」のは「(合計/289)で割る」のと同じなので、Rを(合計/289)としておくと、総議席数は289~(289+3)の間にくるはずです。</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>同様に、R=（総人口/(289-47)）とすると、総議席数は(289-47)~289の間に来ます。<br>
+<br>
+これを使うと、総議席数が289となるようなRは、 <strong>（総人口/289）</strong> より大きく <strong>（総人口/(289-47)）</strong> より小さいということが分かるので、それを初期値として組み込んでみます。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>$from = $sum / $n;
+$to = $sum / ($n - count($pref));
+
+...
+
+echo "R: " . $result . "\n";
+echo "interval: " . $interval . "\n";
+echo "iteration: " . $i . "\n";
+
+// R: 478644
+// interval: 0.0000731945037841
+// iteration: 9</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>というわけで反復回数をさらに半分にし、計算時間も半分になりました。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___4">おわりに</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>大会の後から知ったんですが、探索点を中間点以外のところにとる <strong>内挿探索</strong> というアルゴリズムがあるそうで、<br>
+データの偏りが少ない今回のような問題ではかなり速度があげられそうです。<br>
+<br>
+ロジックもそれほど複雑ではなく二分探索の延長で実装できそうなので、暇があれば挑戦してみようと思います。</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11783-1';
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+</body>
+</html>
