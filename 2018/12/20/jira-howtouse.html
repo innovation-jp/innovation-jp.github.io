@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>社内共有も兼ねてJIRAの使い方をまとめてみます - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="社内共有も兼ねてJIRAの使い方をまとめてみます">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="社内共有も兼ねてJIRAの使い方をまとめてみます">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2018/12/20/jira-howtouse.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="社内共有も兼ねてJIRAの使い方をまとめてみます" />
+    <meta property="og:description" content="KTNです 今回は今まで開発の課題管理で使っていたJIRAの使い方をまとめて見ようと思います 色々あって今後JIRAの管理を引き継いで行く感じになるので、 その時の資料に使えればという思いで書きます 基本的に使い始めるときに気にしなくても良いような、細かい設定については説明を省いていこうと思います また2018年10月に新しいタイプのプロジェクト（次世代プロジェクト）が作成できるようになったようですが、 既存のプロジェクトの説明をするという趣旨のため 今までのもの（クラシックプロジェクト）を扱います JIRAの概要について 一番大きな単位として「プロジ..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2018/12/20/jira-howtouse.html" />
+    <meta property="article:published_time" content="2018-12-19T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2018-12-21T05:02:12.737Z" />
+    <meta property="article:tag" content="jira" />
+    <meta property="article:tag" content="howtouse" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="社内共有も兼ねてJIRAの使い方をまとめてみます" />
+    <meta name="twitter:description" content="KTNです 今回は今まで開発の課題管理で使っていたJIRAの使い方をまとめて見ようと思います 色々あって今後JIRAの管理を引き継いで行く感じになるので、 その時の資料に使えればという思いで書きます 基本的に使い始めるときに気にしなくても良いような、細かい設定については説明を省いていこうと思います また2018年10月に新しいタイプのプロジェクト（次世代プロジェクト）が作成できるようになったようですが、 既存のプロジェクトの説明をするという趣旨のため 今までのもの（クラシックプロジェクト）を扱います JIRAの概要について 一番大きな単位として「プロジ..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2018/12/20/jira-howtouse.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars0.githubusercontent.com/u/24905783?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "社内共有も兼ねてJIRAの使い方をまとめてみます",
+    "url": "http://tech.innovation.co.jp/2018/12/20/jira-howtouse.html",
+    "datePublished": "2018-12-19T15:00:00.000Z",
+    "dateModified": "2018-12-21T05:02:12.737Z",
+    "keywords": "jira,  howtouse",
+    "description": "KTNです 今回は今まで開発の課題管理で使っていたJIRAの使い方をまとめて見ようと思います 色々あって今後JIRAの管理を引き継いで行く感じになるので、 その時の資料に使えればという思いで書きます 基本的に使い始めるときに気にしなくても良いような、細かい設定については説明を省いていこうと思います また2018年10月に新しいタイプのプロジェクト（次世代プロジェクト）が作成できるようになったようですが、 既存のプロジェクトの説明をするという趣旨のため 今までのもの（クラシックプロジェクト）を扱います JIRAの概要について 一番大きな単位として「プロジ..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-jira tag-howtouse no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="20 Dec 2018" class="post-meta__date date">20 Dec 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/jira">jira</a>, <a href="http://tech.innovation.co.jp/tag/howtouse"> howtouse</a></span>
+        <span class="post-meta__author author"><img src="https://avatars0.githubusercontent.com/u/24905783?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">社内共有も兼ねてJIRAの使い方をまとめてみます</h1>
+    </header>
+
+    <section class="post tag-jira tag-howtouse">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>KTNです<br>
+今回は今まで開発の課題管理で使っていたJIRAの使い方をまとめて見ようと思います<br>
+色々あって今後JIRAの管理を引き継いで行く感じになるので、<br>
+その時の資料に使えればという思いで書きます<br>
+<br>
+基本的に使い始めるときに気にしなくても良いような、細かい設定については説明を省いていこうと思います<br>
+また2018年10月に新しいタイプのプロジェクト（次世代プロジェクト）が作成できるようになったようですが、<br>
+既存のプロジェクトの説明をするという趣旨のため<br>
+今までのもの（クラシックプロジェクト）を扱います<br></p>
+</div>
+</div>
+</div>
+<h1 id="_jira" class="sect0">JIRAの概要について</h1>
+<div class="paragraph">
+<p>一番大きな単位として「プロジェクト」というものがあり、用途ごとに作成します<br>
+例えば弊社だと<br>
+開発タスク管理用として「ITトレンド開発」「リストファインダー開発」<br>
+承認ワークフロー用として「ITトレンド申請」「リストファインダー申請」などです<br>
+設定を確認するときはサマリ画面が見やすいです、<br>
+「プロジェクト設定」 - 「概要」と移動すると見ることが出来ます<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20181220/1.jpg" alt="1.jpg">
+</div>
+</div>
+<div class="paragraph">
+<p>「プロジェクト」の設定としては、ここに出てくる項目を設定すればほぼ完了です<br>
+順番に見ていきます<br></p>
+</div>
+<h1 id="__" class="sect0">課題タイプ</h1>
+<div class="paragraph">
+<p>「課題タイプ」とはJIRAで作成する課題のグループ分けみたいなものです<br>
+「タスク」という「課題タイプ」を作って全部の課題をそれに紐づけても良いですし、<br>
+「新規開発」「バグ修正」「質問」など業務の種類によって分けても良いです<br></p>
+</div>
+<div class="paragraph">
+<p>この後に出てきますが、課題が終わるまでにどのようなステータスがあるか設定する「ワークフロー」や、<br>
+入力項目の種類や、必須項目設定などする「画面」などがあり、それらは「課題タイプ」毎に設定することが出来ます<br></p>
+</div>
+<div class="paragraph">
+<p>1つの「プロジェクト」で複数の「課題タイプ」を扱うことが出来るので、<br>
+複数の「課題タイプ」をまとめて1つの「課題タイプスキーム」と呼ばれるものを定義して、<br>
+その「課題タイプスキーム」を「プロジェクト」に紐づけます<br></p>
+</div>
+<div class="paragraph">
+<p>「ITS: 申請課題タイプスキーム」のリンク部分をクリックすると一覧で見れます<br>
+課題タイプ「ジョブスケジュール申請」は、<br>
+ワークフロー「ITS: JobScheduleApplication Workflow」を使い<br>
+フィールド設定「ITS: フィールド設定」を使い<br>
+画面「ITS: ジョブスケジュール申請画面スキーム」を使うということがわかります<br></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20181220/2.jpg" alt="2.jpg">
+</div>
+</div>
+<h1 id="___2" class="sect0">ワークフロー</h1>
+<div class="paragraph">
+<p>「ワークフロー」とは課題が終わるまでにどのような工程を踏む必要があるか設定するものです<br>
+例えば課題タイプ「新規開発」の場合に、要件定義→設計→開発→テスト→リリース→クローズのような工程を踏む必要があるとします<br>
+この工程を「ワークフロー」で定義しておくことで、課題タイプ「新規開発」の課題に各工程の遷移を強制することが出来ます<br>
+<br>
+各課題が現状どの工程にあるのか見れるようになることや、<br>
+「要件定義」から「設計」に変更できるのは特定の権限を持った人だけ（部長だけ）という設定も出来るので、<br>
+課題を確認して「設計」となっている場合は部長が承認したという意味をもたせることも出来ます<br>
+<br>
+「ワークフロー」は「課題タイプ」毎に設定可能で、複数の「ワークフロー」をまとめて1つの「ワークフロースキーム」と呼ばれるものを定義して、<br>
+その「ワークフロースキーム」を「プロジェクト」に紐づけます<br>
+<br>
+先程の、「ITS: 申請課題タイプスキーム」のリンク部分をクリックすると一覧で見れます</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/kotani/20181220/2.jpg" alt="2.jpg">
+</div>
+</div>
+<h1 id="___3" class="sect0">画面</h1>
+<div class="paragraph">
+<p>「画面」はその名のとおりです<br>
+必要な画面項目（フィールド）複数を1つの「画面」に紐づけて利用します<br></p>
+</div>
+<div class="paragraph">
+<p>課題の作成、編集、表示用の「画面」をまとめて1つの「画面スキーム」と呼ばれるものを定義します<br>
+「画面スキーム」は「課題タイプ」毎に設定可能で、複数の「画面スキーム」をまとめて1つの「課題タイプ画面スキーム」と呼ばれるものを定義して、<br>
+その「課題タイプ画面スキーム」を「プロジェクト」に紐づけます<br></p>
+</div>
+<h1 id="___4" class="sect0">フィールド</h1>
+<div class="paragraph">
+<p>「フィールド」もその名の通りです、「画面」で使う入力項目などの設定です<br>
+標準である程度入力項目が用意されているのですが、足りないときに「カスタムフィールド」を作ります<br>
+開発費用の予実管理をしたい場合は、「見積総費用」「総費用実績」という感じで自由に作ってください<br>
+項目の入力方法の説明コメントの設定や、数値のみ・選択リスト・チェックボックスなどの種類を選択可能です<br></p>
+</div>
+<div class="paragraph">
+<p>「カスタムフィールド」のどれを利用するか、表示／非表示、必須／任意などを「フィールドの構成」で定義します<br>
+「フィールドの構成」は「課題タイプ」毎に設定可能で、複数の「フィールドの構成」をまとめて1つの「フィールドの構成スキーム」と呼ばれるものを定義して、<br>
+その「フィールドの構成スキーム」を「プロジェクト」に紐づけます<br></p>
+</div>
+<h1 id="___5" class="sect0">ロール</h1>
+<div class="paragraph">
+<p>一応説明しますが使わなくても大丈夫なやつです<br>
+複数の「プロジェクト」で1つの「ワークフロー」を共有して使う場合などに有効です、<br>
+逆に「ワークフロー」を共有する時以外は使う意味がありません<br>
+「ワークフロー」のところでちらっとお話していた、<br>
+「要件定義」から「設計」に変更できるのは部長だけとした「ワークフロー」を、<br>
+「ITトレンド開発」「リストファインダー開発」の「プロジェクト」に設定したとします<br>
+<br>
+プロジェクト「ITトレンド」ではITトレンドを担当する部署の部長Aさんを部長とする<br>
+プロジェクト「リストファインダー」ではリストファインダーを担当する部署の部長Bさんを部長とする<br>
+と設定することで、「ワークフロー」を共有していながら、<br>
+「プロジェクト」ごとに「要件定義」から「設計」に変更できる人を制限出来ます<br>
+まあ、使わなくても大丈夫なやつです<br></p>
+</div>
+<h1 id="___6" class="sect0">権限</h1>
+<div class="paragraph">
+<p>「プロジェクト」の管理者は誰か、課題を作れるのは誰かなど<br>
+権限設定が出来ます。これは簡単ですね<br>
+〜〜の管理、〜〜の削除 の権限は設定を気をつけてください<br></p>
+</div>
+<h1 id="___7" class="sect0">通知</h1>
+<div class="paragraph">
+<p>課題を作ったとき、課題にコメントを追記した時などに<br>
+メール通知する設定が出来ます。これも簡単ですね<br>
+<br>
+ただ、課題の状態が変更されたときの動作しかここで通知設定出来ません<br>
+1週間更新されていない課題をまとめてメール通知、<br>
+設定した期限を過ぎている課題をまとめてメール通知、<br>
+などについては「課題とフィルター」を使うと通知することが出来ます<br></p>
+</div>
+<h1 id="___8" class="sect0">さいごに</h1>
+<div class="paragraph">
+<p>ここまででざっくり構成は理解できた。かもしれません！<br>
+色々自由に設定できるのですがかゆいところに手が届かないし、<br>
+なれるまですごく使いづらいし、色々設定していくと設定がごちゃごちゃ汚くなる<br>
+というのが全体的な印象です<br>
+設定項目を理解して、設定時のルールをしっかり決めてからやるのがおすすめです<br>
+<br>
+眠いのでここで終わりにしますが、<br>
+社内で説明する必要があるのでまた続き書きます<br>
+<br>
+こちらからは以上です<br></p>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11783-1';
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+</body>
+</html>
