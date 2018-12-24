@@ -1,0 +1,277 @@
+# AkamaiのSite Shieldを導入した際にTerraformを使ってみた件
+:hp-tags: Akamai, Site Shield, Terraform, Shirota
+:published_at: 2018-12-25
+
+先日AkamaiのSite Shieldという製品を導入しました。 +
+この製品はCDNのエッジからオリジンへ通信する際の出口IPアドレスを固定化できるというものです。
+
+これの何が良いかといいますと、 +
+これによりオリジンのロードバランサの許可IPを絞ることができ、 +
+様々な攻撃を防げるからです。
+
+その際のAWSのセキュリティグループの作成にTerraformを使ったので、 +
+ブログに残しておきたいと思います。
+
+# 前提
+* インフラはAWSを使っている
+* 作業端末はMacを使っている
+
+# IPアドレスの設定は手動ではやってられない
+AkamaiのSite Shieldを設定・申請して払い出されたIPを確認すると
+
+xxx.xxx.xxx.xxx/24
+
+上記のような8ビット分のIPが26個も払い出されました。
+
+この26個の8ビットIPアドレス帯域を設定したセキュリティグループを +
+AWSコンソールから作成していこうと思ったのですが。。 +
+26個も手動で設定するのが面倒ですし、適用するVPCも4つあって、80番と443番ポートを開けるので、 +
+26個のIPを2つのポートで、4VPC分となると +
+設定回数が200回を超えてしまいます。。
+
+流石に面倒過ぎるし、手動作業で間違いがあってもいけないので、 +
+Terraformでセキュリティグループを生成・作成してみました。
+
+参考 +
+https://qiita.com/zembutsu/items/5de875ed99ac8a56a998
+
+Terraformを簡単に紹介しますとのインフラコード化ツールで、 +
+JSON形式でインフラ設定を書いて、 +
+コマンド実行すればインフラが出来上がるとっても便利なツールです。
+
+# TerraformをMacにインストール
+```
+$ brew install terraform
+```
+
+いつもの通りbrewコマンドで、簡単です。
+
+# Terraformファイルを作成
+
+## AWSの認証周りの情報を設定するファイルを作成
+aws_region_tokyo.tf
+
+```
+provider "aws" {
+    access_key = "AK******************"
+    secret_key = "NF*********************************"
+    region = "ap-northeast-1"
+}
+```
+
+拡張子は .tf とするようです。
+
+## Terraform設定ファイルを作成
+
+aws_security_group.tf
+```
+resource "aws_security_group" "akamai_site_shield_it" {
+    name = "akamai_site_shield"
+    ingress {
+        from_port = 80
+        to_port = 80
+        protocol = "tcp"
+        cidr_blocks = ["xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24"]
+    }
+    ingress {
+        from_port = 443
+        to_port = 443
+        protocol = "tcp"
+        cidr_blocks = ["xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24"]
+    }
+    vpc_id = "vpc-xxxxxxxxxx"
+    description = "Akamai Site Shield IPs."
+}
+resource "aws_security_group" "akamai_site_shield_biz" {
+    name = "akamai_site_shield"
+    ingress {
+        from_port = 80
+        to_port = 80
+        protocol = "tcp"
+        cidr_blocks = ["xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24"]
+    }
+    ingress {
+        from_port = 443
+        to_port = 443
+        protocol = "tcp"
+        cidr_blocks = ["xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24","xxx.xxx.xxx.xxx/24"]
+    }
+    vpc_id = "vpc-yyyyyyyyyy"
+    description = "Akamai Site Shield IPs."
+}
+```
+
+上記2つのファイルを同じディレクトリに用意し、
+そのディレクトリでまず初期化します。
+
+```
+$ terraform init
+
+Initializing provider plugins...
+- Checking for available provider plugins on https://releases.hashicorp.com...
+- Downloading plugin for provider "aws" (1.54.0)...
+
+The following providers do not have any version constraints in configuration,
+so the latest version was installed.
+
+To prevent automatic upgrades to new major versions that may contain breaking
+changes, it is recommended to add version = "..." constraints to the
+corresponding provider blocks in configuration, with the constraint strings
+suggested below.
+
+* provider.aws: version = "~> 1.54"
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+```
+
+planコマンドで実行計画を確認できます。
+
+```
+$ terraform plan
+Refreshing Terraform state in-memory prior to plan...
+The refreshed state will be used to calculate this plan, but will not be
+persisted to local or remote state storage.
+
+
+------------------------------------------------------------------------
+
+An execution plan has been generated and is shown below.
+Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  + aws_security_group.akamai_site_shield
+      id:                                    <computed>
+      arn:                                   <computed>
+      description:                           "Akamai Site Shield IPs."
+      egress.#:                              <computed>
+      ingress.#:                             "2"
+      ingress.1508980580.cidr_blocks.#:      "26"
+      ingress.1508980580.cidr_blocks.0:      "xxx.xxx.xxx.xxx/24"
+      ingress.1508980580.cidr_blocks.1:      "xxx.xxx.xxx.xxx/24"
+      .
+      . - (中略) -
+      .
+      ingress.4181053134.cidr_blocks.8:      "xxx.xxx.xxx.xxx/24"
+      ingress.4181053134.cidr_blocks.9:      "xxx.xxx.xxx.xxx/24"
+      ingress.4181053134.description:        ""
+      ingress.4181053134.from_port:          "80"
+      ingress.4181053134.ipv6_cidr_blocks.#: "0"
+      ingress.4181053134.prefix_list_ids.#:  "0"
+      ingress.4181053134.protocol:           "tcp"
+      ingress.4181053134.security_groups.#:  "0"
+      ingress.4181053134.self:               "false"
+      ingress.4181053134.to_port:            "80"
+      name:                                  "akamai_site_shield"
+      owner_id:                              <computed>
+      revoke_rules_on_delete:                "false"
+      vpc_id:                                <computed>
+
+
+Plan: 2 to add, 0 to change, 0 to destroy.
+
+------------------------------------------------------------------------
+
+Note: You didn't specify an "-out" parameter to save this plan, so Terraform
+can't guarantee that exactly these actions will be performed if
+"terraform apply" is subsequently run.
+```
+
+applyコマンドで実行します。
+
+```
+$ terraform apply
+
+An execution plan has been generated and is shown below.
+Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  + aws_security_group.akamai_site_shield
+      id:                                    <computed>
+      arn:                                   <computed>
+      description:                           "Akamai Site Shield IPs."
+      egress.#:                              <computed>
+      ingress.#:                             "2"
+      ingress.1508980580.cidr_blocks.#:      "26"
+      ingress.1508980580.cidr_blocks.0:      "xxx.xxx.xxx.xxx/24"
+      ingress.1508980580.cidr_blocks.1:      "xxx.xxx.xxx.xxx/24"
+      .
+      . - (中略) -
+      .
+      ingress.4181053134.cidr_blocks.8:      "xxx.xxx.xxx.xxx/24"
+      ingress.4181053134.cidr_blocks.9:      "xxx.xxx.xxx.xxx/24"
+      ingress.4181053134.description:        ""
+      ingress.4181053134.from_port:          "80"
+      ingress.4181053134.ipv6_cidr_blocks.#: "0"
+      ingress.4181053134.prefix_list_ids.#:  "0"
+      ingress.4181053134.protocol:           "tcp"
+      ingress.4181053134.security_groups.#:  "0"
+      ingress.4181053134.self:               "false"
+      ingress.4181053134.to_port:            "80"
+      name:                                  "akamai_site_shield"
+      owner_id:                              <computed>
+      revoke_rules_on_delete:                "false"
+      vpc_id:                                <computed>
+
+
+Plan: 2 to add, 0 to change, 0 to destroy.
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+aws_security_group.akamai_site_shield: Creating...
+  arn:                                   "" => "<computed>"
+  description:                           "" => "Akamai Site Shield IPs."
+  egress.#:                              "" => "<computed>"
+  ingress.#:                             "" => "2"
+  ingress.1508980580.cidr_blocks.#:      "" => "26"
+  ingress.1508980580.cidr_blocks.0:      "" => "xxx.xxx.xxx.xxx/24"
+  ingress.1508980580.cidr_blocks.1:      "" => "xxx.xxx.xxx.xxx/24"
+  .
+  . - (中略) -
+  .
+  ingress.4181053134.cidr_blocks.8:      "" => "xxx.xxx.xxx.xxx/24"
+  ingress.4181053134.cidr_blocks.9:      "" => "xxx.xxx.xxx.xxx/24"
+  ingress.4181053134.description:        "" => ""
+  ingress.4181053134.from_port:          "" => "80"
+  ingress.4181053134.ipv6_cidr_blocks.#: "" => "0"
+  ingress.4181053134.prefix_list_ids.#:  "" => "0"
+  ingress.4181053134.protocol:           "" => "tcp"
+  ingress.4181053134.security_groups.#:  "" => "0"
+  ingress.4181053134.self:               "" => "false"
+  ingress.4181053134.to_port:            "" => "80"
+  name:                                  "" => "akamai_site_shield"
+  owner_id:                              "" => "<computed>"
+  revoke_rules_on_delete:                "" => "false"
+  vpc_id:                                "" => "<computed>"
+aws_security_group.akamai_site_shield: Creation complete after 4s (ID: sg-xxxxxxxxxxxxxxxxx)
+
+Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
+```
+
+これだけで！ +
+200回以上のボタンクリック作業の時間を短縮できました。
+
+# 所感
+IPの変更などがあった際もこれがあれば怖くない！
+
+Terraformはロードバランサーを作成したりなどもできて、 +
+ステージング環境や開発環境を作成してすぐ壊すなど、 +
+そういった用途がまず思いつきますが、 +
+こういった大量IPなどを設定する時にも使い所があって、とても便利だな〜と感じます。
+
+2019年はTerraformをガンガン使って楽していきたいです！
