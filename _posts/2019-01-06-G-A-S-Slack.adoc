@@ -9,12 +9,11 @@
 GASを使って、対象チャンネルや対象期間を入力したら、メッセージを一括削除出来るようにしてみました〜！ +
 
 
-*〜完成したもの〜* +
-
+== 完成したもの
 image::/images/sumomo/20181109/1.png[]
 
 
-*〜やったこと〜* +
+== 内容
 <使用したSlack API> +
 `チャンネル情報取得` +
 https://api.slack.com/methods/channels.list +
@@ -24,7 +23,8 @@ https://api.slack.com/methods/channels.history +
 https://api.slack.com/methods/chat.delete +
  +
 <参考にしたコード> +
-https://qiita.com/ShishidoToru/items/0725a06ec53d5c6b502d
+`【GAS】Slackの特定のチャンネル内の投稿を定期的に削除する` +
+https://qiita.com/ShishidoToru/items/0725a06ec53d5c6b502d +
 
 
 ```
@@ -109,9 +109,9 @@ function delete_slack() {
 ```
 
 ※Slackの権限の都合上、私は他人のメッセージも消せてしまうので「メッセージの投稿者が自分だったら削除」としましたが、 +
-他人のメッセージを削除する権限がなければ、この部分は要らないかと！
+他人のメッセージを削除する権限がなければ、この部分は要らないかと！ +
 
-*〜感想〜* +
+== 感想
 Slackがポンポン消えてくのはとても快感でした。笑 +
 まだ改善したい点もあるので、これからも色々挑戦していきたいと思います〜！ +
 
