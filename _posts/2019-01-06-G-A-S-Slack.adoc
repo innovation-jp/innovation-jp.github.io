@@ -1,0 +1,121 @@
+= GASでSlackをまとめて削除するやつ作ってみた
+:hp-tags: sumomo, GAS, GoogleAppsScript, Spreadsheet, Slack
+
+
+あけましておめでとうございます！ +
+初詣でおみくじを３回引きましたが全て小吉だったすももです。 +
+ +
+以前から「Slackを何件かまとめて消したい時に、一件一件削除するのは面倒くさいなぁ」と思っていたので、 +
+GASを使って、対象チャンネルや対象期間を入力したら、メッセージを一括削除出来るようにしてみました〜！ +
+
+
+*〜完成したもの〜* +
+
+image::/images/sumomo/20181109/1.png[]
+
+
+*〜やったこと〜* +
+<使用したSlack API> +
+`チャンネル情報取得` +
+https://api.slack.com/methods/channels.list +
+`メッセージ情報取得` +
+https://api.slack.com/methods/channels.history +
+`メッセージ削除` +
+https://api.slack.com/methods/chat.delete +
+ +
+<参考にしたコード> +
+https://qiita.com/ShishidoToru/items/0725a06ec53d5c6b502d
+
+
+```
+function delete_slack() {
+
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet(); //アクティブシート
+    var check_box = sheet.getRange("B12").getValue(); //チェックボックスのセルの値
+    
+    // 判定（チェックが付いていたら実行する）
+    if (!check_box) {
+      return false;
+    }
+    
+    // Slackのトークン
+    var token = "xoxp-XXXXXXXX-XXXXXXXX-XXXXX";
+    // チャンネルIDを取得
+    var channel_id = get_channel_id(sheet, token);
+    // 開始日時のUNIXタイムスタンプを取得
+    var start_ts = get_time_stamp(sheet, "C6", "E6", "G6", "00:00:00");
+    // 終了日時のUNIXタイムスタンプを取得
+    var end_ts = get_time_stamp(sheet, "C8", "E8", "G8", "23:59:59");
+    // 対象チャンネル＆期間のメッセージ情報を取得
+    var post_info = get_post_info(token, channel_id, start_ts, end_ts);
+    // 対象メッセージを削除
+    var delete_complete = delete_target_slack(token, channel_id, post_info);
+    
+    // delete_completeがtrueだったら削除完了と表示し、チェックボックスを外す
+    if (delete_complete) {
+      // ポップアップを表示
+      Browser.msgBox("該当のSlackを削除しました！");
+      // チェックボックスからチェックを外す
+      sheet.getRange("B12").setValue(false);
+    }
+  }
+  
+  // 〜チャンネル準備ゾーン〜（channel_idを取得する）
+  function get_channel_id(sheet, token) {
+    var target_channel = sheet.getRange("B4").getValue(); //対象チャンネルのセルの値
+    var url = "https://slack.com/api/channels.list?token=" + token;
+    var response = UrlFetchApp.fetch(url);
+    var json = response.getContentText();
+    var list = JSON.parse(json);
+    // チャンネル一覧から対象チャンネルのIDを取得
+    for (var i = 0; i < list.channels.length; i++) {
+      if (list.channels[i].name == target_channel) {
+        return list.channels[i].id;
+      }
+    }
+  }
+  
+  // 〜タイムスタンプ準備ゾーン〜（対象期間のUNIXタイムスタンプを取得する）
+  function get_time_stamp(sheet, y_cell, m_cell, d_cell, time) {
+    var year  = sheet.getRange(y_cell).getValue(); //年のセルの値
+    var month = sheet.getRange(m_cell).getValue(); //月のセルの値
+    var day   = sheet.getRange(d_cell).getValue(); //日のセルの値
+    var date  = year + "/" + month + "/" + day + " " + time; //変換準備
+    // UNIXタイムスタンプに変換
+    return Date.parse(date) / 1000;
+  }
+  
+  // 〜メッセージ準備ゾーン〜（対象チャンネル＆期間のメッセージ情報を取得する）
+  function get_post_info(token, channel_id, start_ts, end_ts) {
+    var url = "https://slack.com/api/channels.history?token=" + token + "&channel=" + channel_id + "&oldest=" + start_ts + "&latest=" + end_ts;
+    var response = UrlFetchApp.fetch(url);
+    var json = response.getContentText();
+    var list = JSON.parse(json);
+    return list.messages;
+  }
+  
+  // 〜メッセージ削除ゾーン〜(対象メッセージを削除してtrueを返す)
+  function delete_target_slack(token, channel_id, post_info) {
+    // 対象のメッセージ情報を回す
+    for (var i = 0; i < post_info.length; i++) {
+      // メッセージの投稿者が自分だったら削除
+      if (post_info[i].user == "ユーザーID") {
+        var url = "https://slack.com/api/chat.delete?token=" + token + "&channel=" + channel_id + "&ts=" + post_info[i].ts;
+        UrlFetchApp.fetch(url);
+      }
+    }
+    return true;
+  }
+```
+
+※Slackの権限の都合上、私は他人のメッセージも消せてしまうので「メッセージの投稿者が自分だったら削除」としましたが、 +
+他人のメッセージを削除する権限がなければ、この部分は要らないかと！
+
+*〜感想〜* +
+Slackがポンポン消えてくのはとても快感でした。笑 +
+まだ改善したい点もあるので、これからも色々挑戦していきたいと思います〜！ +
+
+ではでは！ +
+
+
+
