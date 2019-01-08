@@ -213,29 +213,11 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/08/05/mecab.html" title="link to Trello APIとSlackとGASとRaspberryPiを使ってみたお話。">Trello APIとSlackとGASとRaspberryPiを使ってみたお話。</a></h2>
-        <p class="excerpt">みなさまこんばんはこへです。 暑くなってきまして、そろそろTrello APIやラズパイやGASを使って何かしたい時期が来ましたので触ってみました。 イメージ 残タスク通知をGASでやるぜ ↑の今日やることリストに入っているカードを毎日18時にSlackに通知する。 ※事前にTrelloApiのkeyとtoken、リストのidを取得しておく。 function checkTrello() {   var trelloKey   = "###TRELLOKEY###";   var trelloToken = "###TRELLOTOKEN###";   var listId  = "###LISTID###";   var api = "https://trello.com/1/lists&hellip;</p>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/01/06/G-A-S-Slack.html" title="link to GASでSlackをまとめて削除するやつ作ってみた">GASでSlackをまとめて削除するやつ作ってみた</a></h2>
+        <p class="excerpt">あけましておめでとうございます！ 初詣でおみくじを３回引きましたが全て小吉だったすももです。 以前から「Slackを何件かまとめて消したい時に、一件一件削除するのは面倒くさいなぁ」と思っていたので、 GASを使って、対象チャンネルや対象期間を入力したら、メッセージを一括削除出来るようにしてみました〜！ 完成したもの 1.チャンネル名、開始日、終了日を入力してチェックボックスにチェックを付ける ※トリガーはスプレッドシート編集時、チェックが付いていたら実行するように設定しました 2.該当期間の自分のメッセージが削除され、「削除しました」のポップアップが表示される 3.OKを押すとチェックボックスのチェックが外れる 内容 &lt;使用したSlack API&gt; チャンネル情報取得 http&hellip;</p>
         <div class="post-list__meta">
-            <time datetime="05 Aug 2017" class="post-list__meta--date date">05 Aug 2017</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="Kohe">Kohe</a>, <a href="#blog" title="Trello API">Trello API</a>, <a href="#blog" title="Slack">Slack</a>, <a href="#blog" title="CoffeeScript">CoffeeScript</a>, <a href="#blog" title="RaspberryPi">RaspberryPi</a>, <a href="#blog" title="GAS">GAS</a></span>
-        </div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/06/11/jira-to-slack-notification.html" title="link to JIRAのREST APIから作業の記録取得してSlackに通知してみる">JIRAのREST APIから作業の記録取得してSlackに通知してみる</a></h2>
-        <p class="excerpt">こんにちは、加藤です。 弊社ではJIRAを導入しており、課題に対して時間を記録しています。 ただ、時間を記録しても一覧で見る方法見つからず、記録つけっぱなしな状態でした。 (ご存知の方居ましたら、教えていただきたいです。） そこで、今回はこのJIRAの作業記録の部分をREST API経由取得し、Slackに「今日どの課題を何時間やったのか？」を通知する仕組みを作ってみます。 検証環境 検証環境は、下記の通りです。 macOS Sierra(10.12.4) Lumen 5.4 + Homestead 4.0.0 (PHP7.1) JIRA Cloud REST API 1000.1045.2 JIRAの開発者用アカウントの取得 下記URLから、JIRAのdeveloperアカウントが取得で&hellip;</p>
-        <div class="post-list__meta">
-            <time datetime="11 Jun 2017" class="post-list__meta--date date">11 Jun 2017</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="Kato">Kato</a>, <a href="#blog" title="JIRA">JIRA</a>, <a href="#blog" title="Slack">Slack</a></span>
-        </div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2016/08/26/guidelines-with-google-apps-script.html" title="link to Google Apps Scriptで朝会唱和(?)の当番表をSlackに通知できるようにしてみた話">Google Apps Scriptで朝会唱和(?)の当番表をSlackに通知できるようにしてみた話</a></h2>
-        <p class="excerpt">どうも。Linuxと同い年のオザサです。 最近は一層朝が辛いんですが、朝会ネタについて書いてみます。 朝会 弊社ではスクラム風の開発に取り組んでいるので、 毎朝デイリーミーティングをホワイトボードの前で立って行っています。 そのミーティングの後に2点ほど各担当者が小噺をすることになっています。 その2点とは、 技術系話の共有 エンジニア行動指針に対する自分の考えや行動について です。 技術系話の共有 1個目の技術系話の共有は毎朝メンバーの中からランダムに発表者が選定され、 Slackで通知が来るようになっています。 エンジニアたるもの情報を常に取りに行こうという思いのもと、そんな仕組みを入れています。 (あまりに連続で当たってしまうとネタがどんどんなくなってくるんですが) 例えば、「こんな&hellip;</p>
-        <div class="post-list__meta">
-            <time datetime="26 Aug 2016" class="post-list__meta--date date">26 Aug 2016</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="4thPost">4thPost</a>, <a href="#blog" title="Ozasa">Ozasa</a>, <a href="#blog" title="GoogleAppsScript">GoogleAppsScript</a>, <a href="#blog" title="Guidelines">Guidelines</a>, <a href="#blog" title="Javascript">Javascript</a>, <a href="#blog" title="Slack">Slack</a></span>
+            <time datetime="06 Jan 2019" class="post-list__meta--date date">06 Jan 2019</time> &#8226;
+            <span class="post-list__meta--tags tags"><a href="#blog" title="sumomo">sumomo</a>, <a href="#blog" title=" GAS"> GAS</a>, <a href="#blog" title=" GoogleAppsScript"> GoogleAppsScript</a>, <a href="#blog" title=" Spreadsheet"> Spreadsheet</a>, <a href="#blog" title=" Slack"> Slack</a></span>
         </div>
         <hr class="post-list__divider" />
       </li>
@@ -252,7 +234,7 @@ var _trackingid = 'LFT-10003-1';
 
 
             <footer class="footer">
-                <span class="footer__copyright">&copy; 2017. All rights reserved.</span>
+                <span class="footer__copyright">&copy; 2019. All rights reserved.</span>
                 <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
                 <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
             </footer>
@@ -284,6 +266,15 @@ var _trackingid = 'LFT-10003-1';
     ga('send', 'pageview');
 
     </script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11783-1';
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
 
 </body>
 </html>
