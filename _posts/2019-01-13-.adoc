@@ -7,26 +7,223 @@
 今回は、ログ出力についてのお話をのせたいと思います。 +
 
 ====== 経緯
-ログに出力する内容については気をつけていたのですが、エラーが発生した際に出力するログの内容にstackが出力されておらず解析が困難になるため。
-
-====== 今回やる事
-
-エラーが発生した場合にログにstackを出力する +
-
-====== 修正前の実装と出力内容
+エラーが発生した際に出力するログに、stackが出力されず解析が困難になると弊社SREにつめられたため。  + 
+ごもっとも！なので見直します！！
 
 
-バッチ実行後に以下のコマンドを実行し、画像を生成する。
+====== 今回やりたいこと
+
+ログにstackを出力する。 +
+
+
+
+====== 修正前
+
+
+例えば、文字列を数値に変換する関数では、この様に実装していました。
+
 ++++
 <pre style="font-family: Menlo, Courier">
-go tool pprof --svg ./tracking test_track.profile > track.svg
+num, err := strconv.Atoi(target)
+if err != nil {
+	return 
+}
+</pre> 
+++++
+
+エラー判定をして、呼び出し元に返却する。 +
+
+
+targetが数値に変換されない"abcde"の様な値の場合には、err（*errors.errorString）には、
+++++
+<pre style="font-family: Menlo, Courier">
+strconv.Atoi: parsing "abcde": invalid syntax
 </pre> 
 ++++
 
 
+この様な値が設定されています。 + 
+
+エラーが発生時に、ログを出力するのならばこれでもいいでしょう。 +
+
+
+====== 修正後
+
+エラーハンドリングには、"github.com/pkg/errors"を使っています。 +
+
+エラーハンドリングしている箇所で、WithStack関数を使って発生したerrorをStackに追加します。
+
+
+++++
+<pre style="font-family: Menlo, Courier">
+num, err := strconv.Atoi(target)
+if err != nil {
+	<font color="red">err = errors.WithStack(err)</font>
+	return 
+}
+</pre> 
+++++
+
+テスト関数で実行してみます。
+
+++++
+<pre style="font-family: Menlo, Courier">
+func TestERR(t *testing.T) {
+	target := "abcde"
+	_, err := strconv.Atoi(target)
+	if err != nil {
+		t.Log("------before------")
+		msg := err.Error()
+		stack := fmt.Sprintf("%+v", err)
+		t.Log(msg)
+		<font color="blue">t.Log(stack)</font>
+
+		t.Log("------after------")
+		<font color="red">err = errors.WithStack(err)</font>
+		msg = err.Error()
+		stack = fmt.Sprintf("%+v", err)
+		t.Log(msg)
+		<font color="red">t.Log(stack)</font>
+	}
+}
+</pre> 
+++++
+
+実行結果
+++++
+<pre style="font-family: Menlo, Courier">
+=== RUN   TestERR
+--- PASS: TestERR (0.00s)
+    test.go:214: ------before------
+    test.go:217: strconv.Atoi: parsing "abcde": invalid syntax
+    <font color="blue">test.go:218: strconv.Atoi: parsing "abcde": invalid syntax</font>
+    test.go:220: ------after------
+    test.go:224: strconv.Atoi: parsing "abcde": invalid syntax
+    <font color="red">test.go:225: strconv.Atoi: parsing "abcde": invalid syntax
+        github.com/test/test.TestERR
+                /go/src/test/test.go:221
+        testing.tRunner
+                /usr/local/go/src/testing/testing.go:827
+        runtime.goexit
+                /usr/local/go/src/runtime/asm_amd64.s:1333</font>
+</pre> 
+++++
+
+errors.WithStack(err)を設定したので、stackとして行数が出力されています。
+
+
+ちなみに、errors.WithStack()はこの様な実装になってます。
+runtime.Callersでプログラム名と行番号を取得して、そのアドレスを保持している様です。
+
+++++
+<pre style="font-family: Menlo, Courier">
+// WithStack annotates err with a stack trace at the point WithStack was called.
+// If err is nil, WithStack returns nil.
+func WithStack(err error) error {
+	if err == nil {
+		return nil
+	}
+	return &withStack{
+		err,
+		callers(),
+	}
+}
+
+type withStack struct {
+	error
+	*stack
+}
+
+func callers() *stack {
+	const depth = 32
+	var pcs [depth]uintptr
+	n := runtime.Callers(3, pcs[:])
+	var st stack = pcs[0:n]
+	return &st
+}
+</pre> 
+++++
+
+引用）"github.com/pkg/errors" +
+参考）http://golang.jp/pkg/runtime
+
+
+====== ちょっとした問題
+stackが出力されるコトは確認できたのですが、 +
+gormのIsRecordNotFoundError判定が失敗する問題が出てきました。 +
+
+
+
+First関数でデータが存在しない場合に、gormはエラー（record not found）を設定します。 +
+今回、stackを積む様に、errors.WithStack(err)を追加しました。
+++++
+<pre style="font-family: Menlo, Courier">
+if err = db.Table("table_name").Select("id").Where("deleted_at is null").First(&result).Error; err != nil {
+    // stackを追加する様に修正前
+    err = errors.WithStack(err)
+}
+</pre> 
+++++
+
+
+この状態で、IsRecordNotFoundErrorを実行すると、record not foundであってもfalseが返却されてしまいます。
+
+
+++++
+<pre style="font-family: Menlo, Courier">
+var (
+	// ErrRecordNotFound record not found error, happens when haven't find any matched data when looking up with a struct
+	<font color="blue">iErrRecordNotFound = errors.New("record not found")</font>
+)
+
+// IsRecordNotFoundError returns current error has record not found error or not
+func IsRecordNotFoundError(err error) bool {
+	if errs, ok := err.(Errors); ok {
+		for _, err := range errs {
+			if err == ErrRecordNotFound {
+				return true
+			}
+		}
+	}
+	<font color="red">treturn err == ErrRecordNotFound</font>
+}
+</pre> 
+++++
+引用）"github.com/jinzhu/gorm" +
+
+
+stackを積んだコトにより"treturn err == ErrRecordNotFound"の判定でfalseとなっていました。 +
+
+何故か？ +
+
+WithStack(err)をすると、IsRecordNotFoundErrorに渡されたerrの型 は、*errors.withStack +
+
+WithStack(err)をしない場合は、*errors.errorString
+
+IsRecordNotFoundErrorで判定しているerr型（errors.New("record not found")）は、*errors.errorString +
+
+なるほど・・・。
+
+
+++++
+<pre style="font-family: Menlo, Courier">
+if err = db.Table("table_name").Select("id").Where("deleted_at is null").First(&result).Error; err != nil {
+	<font color="blue">if !gorm.IsRecordNotFoundError(err) {</font>
+		err = errors.WithStack(err)
+	}
+}
+</pre> 
+++++
+
+データ存在しない場合は、stackを積まない様にしました。
 
 ====== まとめ
 
+こういう、ログとか非機能要件などで発生するあるあるの問題。 +
+
+最初にちゃんと設計しとけば〜とか思っても、多かれ少なかれ起こります。 +
+
+今回のやつも、もう少し後ならやばかった。
 
 おわり。
 
