@@ -1,0 +1,127 @@
+# Netlifyを使ってNuxt.jsで作成したPWAアプリを簡単にデプロイする
+:hp-alt-title: Netlifyを使ってNuxt.jsで作成したPWAアプリを簡単にデプロイする
+:hp-tags: Hasumin, Nuxt, PWA, Netlify
+
+どうも。はすみんです。 +
+前回のブログでは、Nuxt.jsの概要について触れました。 +
+http://tech.innovation.co.jp/2018/11/13/Nuxtjs.html
+
+最近Nuxt.jsを使ってWebアプリを作っているのですが、 +
+Nuxt.jsを使うとPWAが簡単に作れます。 +
+
+また、本番へのデプロイもGitHubやGitlabと連携することにより、簡単に自動デプロイできます。 +
+
+Nuxt.jsのアプリをどうやって公開しようかと思っていたところ、 +
+Netlifyが非常に簡単にできるらしいとのことで使ってみることにしました。 +
+
+## Nuxt.jsでサービスを作成
+まず公式に則ってNuxt.jsでアプリを作ります。 +
+https://ja.nuxtjs.org/guide/installation/
+
+以下のコマンドをターミナルで実行します。 +
+```
+npx create-nuxt-app <project-name>
+```
+npxコマンドのインストールがまだでしたらbrewでインストールします。 +
+```
+npm install -g npx
+
+```
+いくつか質問されるので、作成したいアプリに合わせて選択してください。 +
+
+回答が終わると、アプリを作成する準備ができました。 +
+以下のコマンドでアプリを立ち上げます。 +
+```
+yarn run dev
+```
+コンパイルが完了すると、アプリケーションは http://localhost:3000 で動いてくれています。 +
+2,3分で立ち上がるので、コーヒーでも淹れて待っていましょう。 +
+
+## 作ったアプリをPWA化する
+次にNuxt.jsで作成したアプリをPWA化します。 +
+こちらも公式にやり方が載っているのでそれに沿ってやっていきます。 +
+https://pwa.nuxtjs.org/setup
+
+まず以下のコマンドを入力しPWAパッケージを入れます。 +
+```
+yarn add @nuxtjs/pwa
+```
+
+続いてnuxt.config.jsにPWAモジュールを追記します。 +
+```
+{
+    modules: [
+        '@nuxtjs/pwa',
+    ],
+}
+```
+
+次にstaticディレクトリが存在していることを確認し、PWAアプリになったときのicon画像をセットします。 +
+公式では512x512px以上を推奨しています。 +
+ちなみにこちらの設定は無効化もできます。 +
+```
+{
+  modules: [
+      ['@nuxtjs/pwa', { icon: false }]
+  ],
+}
+```
+
+次に.gitignoreに以下を追記します。 +
+```
+sw.*
+```
+こうすることでサービスワーカーが作成するファイルをgitの管理下から除外できます。 +
+
+PWA化できたので、ビルドします。 +
+```
+yarn build
+```
+以上で設定は完了です。 +
+
+## Netlifyを使って公開する
+最後にNetlifyにデプロイします。 +
+https://www.netlify.com/
+
+Netlifyは静的なサイトのホスティングサービスです。 +
+Nuxt.jsで作成したアプリをもとに静的ファイルを生成し、Netlify上に公開できます。 +
+
+やることは大きく3つです。 +
+- ブランチ(masterなど)をデプロイする +
+- ビルドコマンドを実行(npm run generate) +
+- 公開ディレクトリの設定(dist) +
+
+言わずもがな公式のやり方に沿ってやっていきます。 +
+https://ja.nuxtjs.org/faq/netlify-deployment/
+
+
+1. masterブランチにpush
+2. Netlifyに登録、「New Site from Git」からGitHub/Gitlabを選択
+3. 公開するリポジトリを選択
+4. デプロイするブランチを選択
+5. Build commandに、``` npm run generate ``` を設定
+6. Publish directoryに、``` dist ```を設定
+7. Deploy site
+
+上記後、5分かからないくらいでデプロイが完了します。 +
+いやー、めちゃくちゃ便利です。 +
+
+デプロイされたサイトを見てみましょう。 +
+いい感じですね。 +
+
+image:/images/hasumi/nuxt/deploy.png[]
+
+上の画像からマウスがあるところを見てみると、「インストールしています」という文字があります。 +
+PWAのアプリではこの表記があり、押下するとアプリとしてダウンロードできます。 +
+
+試しにPWAで開いてみましょう。 +
+
+image:/images/hasumi/nuxt/netlify.gif[]
+
+いい感じですね。 +
+MacではさもApp Storeから落としたアプリのように操作できます。 +
+
+## さいごに
+改めてNuxt.jsとPWAがめちゃくちゃ便利だと実感しました。 +
+めっちゃ便利なんで、引き続きPWAアプリの開発を楽しくできそうだなと感じました。 +
+気になっている人はすごい簡単にできるので、ぜひ試してみてください。 +
