@@ -98,9 +98,9 @@ https://ja.nuxtjs.org/faq/netlify-deployment/
 1. masterブランチにpush
 2. Netlifyに登録、「New Site from Git」からGitHub/Gitlabを選択
 3. 公開するリポジトリを選択
-4. デプロイするブランチを選択
-5. Build commandに、``` npm run generate ``` を設定
-6. Publish directoryに、``` dist ```を設定
+4. デプロイするブランチを選択
+5. Build commandに、`` npm run generate `` を設定
+6. Publish directoryに、`` dist `` を設定
 7. Deploy site
 
 上記後、5分かからないくらいでデプロイが完了します。 +
