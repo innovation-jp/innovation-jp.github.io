@@ -44,14 +44,20 @@ strconv.Atoi: parsing "abcde": invalid syntax
 
 この様な値が設定されています。 + 
 
-エラーが発生時に、ログを出力するのならばこれでもいいでしょう。 +
+エラー発生箇所で出力するのなら、これでもいいでしょう。 +
+
+エラーログの出力は、呼び出し元関数（かなり上位関数）で行なっています。 + 
+
+そのため、これだと内容は分かっても、どこでエラーになったか分かり難いです。
+
 
 
 ====== 修正後
 
+
+エラーハンドリングしている箇所で、WithStack関数を使って発生したerrorをStackに追加します。 +
 エラーハンドリングには、"github.com/pkg/errors"を使っています。 +
 
-エラーハンドリングしている箇所で、WithStack関数を使って発生したerrorをStackに追加します。
 
 
 ++++
@@ -112,8 +118,8 @@ func TestERR(t *testing.T) {
 errors.WithStack(err)を設定したので、stackとして行数が出力されています。
 
 
-ちなみに、errors.WithStack()はこの様な実装になってます。
-runtime.Callersでプログラム名と行番号を取得して、そのアドレスを保持している様です。
+ちなみに、errors.WithStack()はこの様な実装になってます。 +
+runtime.Callersでプログラム名と行番号を取得して、そのアドレスを保持してます。
 
 ++++
 <pre style="font-family: Menlo, Courier">
