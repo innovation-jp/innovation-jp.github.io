@@ -1,4 +1,4 @@
-# アプリケーションのログ出力の見直し
+# アプリケーションログ出力の見直し
 :hp-tags: NewTsukamoto, mac, Golang, seelog, gorm
 
 こんにちは。
