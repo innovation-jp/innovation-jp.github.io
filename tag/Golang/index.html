@@ -213,6 +213,15 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/01/13/.html" title="link to アプリケーションログ出力の見直し">アプリケーションログ出力の見直し</a></h2>
+        <p class="excerpt">こんにちは。 エンジニアのNew塚本です。 今回は、ログ出力についてのお話をのせたいと思います。 経緯 エラーが発生した際に出力するログに、stackが出力されず解析が困難になると弊社SREにつめられたため。  ごもっとも！なので見直します！！ 今回やりたいこと ログにstackを出力する。 修正前 例えば、文字列を数値に変換する関数では、この様に実装していました。 num, err := strconv.Atoi(target) if err != nil { 	return } エラー判定をして、呼び出し元に返却する。 targetが数値に変換されない"abcde"の様な値の場合には、err（*errors.errorString）には、 strconv.Atoi: parsing "&hellip;</p>
+        <div class="post-list__meta">
+            <time datetime="13 Jan 2019" class="post-list__meta--date date">13 Jan 2019</time> &#8226;
+            <span class="post-list__meta--tags tags"><a href="#blog" title="NewTsukamoto">NewTsukamoto</a>, <a href="#blog" title=" mac"> mac</a>, <a href="#blog" title=" Golang"> Golang</a>, <a href="#blog" title=" seelog"> seelog</a>, <a href="#blog" title=" gorm"> gorm</a></span>
+        </div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/11/11/Go-2.html" title="link to Goのプロファイラを使おう！ その2">Goのプロファイラを使おう！ その2</a></h2>
         <p class="excerpt">こんにちは。 エンジニアのNew塚本です。 最近、地元でお祭りがありました。午前中から呑めるっていいですね！ 今回も、前回に引き続きプロファイラについてのお話をのせたいと思います。 今回やる事 プロファイリングデータを可視化する 使用するプログラム 前回と同じプログラムを使用しました。 Azureキューストレージからデータを取得、ごにょごにょした処理後にDBにInsertして、Azureキューストレージからデータを削除するバッチ処理です。 プロファイルデータの画像化 プログラムには、以下のコードが入っているのでバッチを実行すれば、プロファイルデータが出力されます。 f, _ := os.Create("test_track.profile") pprof.StartCPUProfile(f&hellip;</p>
         <div class="post-list__meta">
@@ -288,7 +297,7 @@ var _trackingid = 'LFT-10003-1';
 
 
             <footer class="footer">
-                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright">&copy; 2019. All rights reserved.</span>
                 <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
                 <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
             </footer>
