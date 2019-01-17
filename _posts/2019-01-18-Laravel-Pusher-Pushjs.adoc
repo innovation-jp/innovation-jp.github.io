@@ -1,0 +1,146 @@
+= Laravel + Pusher + Push.js で簡単にデスクトップ通知を作成してみた
+:hp-tags: nakamura,Laravel,Pusher,Push.js,デスクトップ通知
+
+どうも、中村です。
+
+デスクトップ通知、作る機会がありそうだったので作ってみました。
+
+==== 作成したもの
+
+```
+①php artisanで作成したコマンドを実行（通知させたい文言を指定）
+②デスクトップ通知される
+```
+こんな感じの超シンプルなものを今回作ってみました。
+
+==== 環境
+
+Laravel 5.7 +
+nginx/1.13.12 +
+
+
+DBとか特に使ってません。
+
+==== 作成手順
+
+①Pusherに登録
+
+https://pusher.com/
+
+上記URLから登録を行い、appを作成します。 +
+詳細はこちらがよくまとまっていたので参考になるかと思います。
+
+https://qiita.com/alingogo/items/a52dfccc2e4711c5f521
+
+
+②artisanコマンドを作成
+
+以下のようなものを作りました。
+```
+<?php
+namespace App\Console\Commands;
+use Illuminate\Console\Command;
+use Pusher\Pusher;
+class TestPusher1 extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'command:test-pusher1{message : 送信するメッセージ}';
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = '極力PUSHERのサンプルコードのままver';
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function handle()
+    {
+        // コマンドライン引数から送信内容を取得
+        $message = $this->argument('message');
+        // ここにサンプルコードを貼り付け
+        $options = array(
+            'cluster' => config('broadcasting.connections.pusher.options.cluster'),
+            'useTLS' => config('broadcasting.connections.pusher.options.encrypted')
+        );
+        $pusher = new Pusher(
+            config('broadcasting.connections.pusher.key'),
+            config('broadcasting.connections.pusher.secret'),
+            config('broadcasting.connections.pusher.app_id'),
+            $options
+        );
+        $data['message'] = $message;
+        $pusher->trigger('my-channel', 'my-event', $data);
+        $this->info($message . " を送信しました！");
+    }
+}
+```
+.envにPusherでappを作成した際の情報を設定するのを忘れずに。
+
+またPusherの管理画面でappを作成したときにサンプルコードがあったので、なるべくそのまま使ってます。
+
+③フロント側の作成
+
+新規でページを作るのが面倒だったので、welcome.blade.phpに追記することにしました。
+
+```
+<script src="https://js.pusher.com/4.3/pusher.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/push.js/1.0.9/push.js"></script>
+<script>
+    // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true;
+    var pusher = new Pusher('{{ config('broadcasting.connections.pusher.key') }}', {
+        cluster: '{{ config('broadcasting.connections.pusher.options.cluster') }}',
+        forceTLS: '{{ config('broadcasting.connections.pusher.options.encrypted') }}'
+    });
+    var channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function(data) {
+        //alert(JSON.stringify(data));
+        Push.create(data.message);// デスクトップ通知にするためにpush.jsを利用
+    });
+</script>
+```
+
+コメントにも書いてますが、デスクトップ通知にしたいのでpush.jsを使用してます。
+
+通知内容に画像なども設定することができるらしいので、詳細は以下を参考にしてみてください。
+
+https://pushjs.org/docs/introduction
+
+
+以上です！
+
+https://github.com/mizu-kichi/pusher_test/commit/b998cf7baf708b2168430ccc01c7ddfa84957502
+
+
+==== 完成したもの
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/NUilbisiZvg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
++++
+
+
+=== 感想
+
+適当に作っただけで謎の感動がありました（笑） +
+push.jsいいかも。
+
+ただ結局はプライベートチャンネルを使うことになると思うので、Laravelのブロードキャストをちゃんと使うことになりそうですね。
+
+以上です！
+
