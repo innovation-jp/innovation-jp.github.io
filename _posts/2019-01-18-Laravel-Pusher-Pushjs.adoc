@@ -123,7 +123,10 @@ class TestPusher1 extends Command
 https://pushjs.org/docs/introduction
 
 
-以上です！
+以上で完成です！
+
+
+※詳細はgithub上で確認いただくのが早いです
 
 https://github.com/mizu-kichi/pusher_test/commit/b998cf7baf708b2168430ccc01c7ddfa84957502
 
