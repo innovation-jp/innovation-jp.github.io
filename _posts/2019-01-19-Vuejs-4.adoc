@@ -20,7 +20,7 @@ http://tech.innovation.co.jp/2018/11/11/Vuejs-3.html[その3] +
 ## 作ったもの
 実際にできたものがこちらになります。
 
-image:/images/yu/quantum/shor.png[width="600"]
+image:/images/yu/quantum/shor.png[width="800"]
 
 ショアのアルゴリズムの流れは
 https://www.nippyo.co.jp/shop/book/7061.html[[1\]]
