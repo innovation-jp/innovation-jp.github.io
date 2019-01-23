@@ -1,0 +1,227 @@
+# CPPでソケットプログラミングやってみた
+:hp-alt-title:  CPPでソケットプログラミングやってみた
+:hp-tags: Socket, CPP, AhYung,
+
+Hello~~一年生のアヤンです。
+
+初めてのブログを書いてから
+
+勉強会でPHPでソケットのサーバとクライアントを作ってみましたので、バージョン２でCPPで作ってみました！調べて上でPHPととても似ていました。
+
+
+#### 目的
+勉強会でPHPでやったソケットプログラミングをCPPで同じく簡単なサーバーとクライエントの連携するネットワークのプログラムを作ってみました。 
+
+
+#### 使ったツール
+Cloud9のIDE https://c9.io
+
+##### プログラム説明
+クライアントの方で４つのステップを分けて、書きました。
+
+. 　ソケット作成
+.	作成したソケットをサーバーに接続
+.	データをサーバーに送る
+.	サーバーからの返却
+
+サーバの方で主に5つのステップを使いました。
+
+1.	ソケット作成
+2.	ソケットをバインドする
+3.	クライアントから接続を聞く
+4.	接続したらクライアントからデータを取得
+5.	クライアントに返事を送る
+
+CPPで書くと必要なLibrariesはこちらです。
+
+----
+#include<sys/socket.h>
+#include<arpa/inet.h>
+#include<unistd.h>
+#include<iostream>
+#include<stdio.h>
+#include<string.h>
+
+using namespace std;
+----
+
+###### ソケット作成
+それぞれの処理を関数に分けて、ソケットの作成はこんな感じです。
+
+----
+// ソケット作成関数
+int createSocket() 
+{
+    int mySocket;
+    cout << "ソケット作成します。\n";
+    // socket(アドレス種類, ソケットのタイプ, プロトコール)
+    mySocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    
+    return mySocket;
+}
+----
+
+目的の条件によるsocketの引数が変わってくるので、この場合ではこれを使いました。
+
+- AF_INET: IPv4アドレスファミリー
+- SOCK_STREAM: バイトストリームで2ウェイ接続のソケットタイプ
+- IPPROTO_TCP: Transmission Control Protocol (上の二つは AF_INET・AF_INET6とSOCK_STREAMの時のみ使えます）
+
+引数のオプションの参考: https://docs.microsoft.com/ja-jp/windows/desktop/api/winsock2/nf-winsock2-socket
+
+
+###### サーバーの方でソケットをバインドする
+ソケットを作成し、bindの関数でソケットを指定されたアドレスとポート番号にbindします。
+
+----
+// ソケットをバインドする
+int bindSocket(int mySocket)
+{
+    // バインドの処理結果
+    int bindResult = -1;
+    // クライアントと接続のための好きなポート番号
+    int clientPort = ******;
+    struct sockaddr_in server={0};
+    
+    // sockaddr_in IPv4のソケットアドレスタイプのストラクトを指定
+    // sin_family アドレス種類
+    // sin_addr.sin_aar アドレス
+    // sin_port ポート番号
+    server.sin_family = AF_INET;
+    server.sin_addr.s_addr = htonl(INADDR_ANY);
+    server.sin_port = htons(clientPort);
+    bindResult = bind(mySocket, (struct sockaddr *)&server, sizeof(server));
+    
+    return bindResult;
+}
+
+----
+
+###### サーバーの方でクライアントの接続を待機する状態
+main関数でクライアントから接続を来るまでパスを開いたままの状態に設定します。
+
+----
+// クライアントから接続を待機
+listen(socketCreateResult, backlog);
+----
+
+###### クライアントから接続
+
+----
+// サーバーと接続
+int connectSocketToServer(int mySocket)
+{
+    int connectionResult = -1;
+    // サーバーのファイルで指定したと同じポート番号
+    int serverPortNumber = ******;　
+    
+    // sockaddr_in IPv4のソケットアドレスタイプのストラクトを指定
+    // sin_family アドレス種類
+    // sin_addr.sin_aar アドレス
+    // sin_port ポート番号
+    struct sockaddr_in myServer = {0};
+    // AF_INET IPv4アドレス種類のプロトコール
+    myServer.sin_family = AF_INET;
+    // テストのためローカルホストを使ってinet_addrでドットIPアドレスを変更
+    myServer.sin_addr.s_addr = inet_addr("127.0.0.1"); 
+    // ポート番号をTCP/lIPネットワークバイト順番に変更
+    myServer.sin_port = htons(serverPortNumber);
+    
+    /*
+        connect関数の引数
+            socket, sockaddr構造体のポインター, バイトでsockaddrの構造体のサイズ
+    */
+    connectionResult = connect(mySocket, (struct sockaddr *)&myServer, sizeof(struct sockaddr_in));
+    
+    return connectionResult;
+}
+
+----
+
+###### サーバーでクライアントの接続を受け取る
+
+----
+sock = accept(socketCreateResult, NULL, NULL);
+----
+
+###### 接続無事にでき,サーバーにメッセージを送る
+
+----
+// サーバーにメッセージを送る
+int sendDataToServer(int mySocket, char* clientMessage, int messageSize)
+{
+    int sendResult = -1;
+    
+    sendResult = send(mySocket, clientMessage, messageSize, 0);
+    
+    return sendResult;
+}
+----
+
+そして、サーバーでメッセージを取得し、返事を返します。
+
+----
+// クライアントから返事を取得
+memset(clientMessage, '\0', sizeof clientMessage);
+if ( recv(sock, clientMessage, 200, 0) < 0) {
+	cout << "クライアントから取得失敗しました。\n";
+	break;
+}
+cout << "クライアントのメッセジー：" << clientMessage << "\n";
+
+// サーバーからメッセージ送る
+memset(serverMessage, '\0', sizeof serverMessage);
+strcpy(serverMessage, "サーバーでーす。");
+if ( send(sock, serverMessage, strlen(serverMessage), 0) < 0){
+	cout << "サーバーからメッセジーを送るのが失敗しました。\n";
+	return 1;
+}
+----
+
+クライアントを返したメッセージを取得します。
+
+----
+// サーバーの返事を受け取って表示する
+int responseResult = getReplyFromServer(mySocket, serverReply, 200);
+if (responseResult == -1) {
+	cout << "サーバーから返事の取得を失敗しました。";
+	return 1;
+}
+cout << "サーバーの返事: " << serverReply;
+----
+
+###### 最後に切断する
+
+クライアントの方で完全に切断します。
+
+----
+// サーバーに切断
+close(mySocket);
+// 2 = SD_BOTH: 送ると受け取る処理を切断
+shutdown(mySocket, 2);
+----
+
+サーバーの方で別の接続を待機する状態に戻します。
+
+----
+// クライアントと切断
+close(sock);
+sleep(1);
+----
+
+
+
+#### まとめ
+CPPとPHPを比較してみると、半年ぶりにCPPを使うと特に変数の型に関してはPHPの楽さまた書きやすさをとても感じました！PHPについてもっと勉強していきたいと思っています！
+
+###### References
+- https://www.geeksforgeeks.org/socket-programming-cc/
+- https://www.geeksforgeeks.org/socket-programming-in-cc-handling-multiple-clients-on-server-without-multi-threading/
+- https://aticleworld.com/socket-programming-in-c-using-tcpip/
+- https://www.bogotobogo.com/cplusplus/sockets_server_client.php
+- http://www.cplusplus.com/reference/istream/istream/read/
+- https://docs.microsoft.com/ja-jp/windows/desktop/api/winsock2/nf-winsock2-socket
+
+
+
+Done
