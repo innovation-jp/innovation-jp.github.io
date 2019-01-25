@@ -1,0 +1,200 @@
+# Nuxt × Typescript
+:hp-alt-title:  
+:hp-tags: Vue, Nuxt, Typescript, Otake
+
+こんにちは。1年目の大竹です。
+
+現在携わっているプロジェクトではNuxtとTypescriptを使用しているのですが、入ってから約2ヶ月がたったで、このタイミングで学んだことをまとめ見たいと思います。
+
+
+#### Nuxtとは？
+NuxtはVue.jsのフレームワークです。
+
+Nuxtを使用することで規約で縛った開発が行えます。 +
+また、Vueでの開発で良く使用するVue routerやVuexが標準で入っているなど便利です。
+
+https://ja.nuxtjs.org/
+
+
+#### Typescriptとは？
+Typescriptオープンソースのプログラミング言語で、JavaScriptに対して静的型付けとクラスベースオブジェクト指向を加えたスーパーセットです。
+
+https://www.typescriptlang.org/docs/home.html
+
+Vueではちょうど一年前くらいからサポートされ始めました。
+
+https://jp.vuejs.org/v2/guide/typescript.html
+
+
+#### 環境構築
+環境構築はnuxt-communityのtypescript-templateを使用しました。簡単にNuxt × Typescriptの環境が作れて便利です。
+
+https://github.com/nuxt-community/typescript-template
+
+#### Nuxt × Typescriptのメリット
+NuxtとTypescriptを掛け合わせることによるメリットは特に感じていないので、NuxtとTypescriptの双方のメリットを以下に記載します。
+
+##### Nuxtのメリット
+
+
+###### その1： ルーティングの自動生成
+
+Nuxtではpagesディレクトリ内に表示するVueファイルを作成するのですが、このpagesディレクトリの木構造に沿って自動的にvue-routerの設定を生成してくれます。
+これにより、ページを作成するごとにルーティングを書く必要がなくなり、楽です。
+また、`user/_id/edit`のように動的なルーティングを作成することも可能です。
+
+https://ja.nuxtjs.org/guide/routing
+
+
+###### その2：ミドルウェア
+
+ミドルウェアを使用することで、特定のページやいくつかのページのグループ(レイアウト)がレンダリングされる前に実行されるカスタム関数を定義することができます。
+これにより、ログインが完了している場合のみページを表示し、そうでない場合はログイン画面にリダイレクトさせるといった処理を簡単に記述することができます。
+
+以下のコードはログインが完了していない状態で認証が必要なページにアクセスした場合に、ログインページにリダイレクトさせる処理です。
+
+`middleware/authenticated.js`
+
+----
+export default function ({ app, redirect }) {
+	// トークンを取得
+	const hasToken = !!app.$apolloHelpers.getToken();
+	if (!hasToken) {
+		// 認証済みでない場合はログインページにリダイレクト
+		return redirect('/login')
+	}
+}
+----
+
+以下のコードはログインが完了している状態でログインページにアクセスした場合に、homeページにリダイレクトさせる処理です。
+
+`middleware/notAuthenticated.js`
+
+----
+export default function ({ app, redirect }) {
+    const hasToken = !!app.$apolloHelpers.getToken();
+	if (hasToken) {
+        // 認証済みの場合はHOMEページにリダイレクト
+		return redirect('/home')
+	}
+}
+
+----
+
+###### その3：レイアウト
+
+レイアウトを使用することでヘッダーやフッターなど、特定のページで共通の表示をVueファイルとして記述することができます。
+
+----
+<template>
+	<div>
+		<!-- ヘッダー -->
+		<Header />
+		<!-- ここにページの内容が入リます -->
+		<nuxt />
+		<!-- フッター -->
+		<Footer />
+	</div>
+</template>
+
+<script lang="ts">
+	import Header from '../components/Header.vue';
+	import Footer from '../components/Footer.vue';
+
+	export default {
+		components: {
+			Header,
+			Footer
+		}
+	}
+</script>
+----
+
+###### その4：便利な外部パッケージ
+
+axios-moduleが便利です。
+
+https://github.com/nuxt-community/axios-module +
+https://axios.nuxtjs.org/
+
+以下のような形で書くことができます。
+
+----
+this.$axios.$get(url, {
+	params: params,
+	responseType: 'text'
+})
+----
+
+また、リクエストのタイミングでトークンをヘッダにセットするなどの共通の処理を書くこともできます。
+
+`plugins/axios.js`
+
+----
+export default function({ $axios, app }) {
+    $axios.onRequest(config => {
+        // ヘッダにTokenをセット
+        config.headers = { ...config.headers, Authorization: 'Bearer ' + app.$apolloHelpers.getToken() };
+    })
+}
+----
+
+#### TypeScriptのメリット
+一般的に言われることですが、静的型付けがあり、コンパイル時にエラーを吐いてくれるので、バグが起きにくくなります。 +
+Typescriptではプリミティブ型に加え、インターフェースやクラス、リテラル、Enumなど様々な形で型付けを行うことができます。 +
+また、定義したクラスをインスタンス化して使用することができるなど、便利です。
+
+
+また、私はエディタでVisual Stadio Codeを使用しているのですが、veturという拡張機能を追加することで、エディタ上でエラーを表示してくれて便利です。
+
+https://github.com/vuejs/vetur
+
+#### Nuxt × Typescriptで困ったこと
+Nuxtに限ったことではないですが、Typescriptを導入した場合に、必要に応じてグローバルプロパティやインスタンスプロパティの型定義を`index.d.ts`ファイルに記述しないとコンパイル時にエラーが起こります。 +
+そのため、以下のように記述しないといけません。
+
+`index.d.ts`
+
+----
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import { DollarApollo } from './app/shared/apollo/vue-apollo';
+import { ApolloClient } from 'apollo-client';
+
+declare module '*.vue' {
+	const _default: Vue
+	export default _default
+}
+
+/**
+ * グローバルプロパティの追加
+ */
+declare module 'vue/types/vue' {
+	interface Vue {
+		$router: VueRouter,
+		$apollo: DollarApollo<any>,
+		$apolloHelpers: {
+			onLogin(token: string, apolloClient?: ApolloClient<{}>, tokenExpires?: number): Promise<void>;
+			onLogout(apolloClient?: ApolloClient<{}>): Promise<void>;
+			getToken(tokenName?: string): string;
+		}
+	}
+}
+
+/**
+ * コンポーネントのオプションの追加
+ */
+declare module 'vue/types/options' {
+	interface ComponentOptions<V extends Vue> {
+		layout?: string
+		middleware?: string | String[]
+	}
+}
+
+----
+
+
+#### まとめ
+Nuxt × Typescriptで双方の良さを生かした開発ができるようになります。
+
+ぜひお試しください！！！
