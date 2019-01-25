@@ -213,15 +213,6 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/01/13/.html" title="link to アプリケーションログ出力の見直し">アプリケーションログ出力の見直し</a></h2>
-        <p class="excerpt">こんにちは。 エンジニアのNew塚本です。 今回は、ログ出力についてのお話をのせたいと思います。 経緯 エラーが発生した際に出力するログに、stackが出力されず解析が困難になると弊社SREにつめられたため。  ごもっとも！なので見直します！！ 今回やりたいこと ログにstackを出力する。 修正前 例えば、文字列を数値に変換する関数では、この様に実装していました。 num, err := strconv.Atoi(target) if err != nil { 	return } エラー判定をして、呼び出し元に返却する。 targetが数値に変換されない"abcde"の様な値の場合には、err（*errors.errorString）には、 strconv.Atoi: parsing "&hellip;</p>
-        <div class="post-list__meta">
-            <time datetime="13 Jan 2019" class="post-list__meta--date date">13 Jan 2019</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="NewTsukamoto">NewTsukamoto</a>, <a href="#blog" title=" mac"> mac</a>, <a href="#blog" title=" Golang"> Golang</a>, <a href="#blog" title=" seelog"> seelog</a>, <a href="#blog" title=" gorm"> gorm</a></span>
-        </div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/07/08/Gohttp.html" title="link to Goのhttpクライアント通信！">Goのhttpクライアント通信！</a></h2>
         <p class="excerpt">こんにちは。 エンジニアのNew塚本です。 引き続き、Golangでバッチをゴリゴリ製造しています。 今回は、httpクライアント通信についてのお話をのせたいと思います。 プログラムはこんな感じ エラーと返却値は端折っていますが、大枠はこんな感じです。 // 構造体定義 type Client struct { 	url                     string 	parameterArray map[string]string 	client                  *http.Client } // 通信実行メソッド func (c *Client) Execute() () { 	// Getクエリの組み立て 	queryParam := c.createGet&hellip;</p>
         <div class="post-list__meta">
