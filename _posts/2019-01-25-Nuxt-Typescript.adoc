@@ -117,7 +117,7 @@ axios-moduleが便利です。
 https://github.com/nuxt-community/axios-module +
 https://axios.nuxtjs.org/
 
-以下のような形で書くことができます。
+GETリクエストを以下のような形で書くことができます。
 
 ----
 this.$axios.$get(url, {
