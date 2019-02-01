@@ -1,0 +1,165 @@
+# gRPCをJavaとRubyで試してみた
+:hp-tags: gRPC, Java, Ruby, Shirota
+:published_at: 2019-02-01
+
+# 概要
+gRPCとは、RPCを実現するためにGoogle社が開発したプロトコルです。 +
+REST APIとよく比較され、 +
+HTTP/2対応の次世代のAPIインターフェースだなんて話を聞いたことがあります。
+
+そもそもRPCとは何かと言うと、 +
+remote procedure callの略で、 +
+日本語だと「遠隔手続き呼出し」と呼ばれるそうですが、 +
+プログラムから別のアドレス空間（通常、共有ネットワーク上の別のコンピュータ上）にある +
+サブルーチンや手続きを実行することを可能にする技術 +
+ということだそうです。
+
+以下参考にいたしました。
+
+> https://en.wikipedia.org/wiki/GRPC
+> https://ja.wikipedia.org/wiki/%E9%81%A0%E9%9A%94%E6%89%8B%E7%B6%9A%E3%81%8D%E5%91%BC%E5%87%BA%E3%81%97
+> 引用元：Wikipedia
+
+様々な言語間で通信ができるのが特徴ですが、 +
+今回は、弊社ではあまり使われていない言語、 +
+JavaとRubyで試してみたいと思います。
+
+# 概要図
+
+
+# 環境
+* MacOS HighSierra
+* 適当な作業ディレクトリを作成してそこに移動しておく
+
+# 手順
+1) gRPC Javaをインストール
+```
+# grpc-javaをcloneしてきます
+$ git clone -b v1.18.0 https://github.com/grpc/grpc-java
+$ cd grpc-java/examples
+```
+
+2) サーバー側でJava版のHello worldサーバを立ち上げておきます
+```
+$ ./gradlew installDist
+$ ./build/install/examples/bin/hello-world-server
+2 01, 2019 2:49:19 午後 io.grpc.examples.helloworld.HelloWorldServer start
+情報: Server started, listening on 50051
+```
+
+3)（別ターミナルにて）gRPC Rubyをインストール
+```
+# gemでインストール
+$ sudo gem install grpc
+$ sudo gem install grpc-tools
+
+# サンプルをclone
+$ git clone -b v1.18.0 https://github.com/grpc/grpc
+$ cd grpc/examples/ruby
+```
+
+4) クライアント処理実行
+```
+# 処理①（※見込まれる結果：単純にHello worldを返す）
+$ ruby greeter_client.rb
+"Greeting: Hello world"
+
+# 処理②（※見込まれる結果：第一引数に渡した文字列にHelloと言う）
+$ ruby greeter_client.rb Shirox
+"Greeting: Hello Shirox"
+```
+
+Rubyスクリプトから別名前空間上のJavaのスクリプトを実行できたことになりました。
+
+# どうなっているのか中身を確認
+
+## サーバー側
+src/main/java/io/grpc/examples/helloworld/HelloWorldServer.java +
+（※Helloほにゃららを設定している部分）
+
+```
+// パッケージ宣言後
+// 以下の部分でgrpcのServer系と思われるライブラリを読み込んでいる
+import io.grpc.Server;
+import io.grpc.ServerBuilder;
+
+//（いろいろ略）
+
+// 以下のクラスの中で
+public class HelloWorldServer {
+
+  //（いろいろ略）
+
+  private void start() throws IOException {
+	// サーバーを作っています
+    int port = 50051;
+    server = ServerBuilder.forPort(port)
+        .addService(new GreeterImpl()) /* このクラスはファイル下部に内部クラスで記述があります */
+        .build()
+        .start();
+
+  //（いろいろ略）
+
+  // その内部クラス
+  static class GreeterImpl extends GreeterGrpc.GreeterImplBase {
+
+    @Override
+    public void sayHello(HelloRequest req, StreamObserver<HelloReply> responseObserver) {
+    
+      // ↓Helloほにゃららを返信設定してる部分
+      HelloReply reply = HelloReply.newBuilder().setMessage("Hello " + req.getName()).build();
+      
+      responseObserver.onNext(reply);
+      responseObserver.onCompleted();
+    }
+  }
+```
+
+## クライアント側
+grpc/examples/ruby/greeter_client.rb +
+（※APIを呼び出して値を受け取り出力している部分）
+
+```
+#（いろいろ略）
+
+stub = Helloworld::Greeter::Stub.new('localhost:50051', :this_channel_is_insecure)
+user = ARGV.size > 0 ?  ARGV[0] : 'world'
+message = stub.say_hello(Helloworld::HelloRequest.new(name: user)).message
+p "Greeting: #{message}"
+```
+
+クライアント側にもStubサーバ的なものが立っていて、 +
+そこに対して処理してプロキシされているようなイメージに見える。
+
+## Protoファイルの存在
+
+Protoファイルはサーバー側にあるサーバーとクライアントの架け橋となるファイル +
+APIの仕様書・定義書とも取れる存在と思います。
+
+src/main/proto/helloworld.proto
+
+```
+service Greeter {
+  rpc SayHello (HelloRequest) returns (HelloReply) {}
+}
+
+message HelloRequest {
+  string name = 1;
+}
+
+message HelloReply {
+  string message = 1;
+}
+```
+
+# 所感
+Micro Service や、疎結合なシステムで、それぞれ言語や環境が異なっている場合に +
+とても力を発揮すると感じました。
+
+また、 +
+REST APIですとSwaggerなどのような便利なツールもありますが、 +
+Protoファイルそのものがプロダクションで使われているファイルで、 +
+仕様書・定義書の代わりにもなることから、 +
+面倒なAPIのドキュメント管理から解放されるかもしれないと思いました。
+
+以上です。
