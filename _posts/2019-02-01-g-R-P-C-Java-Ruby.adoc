@@ -25,7 +25,7 @@ remote procedure callの略で、 +
 JavaとRubyで試してみたいと思います。
 
 # 概要図
-
+image:/images/shirota/20190201/grpc.png[width="500"]
 
 # 環境
 * MacOS HighSierra
