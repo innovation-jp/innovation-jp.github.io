@@ -211,6 +211,12 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/11/08/develop.html" title="link to developが更新されたらお知らせしてくれるシェルスクリプトを作りたい！">developが更新されたらお知らせしてくれるシェルスクリプトを作りたい！</a></h2>
+        <p class="excerpt">こんにちは、未経験中途エンジニアのすももです。 入社してなんだかんだ1年経ちました〜、本当にあっという間ですね。 出来る事が増えた喜びと、まだまだ何も出来ない哀しみの狭間で生きてます。 &#8230;&#8203;とはいえ元気ですのでご心配なく！笑 今回のテーマは「developが更新されたらお知らせしてくれるシェルスクリプトを作る！」 ということで。 〜なぜ作るのか？〜 私のチームでは、リリースでdevelopを更新した際、メンバーに口頭やSlackで「昨日リリースあったので、developをマージお願いいたします！」と伝えてたりするのですが、言う方も言われた方も忘れてしまうことが多く・・・。笑 「コミットする時とかにdevelopと差分あったら教えてくれるようにしたいね！」という話にな&hellip;</p>
+        <div class="post-list__meta"><time datetime="08 Nov 2018" class="post-list__meta--date date">08 Nov 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/sumomo">sumomo</a>, <a href="http://tech.innovation.co.jp/tag/Shell-Script"> ShellScript</a>, <a href="http://tech.innovation.co.jp/tag/Git"> Git</a>, <a href="http://tech.innovation.co.jp/tag/Linux"> Linux</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/11/08/A-W-S-Azure.html" title="link to カスタムコンテナイメージを使った AWS Fargate で Azure の BLOB Storage をチラ見してみた">カスタムコンテナイメージを使った AWS Fargate で Azure の BLOB Storage をチラ見してみた</a></h2>
         <p class="excerpt">お久しぶりです。 プライベートで Azure を使っている SRE チームの syoga です。 もうすぐ今年も終わりですね！ という訳で、 今回は AWS Fargate を使ってみようと思います。 Fargate で何をしようかな Fargate は AWS が提供する ECS でインスタンスを意識せず利用できる、フルマネージドなコンテナ実行環境です。 詳細は AWS の公式ページ等で要チェックください。 で！ 何をしようかと思ったのですが、以前の 記事 で作成した LINE BOT で Azure の Blob Storage にアップロードした 画像ファイルを気軽に参照できるようにしたいという思いがありましたので、そんな仕組みのコンテナイメージを作って Fargate で利用してみ&hellip;</p>
         <div class="post-list__meta"><time datetime="08 Nov 2018" class="post-list__meta--date date">08 Nov 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/syoga">syoga</a>, <a href="http://tech.innovation.co.jp/tag/Azure"> Azure</a>, <a href="http://tech.innovation.co.jp/tag/A-W-S"> AWS</a>, <a href="http://tech.innovation.co.jp/tag/Fargate"> Fargate</a>, <a href="http://tech.innovation.co.jp/tag/E-C-S"> ECS</a>, <a href="http://tech.innovation.co.jp/tag/Docker"> Docker</a></span></div>
@@ -262,12 +268,6 @@ var _trackingid = 'LFT-10003-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/10/10/Python-A-W-S-Lambda.html" title="link to Pythonで購入履歴を使ったレコメンドを作成してみた②　〜AWS Lambda編〜">Pythonで購入履歴を使ったレコメンドを作成してみた②　〜AWS Lambda編〜</a></h2>
         <p class="excerpt">どうも、中村です。 前回に作成したプログラムだけでは実際に利用するのが難しいので、AWS Lambda + API Gatewayを使ってAPI化していきたいと思います。 ※ちょっと長くなりそうだったので、API Gateway編は次回書きます。 前回作成した構成 ├── data.py ← 履歴データ └── get_recommend.py ← レコメンド取得プログラム こちらをAWS Lambdaに設定していくのですが、デプロイするためにファイルを圧縮したものを作成しましょう。 上記ディレクトリへ移動した後に以下コマンドを実行すれば、全てのファイルを圧縮したものが作成されます。 $ zip -r get_recommend.zip * 実行後 ├── data.py ├── get_&hellip;</p>
         <div class="post-list__meta"><time datetime="10 Oct 2018" class="post-list__meta--date date">10 Oct 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/nakamura">nakamura</a>, <a href="http://tech.innovation.co.jp/tag/A-W-S">AWS</a>, <a href="http://tech.innovation.co.jp/tag/Lambda">Lambda</a>, <a href="http://tech.innovation.co.jp/tag/Python">Python</a>, <a href="http://tech.innovation.co.jp/tag/">レコメンド</a>, <a href="http://tech.innovation.co.jp/tag/Recommend">Recommend</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/10/09/E-K-S.html" title="link to EKSを触ってみた">EKSを触ってみた</a></h2>
-        <p class="excerpt">2018年10月現在、 弊社サービスでも本番環境にDockerコンテナを利用している部分が増えてきました。 AWSを利用している部分ではECSを利用していますが、 今回Kubernetesを試すという意味で、EKSを触ってみることにしました。 ユーザーガイド： https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/what-is-eks.html 前提 Dockerの知識はある程度ある 作業端末はMacを使用した（※未検証だがWindowsでも同じはず） 作業端末で最新のawscliが使用できるようになっていること AWSのIAMの知識があり、EKS用にAmazonEKSClusterPolicyとAmazonEKSServicePo&hellip;</p>
-        <div class="post-list__meta"><time datetime="09 Oct 2018" class="post-list__meta--date date">09 Oct 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/A-W-S">AWS</a>, <a href="http://tech.innovation.co.jp/tag/E-K-S"> EKS</a>, <a href="http://tech.innovation.co.jp/tag/Kubernetes"> Kubernetes</a>, <a href="http://tech.innovation.co.jp/tag/Shirota"> Shirota</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
