@@ -1,0 +1,185 @@
+= WordPressの投稿内容をMySQLで取得する
+:hp-tags: nakamura,WordPress,MySQL,PHP,投稿
+
+どうも、中村です。
+
+先日WordPressで構築されたサイトを、Laravelにリプレイスする案件をおこないました。
+
+その時に意外とWordPressで投稿していたデータを引き抜くのが大変だったので、共有したいと思います！
+
+=== 新しいテーブル構成
+
+こんな感じのtableを作成しようと思います。
+
+```
+[articles]
+id                   int(10) unsigned
+is_active            tinyint(1)           //公開・非公開
+title                varchar(255)         //タイトル
+content              text                 //記事本文
+list_description     text                 //一覧用説明文
+image                varchar(255)         //サムネイル画像
+deleted_at           timestamp
+created_at           timestamp
+updated_at           timestamp
+
+[article_categories]
+id              int(10) unsigned
+article_id      int(10) unsigned
+category_id     int(10) unsigned
+```
+
+articles -> 記事データ +
+article_categories -> 記事とカテゴリー紐付けデータ
+
+最終的にこんな感じで別DBに保存し直すことにします。
+
+
+=== WordPress側で必要なテーブル
+
+WordPressで今回使うテーブルは以下の3つに絞りました。
+
+```
+wp_posts
+wp_postmeta
+wp_term_relationships
+```
+
+一つ一つざっと説明していきます。
+
+=== wp_posts
+
+こちらは投稿データが保存されているテーブルです。
+
+が、全てのデータが投稿データではありません。例えば投稿データのアイキャッチ画像もこちらのテーブルに保存されています。 +
+なぜこんな仕様にしているんでしょうか。。。
+
+
+link:https://wpdocs.osdn.jp/%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9%E6%A7%8B%E9%80%A0#.E3.83.86.E3.83.BC.E3.83.96.E3.83.AB:_wp_posts[詳細はこちら]
+
+=== wp_postmeta
+
+こちらはメタ情報が保存されているテーブルです。 +
+今回はアイキャッチ画像のデータをこちらから取得します。
+
+link:https://wpdocs.osdn.jp/%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9%E6%A7%8B%E9%80%A0#.E3.83.86.E3.83.BC.E3.83.96.E3.83.AB:_wp_postmeta[詳細はこちら]
+
+=== wp_term_relationships
+
+こちらは記事に設定されているカテゴリー&投稿タグ情報が保存されています。
+
+link:https://wpdocs.osdn.jp/%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9%E6%A7%8B%E9%80%A0#.E3.83.86.E3.83.BC.E3.83.96.E3.83.AB:_wp_term_relationships[詳細はこちら]
+
+
+それでは取得したい内容毎に取得するSQLをご紹介していきます。
+
+=== wp_postsから取得できるもの
+
+```
+SELECT
+  ID AS id,
+  CASE WHEN post_status = 'publish' THEN 1 ELSE 0 END AS is_active,
+  post_title AS title,
+  post_content AS content,
+  post_date AS created_at,
+  post_modified AS updated_at
+FROM
+  wp_posts
+WHERE
+  post_type = 'post';
+```
+
+上記SQLで
+```
+ID
+タイトル
+記事本文
+作成日時
+更新日時
+```
+が取得できます。
+
+=== アイキャッチ画像
+
+こちらは以下のSQLで取得できます。
+
+```
+SELECT
+  wp_posts.guid
+FROM
+  wp_postmeta
+INNER JOIN 
+  wp_posts ON wp_posts.id = wp_postmeta.meta_value
+WHERE
+  wp_postmeta.meta_key = '_thumbnail_id'
+  AND wp_postmeta.post_id = {記事ID};
+```
+
+ちょっと面倒な感じです。
+
+=== カテゴリーID
+
+1記事につき複数のカテゴリーIDが取得できます。
+
+```
+SELECT
+  term_taxonomy_id
+FROM
+  wp_term_relationships
+WHERE
+  object_id = {記事ID};
+```
+
+カテゴリーと投稿タグを分けたい場合には、link:https://wpdocs.osdn.jp/%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9%E6%A7%8B%E9%80%A0#.E3.83.86.E3.83.BC.E3.83.96.E3.83.AB:_wp_term_taxonomy[wp_term_taxonomy] をjoinすると良いかもしれません。
+
+
+=== 一覧用説明文
+
+DBには保存されていませんでした！
+
+記事本文の「HTMLタグを除いたもの」＋先頭から規定文字数を取得して保存することになりそうです。
+
+ただし今回リプレイス対象となったWordPressには「Yoast  SEO」というSEO対策のプラグインを使用していたので、そちらからデータを取得してみます。
+
+```
+SELECT
+  meta_value
+FROM
+  wp_postmeta
+WHERE
+  meta_key = '_yoast_wpseo_metadesc'
+  AND post_id = {記事ID};
+```
+
+いい感じです！
+
+=== おまけ
+
+今回上記のようなSQLにて記事本文を取得してきても、そのまま使えませんでした。理由は
+
+```
+・<p>タグが入っていない
+・ショートコードが置換されていない
+```
+です。
+
+それぞれ自前で変換を行なっても良いのですが、WordPressで使われている以下のメソッドを利用してしまった方が確実で早いと思います。
+
+`<p>タグを挿入する` +
+/wp_includes/formatting.php +
+wpautop()
+
+
+`ショートコードを置換する` +
+/wp_includes/shortcodes.php +
+do_shortcode()
+
+
+=== 感想
+
+WordPressが好きなエンジニアっていないんじゃないかと思いますが、思っている以上に世間ではWordPressが使われていて案件として非常に多いので需要がまだまだありそうですね。
+
+好き嫌いせず向き合いましょう（笑）
+
+こちらからは以上です。
+
