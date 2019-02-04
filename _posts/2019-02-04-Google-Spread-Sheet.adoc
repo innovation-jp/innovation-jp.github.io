@@ -25,7 +25,7 @@ E列の数値を出すのが今回のメインです！
 ## 今回E列に書いた式
 [source, rust]
 ----
-=LOOKUP(10^17,ARRAYFORMULA(LEFT(対象文字列,COLUMN($1:$1))*1))
+=LOOKUP(10^18,ARRAYFORMULA(LEFT(対象文字列,COLUMN($1:$1))*1))
 ----
 
 ## 解説
@@ -87,7 +87,7 @@ https://support.google.com/docs/answer/3256570?hl=ja
 これらをまとめて書くとこんな感じ！！
 [source, rust]
 ----
-=LOOKUP(10^17,ARRAYFORMULA(LEFT(対象文字列,COLUMN($1:$1))*1))
+=LOOKUP(10^18,ARRAYFORMULA(LEFT(対象文字列,COLUMN($1:$1))*1))
 ----
 
 う〜ん、読みにくい！
