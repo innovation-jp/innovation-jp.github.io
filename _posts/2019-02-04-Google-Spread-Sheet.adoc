@@ -1,5 +1,5 @@
-# GoogleSpreadSheetで文字列から数字のみを抽出する方法
-:hp-alt-title: GoogleSpreadSheetで文字列から数字のみを抽出する方法
+# GoogleSpreadSheetで文字列から数字のみを抽出する方法のひとつ
+:hp-alt-title: GoogleSpreadSheetで文字列から数字のみを抽出する方法のひとつ
 :hp-tags: ozasa, GoogleSpreadSheet, Excel
 
 ## 困ったこと/したいこと
