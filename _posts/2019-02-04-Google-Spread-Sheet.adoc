@@ -56,7 +56,8 @@ LEFT(対象文字列,COLUMN($1:$1))*1
 この時数値に直せないあたいは「#VALUE!」で表示されます。
 
 これらをARRAYFORMULAを使い、
-配列を横に展開した形で表現したものが下記画像です。
+配列を横に展開した形で表現したものが下記画像です。 +
+(※分かりやすように例の文字列を1000万人にしてみています！)
 
 image::http://tech.innovation.co.jp/images/ozasa/gss_arrayex.png[]
 
