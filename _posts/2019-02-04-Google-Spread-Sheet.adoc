@@ -41,12 +41,16 @@ COLUMN($1:$1)
 ただ単に昇順の数値配列が欲しいだけなので、
 「$1:$1」じゃなくても「A1:Z1」とかでも良いです！
 
+https://support.google.com/docs/answer/3093373?hl=ja
+
 [source, rust]
 ----
 LEFT(対象文字列,COLUMN($1:$1))
 ----
 対象文字列を左から切り出して配列化します。 +
 この時点では文字列です。
+
+https://support.google.com/docs/answer/3094079?hl=ja
 
 [source, rust]
 ----
@@ -58,6 +62,8 @@ LEFT(対象文字列,COLUMN($1:$1))*1
 これらをARRAYFORMULAを使い、
 配列を横に展開した形で表現したものが下記画像です。 +
 (※分かりやすように例の文字列を1000万人にしてみています！)
+
+https://support.google.com/docs/answer/3093275?hl=ja
 
 image::http://tech.innovation.co.jp/images/ozasa/gss_arrayex.png[]
 
@@ -76,6 +82,8 @@ ARRAYFORMULAを使いLEFTで取得した内容を配列データのまま扱い�
 対象配列から検索値の近似値を返します。その性質を利用して最大値を取得します。 +
 今回適当に10^18(百京)としているので百京まではいい感じの最大値が返ります。
 
+https://support.google.com/docs/answer/3256570?hl=ja
+
 これらをまとめて書くとこんな感じ！！
 [source, rust]
 ----
@@ -84,7 +92,7 @@ ARRAYFORMULAを使いLEFTで取得した内容を配列データのまま扱い�
 
 う〜ん、読みにくい！
 
-## 詰まったところ
+### 詰まったところ
 ExcelとGoogleSpreadSheetで仕様が違い、 +
 ARRAYFORMULAを噛ませないとデータを配列として扱えないようです。
 
@@ -104,3 +112,10 @@ image::http://tech.innovation.co.jp/images/ozasa/gss_excel.png[]
 奥が深・・・そう！！
 
 こちらからは以上です。
+
+
+参考にさせていただいたURL
+
+https://qiita.com/mhara/items/82421d1b34e88a3efba1
+
+https://se.ekaki-j.com/excel-lookup-right-column/
