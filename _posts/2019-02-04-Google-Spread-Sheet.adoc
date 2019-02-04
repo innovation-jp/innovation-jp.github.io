@@ -13,10 +13,12 @@
 ## 今回のデータ
 Excelか何かのデータをインポートしたてみたいな感じ！
 
-image::http://tech.innovation.co.jp/images/ozasa/amazongo2018/amazongoFront.JPG[]
+image::http://tech.innovation.co.jp/images/ozasa/gss_orgdata.png[]
 
 ## アウトプットイメージ
 簡素！
+
+image::http://tech.innovation.co.jp/images/ozasa/gss_outputimage.png[]
 
 E列の数値を出すのが今回のメインです！
 
@@ -56,7 +58,7 @@ LEFT(対象文字列,COLUMN($1:$1))*1
 これらをARRAYFORMULAを使い、
 配列を横に展開した形で表現したものが下記画像です。
 
-image::http://tech.innovation.co.jp/images/ozasa/amazongo2018/amazongoFront.JPG[]
+image::http://tech.innovation.co.jp/images/ozasa/gss_arrayex.png[]
 
 続きです！
 
@@ -94,6 +96,8 @@ ARRAYFORMULAを噛ませないとデータを配列として扱えないよう�
 ----
 でそのままいけます。
 こんな風に表示されてました。
+
+image::http://tech.innovation.co.jp/images/ozasa/gss_excel.png[]
 
 う〜ん、
 奥が深・・・そう！！
