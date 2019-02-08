@@ -213,6 +213,15 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/02/01/Word-Press-My-S-Q-L.html" title="link to WordPressの投稿内容をMySQLで取得する">WordPressの投稿内容をMySQLで取得する</a></h2>
+        <p class="excerpt">どうも、中村です。 先日WordPressで構築されたサイトを、Laravelにリプレイスする案件をおこないました。 その時に意外とWordPressで投稿していたデータを引き抜くのが大変だったので、共有したいと思います！ 新しいテーブル構成 こんな感じのtableを作成しようと思います。 [articles] id                   int(10) unsigned is_active            tinyint(1)           //公開・非公開 title                varchar(255)         //タイトル content              text                 //記事本文 list_&hellip;</p>
+        <div class="post-list__meta">
+            <time datetime="01 Feb 2019" class="post-list__meta--date date">01 Feb 2019</time> &#8226;
+            <span class="post-list__meta--tags tags"><a href="#blog" title="nakamura">nakamura</a>, <a href="#blog" title="WordPress">WordPress</a>, <a href="#blog" title="MySQL">MySQL</a>, <a href="#blog" title="PHP">PHP</a>, <a href="#blog" title="投稿">投稿</a></span>
+        </div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/10/10/Python-A-W-S-Lambda.html" title="link to Pythonで購入履歴を使ったレコメンドを作成してみた②　〜AWS Lambda編〜">Pythonで購入履歴を使ったレコメンドを作成してみた②　〜AWS Lambda編〜</a></h2>
         <p class="excerpt">どうも、中村です。 前回に作成したプログラムだけでは実際に利用するのが難しいので、AWS Lambda + API Gatewayを使ってAPI化していきたいと思います。 ※ちょっと長くなりそうだったので、API Gateway編は次回書きます。 前回作成した構成 ├── data.py ← 履歴データ └── get_recommend.py ← レコメンド取得プログラム こちらをAWS Lambdaに設定していくのですが、デプロイするためにファイルを圧縮したものを作成しましょう。 上記ディレクトリへ移動した後に以下コマンドを実行すれば、全てのファイルを圧縮したものが作成されます。 $ zip -r get_recommend.zip * 実行後 ├── data.py ├── get_&hellip;</p>
         <div class="post-list__meta">
