@@ -1,4 +1,4 @@
-# Laravel,Golangプロジェクトの開発環境について考えてみる(Docker)
+# FW移行プロジェクトのLaravel,Golangの開発環境について考えてみる(Docker)
 :hp-alt-title: GoogleSpreadSheetで文字列から数字のみを抽出する方法のひとつ
 :hp-tags: kohe, Docker, git
 
@@ -164,7 +164,7 @@ services:
       - fw-postgres
     container_name: embulk
     volumes:
-      - ./embulk/opt/listfinder:/opt/listfinder
+      - ./embulk/opt:/opt
     env_file:
       - ./Docker/embulk/.env
 
