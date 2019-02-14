@@ -20,7 +20,7 @@ table構成も変更
 |=======================
 
 
-## gitリポジトリ構成
+## Gitリポジトリ構成
 
 リポジトリを4つ使用＆submodule化
 
@@ -30,120 +30,142 @@ table構成も変更
 ** Docker
 ** Embulk
 
+## docker-compose.yml
+
+docker-compose.ymlはDevEnvリポジトリにおいておく
+
+全部で11コンテナも必要…
+
+- nginx
+- php
+- node
+- mailhog
+- redis
+- redis-2
+- go
+- stub(go)
+- postgres-old
+- postgres-new
+- embulk
 
 
-数値の分析とかしたいのに元データが文字列で表現されている！ +
-このままだと加工できない！！ +
-数値だけ抽出したい！！
+```
+version: '3.7'
+services:
+#online
+  nginx:
+    build:
+      context: ./Docker/online/nginx
+    depends_on:
+      - php
+      - redis
+      - mailhog
+      - fw-postgres
+      - node
+    ports:
+      - 443:443
+    volumes:
+      - ./online/var/www:/var/www:cached
+    environment:
+      - TZ=Asia/Tokyo
 
-そんなことありますか？ありませんか？・・・そうですか
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025"
+      - "1025:1025"
 
-## 今回のデータ
-Excelか何かのデータをインポートしたてみたいな感じ！
+  redis:
+    image: redis:3
+    container_name: lf-redis1
+    ports:
+      - "6379:6379"
 
-image::http://tech.innovation.co.jp/images/ozasa/gss_orgdata.png[]
+  php:
+    build:
+      context: ./Docker/online/phpfpm
+    volumes:
+      - ./online/var/www:/var/www:cached
+      - ./Docker/online/phpfpm/usr/local/etc/php/php.ini:/usr/local/etc/php/php.ini:cached
+    environment:
+      - TZ=Asia/Tokyo
 
-## アウトプットイメージ
-簡素！
+  node:
+    image: node
+    tty: true
+    volumes:
+      - ./online/var/www:/var/www:cached
+    working_dir: /var/www/listfinder
 
-image::http://tech.innovation.co.jp/images/ozasa/gss_outputimage.png[]
+#batch
+  batch:
+    build:
+      context: ./Docker/batch
+    depends_on:
+     - fw-postgres
+     - redis-shorturl
+     - stub
+     - mailhog
+    volumes:
+     - ./go/src/github.com/:/go/src/github.com/
+     - ./go/temp:/temp
+    #covarage のhtml出力を見るため
+     - ./go/tmp:/tmp
+    working_dir: /go/src/github.com/innovation-jp/list-finder-batch
+    ports:
+     - "6060:6060"
+    #debugができるようプロセスの監視を許可する
+    security_opt:
+     - seccomp:unconfined
+    env_file:
+      - ./Docker/batch/.go_env
+    environment:
+      - TZ=Asia/Tokyo
+    command: ["godoc", "-http=:6060"]
 
-E列の数値を出すのが今回のメインです！
+  stub:
+    image: golang:latest
+    ports:
+     - "9090:9090"
+    volumes:
+     - ./stub:/go/stub
+    working_dir: /go/stub/api
+    command: ["go", "run", "main.go"]
 
-## 今回E列に書いた式
-[source, rust]
-----
-=LOOKUP(10^18,ARRAYFORMULA(LEFT(対象文字列,COLUMN($1:$1))*1))
-----
+  redis-two:
+    image: redis:3
+    container_name: redis-tow
+    ports:
+      - "63790:6379"
 
-## 解説
-[source, rust]
-----
-COLUMN($1:$1)
-----
+#昔のpostgres
+  postgres:
+    image: xxxxxxxx/postgres:latest
+    container_name: old-postgres
+    ports:
+      - "5432:5432"
 
-数値だけの配列をセットすることができます。 +
-1,2,3,4といった並びです。 +
-見かけ上は「1」と表示されます。
+  new-postgres:
+    image: postgres:10
+    ports:
+      - "54320:5432"
+    environment:
+      POSTGRES_DB: listfinder
+    volumes:
+      - ./embulk/postgres_init:/docker-entrypoint-initdb.d
+      - ./postgresql/data:/var/lib/postgresql/data
+    environment:
+      - TZ=Asia/Tokyo
 
-ただ単に昇順の数値配列が欲しいだけなので、
-「$1:$1」じゃなくても「A1:Z1」とかでも良いです！
+  embulk:
+    image: kooooohe/embulk
+    depends_on:
+      - postgres
+      - fw-postgres
+    container_name: embulk
+    volumes:
+      - ./embulk/opt/listfinder:/opt/listfinder
+    env_file:
+      - ./Docker/embulk/.env
 
-https://support.google.com/docs/answer/3093373?hl=ja
-
-[source, rust]
-----
-LEFT(対象文字列,COLUMN($1:$1))
-----
-対象文字列を左から切り出して配列化します。 +
-この時点では文字列です。
-
-https://support.google.com/docs/answer/3094079?hl=ja
-
-[source, rust]
-----
-LEFT(対象文字列,COLUMN($1:$1))*1
-----
-文字列に対して1をかけることで数値に転換します。 +
-この時数値に直せないあたいは「#VALUE!」で表示されます。
-
-これらをARRAYFORMULAを使い、
-配列を横に展開した形で表現したものが下記画像です。 +
-(※分かりやすように例の文字列を1000万人にしてみています！)
-
-https://support.google.com/docs/answer/3093275?hl=ja
-
-image::http://tech.innovation.co.jp/images/ozasa/gss_arrayex.png[]
-
-続きです！
-
-[source, rust]
-----
-=ARRAYFORMULA(LEFT(対象文字列,COLUMN($1:$1))*1)
-----
-ARRAYFORMULAを使いLEFTで取得した内容を配列データのまま扱います。
-
-[source, rust]
-----
-=LOOKUP(10^18,対象配列))
-----
-対象配列から検索値の近似値を返します。その性質を利用して最大値を取得します。 +
-今回適当に10^18(百京)としているので百京まではいい感じの最大値が返ります。
-
-https://support.google.com/docs/answer/3256570?hl=ja
-
-これらをまとめて書くとこんな感じ！！
-[source, rust]
-----
-=LOOKUP(10^18,ARRAYFORMULA(LEFT(対象文字列,COLUMN($1:$1))*1))
-----
-
-う〜ん、読みにくい！
-
-### 詰まったところ
-ExcelとGoogleSpreadSheetで仕様が違い、 +
-ARRAYFORMULAを噛ませないとデータを配列として扱えないようです。
-
-それを知るまで最初の数値しか抽出できなくて詰まりました。
-
-## Excelだと
-[source, rust]
-----
-=LOOKUP(10^18,LEFT(対象文字列,COLUMN($1:$1))*1)
-----
-でそのままいけます。
-こんな風に表示されてました。
-
-image::http://tech.innovation.co.jp/images/ozasa/gss_excel.png[]
-
-う〜ん、
-奥が深・・・そう！！
-
-こちらからは以上です。
-
-
-参考にさせていただいたURL
-
-https://qiita.com/mhara/items/82421d1b34e88a3efba1
-
-https://se.ekaki-j.com/excel-lookup-right-column/
+```
