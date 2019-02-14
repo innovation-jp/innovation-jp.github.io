@@ -191,19 +191,45 @@ services:
 ```
 
 
-- mailhog
-- redis
-- redis-2
-- go
-- stub(go)
-- postgres-old
-- postgres-new
-- embulk
-
 ### nginx, php
 Laravel,Vuejsを動かすためのImage
 
 ###  node
-Vuejsをトランスパイルするためのコンテナ（本番では使わない）
+VuejsをトランスパイルするためのImage +
+（本番では使わない）
 
-### 
+###  mailhog
+Login時などのメールをローカルで受け取るためのImage +
+（本番では使わない）
+
+### redis
+LarvelでSessionを保持するためのImage +
+（本番ではクラウドベンダーのフルマネージドサービスを使う）
+
+### redis-2
+その他簡易なkey-valueを保持するためのImage +
+（本番ではクラウドベンダーのフルマネージドサービスを使う）
+
+### go 
+golangで書かれたBatchを動かすimage +
+(本番ではマルチステージングビルドを使用し、alpineのimageで動かす）
+
+### stub(go)
+golangで書かれたローカルでサードパーティのAPIの代わりとなるスタブImage +
+(本番では使わない）
+
+### postgres-old
+postgres9系のイメージ。
+ローカルに保存されたdumpファイルを元にデータが初期化される。 +
+(本番では使わない）
+
+### postgres-new
+postgres10系のイメージ +
+postgres-oldからembulkを使用し、データを移行する。
+
+ローカルに保存された、DDLを元に初回コンテナ起動時に初期構築される。 +
+（本番ではクラウドベンダーのフルマネージドサービスを使う）
+
+### embulk
+postgre-oldからpostgres-newへデータ移行するためのコンテナ +
+(本番では使わない）
