@@ -13,19 +13,24 @@ FW移行
 |サーバサイド| Laravel
 |フロントサイド|Vuejs
 |バッチ        |Golang
-|環境         |Docker
-|その他         |Postgres9系→10系へ
+|環境          |Docker
+|DB           |Postgres9系→10系へ
 table構成も変更
+|インフラ          |Kubernetes
 |=======================
 
 
 ##gitリポジトリ構成
 
-DevEnv +
-Online +
-Batch +
-Docker +
-Embulk
+リポジトリを4つ使用＆submodule化
+
+* DevEnv
+** Online
+** Batch
+** Docker
+** Embulk
+
+
 
 数値の分析とかしたいのに元データが文字列で表現されている！ +
 このままだと加工できない！！ +
