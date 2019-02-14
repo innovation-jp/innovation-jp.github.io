@@ -189,3 +189,21 @@ services:
       - ./Docker/embulk/.env
 
 ```
+
+
+- mailhog
+- redis
+- redis-2
+- go
+- stub(go)
+- postgres-old
+- postgres-new
+- embulk
+
+### nginx, php
+Laravel,Vuejsを動かすためのImage
+
+###  node
+Vuejsをトランスパイルするためのコンテナ（本番では使わない）
+
+### 
