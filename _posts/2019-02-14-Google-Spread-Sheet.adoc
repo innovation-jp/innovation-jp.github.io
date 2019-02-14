@@ -27,12 +27,18 @@ golangとdocekrとlaravelとdocker-compose関係は触るメンバーが別々�
 
 リポジトリを5つ使用＆submodule化
 
+
 * DevEnv
 ** Online
 ** Batch
 ** Docker
 ** Embulk
 
+DeVEnvリポジトリが他4つのリポジトリを管理し、
+
+docker-composeで各リポジトリのソースコードとコンテナとvolumeする
+
+※Dockerリポジトリは、別
 
 ### DevEnv
 docker-compose.yml、Postgresのdumpファイルなど開発環境だからこそ必要なものを置く箇所。
