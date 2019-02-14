@@ -30,6 +30,26 @@ table構成も変更
 ** Docker
 ** Embulk
 
+
+### DevEnv
+docker-compose.yml、Postgresのdumpファイルなど開発環境だからこそ必要なものを置く箇所。
+
+### Online
+Laravel,Vuejsのソースコードを置く
+
+### Batch
+Golangのソースコードを置く
+
+### Docker
+各イメージを作るための。Dockerfile郡を置くリポジトリ
+
+### Embulk
+旧Postgresから新Postgresへデータを移行する際に、必要な emblk　file郡を置く
+
+
+
+
+
 ## docker-compose.yml
 
 docker-compose.ymlはDevEnvリポジトリにおいておく
