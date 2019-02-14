@@ -60,7 +60,7 @@ services:
       - php
       - redis
       - mailhog
-      - fw-postgres
+      - new-postgres
       - node
     ports:
       - 443:443
@@ -111,7 +111,7 @@ services:
      - ./go/temp:/temp
     #covarage のhtml出力を見るため
      - ./go/tmp:/tmp
-    working_dir: /go/src/github.com/innovation-jp/list-finder-batch
+    working_dir: /go/src/github.com
     ports:
      - "6060:6060"
     #debugができるようプロセスの監視を許可する
