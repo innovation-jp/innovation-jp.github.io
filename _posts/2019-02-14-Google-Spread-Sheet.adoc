@@ -97,7 +97,7 @@ services:
 
   redis:
     image: redis:3
-    container_name: lf-redis1
+    container_name: redis-1
     ports:
       - "6379:6379"
 
