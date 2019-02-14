@@ -115,7 +115,7 @@ services:
     tty: true
     volumes:
       - ./online/var/www:/var/www:cached
-    working_dir: /var/www/listfinder
+    working_dir: /var/www
 
 #batch
   batch:
@@ -170,7 +170,7 @@ services:
     ports:
       - "54320:5432"
     environment:
-      POSTGRES_DB: listfinder
+      POSTGRES_DB: xxxxxx
     volumes:
       - ./embulk/postgres_init:/docker-entrypoint-initdb.d
       - ./postgresql/data:/var/lib/postgresql/data
