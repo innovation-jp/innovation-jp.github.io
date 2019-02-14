@@ -22,7 +22,10 @@ table構成も変更
 
 ## Gitリポジトリ構成
 
-リポジトリを4つ使用＆submodule化
+1つのリポジトリですべてを管理するにはあまりにもでかい +
+golangとdocekrとlaravelとdocker-compose関係は触るメンバーが別々なので依存をなくしたいということで、
+
+リポジトリを5つ使用＆submodule化
 
 * DevEnv
 ** Online
@@ -50,8 +53,8 @@ Golangのソースコードを置く
 
 
 
-## docker-compose.yml
-
+## docker-compose.yml ＆ Imageの説明
+ 
 docker-compose.ymlはDevEnvリポジトリにおいておく
 
 全部で11コンテナも必要…
@@ -233,3 +236,13 @@ postgres-oldからembulkを使用し、データを移行する。
 ### embulk
 postgre-oldからpostgres-newへデータ移行するためのコンテナ +
 (本番では使わない）
+
+## 最後に
+これだけ大規模な開発環境を作ると、小さな環境差異が大変なことになってしまいます。
+また、メンバーも10人程度いるので、手に負えなくなります。
+
+dockerを使うと、全員に全く同じ環境をいとも簡単に作ることができます。
+
+GitのSubmoduleはDockerでの開発環境と非常に相性が良いように感じました。
+
+おわり
