@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>FW移行プロジェクトのLaravel,Golangの開発環境について考えてみる(Docker) - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="FW移行プロジェクトのLaravel,Golangの開発環境について考えてみる(Docker)">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="FW移行プロジェクトのLaravel,Golangの開発環境について考えてみる(Docker)">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2019/02/14/Google-Spread-Sheet.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="FW移行プロジェクトのLaravel,Golangの開発環境について考えてみる(Docker)" />
+    <meta property="og:description" content="みなさんこんにちは こへです。 そろそろ、開発環境周りについていろいろ語りたい時期がきましたので記載 どんなプロジェクトか？ FW移行 サーバサイド Laravel フロントサイド Vuejs バッチ Golang 環境 Docker DB Postgres9系→10系へ table構成も変更 インフラ Kubernetes Gitリポジトリ構成 1つのリポジトリですべてを管理するにはあまりにもでかい golangとdocekrとlaravelとdocker-compose関係は触るメンバーが別々なので依存をなくしたいということで、 リポジトリを5つ使..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2019/02/14/Google-Spread-Sheet.html" />
+    <meta property="article:published_time" content="2019-02-13T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2019-02-15T01:45:18.139Z" />
+    <meta property="article:tag" content="kohe" />
+    <meta property="article:tag" content="Docker" />
+    <meta property="article:tag" content="git" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="FW移行プロジェクトのLaravel,Golangの開発環境について考えてみる(Docker)" />
+    <meta name="twitter:description" content="みなさんこんにちは こへです。 そろそろ、開発環境周りについていろいろ語りたい時期がきましたので記載 どんなプロジェクトか？ FW移行 サーバサイド Laravel フロントサイド Vuejs バッチ Golang 環境 Docker DB Postgres9系→10系へ table構成も変更 インフラ Kubernetes Gitリポジトリ構成 1つのリポジトリですべてを管理するにはあまりにもでかい golangとdocekrとlaravelとdocker-compose関係は触るメンバーが別々なので依存をなくしたいということで、 リポジトリを5つ使..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2019/02/14/Google-Spread-Sheet.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "kooooohe",
+        "image": "https://avatars1.githubusercontent.com/u/17563192?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "FW移行プロジェクトのLaravel,Golangの開発環境について考えてみる(Docker)",
+    "url": "http://tech.innovation.co.jp/2019/02/14/Google-Spread-Sheet.html",
+    "datePublished": "2019-02-13T15:00:00.000Z",
+    "dateModified": "2019-02-15T01:45:18.139Z",
+    "keywords": "kohe,  Docker,  git",
+    "description": "みなさんこんにちは こへです。 そろそろ、開発環境周りについていろいろ語りたい時期がきましたので記載 どんなプロジェクトか？ FW移行 サーバサイド Laravel フロントサイド Vuejs バッチ Golang 環境 Docker DB Postgres9系→10系へ table構成も変更 インフラ Kubernetes Gitリポジトリ構成 1つのリポジトリですべてを管理するにはあまりにもでかい golangとdocekrとlaravelとdocker-compose関係は触るメンバーが別々なので依存をなくしたいということで、 リポジトリを5つ使..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-kohe tag-Docker tag-git no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="14 Feb 2019" class="post-meta__date date">14 Feb 2019</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/kohe">kohe</a>, <a href="http://tech.innovation.co.jp/tag/Docker"> Docker</a>, <a href="http://tech.innovation.co.jp/tag/git"> git</a></span>
+        <span class="post-meta__author author"><img src="https://avatars1.githubusercontent.com/u/17563192?v=4" alt="profile image for kooooohe" class="avatar post-meta__avatar" /> by kooooohe</span>
+      </div>
+      <h1 class="post-title">FW移行プロジェクトのLaravel,Golangの開発環境について考えてみる(Docker)</h1>
+    </header>
+
+    <section class="post tag-kohe tag-Docker tag-git">
+      <div class="sect1">
+<h2 id="__">みなさんこんにちは</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>こへです。
+そろそろ、開発環境周りについていろいろ語りたい時期がきましたので記載</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">どんなプロジェクトか？</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>FW移行</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">サーバサイド</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Laravel</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">フロントサイド</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vuejs</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">バッチ</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Golang</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">環境</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Docker</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Postgres9系→10系へ
+table構成も変更</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">インフラ</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_git">Gitリポジトリ構成</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>1つのリポジトリですべてを管理するにはあまりにもでかい<br>
+golangとdocekrとlaravelとdocker-compose関係は触るメンバーが別々なので依存をなくしたいということで、</p>
+</div>
+<div class="paragraph">
+<p>リポジトリを5つ使用＆submodule化</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>DevEnv (以下のリポジトリ＋docker-compose)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Online (Laravel,Vue)</p>
+</li>
+<li>
+<p>Batch  (Golang)</p>
+</li>
+<li>
+<p>Docker (Dockerfiles)</p>
+</li>
+<li>
+<p>Embulk</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>DeVEnvリポジトリが他4つのリポジトリを管理し、</p>
+</div>
+<div class="paragraph">
+<p>docker-composeで各リポジトリのソースコードとコンテナとvolumeする</p>
+</div>
+<div class="paragraph">
+<p>※Dockerリポジトリは、別</p>
+</div>
+<div class="sect2">
+<h3 id="_devenv">DevEnv</h3>
+<div class="paragraph">
+<p>docker-compose.yml、Postgresのdumpファイルなど開発環境だからこそ必要なものを置く箇所。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_online">Online</h3>
+<div class="paragraph">
+<p>Laravel,Vuejsのソースコードを置く</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_batch">Batch</h3>
+<div class="paragraph">
+<p>Golangのソースコードを置く</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_docker">Docker</h3>
+<div class="paragraph">
+<p>各イメージを作るための。Dockerfile郡を置くリポジトリ</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_embulk">Embulk</h3>
+<div class="paragraph">
+<p>旧Postgresから新Postgresへデータを移行する際に、必要な emblk　file郡を置く</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_docker_compose_yml_image">docker-compose.yml ＆ Imageの説明</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>docker-compose.ymlはDevEnvリポジトリにおいておく</p>
+</div>
+<div class="paragraph">
+<p>全部で11コンテナも必要…</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>nginx</p>
+</li>
+<li>
+<p>php</p>
+</li>
+<li>
+<p>node</p>
+</li>
+<li>
+<p>mailhog</p>
+</li>
+<li>
+<p>redis</p>
+</li>
+<li>
+<p>redis-2</p>
+</li>
+<li>
+<p>go</p>
+</li>
+<li>
+<p>stub(go)</p>
+</li>
+<li>
+<p>postgres-old</p>
+</li>
+<li>
+<p>postgres-new</p>
+</li>
+<li>
+<p>embulk</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>version: '3.7'
+services:
+#online
+  nginx:
+    build:
+      context: ./Docker/online/nginx
+    depends_on:
+      - php
+      - redis
+      - mailhog
+      - new-postgres
+      - node
+    ports:
+      - 443:443
+    volumes:
+      - ./online/var/www:/var/www:cached
+    environment:
+      - TZ=Asia/Tokyo
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+
+  redis:
+    image: redis:3
+    container_name: redis-1
+    ports:
+      - "6379:6379"
+
+  php:
+    build:
+      context: ./Docker/online/phpfpm
+    volumes:
+      - ./online/var/www:/var/www:cached
+      - ./Docker/online/phpfpm/usr/local/etc/php/php.ini:/usr/local/etc/php/php.ini:cached
+    environment:
+      - TZ=Asia/Tokyo
+
+  node:
+    image: node
+    tty: true
+    volumes:
+      - ./online/var/www:/var/www:cached
+    working_dir: /var/www
+
+#batch
+  batch:
+    build:
+      context: ./Docker/batch
+    depends_on:
+     - fw-postgres
+     - redis-shorturl
+     - stub
+     - mailhog
+    volumes:
+     - ./go/src/github.com/:/go/src/github.com/
+     - ./go/temp:/temp
+    #covarage のhtml出力を見るため
+     - ./go/tmp:/tmp
+    working_dir: /go/src/github.com
+    ports:
+     - "6060:6060"
+    #debugができるようプロセスの監視を許可する
+    security_opt:
+     - seccomp:unconfined
+    env_file:
+      - ./Docker/batch/.go_env
+    environment:
+      - TZ=Asia/Tokyo
+    command: ["godoc", "-http=:6060"]
+
+  stub:
+    image: golang:latest
+    ports:
+     - "9090:9090"
+    volumes:
+     - ./stub:/go/stub
+    working_dir: /go/stub/api
+    command: ["go", "run", "main.go"]
+
+  redis-two:
+    image: redis:3
+    container_name: redis-tow
+    ports:
+      - "63790:6379"
+
+#昔のpostgres
+  postgres:
+    image: xxxxxxxx/postgres:latest
+    container_name: old-postgres
+    ports:
+      - "5432:5432"
+
+  new-postgres:
+    image: postgres:10
+    ports:
+      - "54320:5432"
+    environment:
+      POSTGRES_DB: xxxxxx
+    volumes:
+      - ./embulk/postgres_init:/docker-entrypoint-initdb.d
+      - ./postgresql/data:/var/lib/postgresql/data
+    environment:
+      - TZ=Asia/Tokyo
+
+  embulk:
+    image: kooooohe/embulk
+    depends_on:
+      - postgres
+      - fw-postgres
+    container_name: embulk
+    volumes:
+      - ./embulk/opt:/opt
+    env_file:
+      - ./Docker/embulk/.env</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_nginx_php">nginx, php</h3>
+<div class="paragraph">
+<p>Laravel,Vuejsを動かすためのImage</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_node">node</h3>
+<div class="paragraph">
+<p>VuejsをトランスパイルするためのImage<br>
+（本番では使わない）</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mailhog">mailhog</h3>
+<div class="paragraph">
+<p>Login時などのメールをローカルで受け取るためのImage<br>
+（本番では使わない）</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_redis">redis</h3>
+<div class="paragraph">
+<p>LarvelでSessionを保持するためのImage<br>
+（本番ではクラウドベンダーのフルマネージドサービスを使う）</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_redis_2">redis-2</h3>
+<div class="paragraph">
+<p>その他簡易なkey-valueを保持するためのImage<br>
+（本番ではクラウドベンダーのフルマネージドサービスを使う）</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_go">go</h3>
+<div class="paragraph">
+<p>golangで書かれたBatchを動かすimage<br>
+(本番ではマルチステージングビルドを使用し、alpineのimageで動かす）</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_stub_go">stub(go)</h3>
+<div class="paragraph">
+<p>golangで書かれたローカルでサードパーティのAPIの代わりとなるスタブImage<br>
+(本番では使わない）</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_postgres_old">postgres-old</h3>
+<div class="paragraph">
+<p>postgres9系のイメージ。
+ローカルに保存されたdumpファイルを元にデータが初期化される。<br>
+(本番では使わない）</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_postgres_new">postgres-new</h3>
+<div class="paragraph">
+<p>postgres10系のイメージ<br>
+postgres-oldからembulkを使用し、データを移行する。</p>
+</div>
+<div class="paragraph">
+<p>ローカルに保存された、DDLを元に初回コンテナ起動時に初期構築される。<br>
+（本番ではクラウドベンダーのフルマネージドサービスを使う）</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_embulk_2">embulk</h3>
+<div class="paragraph">
+<p>postgre-oldからpostgres-newへデータ移行するためのコンテナ<br>
+(本番では使わない）</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">最後に</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>これだけ大規模な開発環境を作ると、小さな環境差異が大変なことになってしまいます。
+また、メンバーも10人程度いるので、手に負えなくなります。</p>
+</div>
+<div class="paragraph">
+<p>dockerを使うと、全員に全く同じ環境をいとも簡単に作ることができます。</p>
+</div>
+<div class="paragraph">
+<p>GitのSubmoduleはDockerでの開発環境と非常に相性が良いように感じました。</p>
+</div>
+<div class="paragraph">
+<p>おわり</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2019. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11783-1';
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+</body>
+</html>
