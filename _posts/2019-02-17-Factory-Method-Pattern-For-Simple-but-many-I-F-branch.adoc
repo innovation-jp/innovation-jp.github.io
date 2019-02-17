@@ -8,10 +8,11 @@
  +
 以前デザインパターンを勉強して、勉強しっぱなしだったんですが、最近その知識が業務に生きたのでここでご紹介します。 +
  +
-使ったのはFactoryMethodパターンで、数が多いIF分岐やSWITCH分岐をすっきりリファクタリングできました。 +
+使ったのはFactoryMethodパターンで、数が多いIF分岐をすっきりリファクタリングできました。 +
 
-=　リファクタリングしたいコード
+前提条件：PHP7, Laravel5, phpunit
 
+= リファクタリングしたいコード
 今回リファクタリングしたい機能は、弊社メディアのITトレンド内で用いられる短縮URL機能です。 +
 `https://it-trend.jp/i/xxxx` のような形式(xxxx部分は数字)でURLを生成し、アクセスすると予め登録されたページへリダイレクトするというものです。 +
 リダイレクト先のページの種類によって必要なパラメータやセッション情報が変わるため、リダイレクト先のページの種類ごとにリダイレクトパスを取得する処理が異なります。 +
@@ -19,26 +20,26 @@
 
 
 [source, php]
+.Service.php
 ----
 function getRedirectPath($input) {
-    $redirect_path = '';
-    if ($input['redurect_type'] == 'typeA') {
+    if ($input['redirect_type'] == 'typeA') {
         // DBに接続したり・・・
         // セッションを更新したり・・・
         // redirect_pathを生成したり・・・
-    } elseif ($input['redurect_type'] == 'typeB') {
+    } elseif ($input['redirect_type'] == 'typeB') {
         // DBに接続したり・・・
         // セッションを更新したり・・・
         // redirect_pathを生成したり・・・
-    } elseif ($input['redurect_type'] == 'typeC') {
+    } elseif ($input['redirect_type'] == 'typeC') {
         // DBに接続したり・・・
         // セッションを更新したり・・・
         // redirect_pathを生成したり・・・
-    } elseif ($input['redurect_type'] == 'typeD') {
+    } elseif ($input['redirect_type'] == 'typeD') {
         // DBに接続したり・・・
         // セッションを更新したり・・・
         // redirect_pathを生成したり・・・
-    } elseif ($input['redurect_type'] == 'typeE') {
+    } elseif ($input['redirect_type'] == 'typeE') {
         // DBに接続したり・・・
         // セッションを更新したり・・・
         // redirect_pathを生成したり・・・
@@ -46,3 +47,170 @@ function getRedirectPath($input) {
     return $redirect_path
 }
 ----
+
+ありがちな分岐処理ですが、見た目はごっちゃりしてて嫌ですね +
+あと、テストも書きづらいです。getRedirectPathという関数を一つテストするためだけに、すべての分岐用のデータを用意してあげなければいけません。 +
+
+
+そこで、FactoryMethodパターンを使って下記のようにしてみました。 +
+
+[source, php]
+.Service.php
+----
+function getRedirectPath($input) {
+    $factory = app(RedirectURLOperatorFactory::class); 
+    $operator = $factory->create($input['redirect_type']);
+    return $operator->getRedirectPath();
+}
+----
+
+[source, php]
+.RedirectURLOperatorFactory.php
+----
+const CLASSES = [
+    'type_A'=> RedirectURLOperatorTypeA::class;
+    'type_B' => RedirectURLOperatorTypeB::class;
+    'type_C' => RedirectURLOperatorTypeC::class;
+    'type_D' => RedirectURLOperatorTypeD::class;
+    'type_E' => RedirectURLOperatorTypeE::class;
+];
+
+function create($type) {
+    $class = self::CLASSES[$type];
+    return app($class);
+}
+----
+
+[source, php]
+.RedirectURLOperatorTypeA.php
+----
+function getRedirectPath() {
+    // DBに接続したり・・・
+    // セッションを更新したり・・・
+    // redirect_pathを生成したり・・・
+    return $redirect_path;
+}
+----
+
+
+[source, php]
+.RedirectURLOperatorTypeB.php
+----
+function getRedirectPath() {
+    // DBに接続したり・・・
+    // セッションを更新したり・・・
+    // redirect_pathを生成したり・・・
+    return $redirect_path;
+}
+----
+
+といった感じです。 +
+実際にはOperatorクラスはURL生成に必要なパラメータ等を外部から受け取る必要があるので、Factoryでセットしたりなどもう少し処理を加えましたが、大枠はこれで十分理解していただけると思います。 +
+ +
+ファイル数が多くなるのでファイル管理は少し煩雑になるかもしれませんが、分岐後のそれぞれの処理の責任が各クラスに分かれたので、見通しはよくなりました。 +
+おかげで、単体テストも書きやすくなります。 +
+ServiceではFactory@create()と、Operator@getRedirectPath()をコールしていることだけをチェックすればよくなりました。 +
+正しいリダイレクトパスが取得できているかどうかは、それぞれのOperatorクラスのテストに委ねます。 +
+Operatorのテストも、各クラスごとに自分の担当タイプだけ気にしてテストを書けば良いので、テスト１つあたりの範囲が少なくなり、明快になります。 +
+ただし、テストの量が少なくなるわけではありません。見やすく・書きやすくなるだけです。 +
+ +
+ +
+また、 うちのような小規模開発ではあまり恩恵を受けられませんが、クラスが分割されたことで分業がしやすくなり、「オペレーターだけ先に作る」とか、「オペレータークラスはまだ作られてないけど、モックを使ってファクトリーのテストを先に書く」なども可能になります。 +
+
+
+下記はテストの一例です。 +
+
+*リファクタリング前* 
+[source, php]
+.ServiceTest.php
+----
+public function testGetRedirectPathTypeA1() {
+    $input = ['redirect_type' => 'typeA', 'param1' => 'hoge1', 'param2' => 'fuga1'];
+    $service = new Service();
+    $actual = $service->getRedirectPath($input);
+    $this->assertEquals('expected url', $actual);
+}
+public function testGetRedirectPathTypeA2() {
+    $input = ['redirect_type' => 'typeA', 'param1' => 'hoge2', 'param2' => 'fuga2'];
+    $service = new Service();
+    $actual = $service->getRedirectPath($input);
+    $this->assertEquals('expected url', $actual);
+}
+public function testGetRedirectPathTypeB1() {
+    $input = ['redirect_type' => 'typeB', 'param1' => 'hoge1'];
+    $service = new Service();
+    $actual = $service->getRedirectPath($input);
+    $this->assertEquals('expected url', $actual);
+}
+public function testGetRedirectPathTypeB2() {
+    $input = ['redirect_type' => 'typeB', 'param1' => 'hoge2'];
+    $service = new Service();
+    $actual = $service->getRedirectPath($input);
+    $this->assertEquals('expected url', $actual);
+}
+.
+.
+.
+----
+
+*リファクタリング後*
+
+[source, php]
+.ServiceTest.php
+----
+public function testGetRedirectPath() {
+    // 必要なメソッドがコールされているかどうかだけチェックする
+    // メソッドの返り値値が正しいかどうかは、各クラスのテストでチェックする
+    $mocked_operator =  Mockery::mock(RedirectURLOperatorAbstract::class);
+    $mocked_operator->shouldReceive('getRedirectPath')->once()->andeReturn('expected url');
+    $mocked_factory = Mockery::mock(RedirectURLOperatorFactory::class);
+    $mocked_factory->shouldReceive('create')->once()->andeReturn(mocked_operator);
+    
+    $service = app(Service::class, [mocked_factory]);
+    $actual = $service->getRedirectPath($input);
+    $this->assertEquals('expected url', $actual);
+}
+----
+
+
+[source, php]
+.RedirectURLOperatorTypeATest.php
+----
+// このファイルのテストでは、TypeAのテストだけ考えればよい
+public function testGetRedirectPath1() {
+    $operator =  app(RedirectURLOperatorTypeA::class, [['param1' => 'hoge1', 'param2' => 'hoge2']]);
+    $actual = $operator->getRedirectPath();
+    $this->assertEquals('expected url', $actual);
+}
+public function testGetRedirectPath2() {
+    $operator =  app(RedirectURLOperatorTypeA::class, [['param1' => 'hoge1', 'param2' => 'hoge2']]);
+    $actual = $operator->getRedirectPath();
+    $this->assertEquals('expected url', $actual);
+}
+----
+
+
+[source, php]
+.RedirectURLOperatorTypeBTest.php
+----
+// このファイルのテストでは、TypeBのテストだけ考えればよい
+public function testGetRedirectPath1() {
+    $operator =  app(RedirectURLOperatorTypeA::class, [['param1' => 'hoge1']]);
+    $actual = $operator->getRedirectPath();
+    $this->assertEquals('expected url', $actual);
+}
+public function testGetRedirectPath2() {
+    $operator =  app(RedirectURLOperatorTypeA::class, [['param1' => 'hoge2']]);
+    $actual = $operator->getRedirectPath();
+    $this->assertEquals('expected url', $actual);
+}
+----
+
+
+見通しよい！ +
+
+= おわりに
+
+GoFメソッドパターンの教科書を読んでた時は、オブジェクト指向もよく分かってないし、いつ使うんだろうとおもってましたが、やはりどんな勉強も無駄にはなりませんね +
+100の地道な積み重ねのうち2~3個がここぞというときに役に立つ、お勉強とはそういうもののようです。 +
+それでは。
