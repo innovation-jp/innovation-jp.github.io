@@ -1,0 +1,48 @@
+# 単純だけど数の多いif分岐をFactory Methodパターンでテストコードまですっきり
+:hp-alt-title: Factory Method Pattern For Simple but many IF branch
+:hp-tags: bigen, Factory Method Pattern
+
+
+= はじめに
+どうも、bigenです。 +
+ +
+以前デザインパターンを勉強して、勉強しっぱなしだったんですが、最近その知識が業務に生きたのでここでご紹介します。 +
+ +
+使ったのはFactoryMethodパターンで、数が多いIF分岐やSWITCH分岐をすっきりリファクタリングできました。 +
+
+=　リファクタリングしたいコード
+
+今回リファクタリングしたい機能は、弊社メディアのITトレンド内で用いられる短縮URL機能です。 +
+`https://it-trend.jp/i/xxxx` のような形式(xxxx部分は数字)でURLを生成し、アクセスすると予め登録されたページへリダイレクトするというものです。 +
+リダイレクト先のページの種類によって必要なパラメータやセッション情報が変わるため、リダイレクト先のページの種類ごとにリダイレクトパスを取得する処理が異なります。 +
+現行のソースコードは大体下記のような感じでした。 +
+
+
+[source, php]
+----
+function getRedirectPath($input) {
+    $redirect_path = '';
+    if ($input['redurect_type'] == 'typeA') {
+        // DBに接続したり・・・
+        // セッションを更新したり・・・
+        // redirect_pathを生成したり・・・
+    } elseif ($input['redurect_type'] == 'typeB') {
+        // DBに接続したり・・・
+        // セッションを更新したり・・・
+        // redirect_pathを生成したり・・・
+    } elseif ($input['redurect_type'] == 'typeC') {
+        // DBに接続したり・・・
+        // セッションを更新したり・・・
+        // redirect_pathを生成したり・・・
+    } elseif ($input['redurect_type'] == 'typeD') {
+        // DBに接続したり・・・
+        // セッションを更新したり・・・
+        // redirect_pathを生成したり・・・
+    } elseif ($input['redurect_type'] == 'typeE') {
+        // DBに接続したり・・・
+        // セッションを更新したり・・・
+        // redirect_pathを生成したり・・・
+    }
+    return $redirect_path
+}
+----
