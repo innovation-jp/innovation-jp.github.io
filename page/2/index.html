@@ -211,12 +211,6 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/01/13/.html" title="link to アプリケーションログ出力の見直し">アプリケーションログ出力の見直し</a></h2>
-        <p class="excerpt">こんにちは。 エンジニアのNew塚本です。 今回は、ログ出力についてのお話をのせたいと思います。 経緯 エラーが発生した際に出力するログに、stackが出力されず解析が困難になると弊社SREにつめられたため。  ごもっとも！なので見直します！！ 今回やりたいこと ログにstackを出力する。 修正前 例えば、文字列を数値に変換する関数では、この様に実装していました。 num, err := strconv.Atoi(target) if err != nil { 	return } エラー判定をして、呼び出し元に返却する。 targetが数値に変換されない"abcde"の様な値の場合には、err（*errors.errorString）には、 strconv.Atoi: parsing "&hellip;</p>
-        <div class="post-list__meta"><time datetime="13 Jan 2019" class="post-list__meta--date date">13 Jan 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/New-Tsukamoto">NewTsukamoto</a>, <a href="http://tech.innovation.co.jp/tag/mac"> mac</a>, <a href="http://tech.innovation.co.jp/tag/Golang"> Golang</a>, <a href="http://tech.innovation.co.jp/tag/seelog"> seelog</a>, <a href="http://tech.innovation.co.jp/tag/gorm"> gorm</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/01/06/G-A-S-Slack.html" title="link to GASでSlackをまとめて削除するやつ作ってみた">GASでSlackをまとめて削除するやつ作ってみた</a></h2>
         <p class="excerpt">あけましておめでとうございます！ 初詣でおみくじを３回引きましたが全て小吉だったすももです。 以前から「Slackを何件かまとめて消したい時に、一件一件削除するのは面倒くさいなぁ」と思っていたので、 GASを使って、対象チャンネルや対象期間を入力したら、メッセージを一括削除出来るようにしてみました〜！ 完成したもの 1.チャンネル名、開始日、終了日を入力してチェックボックスにチェックを付ける ※トリガーはスプレッドシート編集時、チェックが付いていたら実行するように設定しました 2.該当期間の自分のメッセージが削除され、「削除しました」のポップアップが表示される 3.OKを押すとチェックボックスのチェックが外れる 内容 &lt;使用したSlack API&gt; チャンネル情報取得 http&hellip;</p>
         <div class="post-list__meta"><time datetime="06 Jan 2019" class="post-list__meta--date date">06 Jan 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/sumomo">sumomo</a>, <a href="http://tech.innovation.co.jp/tag/G-A-S"> GAS</a>, <a href="http://tech.innovation.co.jp/tag/Google-Apps-Script"> GoogleAppsScript</a>, <a href="http://tech.innovation.co.jp/tag/Spreadsheet"> Spreadsheet</a>, <a href="http://tech.innovation.co.jp/tag/Slack"> Slack</a></span></div>
@@ -268,6 +262,12 @@ var _trackingid = 'LFT-10003-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/11/27/Hugo-Ascii-Doc.html" title="link to Hugoを利用してブログ作成、AsciiDocで記事を書けるように挑戦してみた。">Hugoを利用してブログ作成、AsciiDocで記事を書けるように挑戦してみた。</a></h2>
         <p class="excerpt">おはようございます。エンジニア一年目のやすと申します。 今回は、Hugoを使ったブログ書きにチャレンジした結果を報告します！ 簡単な前書き 現在、イノベーションエンジニアブログ（当サイト）で色々と投稿させていただいているのですが、 ブログの編集に多少の使いずらさを感じています。 そこで、特に書いた記事の反映が遅いという点で、様々な方のブログ作りのブログを閲覧させてもらい 今回、試しにHugoを利用したブログ作りにチャレンジしてみました。 また、AsciiDocで今まで記事書いていたので、そちらもちゃんと問題なく動作するものを目指しました。 基本的に他の方のブログを参考に進めたので、私の説明がわかりにくいって時は、リンクをポチってください。 報告内容 １、Hugoの導入とローカルで表示まで&hellip;</p>
         <div class="post-list__meta"><time datetime="27 Nov 2018" class="post-list__meta--date date">27 Nov 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Hugo">Hugo</a>, <a href="http://tech.innovation.co.jp/tag/Ascii-Doc"> AsciiDoc</a>, <a href="http://tech.innovation.co.jp/tag/blog"> blog</a>, <a href="http://tech.innovation.co.jp/tag/Y-A-S-U"> YASU</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/11/25/Amazon-Go.html" title="link to AmazonGo体験してみた">AmazonGo体験してみた</a></h2>
+        <p class="excerpt">こんばんは。オザサです。 唐突ですが、シアトルにあるAmazonGoへ行ってきたので、 レポートしてみたいと思います！ AmazonGoとは Amazon Go is a new kind of store with no checkout required. We created the world’s most advanced shopping technology so you never have to wait in line. With our Just Walk Out Shopping experience, simply use the Amazon Go app to enter&hellip;</p>
+        <div class="post-list__meta"><time datetime="25 Nov 2018" class="post-list__meta--date date">25 Nov 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/ozasa">ozasa</a>, <a href="http://tech.innovation.co.jp/tag/amazongo"> amazongo</a>, <a href="http://tech.innovation.co.jp/tag/seattle"> seattle</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
