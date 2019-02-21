@@ -195,12 +195,12 @@ public function testGetRedirectPath2() {
 ----
 // このファイルのテストでは、TypeBのテストだけ考えればよい
 public function testGetRedirectPath1() {
-    $operator =  app(RedirectURLOperatorTypeA::class, [['param1' => 'hoge1']]);
+    $operator =  app(RedirectURLOperatorTypeB::class, [['param1' => 'hoge1']]);
     $actual = $operator->getRedirectPath();
     $this->assertEquals('expected url', $actual);
 }
 public function testGetRedirectPath2() {
-    $operator =  app(RedirectURLOperatorTypeA::class, [['param1' => 'hoge2']]);
+    $operator =  app(RedirectURLOperatorTypeB::class, [['param1' => 'hoge2']]);
     $actual = $operator->getRedirectPath();
     $this->assertEquals('expected url', $actual);
 }
