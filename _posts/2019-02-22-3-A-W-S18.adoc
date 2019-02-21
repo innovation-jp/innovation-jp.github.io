@@ -1,0 +1,128 @@
+# ここ3年間で学んだAWSのこと18選
+:hp-tags: AWS, Shirota
+:published_at: 2019-02-22
+
+業務などを通してAWSを使っていて、学んだことを書いていきたいと思います。 +
+私自身の忘備録的な意味合いも強いですがどなたかの役に立てばと思い、 +
+書いてみました。 +
+また、 +
+具体的な仕様に関してはAWSサイトだったり、 +
+どなたかのブログに載ってたりすることなので、 +
+積極的に引用・リンクを貼っていくスタイルで書きました。 +
+
+# その1
+## ELBの3種類の違い
+ALBはL7、NLBはL4、CLBはL4とL7両方 +
+参考： +
+https://dev.classmethod.jp/cloud/aws/describe-elb-types/
+
+# その2
+## EBS
+スナップショットのライフサイクルを設定できるようになった（2018年夏） +
+参考： +
+https://dev.classmethod.jp/cloud/aws/amazon-dlm-ebs-snapshot-lifecycle/
+
+# その3
+## リザーブドインスタンス
+契約期間は1年 or 3年 があり、3年の方が割安 +
+前払いなし、一部前払い、全額前払いがあり、全額前払いが最も割安で、前払いなしが割高で、一部前払いはその中間 +
+スタンダードとコンバーチブルがあり、前者はインスタンスファミリーを変更できず、後者はできる +
+参考： +
+https://2502.net/aws-ec2-reserved-instances/
+
+# その4
+## RDSのリザーブドインスタンス
+EC2と同じような感じだが、 +
+インスタンスファミリーの変更という概念がなく、今あるインスタンスに適宜適用されていく +
+
+# その5
+## AMI
+EC2のAMIを取る時に「再起動しない」というオプションがあり、 +
+それにチェックを入れないと取得元EC2は再起動してしまう +
+
+# その6
+## セキュリティグループ
+各設定の設定項目にコメントを入れられるようになったのは2017年秋 +
+参考： +
+https://dev.classmethod.jp/cloud/security-group-comment/ +
+
+# その7
+## ECR
+イメージが溜まってしまって困る場合はライフサイクルポリシーを設定できる +
+参考： +
+https://qiita.com/Jason/items/d12139b83643474b3666
+
+# その8
+## ElastiCache
+CloudWatchで監視するべきはBytesUsedForCacheであり、FreeableMemoryではない +
+両者を取り違えて運用してしまうと危険
+
+# その9
+## RDS Aurora
+ディスクを大きくするとIOPSも上がってくる +
+
+# その10
+## DynamoDB
+一定時間経過したデータを自動削除できるようになったのが2017年3月 +
+従量課金で利用できるようになったのが2018年11月 +
+参考： +
+https://dev.classmethod.jp/cloud/aws/ddb-rw-on-demand-pricing/ +
+ +
+DAXは前段におけるキャッシュ機能だが言語別のドライバーが必要 +
+参考： +
+http://dax-sdk.s3-website-us-west-2.amazonaws.com/
+
+# その11
+## SQS
+FIFOオプションを東京リージョンで使えるようになったのは2018年秋
+
+# その12
+## SES
+メール受信してS3に溜めておくこともできる +
+参考： +
+http://tech.innovation.co.jp/2017/06/04/Route53-S-E-S-S3-Lambda-Gmail.html
+
+# その13
+## CloudFront
+オリジンタイムアウトが最大30秒から60秒になったのは2017年3月 +
+また、申請をすれば延ばせるみたいです。 +
+参考： +
+https://docs.aws.amazon.com/ja_jp/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html#DownloadDistValuesOriginResponseTimeout
+
+# その14
+## Route53
+GEOロケーション機能は充分使える（GDPR対策など） +
+参考： +
+https://dev.classmethod.jp/cloud/route53-georouting/
+
+# その15
+## LightSail
+2018年夏に料金が半額になりお得感がある +
+MySQLも実はマネージドで用意してくれる +
+参考： +
+https://dev.classmethod.jp/cloud/aws/amazon-lightsail-cheaper/
+
+# その16
+## S3
+ファイルが作成・更新・削除された時にSQSもしくはSNSに通知できる
+
+# その17
+## ACM
+ワイルドカードドメインの証明書も取得できる +
+その場合は毎年の自動更新は設定できないのでSESでメールを受信してS3に溜める設定をしておくと便利 +
+参考： +
+http://tech.innovation.co.jp/2017/06/04/Route53-S-E-S-S3-Lambda-Gmail.html
+
+# その18
+## WAF
+結構簡単に標準的なWAFルールなら作れる +
+参考： +
+https://base.terrasky.co.jp/articles/aWzQe +
+https://base.terrasky.co.jp/articles/ETnpA
+
+# 思ったこと
+殴り書きですがざっと書き出してみると改めて整頓されて、 +
+頭に入りやすくなった気がします。 +
+DynamoDBはいろいろ機能が増えたなとか感じました。 +
+記憶の定着のためにも +
+定期的にこういう書き出し作業を行っていきたいと思いました。
