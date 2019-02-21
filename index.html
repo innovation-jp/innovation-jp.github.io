@@ -210,6 +210,12 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/02/17/Factory-Method-Pattern-For-Simple-but-many-I-F-branch.html" title="link to 単純だけど数の多いif分岐をFactory Methodパターンでテストコードまですっきり">単純だけど数の多いif分岐をFactory Methodパターンでテストコードまですっきり</a></h2>
+        <p class="excerpt">はじめに どうも、bigenです。 以前デザインパターンを勉強して、勉強しっぱなしだったんですが、最近その知識が業務に生きたのでここでご紹介します。 使ったのはFactoryMethodパターンで、数が多いIF分岐をすっきりリファクタリングできました。 前提条件：PHP7, Laravel5, phpunit リファクタリングしたいコード 今回リファクタリングしたい機能は、弊社メディアのITトレンド内で用いられる短縮URL機能です。 https://it-trend.jp/i/xxxx のような形式(xxxx部分は数字)でURLを生成し、アクセスすると予め登録されたページへリダイレクトするというものです。 リダイレクト先のページの種類によって必要なパラメータやセッション情報が変わるため、リダ&hellip;</p>
+        <div class="post-list__meta"><time datetime="17 Feb 2019" class="post-list__meta--date date">17 Feb 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/bigen">bigen</a>, <a href="http://tech.innovation.co.jp/tag/Factory-Method-Pattern"> Factory Method Pattern</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/02/14/Google-Spread-Sheet.html" title="link to FW移行プロジェクトのLaravel,Golangの開発環境について考えてみる(Docker)">FW移行プロジェクトのLaravel,Golangの開発環境について考えてみる(Docker)</a></h2>
         <p class="excerpt">みなさんこんにちは こへです。 そろそろ、開発環境周りについていろいろ語りたい時期がきましたので記載 どんなプロジェクトか？ FW移行 サーバサイド Laravel フロントサイド Vuejs バッチ Golang 環境 Docker DB Postgres9系→10系へ table構成も変更 インフラ Kubernetes Gitリポジトリ構成 1つのリポジトリですべてを管理するにはあまりにもでかい golangとdocekrとlaravelとdocker-compose関係は触るメンバーが別々なので依存をなくしたいということで、 リポジトリを5つ使用＆submodule化 DevEnv (以下のリポジトリ＋docker-compose) Online (Laravel,Vue) Bat&hellip;</p>
         <div class="post-list__meta"><time datetime="14 Feb 2019" class="post-list__meta--date date">14 Feb 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/kohe">kohe</a>, <a href="http://tech.innovation.co.jp/tag/Docker"> Docker</a>, <a href="http://tech.innovation.co.jp/tag/git"> git</a></span></div>
@@ -259,12 +265,6 @@ var _trackingid = 'LFT-10003-1';
       </li>
       <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/01/13/Golang.html" title="link to アプリケーションログ出力の見直し Golang">アプリケーションログ出力の見直し Golang</a></h2>
-        <p class="excerpt">こんにちは。 エンジニアのNew塚本です。 今回は、ログ出力についてのお話をのせたいと思います。 経緯 エラーが発生した際に出力するログに、stackが出力されず解析が困難になると弊社SREにつめられたため。  ごもっとも！なので見直します！！ 今回やりたいこと ログにstackを出力する。 修正前 例えば、文字列を数値に変換する関数では、この様に実装していました。 num, err := strconv.Atoi(target) if err != nil { 	return } エラー判定をして、呼び出し元に返却する。 targetが数値に変換されない"abcde"の様な値の場合には、err（*errors.errorString）には、 strconv.Atoi: parsing "&hellip;</p>
-        <div class="post-list__meta"><time datetime="13 Jan 2019" class="post-list__meta--date date">13 Jan 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/New-Tsukamoto">NewTsukamoto</a>, <a href="http://tech.innovation.co.jp/tag/mac"> mac</a>, <a href="http://tech.innovation.co.jp/tag/Golang"> Golang</a>, <a href="http://tech.innovation.co.jp/tag/seelog"> seelog</a>, <a href="http://tech.innovation.co.jp/tag/gorm"> gorm</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/01/13/.html" title="link to アプリケーションログ出力の見直し">アプリケーションログ出力の見直し</a></h2>
         <p class="excerpt">こんにちは。 エンジニアのNew塚本です。 今回は、ログ出力についてのお話をのせたいと思います。 経緯 エラーが発生した際に出力するログに、stackが出力されず解析が困難になると弊社SREにつめられたため。  ごもっとも！なので見直します！！ 今回やりたいこと ログにstackを出力する。 修正前 例えば、文字列を数値に変換する関数では、この様に実装していました。 num, err := strconv.Atoi(target) if err != nil { 	return } エラー判定をして、呼び出し元に返却する。 targetが数値に変換されない"abcde"の様な値の場合には、err（*errors.errorString）には、 strconv.Atoi: parsing "&hellip;</p>
         <div class="post-list__meta"><time datetime="13 Jan 2019" class="post-list__meta--date date">13 Jan 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/New-Tsukamoto">NewTsukamoto</a>, <a href="http://tech.innovation.co.jp/tag/mac"> mac</a>, <a href="http://tech.innovation.co.jp/tag/Golang"> Golang</a>, <a href="http://tech.innovation.co.jp/tag/seelog"> seelog</a>, <a href="http://tech.innovation.co.jp/tag/gorm"> gorm</a></span></div>
         <hr class="post-list__divider" />
