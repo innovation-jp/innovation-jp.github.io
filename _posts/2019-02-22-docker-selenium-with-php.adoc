@@ -1,0 +1,212 @@
+= docker-selenium+phpで簡単E２Eテスト環境構築
+:hp-alt-title: docker-selenium_with_php
+:hp-tags: obata, docker, selenium, php, e2e
+
+
+## VRの人やめました
+お久しぶりです！！！
+
+やばい、ここで記事書くのすっごい久々な気がします。 +
+新卒2年目ブランドが終わりそうな小畑です。
+
+先日のLaravel JP Conferenceは素敵でしたね。 +
+私も会場にいたのですが、たくさんの刺激を受けて、非常に勉強になりました。 +
+~え、私のキャッチコピーや名前見覚えある？きのせいきのせい~
+
+そこでやはり、テスト大切だなーってことを改めて感じたので、 +
+今回はテスト関連の記事を書いてみました。
+
+## VRでプログラミング？
+最近思うのが、いろんな場所でプログラミングしたいなと。
+
+VRでプログラミングできれば良いんじゃね？
+
+ってことで、軽くやってみました。
+
+## E2Eテスト？
+E2Eというのは、(End to End)の略で、私達Webにおいては、 +
+ユーザが入力をして、そしてユーザーの最終的に見る画面のテストを指します。 +
+
+今回の記事は、 +
+
+1. 実際の画面のユーザーの入力 +
+2. 画面に出ている文字などの結果の確認 +
+
+そんな、ポチポチと手作業でやるテストをプログラムにやらせてみようというお話です。
+
+『selenium』と呼ばれるツールを用います。自動化という言葉はやっぱりワクワクしますね！
+
+
+## 環境構築
+さあ環境構築。
+
+今回想定しているのは、 +
+
+1. 既にDockerで開発環境が出来上がっている
+2. composerで新しくなにか入れたくない
+
+Oh...かなーりつらい。
+
+となると、条件としては、
+
+1. 開発環境とはまた別なところに環境を作る
+2. 既にあるDockerの開発環境に接続できる環境
+
+そこそこつらそう＼(\^o^)／
+
+### ベースとなるコード
+勉強時に使った、個人のGitHubの公開Repository。
+
+https://github.com/klack710/start_selenium
+
+ここから、要件に合わせたカスタマイズをします。
+
+### 構成
+```
+docker
+ - docker-compose.yml
+
+original-app
+
+original-app-test
+ - selenium-app
+    - composer.json
+    - script
+       - test.php
+```
+
+## やったこと
+1. 既存のdocker-compose.ymlに追記
+2. composer.jsonで必要なファイルを入れる
+3. テスト用コードの作成
+4. テスト中の画面の表示を確認
+5. テストの実行
+
+### 1. 既存のdocker-compose.ymlに追記
+1. テストスクリプトを実行する環境
+2. seleniumを実行する環境
+
+を用意します。
+```
+  php-test:
+    image: php:7.2
+    volumes:
+      - ../original-app-test/selenium-app:/var/www
+
+  selenium-chrome:
+    image: selenium/standalone-chrome-debug:3.0.1-germanium
+    volumes:
+      - /dev/shm:/dev/shm
+    ports:
+      - "4444:4444"
+      - "5900:5900"
+    links:
+      - "nginx:original_app.dev"
+```
+
+php-testでcomposerを走らせたければ、別途Dockerfileを作成してその中で `composer install`をして下さい！ +
+GitHubのRepositoryには、composerが入ったphpのDockerfileを用意しています。
+
+linksの所で、開発用URLに対しての `/etc/hosts`の変更を用意しています。
+
+### 2. composer.jsonで必要なファイルを入れる
+
+1. テスト用にphpunit
+2. seleniumをphpで動かすためのdriver
+
+composer.json
+```
+{
+    "require-dev": {
+        "phpunit/phpunit": "^7.0",
+        "facebook/webdriver": "^1.1"
+    }
+}
+```
+
+ローカルでも、Dockerfileでcomposerを入れたコンテナ内でもいいので、 `composer install`。
+
+### 3. テスト用コードの作成
+```
+<?php
+namespace Script;
+use PHPUnit\Framework\TestCase;
+use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverDimension;
+use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Facebook\WebDriver\Remote\DesiredCapabilities;
+use Facebook\WebDriver\WebDriverExpectedCondition;
+/**
+ * @property RemoteWebDriver driver
+ */
+class Test extends TestCase
+{
+    const WINDOW_HEIGHT = 900;
+    const WINDOW_WIDTH = 1080;
+    const SELENIUM_SERVER_HOST = "http://selenium-chrome:4444/wd/hub";
+    protected $driver;
+    public function testSelenium()
+    {
+        // ドライバーを生成
+        $this->driver = RemoteWebDriver::create(self::SELENIUM_SERVER_HOST, DesiredCapabilities::chrome());
+        // ブラウザの設定
+        $this->driver->manage()->window()->setSize(new WebDriverDimension(self::WINDOW_WIDTH, self::WINDOW_HEIGHT));
+        // 接続
+        $this->driver->get("https://original_app.dev/");
+        $this->driver->wait(20, 100)->until(
+            WebDriverExpectedCondition::titleIs('original_app_title')
+        );
+        //titleの取得
+        $title = $this->driver->findElement(WebDriverBy::cssSelector('#title'))->getText();
+        // データの確認
+        $this->assertEquals('original_app_title', $title);
+        $this->driver->quit();
+    }
+}
+```
+
+linksでhostsを書き換えているおかげで、URLも開発環境と同じような感じに書き換わっていますね。
+
+これで、ページを開いてid="title"に何が表示されるかをテスト出来ます！
+
+### 4. テスト中の画面の表示を確認
+(これは、macでの対応ですが、windowsも似た対応ができるはずです)
+
+手元にあるchromeとかを立ち上げて、
+
+1. vnc:localhost:5900をURL部分に打ち込む
+2. 画面共有する？と出るので、はいを選ぶ
+3. URLをもう一回打ち込む・・・この時、vncは要らないので `localhost:5900`
+4. パスワードはsecret
+
+これでテスト中の画面が見れるようになります。
+
+### 5. テストの実行
+php-testのコンテナ内とかで、
+
+`vendor/bin/phpunit script/test.php`
+
+
+image::/images/obata/docker-selenium_with_php/test_blog.gif[]
+
+私のブログを対象としたテストですが、こんな感じに動きます！！！
+
+おー！かっこいい！！！ +
+これにinputタグ内の入力や、submitも簡単に設定出来ます。
+
+夢が溢れますね！
+
+## やってみて
+わりとさくっと出来ました！
+
+そして自動化素晴らしい。手作業どれだけ面倒だったか、、、
+
+ブラウザのテストはわりと簡単にかけるので、seleniumをこの機会に触ってみてはいかがでしょうか！
+
+
+## 参考記事
+```
+■docker-selenium 使って見た
+https://qiita.com/yutachaos/items/4a1da5d55a3bf0df889e
+```
+
