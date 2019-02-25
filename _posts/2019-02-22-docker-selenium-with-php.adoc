@@ -181,7 +181,7 @@ php-testのコンテナ内とかで、
 `vendor/bin/phpunit script/test.php`
 
 
-image::/images/obata/docker-selenium_with_php/test_blog.gif[]
+image::/images/obata/test_blog.gif[]
 
 私のブログを対象としたテストですが、こんな感じに動きます！！！
 
