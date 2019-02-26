@@ -210,6 +210,12 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/02/26/3-A-W-S18.html" title="link to ここ3年間で学んだAWSのこと18選">ここ3年間で学んだAWSのこと18選</a></h2>
+        <p class="excerpt">業務などを通してAWSを使っていて、学んだことを書いていきたいと思います。 私自身の忘備録的な意味合いも強いですがどなたかの役に立てばと思い、 書いてみました。 また、 具体的な仕様に関してはAWSサイトだったり、 どなたかのブログに載ってたりすることなので、 積極的に引用・リンクを貼っていくスタイルで書きました。 その1 ELBの3種類の違い ALBはL7、NLBはL4、CLBはL4とL7両方 参考： https://dev.classmethod.jp/cloud/aws/describe-elb-types/ その2 EBS スナップショットのライフサイクルを設定できるようになった（2018年夏） 参考： https://dev.classmethod.jp/cloud/aws/am&hellip;</p>
+        <div class="post-list__meta"><time datetime="26 Feb 2019" class="post-list__meta--date date">26 Feb 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/A-W-S">AWS</a>, <a href="http://tech.innovation.co.jp/tag/Shirota"> Shirota</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/02/17/Factory-Method-Pattern-For-Simple-but-many-I-F-branch.html" title="link to 単純だけど数の多いif分岐をFactory Methodパターンでテストコードまですっきり">単純だけど数の多いif分岐をFactory Methodパターンでテストコードまですっきり</a></h2>
         <p class="excerpt">はじめに どうも、bigenです。 以前デザインパターンを勉強して、勉強しっぱなしだったんですが、最近その知識が業務に生きたのでここでご紹介します。 使ったのはFactoryMethodパターンで、数が多いIF分岐をすっきりリファクタリングできました。 前提条件：PHP7, Laravel5, phpunit リファクタリングしたいコード 今回リファクタリングしたい機能は、弊社メディアのITトレンド内で用いられる短縮URL機能です。 https://it-trend.jp/i/xxxx のような形式(xxxx部分は数字)でURLを生成し、アクセスすると予め登録されたページへリダイレクトするというものです。 リダイレクト先のページの種類によって必要なパラメータやセッション情報が変わるため、リダ&hellip;</p>
         <div class="post-list__meta"><time datetime="17 Feb 2019" class="post-list__meta--date date">17 Feb 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/bigen">bigen</a>, <a href="http://tech.innovation.co.jp/tag/Factory-Method-Pattern"> Factory Method Pattern</a></span></div>
@@ -261,12 +267,6 @@ var _trackingid = 'LFT-10003-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/01/15/Netlify-Nuxtjs-P-W-A.html" title="link to Netlifyを使ってNuxt.jsで作成したPWAアプリを簡単にデプロイする">Netlifyを使ってNuxt.jsで作成したPWAアプリを簡単にデプロイする</a></h2>
         <p class="excerpt">どうも。はすみんです。 前回のブログでは、Nuxt.jsの概要について触れました。 http://tech.innovation.co.jp/2018/11/13/Nuxtjs.html 最近Nuxt.jsを使ってWebアプリを作っているのですが、 Nuxt.jsを使うとPWAが簡単に作れます。 また、本番へのデプロイもGitHubやGitlabと連携することにより、簡単に自動デプロイできます。 Nuxt.jsのアプリをどうやって公開しようかと思っていたところ、 Netlifyが非常に簡単にできるらしいとのことで使ってみることにしました。 Nuxt.jsでサービスを作成 まず公式に則ってNuxt.jsでアプリを作ります。 https://ja.nuxtjs.org/guide/instal&hellip;</p>
         <div class="post-list__meta"><time datetime="15 Jan 2019" class="post-list__meta--date date">15 Jan 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Hasumin">Hasumin</a>, <a href="http://tech.innovation.co.jp/tag/Nuxt"> Nuxt</a>, <a href="http://tech.innovation.co.jp/tag/P-W-A"> PWA</a>, <a href="http://tech.innovation.co.jp/tag/Netlify"> Netlify</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/01/13/Golang.html" title="link to アプリケーションログ出力の見直し Golang">アプリケーションログ出力の見直し Golang</a></h2>
-        <p class="excerpt">こんにちは。 エンジニアのNew塚本です。 今回は、ログ出力についてのお話をのせたいと思います。 経緯 エラーが発生した際に出力するログに、stackが出力されず解析が困難になると弊社SREにつめられたため。  ごもっとも！なので見直します！！ 今回やりたいこと ログにstackを出力する。 修正前 例えば、文字列を数値に変換する関数では、この様に実装していました。 num, err := strconv.Atoi(target) if err != nil { 	return } エラー判定をして、呼び出し元に返却する。 targetが数値に変換されない"abcde"の様な値の場合には、err（*errors.errorString）には、 strconv.Atoi: parsing "&hellip;</p>
-        <div class="post-list__meta"><time datetime="13 Jan 2019" class="post-list__meta--date date">13 Jan 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/New-Tsukamoto">NewTsukamoto</a>, <a href="http://tech.innovation.co.jp/tag/mac"> mac</a>, <a href="http://tech.innovation.co.jp/tag/Golang"> Golang</a>, <a href="http://tech.innovation.co.jp/tag/seelog"> seelog</a>, <a href="http://tech.innovation.co.jp/tag/gorm"> gorm</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
