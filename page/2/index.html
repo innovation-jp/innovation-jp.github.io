@@ -211,6 +211,12 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/01/15/Netlify-Nuxtjs-P-W-A.html" title="link to Netlifyを使ってNuxt.jsで作成したPWAアプリを簡単にデプロイする">Netlifyを使ってNuxt.jsで作成したPWAアプリを簡単にデプロイする</a></h2>
+        <p class="excerpt">どうも。はすみんです。 前回のブログでは、Nuxt.jsの概要について触れました。 http://tech.innovation.co.jp/2018/11/13/Nuxtjs.html 最近Nuxt.jsを使ってWebアプリを作っているのですが、 Nuxt.jsを使うとPWAが簡単に作れます。 また、本番へのデプロイもGitHubやGitlabと連携することにより、簡単に自動デプロイできます。 Nuxt.jsのアプリをどうやって公開しようかと思っていたところ、 Netlifyが非常に簡単にできるらしいとのことで使ってみることにしました。 Nuxt.jsでサービスを作成 まず公式に則ってNuxt.jsでアプリを作ります。 https://ja.nuxtjs.org/guide/instal&hellip;</p>
+        <div class="post-list__meta"><time datetime="15 Jan 2019" class="post-list__meta--date date">15 Jan 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Hasumin">Hasumin</a>, <a href="http://tech.innovation.co.jp/tag/Nuxt"> Nuxt</a>, <a href="http://tech.innovation.co.jp/tag/P-W-A"> PWA</a>, <a href="http://tech.innovation.co.jp/tag/Netlify"> Netlify</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/01/13/Golang.html" title="link to アプリケーションログ出力の見直し Golang">アプリケーションログ出力の見直し Golang</a></h2>
         <p class="excerpt">こんにちは。 エンジニアのNew塚本です。 今回は、ログ出力についてのお話をのせたいと思います。 経緯 エラーが発生した際に出力するログに、stackが出力されず解析が困難になると弊社SREにつめられたため。  ごもっとも！なので見直します！！ 今回やりたいこと ログにstackを出力する。 修正前 例えば、文字列を数値に変換する関数では、この様に実装していました。 num, err := strconv.Atoi(target) if err != nil { 	return } エラー判定をして、呼び出し元に返却する。 targetが数値に変換されない"abcde"の様な値の場合には、err（*errors.errorString）には、 strconv.Atoi: parsing "&hellip;</p>
         <div class="post-list__meta"><time datetime="13 Jan 2019" class="post-list__meta--date date">13 Jan 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/New-Tsukamoto">NewTsukamoto</a>, <a href="http://tech.innovation.co.jp/tag/mac"> mac</a>, <a href="http://tech.innovation.co.jp/tag/Golang"> Golang</a>, <a href="http://tech.innovation.co.jp/tag/seelog"> seelog</a>, <a href="http://tech.innovation.co.jp/tag/gorm"> gorm</a></span></div>
@@ -262,12 +268,6 @@ var _trackingid = 'LFT-10003-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/11/27/Laravel-Nexmo-S-M-S.html" title="link to Laravel+NexmoでSMSを配信してみた">Laravel+NexmoでSMSを配信してみた</a></h2>
         <p class="excerpt">Hello~~一年生のアヤンです。 最近Laravelのメール配信の機能を触ることが多くて、SMSで同じようなことを試して見ました。 また、先週サンクスギビングデーというアメリカの祝日があって、料理をする機会がありました〜 その日のために、様々な料理を作りたくて、気づいたらブラウザーのタブを２０個以上開いてありました&#8230;&#8203; どの料理がどれだけ焼けばいいかをほぼ忘れてしまって、気づいたらパンを肉の加熱する時間分焼いてしまって焦げてしまいました（泣） それを避けるためこれを考えました！ 目的 レシピサイトでタイマーを押して、調理時間が終わったらユーザーの携帯に携帯メールが飛んでくる 使ったツール Laravel 5.7 Nexmo (アカウント登録が必要） 1. 環境構築&hellip;</p>
         <div class="post-list__meta"><time datetime="27 Nov 2018" class="post-list__meta--date date">27 Nov 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Laravel">Laravel</a>, <a href="http://tech.innovation.co.jp/tag/Nexmo"> Nexmo</a>, <a href="http://tech.innovation.co.jp/tag/Ah-Yung"> AhYung</a>, <a href="http://tech.innovation.co.jp/tag/S-M-S"> SMS</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/11/27/Hugo-Ascii-Doc.html" title="link to Hugoを利用してブログ作成、AsciiDocで記事を書けるように挑戦してみた。">Hugoを利用してブログ作成、AsciiDocで記事を書けるように挑戦してみた。</a></h2>
-        <p class="excerpt">おはようございます。エンジニア一年目のやすと申します。 今回は、Hugoを使ったブログ書きにチャレンジした結果を報告します！ 簡単な前書き 現在、イノベーションエンジニアブログ（当サイト）で色々と投稿させていただいているのですが、 ブログの編集に多少の使いずらさを感じています。 そこで、特に書いた記事の反映が遅いという点で、様々な方のブログ作りのブログを閲覧させてもらい 今回、試しにHugoを利用したブログ作りにチャレンジしてみました。 また、AsciiDocで今まで記事書いていたので、そちらもちゃんと問題なく動作するものを目指しました。 基本的に他の方のブログを参考に進めたので、私の説明がわかりにくいって時は、リンクをポチってください。 報告内容 １、Hugoの導入とローカルで表示まで&hellip;</p>
-        <div class="post-list__meta"><time datetime="27 Nov 2018" class="post-list__meta--date date">27 Nov 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Hugo">Hugo</a>, <a href="http://tech.innovation.co.jp/tag/Ascii-Doc"> AsciiDoc</a>, <a href="http://tech.innovation.co.jp/tag/blog"> blog</a>, <a href="http://tech.innovation.co.jp/tag/Y-A-S-U"> YASU</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
