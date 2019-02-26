@@ -1,0 +1,50 @@
+# RancherのEKS東京リージョン対応が待ちきれなくてRC版を試してみた件
+:hp-tags: Rancher, EKS, Shirota
+:published_at: 2019-02-27
+
+AWSのKubernetesマネージドサービスとしてEKSがありますが、 +
+昨年の12月に東京リージョンに対応しました。
+
+そこで、 +
+KubernetesをオーケストレイトするRancherというツールがありますが、 +
+EKSのみならず、GCPのGKEはもちろん、 +
+AzureのAKSや、その他オンプレのKubernetesにも対応していて、 +
+それらを一元管理できる優れたツールです。
+
+https://rancher.com/
+
+この優れたツールのRancherですが、 +
+EKSの東京リージョン対応から2ヶ月程経ちましたが、 +
+未だStable版で東京リージョンには対応しておりません。 +
+
+ただ、 +
+RC版である v2.2.0-rc2 を使用して見た所、 +
+東京リージョン対応がなされているみたいでしたので、 +
+ほんの少し試してみました。
+
+# 作業環境前提
+* Dockerがインストールされていること
+
+# Rancherの起動
+
+基本的にDockerHubからDockerイメージをpullしてくるだけです！
+
+```
+docker run -it -p 80:80 -p 443:443 rancher/rancher
+```
+
+今回は v2.2.0-rc2 を試すので、
+
+```
+docker run -it -p 80:80 -p 443:443 rancher/rancher:v2.2.0-rc2
+```
+
+イメージのタグを指定しました。
+
+latest以外のバージョンを試すのは、 +
+GitHubのReleasesを直接参照してみるのが良いかと思います。
+
+https://github.com/rancher/rancher/releases
+
+# RancherからEKSを操作してみる
+
