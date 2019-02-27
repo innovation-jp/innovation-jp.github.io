@@ -211,6 +211,12 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/01/19/Vuejs-4.html" title="link to Vue.jsを使って量子コンピュータの並列演算を再現してみた ~その4~">Vue.jsを使って量子コンピュータの並列演算を再現してみた ~その4~</a></h2>
+        <p class="excerpt">はじめに こんにちは、Yuです。 4回目ですが量子コンピュータのお話です。 よろしければ以前の記事もどうぞ。 その1 その2 その3 前回は位相推定問題を解きました。 今回は「ショアのアルゴリズム」を実装し、素因数分解をさせてみます。 ショアのアルゴリズム 量子コンピュータを使って素因数分解を高速に解くアルゴリズムです。 計算の一部に量子コンピュータを使用します。 作ったもの 実際にできたものがこちらになります。 ショアのアルゴリズムの流れは [1] を参照しましたが、 実装したのは量子コンピュータを使う部分以降のみです。 回路部分自体は位相推定問題のものとあまり変わりません。 ユニタリ変換は前回のものとは異なり、 U |y&gt; = |x*y mod M&gt; です。 逆フーリエ変換&hellip;</p>
+        <div class="post-list__meta"><time datetime="19 Jan 2019" class="post-list__meta--date date">19 Jan 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Java-Script">JavaScript</a>, <a href="http://tech.innovation.co.jp/tag/Vuejs"> Vue.js</a>, <a href="http://tech.innovation.co.jp/tag/Yu"> Yu</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/01/15/Netlify-Nuxtjs-P-W-A.html" title="link to Netlifyを使ってNuxt.jsで作成したPWAアプリを簡単にデプロイする">Netlifyを使ってNuxt.jsで作成したPWAアプリを簡単にデプロイする</a></h2>
         <p class="excerpt">どうも。はすみんです。 前回のブログでは、Nuxt.jsの概要について触れました。 http://tech.innovation.co.jp/2018/11/13/Nuxtjs.html 最近Nuxt.jsを使ってWebアプリを作っているのですが、 Nuxt.jsを使うとPWAが簡単に作れます。 また、本番へのデプロイもGitHubやGitlabと連携することにより、簡単に自動デプロイできます。 Nuxt.jsのアプリをどうやって公開しようかと思っていたところ、 Netlifyが非常に簡単にできるらしいとのことで使ってみることにしました。 Nuxt.jsでサービスを作成 まず公式に則ってNuxt.jsでアプリを作ります。 https://ja.nuxtjs.org/guide/instal&hellip;</p>
         <div class="post-list__meta"><time datetime="15 Jan 2019" class="post-list__meta--date date">15 Jan 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Hasumin">Hasumin</a>, <a href="http://tech.innovation.co.jp/tag/Nuxt"> Nuxt</a>, <a href="http://tech.innovation.co.jp/tag/P-W-A"> PWA</a>, <a href="http://tech.innovation.co.jp/tag/Netlify"> Netlify</a></span></div>
@@ -218,6 +224,12 @@ var _trackingid = 'LFT-10003-1';
       </li>
       <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/01/13/Golang.html" title="link to アプリケーションログ出力の見直し Golang">アプリケーションログ出力の見直し Golang</a></h2>
+        <p class="excerpt">こんにちは。 エンジニアのNew塚本です。 今回は、ログ出力についてのお話をのせたいと思います。 経緯 エラーが発生した際に出力するログに、stackが出力されず解析が困難になると弊社SREにつめられたため。  ごもっとも！なので見直します！！ 今回やりたいこと ログにstackを出力する。 修正前 例えば、文字列を数値に変換する関数では、この様に実装していました。 num, err := strconv.Atoi(target) if err != nil { 	return } エラー判定をして、呼び出し元に返却する。 targetが数値に変換されない"abcde"の様な値の場合には、err（*errors.errorString）には、 strconv.Atoi: parsing "&hellip;</p>
+        <div class="post-list__meta"><time datetime="13 Jan 2019" class="post-list__meta--date date">13 Jan 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/New-Tsukamoto">NewTsukamoto</a>, <a href="http://tech.innovation.co.jp/tag/mac"> mac</a>, <a href="http://tech.innovation.co.jp/tag/Golang"> Golang</a>, <a href="http://tech.innovation.co.jp/tag/seelog"> seelog</a>, <a href="http://tech.innovation.co.jp/tag/gorm"> gorm</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/01/13/.html" title="link to アプリケーションログ出力の見直し">アプリケーションログ出力の見直し</a></h2>
         <p class="excerpt">こんにちは。 エンジニアのNew塚本です。 今回は、ログ出力についてのお話をのせたいと思います。 経緯 エラーが発生した際に出力するログに、stackが出力されず解析が困難になると弊社SREにつめられたため。  ごもっとも！なので見直します！！ 今回やりたいこと ログにstackを出力する。 修正前 例えば、文字列を数値に変換する関数では、この様に実装していました。 num, err := strconv.Atoi(target) if err != nil { 	return } エラー判定をして、呼び出し元に返却する。 targetが数値に変換されない"abcde"の様な値の場合には、err（*errors.errorString）には、 strconv.Atoi: parsing "&hellip;</p>
         <div class="post-list__meta"><time datetime="13 Jan 2019" class="post-list__meta--date date">13 Jan 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/New-Tsukamoto">NewTsukamoto</a>, <a href="http://tech.innovation.co.jp/tag/mac"> mac</a>, <a href="http://tech.innovation.co.jp/tag/Golang"> Golang</a>, <a href="http://tech.innovation.co.jp/tag/seelog"> seelog</a>, <a href="http://tech.innovation.co.jp/tag/gorm"> gorm</a></span></div>
         <hr class="post-list__divider" />
@@ -258,25 +270,13 @@ var _trackingid = 'LFT-10003-1';
         <div class="post-list__meta"><time datetime="05 Dec 2018" class="post-list__meta--date date">05 Dec 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/kohe">kohe</a>, <a href="http://tech.innovation.co.jp/tag/aws"> aws</a>, <a href="http://tech.innovation.co.jp/tag/aurora"> aurora</a>, <a href="http://tech.innovation.co.jp/tag/serverless"> serverless</a></span></div>
         <hr class="post-list__divider" />
       </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/11/28/vr-programing.html" title="link to VR空間でMacを使ったプログラミングしてみよう">VR空間でMacを使ったプログラミングしてみよう</a></h2>
-        <p class="excerpt">VRの人です？ ちょっと早めにお久しぶりです。新卒2年目の小畑です。 社内で技術情報を共有することがよくあるのですが、私の内容が常にVR関連。 私のお仕事VR全く関係ないのにね！ まあ、自分で購入しなければこんなに情報は集めなかったと思いますし、 何事も挑戦だと思いますよ！ 新しいことどんどん取り入れましょう。 あ、一応プライベートでもWeb系の勉強してます。お仕事大切。 VRでプログラミング？ 最近思うのが、いろんな場所でプログラミングしたいなと。 VRでプログラミングできれば良いんじゃね？ ってことで、軽くやってみました。 使ったもの Virtual Cast Chrome リモートデスクトップ ■Virtual Cast https://virtualcast.jp/ ■Chrome&hellip;</p>
-        <div class="post-list__meta"><time datetime="28 Nov 2018" class="post-list__meta--date date">28 Nov 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/obata">obata</a>, <a href="http://tech.innovation.co.jp/tag/vr"> vr</a>, <a href="http://tech.innovation.co.jp/tag/virtual-cast"> virtual_cast</a>, <a href="http://tech.innovation.co.jp/tag/programing"> programing</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/11/27/Laravel-Nexmo-S-M-S.html" title="link to Laravel+NexmoでSMSを配信してみた">Laravel+NexmoでSMSを配信してみた</a></h2>
-        <p class="excerpt">Hello~~一年生のアヤンです。 最近Laravelのメール配信の機能を触ることが多くて、SMSで同じようなことを試して見ました。 また、先週サンクスギビングデーというアメリカの祝日があって、料理をする機会がありました〜 その日のために、様々な料理を作りたくて、気づいたらブラウザーのタブを２０個以上開いてありました&#8230;&#8203; どの料理がどれだけ焼けばいいかをほぼ忘れてしまって、気づいたらパンを肉の加熱する時間分焼いてしまって焦げてしまいました（泣） それを避けるためこれを考えました！ 目的 レシピサイトでタイマーを押して、調理時間が終わったらユーザーの携帯に携帯メールが飛んでくる 使ったツール Laravel 5.7 Nexmo (アカウント登録が必要） 1. 環境構築&hellip;</p>
-        <div class="post-list__meta"><time datetime="27 Nov 2018" class="post-list__meta--date date">27 Nov 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Laravel">Laravel</a>, <a href="http://tech.innovation.co.jp/tag/Nexmo"> Nexmo</a>, <a href="http://tech.innovation.co.jp/tag/Ah-Yung"> AhYung</a>, <a href="http://tech.innovation.co.jp/tag/S-M-S"> SMS</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
     </ol>
 
     <hr class="post-list__divider " />
 
 <nav class="pagination" role="navigation">
         <a class="newer-posts pagination__newer btn btn-small btn-tertiary" href="http://tech.innovation.co.jp/#blog">&larr; Newer Posts</a>
-    <span class="pagination__page-number">Page 2 of 25</span>
+    <span class="pagination__page-number">Page 2 of 26</span>
         <a class="older-posts pagination__older btn btn-small btn-tertiary" href="http://tech.innovation.co.jp/page/3/#blog">Older Posts &rarr;</a>
 </nav>
 
