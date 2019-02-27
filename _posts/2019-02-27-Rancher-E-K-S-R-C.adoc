@@ -48,3 +48,21 @@ https://github.com/rancher/rancher/releases
 
 # RancherからEKSを操作してみる
 
+image:/images/shirota/20190227/01.png[]
+image:/images/shirota/20190227/02.png[]
+image:/images/shirota/20190227/03.png[]
+image:/images/shirota/20190227/04.png[]
+image:/images/shirota/20190227/05.png[]
+image:/images/shirota/20190227/06.png[]
+image:/images/shirota/20190227/07.png[]
+image:/images/shirota/20190227/08.png[]
+image:/images/shirota/20190227/09.png[]
+image:/images/shirota/20190227/10.png[]
+image:/images/shirota/20190227/11.png[]
+image:/images/shirota/20190227/12.png[]
+image:/images/shirota/20190227/13.png[]
+image:/images/shirota/20190227/14.png[]
+image:/images/shirota/20190227/15.png[]
+image:/images/shirota/20190227/16.png[]
+image:/images/shirota/20190227/17.png[]
+
