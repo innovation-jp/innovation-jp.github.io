@@ -15,7 +15,7 @@ https://rancher.com/
 
 この優れたツールのRancherですが、 +
 EKSの東京リージョン対応から2ヶ月程経ちましたが、 +
-未だStable版で東京リージョンには対応しておりません。 +
+未だStable版で東京リージョンには対応しておりません。
 
 ただ、 +
 RC版である v2.2.0-rc2 を使用して見た所、 +
@@ -48,21 +48,92 @@ https://github.com/rancher/rancher/releases
 
 # RancherからEKSを操作してみる
 
+まず https://localhost にアクセスします。
+
 image:/images/shirota/20190227/01.png[]
+
+パスワードの設定が終わったら、RancherサーバーのURLを設定します。
+
+今回はMacで試しているだけなのでlocalhostになります。
+
 image:/images/shirota/20190227/02.png[]
+
+ログインが完了したら、以下のカタログタブからHelmを有効化しておきます。
+
 image:/images/shirota/20190227/03.png[]
+
+クラスタータブからクラスターを追加します。
+
 image:/images/shirota/20190227/04.png[]
+
+すると、 +
+クラスターの種類を選べますが、 +
+今回はEKSの東京リージョンを試すので以下の通り選択します。
+
 image:/images/shirota/20190227/05.png[]
+
+RC版なので、 +
+リージョン選択のプルダウンで、ap-northeast-1（東京リージョン）が選択できます！
+
 image:/images/shirota/20190227/06.png[]
+
+AWSのキーを入力して、
+
 image:/images/shirota/20190227/07.png[]
+
+クラスタースペックはデフォルトのままにしました。
+
 image:/images/shirota/20190227/08.png[]
+
+ここで、少し待ちます。 +
+すると以下のようにKubernetesクラスターが出来上がりました。
+
 image:/images/shirota/20190227/09.png[]
+
+クラスター名をクリックするとダッシュボードが表示されます。
+
 image:/images/shirota/20190227/10.png[]
+
+ノードタブをクリックすると各ノードの状態も確認できます。
+
 image:/images/shirota/20190227/11.png[]
+
+AWSコンソールの方を覗いてみると、
+
 image:/images/shirota/20190227/12.png[]
+
+きちんとクラスターもできていまして、 +
+ノードとしてEC2も立っていました。
+
 image:/images/shirota/20190227/13.png[]
+
+このように、バージョンv2.2.0-rc2では、EKS東京リージョンに対応できているようです。
+
+# EKSクラスターの削除
+
+このまま一日でも忘れてしまうとすぐ何千円と請求が来ていしまいすので、 +
+忘れずに削除しておきます。
+
+削除はチェックをして削除ボタンを押すだけです。
+
 image:/images/shirota/20190227/14.png[]
 image:/images/shirota/20190227/15.png[]
+
+削除中になりました。
+
 image:/images/shirota/20190227/16.png[]
+
+AWSコンソールからCloudFormationを見てみると、 +
+スタックで削除しようとしているのが確認できました。
+
 image:/images/shirota/20190227/17.png[]
+
+この時、Rancher画面からは直ぐに削除されますが、 +
+AWSコンソールではクラスターやノードの削除処理がしばらく続いていました。
+
+# まとめ
+このように Rancherのバージョン v2.2.0-rc2 を使えば、 +
+現在でもEKS東京リージョンにてKubernetesクラスターを立てることができました。 +
+開発中のプロジェクトでRancherを既に導入していて、 +
+Rancherで統一したい場合など、良いかもしれません。
 
