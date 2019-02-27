@@ -15,7 +15,7 @@ https://rancher.com/
 
 この優れたツールのRancherですが、 +
 EKSの東京リージョン対応から2ヶ月程経ちましたが、 +
-未だStable版で東京リージョンには対応しておりません。
+未だStable版では東京リージョンには対応しておりません。
 
 ただ、 +
 RC版である v2.2.0-rc2 を使用して見た所、 +
@@ -27,7 +27,7 @@ RC版である v2.2.0-rc2 を使用して見た所、 +
 
 # Rancherの起動
 
-基本的にDockerHubからDockerイメージをpullしてくるだけです！
+基本的にDockerHubからDockerイメージをpullしてくるだけですが、
 
 ```
 docker run -it -p 80:80 -p 443:443 rancher/rancher
@@ -48,12 +48,12 @@ https://github.com/rancher/rancher/releases
 
 # RancherからEKSを操作してみる
 
-まず https://localhost にアクセスします。
+Rancherが起動しましたら、 +
+https://localhost にアクセスします。
 
 image:/images/shirota/20190227/01.png[]
 
-パスワードの設定が終わったら、RancherサーバーのURLを設定します。
-
+パスワードの設定が終わったら、RancherサーバーのURLを設定します。 +
 今回はMacで試しているだけなのでlocalhostになります。
 
 image:/images/shirota/20190227/02.png[]
@@ -90,11 +90,11 @@ image:/images/shirota/20190227/08.png[]
 
 image:/images/shirota/20190227/09.png[]
 
-クラスター名をクリックするとダッシュボードが表示されます。
+クラスター名をクリックするとダッシュボードが表示されました。
 
 image:/images/shirota/20190227/10.png[]
 
-ノードタブをクリックすると各ノードの状態も確認できます。
+ノードタブをクリックすると各ノードの状態も確認できました。
 
 image:/images/shirota/20190227/11.png[]
 
@@ -107,16 +107,21 @@ image:/images/shirota/20190227/12.png[]
 
 image:/images/shirota/20190227/13.png[]
 
-このように、バージョンv2.2.0-rc2では、EKS東京リージョンに対応できているようです。
+このように、 +
+バージョンv2.2.0-rc2では、EKS東京リージョンに対応できているようです。
 
 # EKSクラスターの削除
 
 このまま一日でも忘れてしまうとすぐ何千円と請求が来ていしまいすので、 +
 忘れずに削除しておきます。
 
-削除はチェックをして削除ボタンを押すだけです。
+削除はクラスタータブから、 +
+該当クラスターをチェックして削除ボタンを押すだけです。
 
 image:/images/shirota/20190227/14.png[]
+
+確認画面
+
 image:/images/shirota/20190227/15.png[]
 
 削除中になりました。
