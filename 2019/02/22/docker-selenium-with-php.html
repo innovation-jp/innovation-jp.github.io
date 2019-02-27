@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>docker-selenium+phpで簡単E２Eテスト環境構築 - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="docker-selenium+phpで簡単E２Eテスト環境構築">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="docker-selenium+phpで簡単E２Eテスト環境構築">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2019/02/22/docker-selenium-with-php.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="docker-selenium+phpで簡単E２Eテスト環境構築" />
+    <meta property="og:description" content="テスト大切！ お久しぶりです！！！ やばい、ここで記事書くのすっごい久々な気がします。 新卒2年目ブランドが終わりそうな小畑です。 先日のLaravel JP Conferenceは素敵でしたね。 私も会場にいたのですが、たくさんの刺激を受けて、非常に勉強になりました。 え、私のキャッチコピーや名前見覚えある？きのせいきのせい そこでやはり、テスト大切だなーってことを改めて感じたので、 今回はテスト関連の記事を書いてみました。 E2Eテスト？ E2Eというのは、(End to End)の略で、私達Web屋においては、 ユーザが入力をして、そしてユーザー..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2019/02/22/docker-selenium-with-php.html" />
+    <meta property="article:published_time" content="2019-02-21T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2019-02-27T05:15:27.524Z" />
+    <meta property="article:tag" content="obata" />
+    <meta property="article:tag" content="docker" />
+    <meta property="article:tag" content="selenium" />
+    <meta property="article:tag" content="php" />
+    <meta property="article:tag" content="e2e" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="docker-selenium+phpで簡単E２Eテスト環境構築" />
+    <meta name="twitter:description" content="テスト大切！ お久しぶりです！！！ やばい、ここで記事書くのすっごい久々な気がします。 新卒2年目ブランドが終わりそうな小畑です。 先日のLaravel JP Conferenceは素敵でしたね。 私も会場にいたのですが、たくさんの刺激を受けて、非常に勉強になりました。 え、私のキャッチコピーや名前見覚えある？きのせいきのせい そこでやはり、テスト大切だなーってことを改めて感じたので、 今回はテスト関連の記事を書いてみました。 E2Eテスト？ E2Eというのは、(End to End)の略で、私達Web屋においては、 ユーザが入力をして、そしてユーザー..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2019/02/22/docker-selenium-with-php.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars3.githubusercontent.com/u/30609804?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "docker-selenium+phpで簡単E２Eテスト環境構築",
+    "url": "http://tech.innovation.co.jp/2019/02/22/docker-selenium-with-php.html",
+    "datePublished": "2019-02-21T15:00:00.000Z",
+    "dateModified": "2019-02-27T05:15:27.524Z",
+    "keywords": "obata,  docker,  selenium,  php,  e2e",
+    "description": "テスト大切！ お久しぶりです！！！ やばい、ここで記事書くのすっごい久々な気がします。 新卒2年目ブランドが終わりそうな小畑です。 先日のLaravel JP Conferenceは素敵でしたね。 私も会場にいたのですが、たくさんの刺激を受けて、非常に勉強になりました。 え、私のキャッチコピーや名前見覚えある？きのせいきのせい そこでやはり、テスト大切だなーってことを改めて感じたので、 今回はテスト関連の記事を書いてみました。 E2Eテスト？ E2Eというのは、(End to End)の略で、私達Web屋においては、 ユーザが入力をして、そしてユーザー..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-obata tag-docker tag-selenium tag-php tag-e2e no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="22 Feb 2019" class="post-meta__date date">22 Feb 2019</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/obata">obata</a>, <a href="http://tech.innovation.co.jp/tag/docker"> docker</a>, <a href="http://tech.innovation.co.jp/tag/selenium"> selenium</a>, <a href="http://tech.innovation.co.jp/tag/php"> php</a>, <a href="http://tech.innovation.co.jp/tag/e2e"> e2e</a></span>
+        <span class="post-meta__author author"><img src="https://avatars3.githubusercontent.com/u/30609804?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">docker-selenium+phpで簡単E２Eテスト環境構築</h1>
+    </header>
+
+    <section class="post tag-obata tag-docker tag-selenium tag-php tag-e2e">
+      <div class="sect1">
+<h2 id="__">テスト大切！</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>お久しぶりです！！！</p>
+</div>
+<div class="paragraph">
+<p>やばい、ここで記事書くのすっごい久々な気がします。<br>
+新卒2年目ブランドが終わりそうな小畑です。</p>
+</div>
+<div class="paragraph">
+<p>先日のLaravel JP Conferenceは素敵でしたね。<br>
+私も会場にいたのですが、たくさんの刺激を受けて、非常に勉強になりました。<br>
+<sub>え、私のキャッチコピーや名前見覚えある？きのせいきのせい</sub></p>
+</div>
+<div class="paragraph">
+<p>そこでやはり、テスト大切だなーってことを改めて感じたので、<br>
+今回はテスト関連の記事を書いてみました。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_e2e">E2Eテスト？</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>E2Eというのは、(End to End)の略で、私達Web屋においては、<br>
+ユーザが入力をして、そしてユーザーの最終的に見る画面のテストを指します。<br></p>
+</div>
+<div class="paragraph">
+<p>今回の記事は、<br></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>実際の画面のユーザーの入力<br></p>
+</li>
+<li>
+<p>画面に出ている文字などの結果の確認<br></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>そんな、ポチポチと手作業でやるテストをプログラムにやらせてみようというお話です。</p>
+</div>
+<div class="paragraph">
+<p>『selenium』と呼ばれるツールを用います。自動化という言葉はやっぱりワクワクしますね！</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">環境構築</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>さあ環境構築。</p>
+</div>
+<div class="paragraph">
+<p>今回想定しているのは、<br></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>既にDockerで開発環境が出来上がっているプロジェクト</p>
+</li>
+<li>
+<p>プロジェクトの方のcomposer.jsonに新しくなにか入れたくない</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Oh&#8230;&#8203;かなーりつらい。</p>
+</div>
+<div class="paragraph">
+<p>となると、条件としては、</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>既にあるDockerの開発環境に接続できる環境</p>
+</li>
+<li>
+<p>既存のプロジェクトとは別なディレクトリに環境を作る</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>そこそこつらそう＼(^o^)／</p>
+</div>
+<div class="sect2">
+<h3 id="___3">ベースとなるコード</h3>
+<div class="paragraph">
+<p>勉強時に使った、個人のGitHubの公開Repository。</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/klack710/start_selenium" class="bare">https://github.com/klack710/start_selenium</a></p>
+</div>
+<div class="paragraph">
+<p>ここから、環境構築の項にあった条件に合わせたカスタマイズをします。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___4">構成</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>docker
+ - docker-compose.yml
+
+original-app
+
+original-app-test
+ - selenium-app
+    - composer.json
+    - script
+       - test.php</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___5">やったこと</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>既存のdocker-compose.ymlに追記</p>
+</li>
+<li>
+<p>composer.jsonで必要なファイルを入れる</p>
+</li>
+<li>
+<p>テスト用コードの作成</p>
+</li>
+<li>
+<p>テスト中の画面の表示を確認</p>
+</li>
+<li>
+<p>テストの実行</p>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="_1_docker_compose_yml">1. 既存のdocker-compose.ymlに追記</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>テストスクリプトを実行する環境</p>
+</li>
+<li>
+<p>seleniumを実行する環境</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>を用意します。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>  php-test:
+    image: php:7.2
+    volumes:
+      - ../original-app-test/selenium-app:/var/www
+
+  selenium-chrome:
+    image: selenium/standalone-chrome-debug:3.0.1-germanium
+    volumes:
+      - /dev/shm:/dev/shm
+    ports:
+      - "4444:4444"
+      - "5900:5900"
+    links:
+      - "nginx:original_app.dev"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>php-testでcomposerを走らせたければ、別途Dockerfileを作成してその中で <code>composer install</code>をして下さい！<br>
+GitHubのRepositoryには、composerが入ったphpのDockerfileを用意しています。</p>
+</div>
+<div class="paragraph">
+<p>linksの所で、開発用URLに対しての <code>/etc/hosts</code>の変更を用意しています。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_2_composer_json">2. composer.jsonで必要なファイルを入れる</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>テスト用にphpunit</p>
+</li>
+<li>
+<p>seleniumをphpで動かすためのdriver</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>composer.json</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>{
+    "require-dev": {
+        "phpunit/phpunit": "^7.0",
+        "facebook/webdriver": "^1.1"
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>ローカルでも、Dockerfileでcomposerを入れたコンテナ内でもいいので、 <code>composer install</code>。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_3">3. テスト用コードの作成</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>&lt;?php
+namespace Script;
+use PHPUnit\Framework\TestCase;
+use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverDimension;
+use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Facebook\WebDriver\Remote\DesiredCapabilities;
+use Facebook\WebDriver\WebDriverExpectedCondition;
+/**
+ * @property RemoteWebDriver driver
+ */
+class Test extends TestCase
+{
+    const WINDOW_HEIGHT = 900;
+    const WINDOW_WIDTH = 1080;
+    const SELENIUM_SERVER_HOST = "http://selenium-chrome:4444/wd/hub";
+    protected $driver;
+    public function testSelenium()
+    {
+        // ドライバーを生成
+        $this-&gt;driver = RemoteWebDriver::create(self::SELENIUM_SERVER_HOST, DesiredCapabilities::chrome());
+        // ブラウザの設定
+        $this-&gt;driver-&gt;manage()-&gt;window()-&gt;setSize(new WebDriverDimension(self::WINDOW_WIDTH, self::WINDOW_HEIGHT));
+        // 接続
+        $this-&gt;driver-&gt;get("https://original_app.dev/");
+        $this-&gt;driver-&gt;wait(20, 100)-&gt;until(
+            WebDriverExpectedCondition::titleIs('original_app_title')
+        );
+        //titleの取得
+        $title = $this-&gt;driver-&gt;findElement(WebDriverBy::cssSelector('#title'))-&gt;getText();
+        // データの確認
+        $this-&gt;assertEquals('original_app_title', $title);
+        $this-&gt;driver-&gt;quit();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>linksでhostsを書き換えているおかげで、URLも開発環境と同じような感じに書き換わっていますね。</p>
+</div>
+<div class="paragraph">
+<p>これで、ページを開いてid="title"に何が表示されるかをテスト出来ます！</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_4">4. テスト中の画面の表示を確認</h3>
+<div class="paragraph">
+<p>(これは、macでの対応ですが、windowsも似た対応ができるはずです)</p>
+</div>
+<div class="paragraph">
+<p>手元にあるchromeとかを立ち上げて、</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>vnc:localhost:5900をURL部分に打ち込む</p>
+</li>
+<li>
+<p>画面共有する？と出るので、はいを選ぶ</p>
+</li>
+<li>
+<p>URLをもう一回打ち込む・・・この時、vncは要らないので <code>localhost:5900</code></p>
+</li>
+<li>
+<p>パスワードはsecret</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>これでテスト中の画面が見れるようになります。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_5">5. テストの実行</h3>
+<div class="paragraph">
+<p>php-testのコンテナ内とかで、</p>
+</div>
+<div class="paragraph">
+<p><code>vendor/bin/phpunit script/test.php</code></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/obata/test_blog.gif" alt="test blog.gif">
+</div>
+</div>
+<div class="paragraph">
+<p>私のブログを対象としたテストですが、こんな感じに動きます！！！</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>ページの表示</p>
+</li>
+<li>
+<p>全て表示されるまで待つ</p>
+</li>
+<li>
+<p>id="title"のテキストが『エンジニアのたまご_level10』と等しいかチェック</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>をしてました。<br>
+コンソールにも、OK(1 test, 1 assertion)って書かれていますね。ばっちり動いてます！</p>
+</div>
+<div class="paragraph">
+<p>これにinputタグ内の入力や、submitも簡単に設定出来ます。</p>
+</div>
+<div class="paragraph">
+<p>夢が溢れますね！</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___6">やってみて</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>わりとさくっと出来ました！</p>
+</div>
+<div class="paragraph">
+<p>そして自動化素晴らしい。手作業どれだけ面倒だったか、、、</p>
+</div>
+<div class="paragraph">
+<p>ブラウザのテストはわりと簡単にかけるので、seleniumをこの機会に触ってみてはいかがでしょうか！</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___7">参考記事</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>■docker-selenium 使って見た
+https://qiita.com/yutachaos/items/4a1da5d55a3bf0df889e</code></pre>
+</div>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2019. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11783-1';
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+</body>
+</html>
