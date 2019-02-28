@@ -211,6 +211,12 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/11/08/A-W-S-Azure.html" title="link to カスタムコンテナイメージを使った AWS Fargate で Azure の BLOB Storage をチラ見してみた">カスタムコンテナイメージを使った AWS Fargate で Azure の BLOB Storage をチラ見してみた</a></h2>
+        <p class="excerpt">お久しぶりです。 プライベートで Azure を使っている SRE チームの syoga です。 もうすぐ今年も終わりですね！ という訳で、 今回は AWS Fargate を使ってみようと思います。 Fargate で何をしようかな Fargate は AWS が提供する ECS でインスタンスを意識せず利用できる、フルマネージドなコンテナ実行環境です。 詳細は AWS の公式ページ等で要チェックください。 で！ 何をしようかと思ったのですが、以前の 記事 で作成した LINE BOT で Azure の Blob Storage にアップロードした 画像ファイルを気軽に参照できるようにしたいという思いがありましたので、そんな仕組みのコンテナイメージを作って Fargate で利用してみ&hellip;</p>
+        <div class="post-list__meta"><time datetime="08 Nov 2018" class="post-list__meta--date date">08 Nov 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/syoga">syoga</a>, <a href="http://tech.innovation.co.jp/tag/Azure"> Azure</a>, <a href="http://tech.innovation.co.jp/tag/A-W-S"> AWS</a>, <a href="http://tech.innovation.co.jp/tag/Fargate"> Fargate</a>, <a href="http://tech.innovation.co.jp/tag/E-C-S"> ECS</a>, <a href="http://tech.innovation.co.jp/tag/Docker"> Docker</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/11/02/Amazon-Linux-E-C2chrony.html" title="link to 古いAmazonLinux EC2インスタンスの時刻をchronyで合わせた件">古いAmazonLinux EC2インスタンスの時刻をchronyで合わせた件</a></h2>
         <p class="excerpt">今は昔のお話ですが、 かなり昔に作成したAmazonLinuxがあり、 時刻が何故か10分程度ズレてしまう現象に見舞われたことがありました。 ntpdの自動時刻補正の時点でズレてしまっているようで、 dateコマンドで一時的に合わせたとしてもすぐに同じ状態に戻ってしまっていました。 これを解消した際の手順を公開したいと思います。 やったこと 状況確認 ntpdの停止 chronyをインストール chronyを設定 chronyのmakestepを実行 自動起動設定 状況確認 作業時間が深夜なのは気にせず行きましょう。 # SSHで該当インスタンスにログイン Warning: Permanently added 'xxx.xxx.xxx.xxx' (RSA) to the list of k&hellip;</p>
         <div class="post-list__meta"><time datetime="02 Nov 2018" class="post-list__meta--date date">02 Nov 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/A-W-S">AWS</a>, <a href="http://tech.innovation.co.jp/tag/E-C2"> EC2</a>, <a href="http://tech.innovation.co.jp/tag/chrony"> chrony</a>, <a href="http://tech.innovation.co.jp/tag/Shirota"> Shirota</a></span></div>
@@ -262,12 +268,6 @@ var _trackingid = 'LFT-10003-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/10/09/E-K-S.html" title="link to EKSを触ってみた">EKSを触ってみた</a></h2>
         <p class="excerpt">2018年10月現在、 弊社サービスでも本番環境にDockerコンテナを利用している部分が増えてきました。 AWSを利用している部分ではECSを利用していますが、 今回Kubernetesを試すという意味で、EKSを触ってみることにしました。 ユーザーガイド： https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/what-is-eks.html 前提 Dockerの知識はある程度ある 作業端末はMacを使用した（※未検証だがWindowsでも同じはず） 作業端末で最新のawscliが使用できるようになっていること AWSのIAMの知識があり、EKS用にAmazonEKSClusterPolicyとAmazonEKSServicePo&hellip;</p>
         <div class="post-list__meta"><time datetime="09 Oct 2018" class="post-list__meta--date date">09 Oct 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/A-W-S">AWS</a>, <a href="http://tech.innovation.co.jp/tag/E-K-S"> EKS</a>, <a href="http://tech.innovation.co.jp/tag/Kubernetes"> Kubernetes</a>, <a href="http://tech.innovation.co.jp/tag/Shirota"> Shirota</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/10/09/D3js1.html" title="link to D3.jsを使ってを「1日が残りどれくらいなのかが分かる時計」を作ってみた">D3.jsを使ってを「1日が残りどれくらいなのかが分かる時計」を作ってみた</a></h2>
-        <p class="excerpt">少しずつ気温が下がってきた今日この頃いかがお過ごしでしょうか。ozasaです。 もう間も無く秋って感じでしょうかね、 ○○の秋といえば、皆様は何を想像されるでしょう？ 私はやはり芸術の秋です！ ということでビジュアル表現を学ぶべく、 今回はD3.jsを使ってを「1日が残りどれくらいなのかが分かる時計」を作ってみました。 D3.jsとは Data-Driven DocumentsでD3と名付けているようです。 詳しくは D3.js is a JavaScript library for manipulating documents based on data. D3 helps you bring data to life using HTML, SVG, and CSS. D3’s emp&hellip;</p>
-        <div class="post-list__meta"><time datetime="09 Oct 2018" class="post-list__meta--date date">09 Oct 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/D3js">D3.js</a>, <a href="http://tech.innovation.co.jp/tag/ozasa"> ozasa</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
