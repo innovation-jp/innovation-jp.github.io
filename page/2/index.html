@@ -211,6 +211,12 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/01/23/C-P-P.html" title="link to CPPでソケットプログラミング書いてみた">CPPでソケットプログラミング書いてみた</a></h2>
+        <p class="excerpt">Hello~~一年生のアヤンです。 勉強会でPHPでソケットのサーバとクライアントを作ってみましたので、バージョン２のCPPで作ってみました！調べてみるとPHPととても似ていました。 目的 勉強会でPHPでやったソケットプログラミングをCPPで同じく簡単なサーバーとクライエントの連携するネットワークのプログラムを作ってみました。 使ったツール Cloud9のIDE https://c9.io プログラム説明 クライアントの方で４つのステップを分けて、書きました。 　ソケット作成 作成したソケットをサーバーに接続 データをサーバーに送る サーバーからの返却 サーバの方で主に5つのステップを使いました。 ソケット作成 ソケットをバインドする クライアントから接続を聞く 接続したらクライアントか&hellip;</p>
+        <div class="post-list__meta"><time datetime="23 Jan 2019" class="post-list__meta--date date">23 Jan 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Socket">Socket</a>, <a href="http://tech.innovation.co.jp/tag/C-P-P"> CPP</a>, <a href="http://tech.innovation.co.jp/tag/Ah-Yung"> AhYung</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/01/19/Vuejs-4.html" title="link to Vue.jsを使って量子コンピュータの並列演算を再現してみた ~その4~">Vue.jsを使って量子コンピュータの並列演算を再現してみた ~その4~</a></h2>
         <p class="excerpt">はじめに こんにちは、Yuです。 4回目ですが量子コンピュータのお話です。 よろしければ以前の記事もどうぞ。 その1 その2 その3 前回は位相推定問題を解きました。 今回は「ショアのアルゴリズム」を実装し、素因数分解をさせてみます。 ショアのアルゴリズム 量子コンピュータを使って素因数分解を高速に解くアルゴリズムです。 計算の一部に量子コンピュータを使用します。 作ったもの 実際にできたものがこちらになります。 ショアのアルゴリズムの流れは [1] を参照しましたが、 実装したのは量子コンピュータを使う部分以降のみです。 回路部分自体は位相推定問題のものとあまり変わりません。 ユニタリ変換は前回のものとは異なり、 U |y&gt; = |x*y mod M&gt; です。 逆フーリエ変換&hellip;</p>
         <div class="post-list__meta"><time datetime="19 Jan 2019" class="post-list__meta--date date">19 Jan 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Java-Script">JavaScript</a>, <a href="http://tech.innovation.co.jp/tag/Vuejs"> Vue.js</a>, <a href="http://tech.innovation.co.jp/tag/Yu"> Yu</a></span></div>
@@ -224,12 +230,6 @@ var _trackingid = 'LFT-10003-1';
       </li>
       <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/01/13/Golang.html" title="link to アプリケーションログ出力の見直し Golang">アプリケーションログ出力の見直し Golang</a></h2>
-        <p class="excerpt">こんにちは。 エンジニアのNew塚本です。 今回は、ログ出力についてのお話をのせたいと思います。 経緯 エラーが発生した際に出力するログに、stackが出力されず解析が困難になると弊社SREにつめられたため。  ごもっとも！なので見直します！！ 今回やりたいこと ログにstackを出力する。 修正前 例えば、文字列を数値に変換する関数では、この様に実装していました。 num, err := strconv.Atoi(target) if err != nil { 	return } エラー判定をして、呼び出し元に返却する。 targetが数値に変換されない"abcde"の様な値の場合には、err（*errors.errorString）には、 strconv.Atoi: parsing "&hellip;</p>
-        <div class="post-list__meta"><time datetime="13 Jan 2019" class="post-list__meta--date date">13 Jan 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/New-Tsukamoto">NewTsukamoto</a>, <a href="http://tech.innovation.co.jp/tag/mac"> mac</a>, <a href="http://tech.innovation.co.jp/tag/Golang"> Golang</a>, <a href="http://tech.innovation.co.jp/tag/seelog"> seelog</a>, <a href="http://tech.innovation.co.jp/tag/gorm"> gorm</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/01/13/.html" title="link to アプリケーションログ出力の見直し">アプリケーションログ出力の見直し</a></h2>
         <p class="excerpt">こんにちは。 エンジニアのNew塚本です。 今回は、ログ出力についてのお話をのせたいと思います。 経緯 エラーが発生した際に出力するログに、stackが出力されず解析が困難になると弊社SREにつめられたため。  ごもっとも！なので見直します！！ 今回やりたいこと ログにstackを出力する。 修正前 例えば、文字列を数値に変換する関数では、この様に実装していました。 num, err := strconv.Atoi(target) if err != nil { 	return } エラー判定をして、呼び出し元に返却する。 targetが数値に変換されない"abcde"の様な値の場合には、err（*errors.errorString）には、 strconv.Atoi: parsing "&hellip;</p>
         <div class="post-list__meta"><time datetime="13 Jan 2019" class="post-list__meta--date date">13 Jan 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/New-Tsukamoto">NewTsukamoto</a>, <a href="http://tech.innovation.co.jp/tag/mac"> mac</a>, <a href="http://tech.innovation.co.jp/tag/Golang"> Golang</a>, <a href="http://tech.innovation.co.jp/tag/seelog"> seelog</a>, <a href="http://tech.innovation.co.jp/tag/gorm"> gorm</a></span></div>
         <hr class="post-list__divider" />
