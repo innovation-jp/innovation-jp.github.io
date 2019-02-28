@@ -3,21 +3,23 @@
 :published_at: 2019-02-28
 
 ふと、 +
-Perl1.0を動かしてみたくなり、 +
-サンプルスクリプトでHello Worldでは味気ないので、 +
-ズンドコキヨシをしてみました。
+Perl1.0を動かしてみたくなりました。
+
+ですが、 +
+サンプルでHello Worldでは味気ないので、 +
+懐かしい「ズンドコキヨシ」をしてみました。
 
 # 作業環境
 MacのDocker上のUbuntuコンテナ内
 
 # 作業環境準備
 
-ubuntu環境を用意します。
+適当なUbuntu環境をDockerで用意します。
 ```
 $ docker run -it ubuntu
 ```
 
-コンテナ内で make git vim コマンドが使えるようにしておきます。
+コンテナ内で make git vim コマンドを使えるようにしておきます。
 ```
 $ apt update
 $ apt install build-essential byacc
@@ -25,9 +27,10 @@ $ apt install git
 $ apt install vim
 ```
 
+また、 +
 日本語を使うので文字化けしないように、vimの設定をしておきます。
 ```
-vi ~/.vimrc
+$ vi ~/.vimrc
 ```
 ```
 set encoding=utf-8
@@ -35,7 +38,7 @@ set fileencodings=utf-8
 set fileformats=unix
 ```
 
-.vimrcを反映
+設定を反映
 ```
 $ source ~/.vimrc
 ```
@@ -44,8 +47,7 @@ $ source ~/.vimrc
 さて、 +
 Perlのバージョン1.0をインストールしています。
 
-今回は、 +
-Perl1.0はAnaTofuZさんのパッチ版でビルドしました。
+今回はAnaTofuZさんのパッチ版でビルドしました。
 
 ```
 $ git clone https://github.com/AnaTofuZ/Perl-1.0.git
@@ -54,7 +56,7 @@ $ cd Perl-1.0
 $ ./Configure -d
 $ make
 
-# 以下のようにperlファイルができていればOKです
+# 以下のようにperlファイルができていればOK
 $ ls perl
 perl
 ```
@@ -63,7 +65,7 @@ perl
 https://github.com/AnaTofuZ/Perl-1.0
 https://qiita.com/hakatashi/items/5c41b3835814e13a7b6a
 
-# ズンドコキヨシをPerlで書く
+# ズンドコキヨシを書く
 ```
 $ vi kiyoshi.pl
 ```
@@ -99,6 +101,17 @@ sub kiyoshi {
 $ perl kiyoshi.pl
 ズンドコドコズンズンドコドコドコズンドコズンズンドコドコドコドコズンドコドコズンドコドコドコズンズンズンズンドコキ・ヨ・シ！
 ```
+
+```
+$ perl kiyoshi.pl
+ズンドコドコドコズンドコズンズンドコドコズンズンズンズンドコキ・ヨ・シ！
+```
+
+```
+$ perl kiyoshi.pl
+ズンドコズンドコズンズンドコドコズンズンドコズンズンドコズンズンドコドコズンドコズンドコドコドコドコドコズンドコドコドコドコズンドコドコドコドコズンズンドコズンドコドコズンズンズンドコズンズンドコズンドコズンドコズンズンドコズンドコドコズンズンドコドコズンズンドコズンドコドコズンズンドコズンズンドコドコドコズンズンドコズンドコズンドコズンズンドコドコズンドコドコドコドコズンズンズンズンズンズンズンズンズンドコキ・ヨ・シ！
+```
+
 
 動きました！
 
