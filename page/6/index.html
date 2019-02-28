@@ -211,6 +211,12 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/08/30/Exception.html" title="link to 例外のお話">例外のお話</a></h2>
+        <p class="excerpt">お久しぶりです、SRE チームの syoga です 今年の夏は激アツでしたが皆様いかがお過ごしでしょうか？ ふわふわなかき氷が流行っているという事で、天然氷を使ったかき氷が人気だそうです、天然氷だと知らなければ食べてる人はあまり意識しないと思われますが、こだわりをもった職人さんがいるという話を聞きました。 上記のこだわりについては、今回の話にあまり関係ありませんが、皆様ログ出力していますか？ という訳で今回は運用・保守をする側から見てこんなコードはイヤだ！ というテーマで記事をしたためたいと思います。 ある日の出来事 弊社のサービスではアプリケーションエラーが発生した場合は、メールや Slack で通知が来ますが、通知が来たらまずはアプリケーションサーバでログを確認します。 さしずめ死体（&hellip;</p>
+        <div class="post-list__meta"><time datetime="30 Aug 2018" class="post-list__meta--date date">30 Aug 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/syoga">syoga</a>, <a href="http://tech.innovation.co.jp/tag/log"> log</a>, <a href="http://tech.innovation.co.jp/tag/exception"> exception</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/08/27/G-A-S-slack-birthday-channel.html" title="link to GASでslackのお誕生日チャンネルを作成する">GASでslackのお誕生日チャンネルを作成する</a></h2>
         <p class="excerpt">KTNです 今回はGASでslackをあれしてみたいと思います 社内で「お誕生日社員にプレゼントを作る」という文化があるのですが、 その連絡にslackのプライベートチャンネルを使っています slackの画面で「チャンネルを作成する」ボタンを押して、メンバーを手作業でぽちぽちぽちぽちして 全社員（お誕生日の人だけ除く）になっているのを確認後、作成してます たまにミスって誕生日の人が入ってたりして何を作るかバレたりなんてこともあります なのでこの面倒な作業を自動化してみます お誕生日の人を選択するプルダウンを実装 全社員が参加しているチャンネルがあるのでそのチャンネルのメンバ全員を取得 →slackのAPIで情報を取得、このURLで検証が出来ます 　https://api.slack.com&hellip;</p>
         <div class="post-list__meta"><time datetime="27 Aug 2018" class="post-list__meta--date date">27 Aug 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/G-A-S">GAS</a>, <a href="http://tech.innovation.co.jp/tag/slack"> slack</a>, <a href="http://tech.innovation.co.jp/tag/birthday"> birthday</a>, <a href="http://tech.innovation.co.jp/tag/channel"> channel</a></span></div>
@@ -262,12 +268,6 @@ var _trackingid = 'LFT-10003-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/07/26/Scratch.html" title="link to Scratchでインスタ映えする図形描画をしてくれるもの作ってみた">Scratchでインスタ映えする図形描画をしてくれるもの作ってみた</a></h2>
         <p class="excerpt">おはようございます。エンジニア一年目のやすと申します。 初投稿の題材は、私がプログラミングに興味を持つきっかけになった「Scratch」の簡単な紹介を私の作ったものを踏まえて行いたいと思います。 簡単な前書き ご存知の方もいらっしゃると思いますが、「Scratch」とはビジュアルプログラミング言語の１つで、主に子どもたちがプログラミングを学ぶのに利用されているそうです。 私も中学生の頃にScratchに触れ、プログラミングについて学びました。しかしそれ以降、触れ直すことがありませんでした。 せっかく自分のエンジニアの原点とも呼べるものなので、ゆくゆくは何か作品を作ってみたいと思い、今回は簡単に触れてみました！ タイトルで述べているものを作った経緯は、最近SNSである一定の動きをするペンが綺&hellip;</p>
         <div class="post-list__meta"><time datetime="26 Jul 2018" class="post-list__meta--date date">26 Jul 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Scratch">Scratch</a>, <a href="http://tech.innovation.co.jp/tag/Yasu">Yasu</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/07/20/Introduction-of-Computational-Complexity.html" title="link to Vue.jsを使って量子コンピュータの並列演算を再現してみた">Vue.jsを使って量子コンピュータの並列演算を再現してみた</a></h2>
-        <p class="excerpt">はじめに 初めまして、新卒エンジニアのYuです。 初ブログです。 よろしくお願いします。 最近、色々あって量子コンピュータの勉強をしていました。 個人的に興味があっただけで、業務で使うことはないと思いますが… 量子コンピュータの重要な性質の一つに「並列演算」があります。 詳しい説明は書くと長くなるので割愛します（ググれば出てきます）が、 要するに「複数の演算を同時に実行できる」ということです。 この並列性があるからこそ量子コンピュータは高速に計算をすることができます。 この並列演算ですが、実際に紙とペンで回路に沿って計算してみると「確かに並列で計算してるなー」ということは分かります。 しかし、1回1回手計算しているとイマイチ並列っぽさがありません。 せっかくならもっとそれっぽい並列演算を見&hellip;</p>
-        <div class="post-list__meta"><time datetime="20 Jul 2018" class="post-list__meta--date date">20 Jul 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Java-Script">JavaScript</a>, <a href="http://tech.innovation.co.jp/tag/Vuejs"> Vue.js</a>, <a href="http://tech.innovation.co.jp/tag/Yu"> Yu</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
