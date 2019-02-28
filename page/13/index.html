@@ -211,6 +211,12 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/12/03/visual-studio-code-extension.html" title="link to テンプレで作る、Visual Studio Codeの拡張機能">テンプレで作る、Visual Studio Codeの拡張機能</a></h2>
+        <p class="excerpt">再び回ってきました、新人エンジニアの小畑です。 最近周りではエディタ戦争が水面下で行われてい・・・るわけではありませんが、 IDEも含め、Vimいいぞ、IntelliJいいぞと周りにいろいろおすすめされながら、 乗り換えに揺れている今日このごろ。 ただ、なんだかんだ言って、Visual Studio Codeに慣れてしまうと、 使いやすくて離れられないのですよね。 そんな私を支えてくれているのが、拡張機能。 いつか作ってみたいと思っているので、その取っ掛かりに作り方調べてみました。 Visual Studio Codeとは そもそものVisual Studio Codeとは。 Microsoft様が出しているエディタです。 MacやLinux、もちろんWindows版もあって、お値段無料。&hellip;</p>
+        <div class="post-list__meta"><time datetime="03 Dec 2017" class="post-list__meta--date date">03 Dec 2017</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/obata">obata</a>, <a href="http://tech.innovation.co.jp/tag/Visual-Studio-Code"> VisualStudioCode</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/11/28/O-W-A-S-P-Z-A-P-Docker-Hub-A-W-S-E-C-S.html" title="link to OWASP ZAP 公式 Docker Hub イメージで AWS ECS にセキュリティ診断環境を構築">OWASP ZAP 公式 Docker Hub イメージで AWS ECS にセキュリティ診断環境を構築</a></h2>
         <p class="excerpt">前提 OWASP ZAPとはOSSのセキュリティ診断ツール AWS ECSとはDockerコンテナー管理サービス 概要 OWASP ZAPの公式Docker Hub イメージを使うことにより環境構築工数を削減できました。 ECSクラスターを作成 OWASP ZAP公式Docker Hubイメージからコンテナーを作成 ブラウザでアクセス セキュリティ診断を行う レポート出力を保存 （おまけ）コンテナーのメモリとディスク容量の拡張に関して ECSクラスターを作成 AWSコンソールにログインし、ECSに移動してクラスターを作成します。 Create Clusterをクリック Cluster nameに任意の名称を入力（※今回は owaspzap とした） EC2 Instance type（※コ&hellip;</p>
         <div class="post-list__meta"><time datetime="28 Nov 2017" class="post-list__meta--date date">28 Nov 2017</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Shirota">Shirota</a>, <a href="http://tech.innovation.co.jp/tag/O-W-A-S-P-Z-A-P"> OWASP ZAP</a>, <a href="http://tech.innovation.co.jp/tag/Docker-Hub"> Docker Hub</a>, <a href="http://tech.innovation.co.jp/tag/E-C-S"> ECS</a></span></div>
@@ -262,12 +268,6 @@ var _trackingid = 'LFT-10003-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/10/28/Lets-Scrum-Retrospective.html" title="link to レッツスクラムレトロスペクティブ">レッツスクラムレトロスペクティブ</a></h2>
         <p class="excerpt">スクラムレトロスペクティブとは https://www.scrumguides.org/docs/scrumguide/v2016/2016-Scrum-Guide-Japanese.pdf 詳細はスクラムガイドを参照していただければと思います。 所謂振り返り活動になるのですが、 個人的に好きなのは以下の表現です。 次のスプリントが効果的で楽しいものになるよう この視点は私がスクラムマスターをやっていた際、かなり意識をしておりました。  やはり出てきた改善策がそれを行ってワクワクできなければ、継続には繋がらないものです。 そしてそういうワクワク感は閉じきった会議室などではなかなか想像できなくなってしまうので、 どこかしら解放されたスペースで、コーヒーとお菓子を持って行うのが個人的にはオスス&hellip;</p>
         <div class="post-list__meta"><time datetime="28 Oct 2017" class="post-list__meta--date date">28 Oct 2017</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/ozasa">ozasa</a>, <a href="http://tech.innovation.co.jp/tag/scrum">scrum</a>, <a href="http://tech.innovation.co.jp/tag/retrospective">retrospective</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/10/27/Nginxngx-small-lightminio-S3-Docker.html" title="link to Nginxのngx_small_lightモジュールでminio(S3互換)にある画像をリサイズしてみる(Docker編)">Nginxのngx_small_lightモジュールでminio(S3互換)にある画像をリサイズしてみる(Docker編)</a></h2>
-        <p class="excerpt">Webサービスを作っていると、ユーザーがアップした画像からサムネイル画像を作ることがよくありますが、  Webアプリケーション側での画像リサイズは少々手間がかかります。  そんな中、画像のリサイズが出来るNginxのモジュールの「ngx_small_light」が便利そうだったので試してみました。 目標 目標、下記のとおりです。 minio(S3互換)に「main」バケットを作成し、「image.png」という名前で画像を用意 http://localhost/image.png　にアクセスするとminioにアップした「image.png」をそのまま表示され、  http://localhost/image.png/small　にアクセスすると「ngx_small_light」モジュールに&hellip;</p>
-        <div class="post-list__meta"><time datetime="27 Oct 2017" class="post-list__meta--date date">27 Oct 2017</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Kato-K">KatoK</a>, <a href="http://tech.innovation.co.jp/tag/Docker">Docker</a>, <a href="http://tech.innovation.co.jp/tag/Nginx">Nginx</a>, <a href="http://tech.innovation.co.jp/tag/minio">minio</a>, <a href="http://tech.innovation.co.jp/tag/ngx-small-light">ngx_small_light</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
