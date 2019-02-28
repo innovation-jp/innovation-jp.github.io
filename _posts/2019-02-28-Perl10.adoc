@@ -1,0 +1,116 @@
+# Perl1.0でズンドコキヨシしてみた
+:hp-tags: Perl, Perl1.0, Shirota
+:published_at: 2019-02-28
+
+ふと、 +
+Perl1.0を動かしてみたくなり、 +
+サンプルスクリプトでHello Worldでは味気ないので、 +
+ズンドコキヨシをしてみました。
+
+# 作業環境
+MacのDocker上のUbuntuコンテナ内
+
+# 作業環境準備
+
+ubuntu環境を用意します。
+```
+$ docker run -it ubuntu
+```
+
+コンテナ内で make git vim コマンドが使えるようにしておきます。
+```
+$ apt update
+$ apt install build-essential byacc
+$ apt install git
+$ apt install vim
+```
+
+日本語を使うので文字化けしないように、vimの設定をしておきます。
+```
+vi ~/.vimrc
+```
+```
+set encoding=utf-8
+set fileencodings=utf-8
+set fileformats=unix
+```
+
+.vimrcを反映
+```
+$ source ~/.vimrc
+```
+
+# Perl1.0をインストール
+さて、 +
+Perlのバージョン1.0をインストールしています。
+
+今回は、 +
+Perl1.0はAnaTofuZさんのパッチ版でビルドしました。
+
+```
+$ git clone https://github.com/AnaTofuZ/Perl-1.0.git
+$ cd Perl-1.0
+
+$ ./Configure -d
+$ make
+
+# 以下のようにperlファイルができていればOKです
+$ ls perl
+perl
+```
+
+参考: +
+https://github.com/AnaTofuZ/Perl-1.0
+https://qiita.com/hakatashi/items/5c41b3835814e13a7b6a
+
+# ズンドコキヨシをPerlで書く
+```
+$ vi kiyoshi.pl
+```
+```
+kiyoshi();
+
+sub kiyoshi {
+
+    my @zundoko = ("ズン","ドコ");
+    my $haystack = "ズンズンズンズンドコ";
+    my $result = "";
+
+    # while内で標準出力をフラッシュする設定
+    local $| = 1;
+
+    # 結果の中にズンズンズンズンドコが無ければ処理を継続
+    while ($result !~ /$haystack/) {
+
+　　　　　　　　# 乱数でズンかドコを選択して結果に格納
+        $result .= $zun_or_doko = $zundoko[rand(@zundoko)];
+        print $zun_or_doko;
+        
+        sleep(1);
+    }
+
+　　　　print "キ・ヨ・シ！"."\n";
+}
+```
+
+# ズンドコキヨシを動かす
+
+```
+$ perl kiyoshi.pl
+ズンドコドコズンズンドコドコドコズンドコズンズンドコドコドコドコズンドコドコズンドコドコドコズンズンズンズンドコキ・ヨ・シ！
+```
+
+動きました！
+
+# 所感
+まず、 +
+Perl1.0をビルドできるようにしている人がいることに驚きました。 +
+それもかなりの精度で様々な環境で動くようです。
+
+また、 +
+Perl1.0がリリースされたのは、 +
+1987年で、30年以上も前の話であり、 +
+このバージョンでも、 +
+正規表現や、配列、乱数生成、スリープ、ループ内の出力フラッシュなどが使えて、 +
+今も現役で使われているのですから、 +
+すごい言語だなと感じました。
