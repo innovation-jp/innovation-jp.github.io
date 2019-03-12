@@ -1,5 +1,5 @@
 = （編集中）最近ABテストで困ったこと
-:hp-tags: sumomo, laravel, Response, beginner
+:hp-tags: sumomo, Javascript, Google Optimize, ABtest, beginner
 
 こんにちわ、すももです。 +
 よくサイト改善の為に、Google Optimize（以下、オプティマイズ）を使用してABテストを実施するのですが、 +
