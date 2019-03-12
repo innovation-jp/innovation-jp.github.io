@@ -31,13 +31,10 @@ https://ferret-plus.com/10561
             <p>Aパターン(オリジナル版)</p>
             <label for="company">会社名</label>
             <input type="text" name="company_name" placeholder="（例）株式会社イノベーション">
-            
             <label for="name">お名前</label>
-            <input type="text" name="name"  placeholder="（例）山田太郎">
-            
+            <input type="text" name="name"  placeholder="（例）山田太郎">   
             <label for="tel">電話番号</label>
             <input type="tel" name="phone_number"  placeholder="（例）0312345678">
-            
             <label for="address">住所</label>
             <div class="select">
                 <select name="prefecture_id">
@@ -61,7 +58,6 @@ https://ferret-plus.com/10561
             <input type="text" name="company_name" placeholder="会社名">
             <input type="text" name="name"  placeholder="お名前">
             <input type="tel" name="phone_number"  placeholder="電話番号">
-        
             <div class="select">
                 <select name="prefecture_id">
                     <option selected>所在地（都道府県）を選択</option>
@@ -77,6 +73,7 @@ https://ferret-plus.com/10561
             </div>
             <input type="text" name="address" placeholder="所在地（市区町村以下）">
         </div>
+        
         <!-- ※省略※ -->
     </form>
 </body>
