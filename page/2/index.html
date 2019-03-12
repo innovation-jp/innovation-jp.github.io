@@ -241,6 +241,12 @@ var _trackingid = 'LFT-10003-1';
         <hr class="post-list__divider" />
       </li>
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/01/13/.html" title="link to アプリケーションログ出力の見直し">アプリケーションログ出力の見直し</a></h2>
+        <p class="excerpt">こんにちは。 エンジニアのNew塚本です。 今回は、ログ出力についてのお話をのせたいと思います。 経緯 エラーが発生した際に出力するログに、stackが出力されず解析が困難になると弊社SREにつめられたため。  ごもっとも！なので見直します！！ 今回やりたいこと ログにstackを出力する。 修正前 例えば、文字列を数値に変換する関数では、この様に実装していました。 num, err := strconv.Atoi(target) if err != nil { 	return } エラー判定をして、呼び出し元に返却する。 targetが数値に変換されない"abcde"の様な値の場合には、err（*errors.errorString）には、 strconv.Atoi: parsing "&hellip;</p>
+        <div class="post-list__meta"><time datetime="13 Jan 2019" class="post-list__meta--date date">13 Jan 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/New-Tsukamoto">NewTsukamoto</a>, <a href="http://tech.innovation.co.jp/tag/mac"> mac</a>, <a href="http://tech.innovation.co.jp/tag/Golang"> Golang</a>, <a href="http://tech.innovation.co.jp/tag/seelog"> seelog</a>, <a href="http://tech.innovation.co.jp/tag/gorm"> gorm</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/01/06/G-A-S-Slack.html" title="link to GASでSlackをまとめて削除するやつ作ってみた">GASでSlackをまとめて削除するやつ作ってみた</a></h2>
         <p class="excerpt">あけましておめでとうございます！ 初詣でおみくじを３回引きましたが全て小吉だったすももです。 以前から「Slackを何件かまとめて消したい時に、一件一件削除するのは面倒くさいなぁ」と思っていたので、 GASを使って、対象チャンネルや対象期間を入力したら、メッセージを一括削除出来るようにしてみました〜！ 完成したもの 1.チャンネル名、開始日、終了日を入力してチェックボックスにチェックを付ける ※トリガーはスプレッドシート編集時、チェックが付いていたら実行するように設定しました 2.該当期間の自分のメッセージが削除され、「削除しました」のポップアップが表示される 3.OKを押すとチェックボックスのチェックが外れる 内容 &lt;使用したSlack API&gt; チャンネル情報取得 http&hellip;</p>
         <div class="post-list__meta"><time datetime="06 Jan 2019" class="post-list__meta--date date">06 Jan 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/sumomo">sumomo</a>, <a href="http://tech.innovation.co.jp/tag/G-A-S"> GAS</a>, <a href="http://tech.innovation.co.jp/tag/Google-Apps-Script"> GoogleAppsScript</a>, <a href="http://tech.innovation.co.jp/tag/Spreadsheet"> Spreadsheet</a>, <a href="http://tech.innovation.co.jp/tag/Slack"> Slack</a></span></div>
@@ -262,12 +268,6 @@ var _trackingid = 'LFT-10003-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/12/16/adams-method.html" title="link to 社内で行われた第一回アルゴリズム大会で優勝しました！">社内で行われた第一回アルゴリズム大会で優勝しました！</a></h2>
         <p class="excerpt">どうも、Anti-Pattern初代テックリードのbigenです。 先日、社内で第一回アルゴリズム大会が開催されました。 社内エンジニアを対象に、参加者全員で同じ問題を解き、もっとも短い時間で解答を出力するコードを書いた人が優勝です。 なんとこの大会で僕が優勝しまして、初代テックリードの称号を頂きました。 数カ月後に第二回をするそうなので、次回も今から楽しみです。 今日はその大会で出題された問題について解説してみようと思います。 問題 各都道府県の人口が下記配列で与えられ、議席数の合計が289の時、アダムズ方式で各都道府県ごとの議席数を割り振る時、計算に用いる「各都道府県の人口を割る、ある整数」を求めよ。（制限時間30分くらい） // 各都道府県の人口 $pref = [5381733,&hellip;</p>
         <div class="post-list__meta"><time datetime="16 Dec 2018" class="post-list__meta--date date">16 Dec 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/bigen">bigen</a>, <a href="http://tech.innovation.co.jp/tag/adams"> adams</a>, <a href="http://tech.innovation.co.jp/tag/algorithm"> algorithm</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/12/14/Metabase-K-P-I.html" title="link to Metabaseで社内のKPIを可視化してみた">Metabaseで社内のKPIを可視化してみた</a></h2>
-        <p class="excerpt">どうも、小柳津です。 最近、開発しているプロダクトの機能が増え、見たいKPIが増えてきました。 現在社内で活用しているKPIを可視化するダッシュボードがすでにあるのですが、自作したもので以下のようになっています。 普通に可愛いくていい感じです。 KPIが調子いいと動物が笑顔になったりします。 こんなにいい感じのダッシュボードですが、見たいKPIを増やしたい場合はHTML/CSS周りの開発を行わなければなりません。 さらに最近マーケーターがいい感じにSQLを習得していっているので、開発者でなくとも気軽に可視化したKPIを追加できないかと思いました。 そこで今回はデータベースの内容を簡単に可視化できるMetabaseというものを使ってみました。 設定後の画面は以下のようになっています。 オシャ&hellip;</p>
-        <div class="post-list__meta"><time datetime="14 Dec 2018" class="post-list__meta--date date">14 Dec 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/oyaizu">oyaizu</a>, <a href="http://tech.innovation.co.jp/tag/Metabase">Metabase</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
