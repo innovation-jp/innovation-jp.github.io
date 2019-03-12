@@ -55,7 +55,7 @@ var _trackingid = 'LFT-10003-1';
     <meta property="og:description" content="はじめに どうも、bigenです。 以前デザインパターンを勉強して、勉強しっぱなしだったんですが、最近その知識が業務に生きたのでここでご紹介します。 使ったのはFactoryMethodパターンで、数が多いIF分岐をすっきりリファクタリングできました。 前提条件：PHP7, Laravel5, phpunit リファクタリングしたいコード 今回リファクタリングしたい機能は、弊社メディアのITトレンド内で用いられる短縮URL機能です。 https://it-trend.jp/i/xxxx のような形式(xxxx部分は数字)でURLを生成し、アクセスすると予..." />
     <meta property="og:url" content="http://tech.innovation.co.jp/2019/02/17/Factory-Method-Pattern-For-Simple-but-many-I-F-branch.html" />
     <meta property="article:published_time" content="2019-02-16T15:00:00.000Z" />
-    <meta property="article:modified_time" content="2019-02-21T06:57:58.969Z" />
+    <meta property="article:modified_time" content="2019-03-12T04:34:39.751Z" />
     <meta property="article:tag" content="bigen" />
     <meta property="article:tag" content="Factory Method Pattern" />
     
@@ -79,7 +79,7 @@ var _trackingid = 'LFT-10003-1';
     "headline": "単純だけど数の多いif分岐をFactory Methodパターンでテストコードまですっきり",
     "url": "http://tech.innovation.co.jp/2019/02/17/Factory-Method-Pattern-For-Simple-but-many-I-F-branch.html",
     "datePublished": "2019-02-16T15:00:00.000Z",
-    "dateModified": "2019-02-21T06:57:58.969Z",
+    "dateModified": "2019-03-12T04:34:39.751Z",
     "keywords": "bigen,  Factory Method Pattern",
     "description": "はじめに どうも、bigenです。 以前デザインパターンを勉強して、勉強しっぱなしだったんですが、最近その知識が業務に生きたのでここでご紹介します。 使ったのはFactoryMethodパターンで、数が多いIF分岐をすっきりリファクタリングできました。 前提条件：PHP7, Laravel5, phpunit リファクタリングしたいコード 今回リファクタリングしたい機能は、弊社メディアのITトレンド内で用いられる短縮URL機能です。 https://it-trend.jp/i/xxxx のような形式(xxxx部分は数字)でURLを生成し、アクセスすると予..."
 }
@@ -267,8 +267,15 @@ var _trackingid = 'LFT-10003-1';
 </div>
 <h1 id="___2" class="sect0">リファクタリングしたいコード</h1>
 <div class="paragraph">
-<p>今回リファクタリングしたい機能は、弊社メディアのITトレンド内で用いられる短縮URL機能です。<br>
-<code><a href="https://it-trend.jp/i/xxxx" class="bare">https://it-trend.jp/i/xxxx</a></code> のような形式(xxxx部分は数字)でURLを生成し、アクセスすると予め登録されたページへリダイレクトするというものです。<br>
+<p>今回リファクタリングしたい機能は、弊社メディアのITトレンド内で用いられる短縮URL機能です。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>https://it-trend.jp/i/xxxx</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>のような形式(xxxx部分は数字)でURLを生成し、アクセスすると予め登録されたページへリダイレクトするというものです。<br>
 リダイレクト先のページの種類によって必要なパラメータやセッション情報が変わるため、リダイレクト先のページの種類ごとにリダイレクトパスを取得する処理が異なります。<br>
 現行のソースコードは大体下記のような感じでした。<br></p>
 </div>
