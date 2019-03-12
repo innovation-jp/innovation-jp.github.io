@@ -1,9 +1,9 @@
 = （編集中）最近ABテストで困ったこと
-:hp-tags: sumomo, Javascript, Google Optimize, ABtest, beginner
+:hp-tags: sumomo, JavaScript, GoogleOptimize, ABtest, beginner
 
 こんにちわ、すももです。 +
 よくサイト改善の為に、Google Optimize（以下、オプティマイズ）を使用してABテストを実施するのですが、 +
-いつもやるABテストのやり方では上手くいかないパターンに出くわし、色々調べた結果Javascript使って解決したよって話です。 +
+いつもやるABテストのやり方では上手くいかないパターンに出くわし、色々調べた結果JavaScript使って解決したよって話です。 +
  +
 【Google Optimizeとは】 +
 https://ferret-plus.com/10561 +
@@ -158,6 +158,6 @@ parent.insertBefore(user_name, company_name);
 ## 感想 +
 
 いつものABテストのパターンより複雑になった為、このABテストの終了対応時はちょっと時間かかりそうですが、 +
-オプティマイズの設定や、Javascriptのいい勉強になったので、結果良かったです！ +
+オプティマイズの設定や、JavaScriptのいい勉強になったので、結果良かったです！ +
  +
 〜おわり〜 +
