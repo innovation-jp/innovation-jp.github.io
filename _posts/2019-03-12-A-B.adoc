@@ -16,7 +16,71 @@ https://ferret-plus.com/10561
 ## よくやるABテストのパターンだと...？ +
 
 ```
+<!-- 省略 -->
+<style>
+    .AB_test_B {
+        display: none;
+    }
+</style>
+</head>
+<body>
+    <form action="xxx" method="post" id="oreder_form" name="form">
 
+        <!-- Aパターン(オリジナル版) -->
+        <div class="AB_test_A">
+            <p>Aパターン(オリジナル版)</p>
+            <label for="company">会社名</label>
+            <input type="text" name="company_name" placeholder="（例）株式会社イノベーション">
+            
+            <label for="name">お名前</label>
+            <input type="text" name="name"  placeholder="（例）山田太郎">
+            
+            <label for="tel">電話番号</label>
+            <input type="tel" name="phone_number"  placeholder="（例）0312345678">
+            
+            <label for="address">住所</label>
+            <div class="select">
+                <select name="prefecture_id">
+                    <option selected>お選びください</option>
+                    <option value="1">北海道</option>
+                    <option value="2">青森県</option>
+                    <option value="3">秋田県</option>
+                    <option value="4">岩手県</option>
+                    <option value="5">山形県</option>
+                    <option value="6">宮城県</option>
+                    <option value="7">福島県</option>
+                    <option value="8">※省略※</option>
+                </select>
+            </div>
+            <input type="text" name="address" placeholder="市区町村以下(例:◯◯区✕✕ ◯◯-✕✕)">
+        </div>
+
+        <!-- Bパターン(改善版) -->
+        <div class="AB_test_B">
+            <p>Bパターン(改善版)</p>
+            <input type="text" name="company_name" placeholder="会社名">
+            <input type="text" name="name"  placeholder="お名前">
+            <input type="tel" name="phone_number"  placeholder="電話番号">
+        
+            <div class="select">
+                <select name="prefecture_id">
+                    <option selected>所在地（都道府県）を選択</option>
+                    <option value="1">北海道</option>
+                    <option value="2">青森県</option>
+                    <option value="3">秋田県</option>
+                    <option value="4">岩手県</option>
+                    <option value="5">山形県</option>
+                    <option value="6">宮城県</option>
+                    <option value="7">福島県</option>
+                    <option value="8">※以下省略※</option>
+                </select>
+            </div>
+            <input type="text" name="address" placeholder="所在地（市区町村以下）">
+        </div>
+        <!-- ※省略※ -->
+    </form>
+</body>
+</html>
 ```
 
 
