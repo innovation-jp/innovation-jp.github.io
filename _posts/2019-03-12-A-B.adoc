@@ -100,84 +100,17 @@ removeメソッドで要素自体を削除する方法も使えなかった。�
  +
 周りに相談した結果、オプティマイズの設定でJavascript書いて、Bパターン(改善版)にだけ効かすことにしました〜 +
 
+## 解決策 +
 
 
 
-```
-// ->name('名前付きルート名')
-Route::get('/test/aaa/bbb/ccc/ddd', 'TestController@test')->name('test_input');
-
-// routeメソッドの引数として('名前付きルート名')を渡す
-Route::get('/response', function () {
-	return redirect()->route('test_input');
-});
-```
-※もし、ルートにパラメーターがある場合は【routeメソッド】の第２引数として渡します！ +
-例：`/response`にアクセスがきたら`/test/sumo`にリダイレクトする
-```
-// ->name('名前付きルート名')
-Route::get('/test/{name}', 'TestController@test')->name('test_input');
-
-// routeメソッドの引数として('名前付きルート名', ['パラメーター'])を渡す
-Route::get('/response', function () {
-	return redirect()->route('test_input', ['name' => 'sumo']);
-});
-```
-
-▼コントローラアクションにリダイレクトしたい場合は【actionメソッド】 +
-例：`TestController@test`にリダイレクトされる
-```
-// actionメソッドにコントローラとアクション名を渡す
-return redirect()->action('TestController@test');
-```
 
 
-▼外部ドメインにリダイレクトしたい場合は【awayメソッド】 +
-例：イノベーションエンジニアブログにリダイレクト
-```
-// ->away('外部ドメインのURL')
-return redirect()->away('http://tech.innovation.co.jp/');
-```
-
-
-=== 〜backヘルパ関数を使うパターン〜
-
-▼フォーム入力情報にエラーがあった際、入力情報は残したまま元の画面を表示させたい場合は【backヘルパ関数】 +
-例：名前の入力が空だった場合、メールアドレスの入力情報は残したまま元の画面を表示させる
-```
-// 名前とメールアドレスを送るフォームを準備
-{{ Form::open(['url' => '/testregist', 'method' => 'post']) }}
-    <label>お名前：<input type="text" name="name"></label><br>
-    <label>メール：<input type="text" name="mail"></label><br>
-    <input type="submit" name="regist" value="登録する">
-{{ Form::close() }}
-
-// 名前が入力されているか確認
-Route::post('/testregist', function (Request $request) {
-    if (empty($request->name)) {
-        return back()->withInput();
-    }
-    return view('test.index');
-});
-```
-
-また、【backヘルパ関数】を使わずとも【validateメソッド】を使えば同様にデータを残したままリダイレクト出来ます！ +
-便利だなぁー。 +
-
-```
-// 名前が入力されているか確認
-Route::post('/testregist', function (Request $request) {
-    $request->validate([
-        'name' => 'required',
-    ]);
-    return view('test.index');
-});
-```
 
 
 ## 感想 +
 
-Laravelの公式ドキュメントを見ながら勉強しているのですが、読むだけでは分からなかったものがサンプルコード書いてみたら少し理解できるようになり良かったです。 +
-ただ、使い方は分かってもどういう時に便利なのかは分からなかったりするので、実際業務で使用する機会が出てくれば、更に理解が深まるのかな？と思いました。 +
+いつものABテストのパターンより複雑になった為、このABテストの終了対応時はちょっと時間かかりそうですが、 +
+オプティマイズの設定や、Javascriptのいい勉強になったので、結果良かったです！ +
  +
 〜おわり〜 +
