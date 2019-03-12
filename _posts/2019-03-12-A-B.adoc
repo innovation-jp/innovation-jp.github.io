@@ -80,9 +80,8 @@ https://ferret-plus.com/10561
 </html>
 ```
 
-
-Laravelのレスポンスを返す方法で、一番シンプルなのはルートやコントローラから文字列を返す方法です。 +
- +
+こんな感じで、ABどっちのパターンのコードも全部わーっと書いて、 +
+`<div class="AB_test_A"></div>` とか `<div class="AB_test_B"></div>` でABテストの範囲を囲っとく。 +
 例：`/response`にアクセスがきたら`レスポンスの勉強中！`を返す
 ```
 Route::get('/response', function () {
