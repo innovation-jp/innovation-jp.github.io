@@ -28,7 +28,6 @@ https://ferret-plus.com/10561 +
 
         <!-- Aパターン(オリジナル版) -->
         <div class="AB_test_A">
-            <p>Aパターン(オリジナル版)</p>
             <label for="company">会社名</label>
             <input type="text" name="company_name" placeholder="（例）株式会社イノベーション">
             <label for="name">お名前</label>
@@ -54,7 +53,6 @@ https://ferret-plus.com/10561 +
 
         <!-- Bパターン(改善版) -->
         <div class="AB_test_B">
-            <p>Bパターン(改善版)</p>
             <input type="text" name="company_name" placeholder="会社名">
             <input type="text" name="name"  placeholder="お名前">
             <input type="tel" name="phone_number"  placeholder="電話番号">
@@ -82,8 +80,8 @@ https://ferret-plus.com/10561 +
 
 こんな感じで、ABどっちのパターンのコードも全部わーっと書いて、 +
 `<div class="AB_test_A"></div>` とか `<div class="AB_test_B"></div>` でABテストの範囲を囲っとく。 +
-通常はBパターン(改善版)をdisplay: none;で非表示にしといて、 +
-Bパターン(改善版)を表示する際は、Aパターン(オリジナル版)をdisplay: none;に、Bパターン(改善版)をdisplay: block;になるよう +
+通常はBパターン(改善版)をdisplay: none;で非表示にしといて、Bパターン(改善版)を表示する際は、 +
+Aパターン(オリジナル版)をdisplay: none;に、Bパターン(改善版)をdisplay: block;になるように +
 オプティマイズで設定する、以上。 +
  +
 おお、簡単だ！ +
