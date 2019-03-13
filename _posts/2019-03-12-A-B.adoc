@@ -170,7 +170,7 @@ var company_name = document.getElementById("AB_test_B_company_name");
 parent.insertBefore(user_name, company_name);
 ```
 
-## 出来上がったコード +
+## 出来上がったABテスト用コード +
 
 
 ```
@@ -232,10 +232,7 @@ parent.insertBefore(user_name, company_name);
 
 ## オプティマイズの設定(JavaScript) +
 
-
-```
-完成オプティマイズ書く
-```
+画像入れる
 
 ## 感想 +
 
