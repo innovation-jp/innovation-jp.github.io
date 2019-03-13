@@ -54,8 +54,8 @@ https://ferret-plus.com/10561 +
         <!-- Bパターン(改善版) -->
         <div class="AB_test_B">
             <div class="all_required">すべて必須です</div>
-            <input type="text" name="company_name" placeholder="会社名">
             <input type="text" name="name"  placeholder="お名前">
+            <input type="text" name="company_name" placeholder="会社名">
             <input type="tel" name="phone_number"  placeholder="電話番号">
             <div class="select">
                 <select name="prefecture_id">
