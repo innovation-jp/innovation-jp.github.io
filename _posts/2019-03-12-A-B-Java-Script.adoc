@@ -1,0 +1,242 @@
+= ABテストで困ってJavaScript使って解決したよって話
+:hp-tags: sumomo, JavaScript, GoogleOptimize, ABtest, beginner
+
+こんにちわ、すももです。 +
+よくサイト改善の為に、Google Optimize（以下、オプティマイズ）を使用してABテストを実施するのですが、 +
+いつもやるABテストのやり方では上手くいかないパターンに出くわし、色々調べた結果JavaScript使って解決出来たので紹介します。 +
+ +
+【Google Optimizeとは】 +
+https://ferret-plus.com/10561 +
+
+例えば、フォーム画面のABテストで、デザイン変更と、 +
+あと、プレースホルダの文言変えたり、項目の並び順ちょっと変えたいんだよな〜って時。
+
+image::/images/sumomo/20190313/1.png[]
+
+## よくやるABテストのパターンだと... +
+
+```
+<!-- 省略 -->
+<style>
+    .AB_test_B {
+        display: none;
+    }
+</style>
+</head>
+<body>
+    <form action="xxx" method="post" id="oreder_form" name="form">
+
+        <!-- Aパターン(オリジナル版) -->
+        <div class="AB_test_A">
+            <label for="company">会社名</label>
+            <input type="text" name="company_name" placeholder="（例）株式会社イノベーション">
+            <label for="name">お名前</label>
+            <input type="text" name="name"  placeholder="（例）山田太郎">
+            <label for="tel">電話番号</label>
+            <input type="tel" name="phone_number"  placeholder="（例）0312345678">
+            <label for="address">住所</label>
+            <div class="select">
+                <select name="prefecture_id">
+                    <option selected>お選びください</option>
+                    <option value="1">北海道</option>
+                    <option value="2">青森県</option>
+                    <option value="3">秋田県</option>
+                    <option value="4">岩手県</option>
+                    <option value="5">山形県</option>
+                    <option value="6">宮城県</option>
+                    <option value="7">福島県</option>
+                    <option value="8">※省略※</option>
+                </select>
+            </div>
+            <input type="text" name="address" placeholder="市区町村以下(例:◯◯区✕✕ ◯◯-✕✕)">
+        </div>
+
+        <!-- Bパターン(改善版) -->
+        <div class="AB_test_B">
+            <div class="all_required">すべて必須です</div>
+            <input type="text" name="name"  placeholder="お名前">
+            <input type="text" name="company_name" placeholder="会社名">
+            <input type="tel" name="phone_number"  placeholder="電話番号">
+            <div class="select">
+                <select name="prefecture_id">
+                    <option selected>所在地（都道府県）を選択</option>
+                    <option value="1">北海道</option>
+                    <option value="2">青森県</option>
+                    <option value="3">秋田県</option>
+                    <option value="4">岩手県</option>
+                    <option value="5">山形県</option>
+                    <option value="6">宮城県</option>
+                    <option value="7">福島県</option>
+                    <option value="8">※以下省略※</option>
+                </select>
+            </div>
+            <input type="text" name="address" placeholder="所在地（市区町村以下）">
+        </div>
+
+        <!-- ※省略※ -->   
+    </form>
+</body>
+</html>
+```
+
+こんな感じで、ABどっちのパターンのコードも全部わーっと書いて、 +
+`<div class="AB_test_A"></div>` とか `<div class="AB_test_B"></div>` でABテストの範囲を囲っとく。 +
+通常はBパターン(改善版)をdisplay: none;で非表示にしといて、Bパターン(改善版)を表示する際は、 +
+Aパターン(オリジナル版)をdisplay: none;に、Bパターン(改善版)をdisplay: block;になるように +
+オプティマイズで設定する、以上。 +
+ +
+おお、簡単だ！ +
+
+## ABテストで困ったパターン... +
+
+```
+<!-- 省略 -->
+</head>
+<body>
+    <form action="xxx" method="post" id="oreder_form" name="form">
+    
+        <!-- ※元コード -->
+        <label for="company">会社名</label>
+        <input id="OrderCompany" type="text" name="company_name" placeholder="（例）株式会社イノベーション">
+        <label for="name">お名前</label>
+        <input id="OrderName" type="text" name="name"  placeholder="（例）山田太郎">
+        <label for="tel">電話番号</label>
+        <input id="OrderPhone" type="tel" name="phone_number"  placeholder="（例）0312345678">
+        <label for="address">住所</label>
+        <div class="select">
+            <select id="wPrefecture_id" name="prefecture_id">
+                <option selected>お選びください</option>
+                <option value="1">北海道</option>
+                <option value="2">青森県</option>
+                <option value="3">秋田県</option>
+                <option value="4">岩手県</option>
+                <option value="5">山形県</option>
+                <option value="6">宮城県</option>
+                <option value="7">福島県</option>
+                <option value="8">※以下省略※</option>
+            </select>
+        </div>
+        <input id="addr" type="text" name="address" placeholder="市区町村以下(例:◯◯区✕✕ ◯◯-✕✕)">
+        
+        <!-- 省略 -->
+    </form>
+</body>
+</html>
+```
+
+外部サービスを使用している都合上、指定のID(など)を変える事が出来ず、 +
+いつものdisplay: none;で要素を非表示にする方法はダメ、 +
+removeメソッドで要素自体を削除する方法も使えなかった。。 +
+ +
+周りに相談した結果、オプティマイズの設定でJavaScript書いて、Bパターン(改善版)にだけ効かすことにしました〜 +
+
+## 解決策 +
+
+デザイン変更したい部分は、Bパターン(改善版)用のCSSを準備しておいて、 +
+該当IDに対し、classList.add()メソッドで、Bパターン(改善版)用のクラス(AB_test_B)を追加、 +
+Aパターン(オリジナル版)のCSSを打ち消して表示出来るよう設定。 +
+```
+document.getElementById("oreder_form").classList.add("AB_test_B");
+```
+
+プレースホルダーの文言変更は、該当IDに対し、setAttribute()メソッドで、 +
+placeholderをBパターン(改善版)用の文言に変更するよう設定。 +
+```
+document.getElementById("OrderCompany").setAttribute('placeholder', '会社名');
+```
+
+セレクトボックスのselectedの文言変更は、 `document.フォーム名.セレクト名.options[0].text = '文言';` で、 +
+Bパターン(改善版)用の文言に変更するよう設定。 +
+ `.options[0].text` を `.options[1].text = '東京'` にしてあげれば、 +
+一番上の選択肢を「北海道」から「東京」に変更したりも出来る。 +
+【参考サイト】  +
+https://www.pazru.net/js/form/5.html +
+```
+document.form.prefecture_id.options[0].text = '所在地（都道府県）を選択';
+```
+ 
+項目の並び順の変更は、親要素と、移動したい要素、移動先の要素を取得し、 +
+`親要素.insertBefore(移動したい要素, 移動先の要素);` で、Bパターン(改善版)では順序が入れ替わるよう設定。 +
+【参考サイト】 +
+https://hapilaki.net/wiki/appendchild-insertbefore-clonenode +
+```
+// 親要素の取得
+var parent       = document.getElementById("AB_test_B_parent");
+// 移動したい要素の取得
+var user_name    = document.getElementById("AB_test_B_user_name");
+// 移動先の要素の取得
+var company_name = document.getElementById("AB_test_B_company_name");
+// 「移動したい要素」が「移動先の要素」の前に移動される！
+parent.insertBefore(user_name, company_name);
+```
+
+## 出来上がったABテスト用コード +
+
+
+```
+<!-- 省略 -->
+<style>
+    .AB_test_B {
+        display: none;
+    }
+</style>
+</head>
+<body>
+    <form action="xxx" method="post" id="oreder_form" name="form">
+
+        <!-- ABテスト -->
+        <div class="AB_test_B">
+            <div class="all_required">すべて必須です</div>
+        </div>
+        <div id="AB_test_B_parent">
+            <div id="AB_test_B_company_name">
+                <div class="AB_test_A">
+                    <label for="company">会社名</label>
+                </div>
+                <input id="OrderCompany" type="text" name="company_name" placeholder="（例）株式会社イノベーション">
+            </div>
+            <div id="AB_test_B_user_name">
+                <div class="AB_test_A">
+                    <label for="name">お名前</label>
+                </div>
+                <input id="OrderName" type="text" name="name"  placeholder="（例）山田太郎">
+            </div>
+        </div>
+        <div class="AB_test_A">
+            <label for="tel">電話番号</label>
+        </div>
+        <input id="OrderPhone" type="tel" name="phone_number"  placeholder="（例）0312345678">
+        <div class="AB_test_A">
+            <label for="address">住所</label>
+        </div>
+        <div class="select">
+            <select id="wPrefecture_id" name="prefecture_id">
+                <option selected>お選びください</option>
+                <option value="1">北海道</option>
+                <option value="2">青森県</option>
+                <option value="3">秋田県</option>
+                <option value="4">岩手県</option>
+                <option value="5">山形県</option>
+                <option value="6">宮城県</option>
+                <option value="7">福島県</option>
+                <option value="8">※以下省略※</option>
+            </select>
+        </div>
+        <input id="addr" type="text" name="address" placeholder="市区町村以下(例:◯◯区✕✕ ◯◯-✕✕)">
+        
+        <!-- 省略 -->
+    </form>
+</body>
+</html>
+```
+
+## オプティマイズの設定(JavaScript) +
+
+image::/images/sumomo/20190313/2.png[]
+
+## 感想 +
+
+いつものABテストのパターンより複雑になった為、このABテストの終了対応時はちょっと時間かかりそうですが、 +
+オプティマイズの設定や、JavaScriptのいい勉強になったので、結果良かったです！ +
+ +
+〜おわり〜 +
