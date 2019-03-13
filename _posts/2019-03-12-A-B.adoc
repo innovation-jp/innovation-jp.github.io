@@ -31,7 +31,7 @@ https://ferret-plus.com/10561 +
             <label for="company">会社名</label>
             <input type="text" name="company_name" placeholder="（例）株式会社イノベーション">
             <label for="name">お名前</label>
-            <input type="text" name="name"  placeholder="（例）山田太郎">   
+            <input type="text" name="name"  placeholder="（例）山田太郎">
             <label for="tel">電話番号</label>
             <input type="tel" name="phone_number"  placeholder="（例）0312345678">
             <label for="address">住所</label>
@@ -53,6 +53,7 @@ https://ferret-plus.com/10561 +
 
         <!-- Bパターン(改善版) -->
         <div class="AB_test_B">
+            <div class="all_required">すべて必須です</div>
             <input type="text" name="company_name" placeholder="会社名">
             <input type="text" name="name"  placeholder="お名前">
             <input type="tel" name="phone_number"  placeholder="電話番号">
@@ -71,8 +72,8 @@ https://ferret-plus.com/10561 +
             </div>
             <input type="text" name="address" placeholder="所在地（市区町村以下）">
         </div>
-        
-        <!-- ※省略※ -->
+
+        <!-- ※省略※ -->   
     </form>
 </body>
 </html>
