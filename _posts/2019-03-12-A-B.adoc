@@ -87,13 +87,15 @@ Aパターン(オリジナル版)をdisplay: none;に、Bパターン(改善版)
  +
 おお、簡単だ！ +
 
-## そしてこちらが、ABテストで困ったパターン... +
+## ABテストで困ったパターン... +
 
 ```
 <!-- 省略 -->
 </head>
 <body>
-    <form action="xxx" method="post" id="oreder_form" name="form">  
+    <form action="xxx" method="post" id="oreder_form" name="form">
+    
+        <!-- ※元コード -->
         <label for="company">会社名</label>
         <input id="OrderCompany" type="text" name="company_name" placeholder="（例）株式会社イノベーション">
         <label for="name">お名前</label>
@@ -115,6 +117,7 @@ Aパターン(オリジナル版)をdisplay: none;に、Bパターン(改善版)
             </select>
         </div>
         <input id="addr" type="text" name="address" placeholder="市区町村以下(例:◯◯区✕✕ ◯◯-✕✕)">
+        
         <!-- 省略 -->
     </form>
 </body>
