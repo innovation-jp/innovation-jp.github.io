@@ -11,7 +11,7 @@ https://ferret-plus.com/10561 +
 例えば、フォーム画面のABテストで、デザイン変更と、 +
 あと、プレースホルダの文言変えたり、項目の並び順ちょっと変えたいんだよな〜って時。
 
-image::/images/sumomo/20180830/1.png[]
+image::/images/sumomo/20190313/1.png[]
 
 ## よくやるABテストのパターンだと... +
 
@@ -232,7 +232,7 @@ parent.insertBefore(user_name, company_name);
 
 ## オプティマイズの設定(JavaScript) +
 
-画像入れる
+image::/images/sumomo/20190313/2.png[]
 
 ## 感想 +
 
