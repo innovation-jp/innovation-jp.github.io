@@ -103,30 +103,29 @@ removeメソッドで要素自体を削除する方法も使えなかった。�
 ## 解決策 +
 
 デザイン変更したい部分は、Bパターン(改善版)用のCSSを準備しておいて、 +
-該当IDに対し、Bパターン(改善版)用のクラス(AB_test_B)を追加、 +
+該当IDに対し、classList.add()メソッドで、Bパターン(改善版)用のクラス(AB_test_B)を追加、 +
 Aパターン(オリジナル版)のCSSを打ち消して表示出来るよう設定。 +
 ```
 document.getElementById("oreder_form").classList.add("AB_test_B");
 ```
 
-プレースホルダーの文言変更は、該当IDに対し、 +
-setAttribute()メソッドで、placeholderをBパターン(改善版)用の文言に変更するよう設定。 +
+プレースホルダーの文言変更は、該当IDに対し、setAttribute()メソッドで、 +
+placeholderをBパターン(改善版)用の文言に変更するよう設定。 +
 ```
 document.getElementById("OrderCompany").setAttribute('placeholder', '会社名');
 ```
 
-セレクトボックスのselectedの文言変更は、 +
-`document.フォーム名.セレクト名.options[0].text = '文言';` で、Bパターン(改善版)用の文言に変更するよう設定。 +
-同じように、 `.options[0].text` を `.options[1].text = '東京'` にしてあげれば、 +
-一番上の選択肢を「北海道」から「東京」に変更出来る。 +
+セレクトボックスのselectedの文言変更は、 `document.フォーム名.セレクト名.options[0].text = '文言';` で、 +
+Bパターン(改善版)用の文言に変更するよう設定。 +
+ `.options[0].text` を `.options[1].text = '東京'` にしてあげれば、 +
+一番上の選択肢を「北海道」から「東京」に変更したりも出来る。 +
 【参考サイト】  +
 https://www.pazru.net/js/form/5.html +
 ```
 document.form.prefecture_id.options[0].text = '所在地（都道府県）を選択';
 ```
  
-項目の並び順の変更は、 +
-親要素と、移動したい要素、移動先の要素を取得し、 +
+項目の並び順の変更は、親要素と、移動したい要素、移動先の要素を取得し、 +
 `親要素.insertBefore(移動したい要素, 移動先の要素);` で、Bパターン(改善版)では順序が入れ替わるよう設定。 +
 【参考サイト】 +
 https://hapilaki.net/wiki/appendchild-insertbefore-clonenode +
