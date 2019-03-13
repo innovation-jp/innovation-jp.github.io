@@ -90,7 +90,35 @@ Aパターン(オリジナル版)をdisplay: none;に、Bパターン(改善版)
 ## そしてこちらが、ABテストで困ったパターン... +
 
 ```
-元コード書く
+<!-- 省略 -->
+</head>
+<body>
+    <form action="xxx" method="post" id="oreder_form" name="form">  
+        <label for="company">会社名</label>
+        <input id="OrderCompany" type="text" name="company_name" placeholder="（例）株式会社イノベーション">
+        <label for="name">お名前</label>
+        <input id="OrderName" type="text" name="name"  placeholder="（例）山田太郎">
+        <label for="tel">電話番号</label>
+        <input id="OrderPhone" type="tel" name="phone_number"  placeholder="（例）0312345678">
+        <label for="address">住所</label>
+        <div class="select">
+            <select id="wPrefecture_id" name="prefecture_id">
+                <option selected>お選びください</option>
+                <option value="1">北海道</option>
+                <option value="2">青森県</option>
+                <option value="3">秋田県</option>
+                <option value="4">岩手県</option>
+                <option value="5">山形県</option>
+                <option value="6">宮城県</option>
+                <option value="7">福島県</option>
+                <option value="8">※以下省略※</option>
+            </select>
+        </div>
+        <input id="addr" type="text" name="address" placeholder="市区町村以下(例:◯◯区✕✕ ◯◯-✕✕)">
+        <!-- 省略 -->
+    </form>
+</body>
+</html>
 ```
 
 外部サービスを使用している都合上、指定のID(など)を変える事が出来ず、 +
