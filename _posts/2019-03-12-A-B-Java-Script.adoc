@@ -81,9 +81,9 @@ image::/images/sumomo/20190313/1.png[]
 
 こんな感じで、ABどっちのパターンのコードも全部わーっと書いて、 +
 `<div class="AB_test_A"></div>` とか `<div class="AB_test_B"></div>` でABテストの範囲を囲っとく。 +
-通常はBパターン(改善版)をdisplay: none;で非表示にしといて、Bパターン(改善版)を表示する際は、 +
-Aパターン(オリジナル版)をdisplay: none;に、Bパターン(改善版)をdisplay: block;になるように +
-オプティマイズで設定する、以上。 +
+通常はBパターン(改善版)を `display: none;` で非表示にしといて、Bパターン(改善版)を表示する際は、 +
+Aパターン(オリジナル版)を `display: none;` に、Bパターン(改善版)を `display: block;` になるようにオプティマイズで設定する。 +
+以上！ +
  +
 おお、簡単だ！ +
 
@@ -125,27 +125,27 @@ Aパターン(オリジナル版)をdisplay: none;に、Bパターン(改善版)
 ```
 
 外部サービスを使用している都合上、指定のID(など)を変える事が出来ず、 +
-いつものdisplay: none;で要素を非表示にする方法はダメ、 +
-removeメソッドで要素自体を削除する方法も使えなかった。。 +
+いつもの `display: none;` で要素を非表示にする方法はダメ、 +
+`removeメソッド` で要素自体を削除する方法も使えなかった。。 +
  +
 周りに相談した結果、オプティマイズの設定でJavaScript書いて、Bパターン(改善版)にだけ効かすことにしました〜 +
 
 ## 解決策 +
 
 デザイン変更したい部分は、Bパターン(改善版)用のCSSを準備しておいて、 +
-該当IDに対し、classList.add()メソッドで、Bパターン(改善版)用のクラス(AB_test_B)を追加、 +
+該当IDに対し `classList.add()メソッド` で、Bパターン(改善版)用のクラス(AB_test_B)を追加、 +
 Aパターン(オリジナル版)のCSSを打ち消して表示出来るよう設定。 +
 ```
 document.getElementById("oreder_form").classList.add("AB_test_B");
 ```
 
-プレースホルダーの文言変更は、該当IDに対し、setAttribute()メソッドで、 +
+プレースホルダーの文言変更は、該当IDに対し `setAttribute()メソッド` で、 +
 placeholderをBパターン(改善版)用の文言に変更するよう設定。 +
 ```
 document.getElementById("OrderCompany").setAttribute('placeholder', '会社名');
 ```
 
-セレクトボックスのselectedの文言変更は、 `document.フォーム名.セレクト名.options[0].text = '文言';` で、 +
+セレクトボックスのselectedの文言変更は `document.フォーム名.セレクト名.options[0].text = '文言';` で、 +
 Bパターン(改善版)用の文言に変更するよう設定。 +
  `.options[0].text` の部分を `.options[1].text = '東京'` にしてあげれば、 +
 一番上の選択肢を「北海道」から「東京」に変更したりも出来ます。 +
@@ -161,9 +161,9 @@ document.form.prefecture_id.options[0].text = '所在地（都道府県）を選
 https://hapilaki.net/wiki/appendchild-insertbefore-clonenode +
 ```
 // 親要素の取得
-var parent       = document.getElementById("AB_test_B_parent");
+var parent = document.getElementById("AB_test_B_parent");
 // 移動したい要素の取得
-var user_name    = document.getElementById("AB_test_B_user_name");
+var user_name = document.getElementById("AB_test_B_user_name");
 // 移動先の要素の取得
 var company_name = document.getElementById("AB_test_B_company_name");
 // 「移動したい要素」が「移動先の要素」の前に移動される！
