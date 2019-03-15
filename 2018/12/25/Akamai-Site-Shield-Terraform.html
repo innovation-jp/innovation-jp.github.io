@@ -45,6 +45,16 @@ var _trackingid = 'LFT-10003-1';
 })();
 </script>
 
+<script type="text/javascript">
+var _trackingid = 'LFT-11927-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
     <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
 
     <link rel="canonical" href="http://tech.innovation.co.jp/2018/12/25/Akamai-Site-Shield-Terraform.html" />
@@ -55,7 +65,7 @@ var _trackingid = 'LFT-10003-1';
     <meta property="og:description" content="先日AkamaiのSite Shieldという製品を導入しました。 この製品はCDNのエッジからオリジンへ通信する際の出口IPアドレスを固定化できるというものです。 これの何が良いかといいますと、 これによりオリジンのロードバランサの許可IPを絞ることができ、 様々な攻撃を防げるところです。 その設定の際のAWSのセキュリティグループの作成にTerraformを使ったので、 ブログに残しておきたいと思います。 前提 インフラはAWSを使っている 作業端末はMacを使っている IPアドレスの設定は手動ではやってられない AkamaiのSite Shiel..." />
     <meta property="og:url" content="http://tech.innovation.co.jp/2018/12/25/Akamai-Site-Shield-Terraform.html" />
     <meta property="article:published_time" content="2018-12-24T15:00:00.000Z" />
-    <meta property="article:modified_time" content="2018-12-25T05:30:35.544Z" />
+    <meta property="article:modified_time" content="2019-03-15T11:58:17.986Z" />
     <meta property="article:tag" content="Akamai" />
     <meta property="article:tag" content="Site Shield" />
     <meta property="article:tag" content="Terraform" />
@@ -73,15 +83,15 @@ var _trackingid = 'LFT-10003-1';
     "publisher": "イノベーション　エンジニアブログ",
     "author": {
         "@type": "Person",
-        "name": "Junichi Shirota",
-        "image": "https://avatars2.githubusercontent.com/u/26893225?v=4",
+        "name": null,
+        "image": "https://avatars0.githubusercontent.com/u/24905783?v=4",
         "url": "undefined/author/undefined",
         "sameAs": ""
     },
     "headline": "AkamaiのSite Shieldを導入した際にTerraformを使ってみた件",
     "url": "http://tech.innovation.co.jp/2018/12/25/Akamai-Site-Shield-Terraform.html",
     "datePublished": "2018-12-24T15:00:00.000Z",
-    "dateModified": "2018-12-25T05:30:35.544Z",
+    "dateModified": "2019-03-15T11:58:17.986Z",
     "keywords": "Akamai,  Site Shield,  Terraform,  Shirota",
     "description": "先日AkamaiのSite Shieldという製品を導入しました。 この製品はCDNのエッジからオリジンへ通信する際の出口IPアドレスを固定化できるというものです。 これの何が良いかといいますと、 これによりオリジンのロードバランサの許可IPを絞ることができ、 様々な攻撃を防げるところです。 その設定の際のAWSのセキュリティグループの作成にTerraformを使ったので、 ブログに残しておきたいと思います。 前提 インフラはAWSを使っている 作業端末はMacを使っている IPアドレスの設定は手動ではやってられない AkamaiのSite Shiel..."
 }
@@ -250,7 +260,7 @@ var _trackingid = 'LFT-10003-1';
     <header class="post-header">
       <div class="post-meta">
         <time datetime="25 Dec 2018" class="post-meta__date date">25 Dec 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Akamai">Akamai</a>, <a href="http://tech.innovation.co.jp/tag/Site-Shield"> Site Shield</a>, <a href="http://tech.innovation.co.jp/tag/Terraform"> Terraform</a>, <a href="http://tech.innovation.co.jp/tag/Shirota"> Shirota</a></span>
-        <span class="post-meta__author author"><img src="https://avatars2.githubusercontent.com/u/26893225?v=4" alt="profile image for Junichi Shirota" class="avatar post-meta__avatar" /> by Junichi Shirota</span>
+        <span class="post-meta__author author"><img src="https://avatars0.githubusercontent.com/u/24905783?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
       </div>
       <h1 class="post-title">AkamaiのSite Shieldを導入した際にTerraformを使ってみた件</h1>
     </header>
@@ -583,7 +593,7 @@ Apply complete! Resources: 2 added, 0 changed, 0 destroyed.</code></pre>
 
 
             <footer class="footer">
-                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright">&copy; 2019. All rights reserved.</span>
                 <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
                 <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
             </footer>
