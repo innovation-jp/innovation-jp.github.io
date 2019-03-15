@@ -45,6 +45,16 @@ var _trackingid = 'LFT-10003-1';
 })();
 </script>
 
+<script type="text/javascript">
+var _trackingid = 'LFT-11927-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
     <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
 
     <link rel="canonical" href="http://tech.innovation.co.jp/2018/11/02/Amazon-Linux-E-C2chrony.html" />
@@ -55,7 +65,7 @@ var _trackingid = 'LFT-10003-1';
     <meta property="og:description" content="今は昔のお話ですが、 かなり昔に作成したAmazonLinuxがあり、 時刻が何故か10分程度ズレてしまう現象に見舞われたことがありました。 ntpdの自動時刻補正の時点でズレてしまっているようで、 dateコマンドで一時的に合わせたとしてもすぐに同じ状態に戻ってしまっていました。 これを解消した際の手順を公開したいと思います。 やったこと 状況確認 ntpdの停止 chronyをインストール chronyを設定 chronyのmakestepを実行 自動起動設定 状況確認 作業時間が深夜なのは気にせず行きましょう。 # SSHで該当インスタンスにログ..." />
     <meta property="og:url" content="http://tech.innovation.co.jp/2018/11/02/Amazon-Linux-E-C2chrony.html" />
     <meta property="article:published_time" content="2018-11-01T15:00:00.000Z" />
-    <meta property="article:modified_time" content="2018-11-02T09:59:40.344Z" />
+    <meta property="article:modified_time" content="2019-03-15T11:58:18.033Z" />
     <meta property="article:tag" content="AWS" />
     <meta property="article:tag" content="EC2" />
     <meta property="article:tag" content="chrony" />
@@ -73,15 +83,15 @@ var _trackingid = 'LFT-10003-1';
     "publisher": "イノベーション　エンジニアブログ",
     "author": {
         "@type": "Person",
-        "name": "Junichi Shirota",
-        "image": "https://avatars2.githubusercontent.com/u/26893225?v=4",
+        "name": null,
+        "image": "https://avatars0.githubusercontent.com/u/24905783?v=4",
         "url": "undefined/author/undefined",
         "sameAs": ""
     },
     "headline": "古いAmazonLinux EC2インスタンスの時刻をchronyで合わせた件",
     "url": "http://tech.innovation.co.jp/2018/11/02/Amazon-Linux-E-C2chrony.html",
     "datePublished": "2018-11-01T15:00:00.000Z",
-    "dateModified": "2018-11-02T09:59:40.344Z",
+    "dateModified": "2019-03-15T11:58:18.033Z",
     "keywords": "AWS,  EC2,  chrony,  Shirota",
     "description": "今は昔のお話ですが、 かなり昔に作成したAmazonLinuxがあり、 時刻が何故か10分程度ズレてしまう現象に見舞われたことがありました。 ntpdの自動時刻補正の時点でズレてしまっているようで、 dateコマンドで一時的に合わせたとしてもすぐに同じ状態に戻ってしまっていました。 これを解消した際の手順を公開したいと思います。 やったこと 状況確認 ntpdの停止 chronyをインストール chronyを設定 chronyのmakestepを実行 自動起動設定 状況確認 作業時間が深夜なのは気にせず行きましょう。 # SSHで該当インスタンスにログ..."
 }
@@ -250,7 +260,7 @@ var _trackingid = 'LFT-10003-1';
     <header class="post-header">
       <div class="post-meta">
         <time datetime="02 Nov 2018" class="post-meta__date date">02 Nov 2018</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/A-W-S">AWS</a>, <a href="http://tech.innovation.co.jp/tag/E-C2"> EC2</a>, <a href="http://tech.innovation.co.jp/tag/chrony"> chrony</a>, <a href="http://tech.innovation.co.jp/tag/Shirota"> Shirota</a></span>
-        <span class="post-meta__author author"><img src="https://avatars2.githubusercontent.com/u/26893225?v=4" alt="profile image for Junichi Shirota" class="avatar post-meta__avatar" /> by Junichi Shirota</span>
+        <span class="post-meta__author author"><img src="https://avatars0.githubusercontent.com/u/24905783?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
       </div>
       <h1 class="post-title">古いAmazonLinux EC2インスタンスの時刻をchronyで合わせた件</h1>
     </header>
@@ -629,7 +639,7 @@ OSに合わせて古いバージョンのミドルウェアを使わざるを得
 
 
             <footer class="footer">
-                <span class="footer__copyright">&copy; 2018. All rights reserved.</span>
+                <span class="footer__copyright">&copy; 2019. All rights reserved.</span>
                 <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
                 <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
             </footer>
