@@ -210,6 +210,12 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/03/12/A-B-Java-Script.html" title="link to ABテストで困ってJavaScript使って解決したよって話">ABテストで困ってJavaScript使って解決したよって話</a></h2>
+        <p class="excerpt">こんにちわ、すももです。 よくサイト改善の為に、Google Optimize（以下、オプティマイズ）を使用してABテストを実施するのですが、 いつもやるABテストのやり方では上手くいかないパターンに出くわし、色々調べた結果JavaScript使って解決出来たので紹介します。 【Google Optimizeとは】 https://ferret-plus.com/10561 例えば、下の画像のように、フォーム画面のABテストで、デザイン変更と、 あと、プレースホルダの文言変えたり、項目の並び順ちょっと変えたいんだよな〜って時。 よくやるABテストのパターンだと&#8230;&#8203; &lt;!-- 省略 --&gt; &lt;style&gt;     .AB_test_B {&hellip;</p>
+        <div class="post-list__meta"><time datetime="12 Mar 2019" class="post-list__meta--date date">12 Mar 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/sumomo">sumomo</a>, <a href="http://tech.innovation.co.jp/tag/Java-Script"> JavaScript</a>, <a href="http://tech.innovation.co.jp/tag/Google-Optimize"> GoogleOptimize</a>, <a href="http://tech.innovation.co.jp/tag/A-Btest"> ABtest</a>, <a href="http://tech.innovation.co.jp/tag/beginner"> beginner</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/02/28/Rancher-E-K-S-R-C.html" title="link to RancherのEKS東京リージョン対応が待ちきれなくてRC版を試してみた件">RancherのEKS東京リージョン対応が待ちきれなくてRC版を試してみた件</a></h2>
         <p class="excerpt">AWSのKubernetesマネージドサービスとしてEKSがありますが、 昨年の12月に東京リージョンに対応しました。 そこで、 KubernetesをオーケストレイトするRancherというツールがありますが、 EKSのみならず、GCPのGKEはもちろん、 AzureのAKSや、その他オンプレのKubernetesにも対応していて、 それらを一元管理できる優れたツールです。 https://rancher.com/ この優れたツールのRancherですが、 EKSの東京リージョン対応から2ヶ月程経ちましたが、 未だStable版では東京リージョンには対応しておりません。 ただ、 RC版である v2.2.0-rc2 を使用して見た所、 東京リージョン対応がなされているみたいでしたので、 ほ&hellip;</p>
         <div class="post-list__meta"><time datetime="28 Feb 2019" class="post-list__meta--date date">28 Feb 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Rancher">Rancher</a>, <a href="http://tech.innovation.co.jp/tag/E-K-S"> EKS</a>, <a href="http://tech.innovation.co.jp/tag/Shirota"> Shirota</a></span></div>
@@ -261,12 +267,6 @@ var _trackingid = 'LFT-10003-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/02/01/g-R-P-C-Java-Ruby.html" title="link to gRPCをJavaとRubyで試してみた">gRPCをJavaとRubyで試してみた</a></h2>
         <p class="excerpt">概要 gRPCとは、RPCを実現するためにGoogle社が開発したプロトコルです。 REST APIとよく比較され、 HTTP/2対応の次世代のAPIインターフェースだなんて話を聞いたことがあります。 そもそもRPCとは何かと言うと、 remote procedure callの略だそうで、 日本語だと「遠隔手続き呼出し」と呼ばれるそうですが、 プログラムから別のアドレス空間（通常、共有ネットワーク上の別のコンピュータ上）にある サブルーチンや手続きを実行することを可能にする技術 ということだそうです。 以下参考にいたしました。 https://en.wikipedia.org/wiki/GRPC https://ja.wikipedia.org/wiki/%E9%81%A0%E9%9A%9&hellip;</p>
         <div class="post-list__meta"><time datetime="01 Feb 2019" class="post-list__meta--date date">01 Feb 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/g-R-P-C">gRPC</a>, <a href="http://tech.innovation.co.jp/tag/Java"> Java</a>, <a href="http://tech.innovation.co.jp/tag/Ruby"> Ruby</a>, <a href="http://tech.innovation.co.jp/tag/Shirota"> Shirota</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/02/01/Word-Press-My-S-Q-L.html" title="link to WordPressの投稿内容をMySQLで取得する">WordPressの投稿内容をMySQLで取得する</a></h2>
-        <p class="excerpt">どうも、中村です。 先日WordPressで構築されたサイトを、Laravelにリプレイスする案件をおこないました。 その時に意外とWordPressで投稿していたデータを引き抜くのが大変だったので、共有したいと思います！ 新しいテーブル構成 こんな感じのtableを作成しようと思います。 [articles] id                   int(10) unsigned is_active            tinyint(1)           //公開・非公開 title                varchar(255)         //タイトル content              text                 //記事本文 list_&hellip;</p>
-        <div class="post-list__meta"><time datetime="01 Feb 2019" class="post-list__meta--date date">01 Feb 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/nakamura">nakamura</a>, <a href="http://tech.innovation.co.jp/tag/Word-Press">WordPress</a>, <a href="http://tech.innovation.co.jp/tag/My-S-Q-L">MySQL</a>, <a href="http://tech.innovation.co.jp/tag/P-H-P">PHP</a>, <a href="http://tech.innovation.co.jp/tag/">投稿</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
