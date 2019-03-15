@@ -1,0 +1,95 @@
+# 量子プログラミングライブラリ「Cirq」を触ってみた
+
+:hp-tags: Python, Cirq, Yu
+
+## はじめに
+こんにちは、Yuです。 +
+シリーズが終わってもまたまた量子コンピュータのお話です。 +
+今回は実践的な量子プログラミングに挑戦しました。
+
+
+## Cirqとは
+Googleが開発しているオープンソースの量子プログラミングライブラリです。  +
+Pythonで書かれています。 +
+量子コンピュータを操作するための回路を比較的簡単に記述することができます。 +
+公式ドキュメント： https://cirq.readthedocs.io/en/latest/index.html +
+
+## 使ってみた
+`pip install cirq` でインストールできます。 +
+とりあえず上の公式ドキュメントに載っている https://cirq.readthedocs.io/en/latest/tutorial.html[チュートリアル]をこなし、
+いくつか https://cirq.readthedocs.io/en/latest/examples.html[例] を見れば、
+最低限の使い方はわかると思います。 +
+
+Cirqを使って、前シリーズでも扱ったフーリエ変換のアルゴリズムを書いてみました。 +
+フーリエ変換は公式ドキュメントにサンプルが載っているので、それを参考にしつつ書きました。
+
+```
+import cirq
+
+# 制御回転ゲート
+def controlRotation(target, control, rotation):
+    # target=control=1ならtargetをexp(2πi**rotation)回転させる
+    yield cirq.CZ(target, control)**rotation
+
+# スワップゲート
+def allSwap(qubits):
+    bit_count = len(qubits)
+    for target_1 in range(bit_count // 2):
+        target_2 = bit_count - target_1 - 1
+        # 1番目とbit_count番目、2番目とbit_count-1番目...のビットを入れ替える
+        yield cirq.SWAP(qubits[target_1], qubits[target_2])
+
+# フーリエ変換
+def fourierTransform(qubits):
+    bit_count = len(qubits)
+    for target in range(bit_count):
+        # アダマールゲート
+        yield cirq.H(qubits[target])
+        for index, control in enumerate(range(target + 1, bit_count)):
+            # 制御回転ゲート
+            yield controlRotation(qubits[target], qubits[control], 1 / (2 ** (index + 1)))
+    # スワップゲート
+    yield allSwap(qubits)
+
+# 始状態
+def initialState(qubits, number):
+    bin_string = format(number, 'b')
+    bit_count = len(qubits)
+    for index, state in enumerate(reversed(bin_string)):
+        if state == '1':
+            # 初期値を1にするためにxゲートを通す
+            yield cirq.X(qubits[bit_count - index - 1])
+
+def main():
+    bit_count = int(input('Bit count : '))
+    number = int(input('Number : '))
+    # ビット数が足りていなければ終了
+    if len(format(number, 'b')) > bit_count:
+        print('bit_count is too small')
+        return
+    # qubit、回路を生成
+    qubits = [cirq.GridQubit(i, 0) for i in range(bit_count)]
+    circuit = cirq.Circuit()
+    # 始状態、フーリエ変換を回路に追加
+    circuit.append(initialState(qubits, number))
+    circuit.append(fourierTransform(qubits))
+    print(circuit)
+
+    # シミュレーション
+    result = cirq.Simulator().simulate(circuit)
+    for index, state in enumerate(result.final_state):
+        print(index, state)
+
+if __name__ == '__main__':
+    main()
+
+```
+
+実行すると、使用するビット数と変換対象の数字の入力を促してきます。
+それらを入力すると、回路とシミュレーション結果が表示されます。
+回路の変数をprint関数に渡すだけで、いい感じに回路を表示してくれます。
+image:/images/yu/quantum/cirq_fourier.png[]
+
+## おわりに
+前シリーズでフーリエ変換を書いた時はかなり大変でしたが、それに比べると今回は楽に書けました。
+今後も少しずつ勉強していこうと思います。
