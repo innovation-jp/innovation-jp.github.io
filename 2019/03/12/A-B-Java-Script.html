@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>ABテストで困ってJavaScript使って解決したよって話 - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="ABテストで困ってJavaScript使って解決したよって話">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="ABテストで困ってJavaScript使って解決したよって話">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2019/03/12/A-B-Java-Script.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="ABテストで困ってJavaScript使って解決したよって話" />
+    <meta property="og:description" content="こんにちわ、すももです。 よくサイト改善の為に、Google Optimize（以下、オプティマイズ）を使用してABテストを実施するのですが、 いつもやるABテストのやり方では上手くいかないパターンに出くわし、色々調べた結果JavaScript使って解決出来たので紹介します。 【Google Optimizeとは】 https://ferret-plus.com/10561 例えば、下の画像のように、フォーム画面のABテストで、デザイン変更と、 あと、プレースホルダの文言変えたり、項目の並び順ちょっと変えたいんだよな〜って時。 よくやるABテストのパタ..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2019/03/12/A-B-Java-Script.html" />
+    <meta property="article:published_time" content="2019-03-11T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2019-03-15T06:10:41.566Z" />
+    <meta property="article:tag" content="sumomo" />
+    <meta property="article:tag" content="JavaScript" />
+    <meta property="article:tag" content="GoogleOptimize" />
+    <meta property="article:tag" content="ABtest" />
+    <meta property="article:tag" content="beginner" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="ABテストで困ってJavaScript使って解決したよって話" />
+    <meta name="twitter:description" content="こんにちわ、すももです。 よくサイト改善の為に、Google Optimize（以下、オプティマイズ）を使用してABテストを実施するのですが、 いつもやるABテストのやり方では上手くいかないパターンに出くわし、色々調べた結果JavaScript使って解決出来たので紹介します。 【Google Optimizeとは】 https://ferret-plus.com/10561 例えば、下の画像のように、フォーム画面のABテストで、デザイン変更と、 あと、プレースホルダの文言変えたり、項目の並び順ちょっと変えたいんだよな〜って時。 よくやるABテストのパタ..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2019/03/12/A-B-Java-Script.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars0.githubusercontent.com/u/34367516?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "ABテストで困ってJavaScript使って解決したよって話",
+    "url": "http://tech.innovation.co.jp/2019/03/12/A-B-Java-Script.html",
+    "datePublished": "2019-03-11T15:00:00.000Z",
+    "dateModified": "2019-03-15T06:10:41.566Z",
+    "keywords": "sumomo,  JavaScript,  GoogleOptimize,  ABtest,  beginner",
+    "description": "こんにちわ、すももです。 よくサイト改善の為に、Google Optimize（以下、オプティマイズ）を使用してABテストを実施するのですが、 いつもやるABテストのやり方では上手くいかないパターンに出くわし、色々調べた結果JavaScript使って解決出来たので紹介します。 【Google Optimizeとは】 https://ferret-plus.com/10561 例えば、下の画像のように、フォーム画面のABテストで、デザイン変更と、 あと、プレースホルダの文言変えたり、項目の並び順ちょっと変えたいんだよな〜って時。 よくやるABテストのパタ..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-sumomo tag-Java-Script tag-Google-Optimize tag-A-Btest tag-beginner no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="12 Mar 2019" class="post-meta__date date">12 Mar 2019</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/sumomo">sumomo</a>, <a href="http://tech.innovation.co.jp/tag/Java-Script"> JavaScript</a>, <a href="http://tech.innovation.co.jp/tag/Google-Optimize"> GoogleOptimize</a>, <a href="http://tech.innovation.co.jp/tag/A-Btest"> ABtest</a>, <a href="http://tech.innovation.co.jp/tag/beginner"> beginner</a></span>
+        <span class="post-meta__author author"><img src="https://avatars0.githubusercontent.com/u/34367516?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">ABテストで困ってJavaScript使って解決したよって話</h1>
+    </header>
+
+    <section class="post tag-sumomo tag-Java-Script tag-Google-Optimize tag-A-Btest tag-beginner">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんにちわ、すももです。<br>
+よくサイト改善の為に、Google Optimize（以下、オプティマイズ）を使用してABテストを実施するのですが、<br>
+いつもやるABテストのやり方では上手くいかないパターンに出くわし、色々調べた結果JavaScript使って解決出来たので紹介します。<br>
+<br>
+【Google Optimizeとは】<br>
+<a href="https://ferret-plus.com/10561" class="bare">https://ferret-plus.com/10561</a><br></p>
+</div>
+<div class="paragraph">
+<p>例えば、下の画像のように、フォーム画面のABテストで、デザイン変更と、<br>
+あと、プレースホルダの文言変えたり、項目の並び順ちょっと変えたいんだよな〜って時。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/sumomo/20190313/1.png" alt="1.png">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__ab_br">よくやるABテストのパターンだと&#8230;&#8203;<br></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>&lt;!-- 省略 --&gt;
+&lt;style&gt;
+    .AB_test_B {
+        display: none;
+    }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;form action="xxx" method="post" id="oreder_form" name="form"&gt;
+
+        &lt;!-- Aパターン(オリジナル版) --&gt;
+        &lt;div class="AB_test_A"&gt;
+            &lt;label for="company"&gt;会社名&lt;/label&gt;
+            &lt;input type="text" name="company_name" placeholder="（例）株式会社イノベーション"&gt;
+            &lt;label for="name"&gt;お名前&lt;/label&gt;
+            &lt;input type="text" name="name"  placeholder="（例）山田太郎"&gt;
+            &lt;label for="tel"&gt;電話番号&lt;/label&gt;
+            &lt;input type="tel" name="phone_number"  placeholder="（例）0312345678"&gt;
+            &lt;label for="address"&gt;住所&lt;/label&gt;
+            &lt;div class="select"&gt;
+                &lt;select name="prefecture_id"&gt;
+                    &lt;option selected&gt;お選びください&lt;/option&gt;
+                    &lt;option value="1"&gt;北海道&lt;/option&gt;
+                    &lt;option value="2"&gt;青森県&lt;/option&gt;
+                    &lt;option value="3"&gt;秋田県&lt;/option&gt;
+                    &lt;option value="4"&gt;岩手県&lt;/option&gt;
+                    &lt;option value="5"&gt;山形県&lt;/option&gt;
+                    &lt;option value="6"&gt;宮城県&lt;/option&gt;
+                    &lt;option value="7"&gt;福島県&lt;/option&gt;
+                    &lt;option value="8"&gt;※省略※&lt;/option&gt;
+                &lt;/select&gt;
+            &lt;/div&gt;
+            &lt;input type="text" name="address" placeholder="市区町村以下(例:◯◯区✕✕ ◯◯-✕✕)"&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Bパターン(改善版) --&gt;
+        &lt;div class="AB_test_B"&gt;
+            &lt;div class="all_required"&gt;すべて必須です&lt;/div&gt;
+            &lt;input type="text" name="name"  placeholder="お名前"&gt;
+            &lt;input type="text" name="company_name" placeholder="会社名"&gt;
+            &lt;input type="tel" name="phone_number"  placeholder="電話番号"&gt;
+            &lt;div class="select"&gt;
+                &lt;select name="prefecture_id"&gt;
+                    &lt;option selected&gt;所在地（都道府県）を選択&lt;/option&gt;
+                    &lt;option value="1"&gt;北海道&lt;/option&gt;
+                    &lt;option value="2"&gt;青森県&lt;/option&gt;
+                    &lt;option value="3"&gt;秋田県&lt;/option&gt;
+                    &lt;option value="4"&gt;岩手県&lt;/option&gt;
+                    &lt;option value="5"&gt;山形県&lt;/option&gt;
+                    &lt;option value="6"&gt;宮城県&lt;/option&gt;
+                    &lt;option value="7"&gt;福島県&lt;/option&gt;
+                    &lt;option value="8"&gt;※以下省略※&lt;/option&gt;
+                &lt;/select&gt;
+            &lt;/div&gt;
+            &lt;input type="text" name="address" placeholder="所在地（市区町村以下）"&gt;
+        &lt;/div&gt;
+
+        &lt;!-- ※省略※ --&gt;
+    &lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>こんな感じで、ABどっちのパターンのコードも全部わーっと書いて、<br>
+<code>&lt;div class="AB_test_A"&gt;&lt;/div&gt;</code> とか <code>&lt;div class="AB_test_B"&gt;&lt;/div&gt;</code> でABテストの範囲を囲っとく。<br>
+通常はBパターン(改善版)を <code>display: none;</code> で非表示にしといて、Bパターン(改善版)を表示する際は、<br>
+Aパターン(オリジナル版)を <code>display: none;</code> に、Bパターン(改善版)を <code>display: block;</code> になるようにオプティマイズで設定する。<br>
+以上！<br>
+<br>
+おお、簡単だ！<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ab_br">ABテストで困ったパターン&#8230;&#8203;<br></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>&lt;!-- 省略 --&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;form action="xxx" method="post" id="oreder_form" name="form"&gt;
+
+        &lt;!-- ※元コード --&gt;
+        &lt;label for="company"&gt;会社名&lt;/label&gt;
+        &lt;input id="OrderCompany" type="text" name="company_name" placeholder="（例）株式会社イノベーション"&gt;
+        &lt;label for="name"&gt;お名前&lt;/label&gt;
+        &lt;input id="OrderName" type="text" name="name"  placeholder="（例）山田太郎"&gt;
+        &lt;label for="tel"&gt;電話番号&lt;/label&gt;
+        &lt;input id="OrderPhone" type="tel" name="phone_number"  placeholder="（例）0312345678"&gt;
+        &lt;label for="address"&gt;住所&lt;/label&gt;
+        &lt;div class="select"&gt;
+            &lt;select id="wPrefecture_id" name="prefecture_id"&gt;
+                &lt;option selected&gt;お選びください&lt;/option&gt;
+                &lt;option value="1"&gt;北海道&lt;/option&gt;
+                &lt;option value="2"&gt;青森県&lt;/option&gt;
+                &lt;option value="3"&gt;秋田県&lt;/option&gt;
+                &lt;option value="4"&gt;岩手県&lt;/option&gt;
+                &lt;option value="5"&gt;山形県&lt;/option&gt;
+                &lt;option value="6"&gt;宮城県&lt;/option&gt;
+                &lt;option value="7"&gt;福島県&lt;/option&gt;
+                &lt;option value="8"&gt;※以下省略※&lt;/option&gt;
+            &lt;/select&gt;
+        &lt;/div&gt;
+        &lt;input id="addr" type="text" name="address" placeholder="市区町村以下(例:◯◯区✕✕ ◯◯-✕✕)"&gt;
+
+        &lt;!-- 省略 --&gt;
+    &lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>外部サービスを使用している都合上、指定のID(など)を変える事が出来ず、<br>
+いつもの <code>display: none;</code> で要素を非表示にする方法はダメ、<br>
+<code>removeメソッド</code> で要素自体を削除する方法も使えなかった。。<br>
+<br>
+周りに相談した結果、オプティマイズの設定でJavaScript書いて、Bパターン(改善版)にだけ効かすことにしました〜<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__br">解決策<br></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>デザイン変更したい部分は、Bパターン(改善版)用のCSSを準備しておいて、<br>
+該当IDに対し <code>classList.add()メソッド</code> で、Bパターン(改善版)用のクラス(AB_test_B)を追加、<br>
+Aパターン(オリジナル版)のCSSを打ち消して表示出来るよう設定。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>document.getElementById("oreder_form").classList.add("AB_test_B");</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>プレースホルダーの文言変更は、該当IDに対し <code>setAttribute()メソッド</code> で、<br>
+placeholderをBパターン(改善版)用の文言に変更するよう設定。<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>document.getElementById("OrderCompany").setAttribute('placeholder', '会社名');</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>セレクトボックスのselectedの文言変更は <code>document.フォーム名.セレクト名.options[0].text = '文言';</code> で、<br>
+Bパターン(改善版)用の文言に変更するよう設定。<br>
+ <code>.options[0].text</code> の部分を <code>.options[1].text = '東京'</code> にしてあげれば、<br>
+一番上の選択肢を「北海道」から「東京」に変更したりも出来ます。<br>
+【参考サイト】 <br>
+<a href="https://www.pazru.net/js/form/5.html" class="bare">https://www.pazru.net/js/form/5.html</a><br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>document.form.prefecture_id.options[0].text = '所在地（都道府県）を選択';</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>項目の並び順の変更は、親要素と、移動したい要素、移動先の要素を取得し、<br>
+<code>親要素.insertBefore(移動したい要素, 移動先の要素);</code> で、Bパターン(改善版)では順序が入れ替わるよう設定。<br>
+【参考サイト】<br>
+<a href="https://hapilaki.net/wiki/appendchild-insertbefore-clonenode" class="bare">https://hapilaki.net/wiki/appendchild-insertbefore-clonenode</a><br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// 親要素の取得
+var parent = document.getElementById("AB_test_B_parent");
+// 移動したい要素の取得
+var user_name = document.getElementById("AB_test_B_user_name");
+// 移動先の要素の取得
+var company_name = document.getElementById("AB_test_B_company_name");
+// 「移動したい要素」が「移動先の要素」の前に移動される！
+parent.insertBefore(user_name, company_name);</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__ab_br_2">出来上がったABテスト用コード<br></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>&lt;!-- 省略 --&gt;
+&lt;style&gt;
+    .AB_test_B {
+        display: none;
+    }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;form action="xxx" method="post" id="oreder_form" name="form"&gt;
+
+        &lt;!-- ABテスト --&gt;
+        &lt;div class="AB_test_B"&gt;
+            &lt;div class="all_required"&gt;すべて必須です&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div id="AB_test_B_parent"&gt;
+            &lt;div id="AB_test_B_company_name"&gt;
+                &lt;div class="AB_test_A"&gt;
+                    &lt;label for="company"&gt;会社名&lt;/label&gt;
+                &lt;/div&gt;
+                &lt;input id="OrderCompany" type="text" name="company_name" placeholder="（例）株式会社イノベーション"&gt;
+            &lt;/div&gt;
+            &lt;div id="AB_test_B_user_name"&gt;
+                &lt;div class="AB_test_A"&gt;
+                    &lt;label for="name"&gt;お名前&lt;/label&gt;
+                &lt;/div&gt;
+                &lt;input id="OrderName" type="text" name="name"  placeholder="（例）山田太郎"&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="AB_test_A"&gt;
+            &lt;label for="tel"&gt;電話番号&lt;/label&gt;
+        &lt;/div&gt;
+        &lt;input id="OrderPhone" type="tel" name="phone_number"  placeholder="（例）0312345678"&gt;
+        &lt;div class="AB_test_A"&gt;
+            &lt;label for="address"&gt;住所&lt;/label&gt;
+        &lt;/div&gt;
+        &lt;div class="select"&gt;
+            &lt;select id="wPrefecture_id" name="prefecture_id"&gt;
+                &lt;option selected&gt;お選びください&lt;/option&gt;
+                &lt;option value="1"&gt;北海道&lt;/option&gt;
+                &lt;option value="2"&gt;青森県&lt;/option&gt;
+                &lt;option value="3"&gt;秋田県&lt;/option&gt;
+                &lt;option value="4"&gt;岩手県&lt;/option&gt;
+                &lt;option value="5"&gt;山形県&lt;/option&gt;
+                &lt;option value="6"&gt;宮城県&lt;/option&gt;
+                &lt;option value="7"&gt;福島県&lt;/option&gt;
+                &lt;option value="8"&gt;※以下省略※&lt;/option&gt;
+            &lt;/select&gt;
+        &lt;/div&gt;
+        &lt;input id="addr" type="text" name="address" placeholder="市区町村以下(例:◯◯区✕✕ ◯◯-✕✕)"&gt;
+
+        &lt;!-- 省略 --&gt;
+    &lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__javascript_br">オプティマイズの設定(JavaScript)<br></h2>
+<div class="sectionbody">
+<div class="imageblock">
+<div class="content">
+<img src="/images/sumomo/20190313/2.png" alt="2.png">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__br_2">感想<br></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>いつものABテストのパターンより複雑になった為、このABテストの終了対応時はちょっと時間かかりそうですが、<br>
+オプティマイズの設定や、JavaScriptのいい勉強になったので、結果良かったです！<br>
+<br>
+〜おわり〜<br></p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2019. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11783-1';
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+</body>
+</html>
