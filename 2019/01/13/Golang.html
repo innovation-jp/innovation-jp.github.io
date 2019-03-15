@@ -45,6 +45,16 @@ var _trackingid = 'LFT-10003-1';
 })();
 </script>
 
+<script type="text/javascript">
+var _trackingid = 'LFT-11927-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
     <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
 
     <link rel="canonical" href="http://tech.innovation.co.jp/2019/01/13/Golang.html" />
@@ -55,7 +65,7 @@ var _trackingid = 'LFT-10003-1';
     <meta property="og:description" content="こんにちは。 エンジニアのNew塚本です。 今回は、ログ出力についてのお話をのせたいと思います。 経緯 エラーが発生した際に出力するログに、stackが出力されず解析が困難になると弊社SREにつめられたため。  ごもっとも！なので見直します！！ 今回やりたいこと ログにstackを出力する。 修正前 例えば、文字列を数値に変換する関数では、この様に実装していました。 num, err := strconv.Atoi(target) if err != nil { 	return } エラー判定をして、呼び出し元に返却する。 targetが数値に変換され..." />
     <meta property="og:url" content="http://tech.innovation.co.jp/2019/01/13/Golang.html" />
     <meta property="article:published_time" content="2019-01-12T15:00:00.000Z" />
-    <meta property="article:modified_time" content="2019-01-25T02:27:41.398Z" />
+    <meta property="article:modified_time" content="2019-03-15T11:58:17.979Z" />
     <meta property="article:tag" content="NewTsukamoto" />
     <meta property="article:tag" content="mac" />
     <meta property="article:tag" content="Golang" />
@@ -75,14 +85,14 @@ var _trackingid = 'LFT-10003-1';
     "author": {
         "@type": "Person",
         "name": null,
-        "image": "https://avatars2.githubusercontent.com/u/29852256?v=4",
+        "image": "https://avatars0.githubusercontent.com/u/24905783?v=4",
         "url": "undefined/author/undefined",
         "sameAs": ""
     },
     "headline": "アプリケーションログ出力の見直し Golang",
     "url": "http://tech.innovation.co.jp/2019/01/13/Golang.html",
     "datePublished": "2019-01-12T15:00:00.000Z",
-    "dateModified": "2019-01-25T02:27:41.398Z",
+    "dateModified": "2019-03-15T11:58:17.979Z",
     "keywords": "NewTsukamoto,  mac,  Golang,  seelog,  gorm",
     "description": "こんにちは。 エンジニアのNew塚本です。 今回は、ログ出力についてのお話をのせたいと思います。 経緯 エラーが発生した際に出力するログに、stackが出力されず解析が困難になると弊社SREにつめられたため。  ごもっとも！なので見直します！！ 今回やりたいこと ログにstackを出力する。 修正前 例えば、文字列を数値に変換する関数では、この様に実装していました。 num, err := strconv.Atoi(target) if err != nil { \treturn } エラー判定をして、呼び出し元に返却する。 targetが数値に変換され..."
 }
@@ -251,7 +261,7 @@ var _trackingid = 'LFT-10003-1';
     <header class="post-header">
       <div class="post-meta">
         <time datetime="13 Jan 2019" class="post-meta__date date">13 Jan 2019</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/New-Tsukamoto">NewTsukamoto</a>, <a href="http://tech.innovation.co.jp/tag/mac"> mac</a>, <a href="http://tech.innovation.co.jp/tag/Golang"> Golang</a>, <a href="http://tech.innovation.co.jp/tag/seelog"> seelog</a>, <a href="http://tech.innovation.co.jp/tag/gorm"> gorm</a></span>
-        <span class="post-meta__author author"><img src="https://avatars2.githubusercontent.com/u/29852256?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+        <span class="post-meta__author author"><img src="https://avatars0.githubusercontent.com/u/24905783?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
       </div>
       <h1 class="post-title">アプリケーションログ出力の見直し Golang</h1>
     </header>
