@@ -45,6 +45,16 @@ var _trackingid = 'LFT-10003-1';
 })();
 </script>
 
+<script type="text/javascript">
+var _trackingid = 'LFT-11927-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
     <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
 
     <link rel="canonical" href="http://tech.innovation.co.jp" />
@@ -211,6 +221,12 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/02/01/g-R-P-C-Java-Ruby.html" title="link to gRPCをJavaとRubyで試してみた">gRPCをJavaとRubyで試してみた</a></h2>
+        <p class="excerpt">概要 gRPCとは、RPCを実現するためにGoogle社が開発したプロトコルです。 REST APIとよく比較され、 HTTP/2対応の次世代のAPIインターフェースだなんて話を聞いたことがあります。 そもそもRPCとは何かと言うと、 remote procedure callの略だそうで、 日本語だと「遠隔手続き呼出し」と呼ばれるそうですが、 プログラムから別のアドレス空間（通常、共有ネットワーク上の別のコンピュータ上）にある サブルーチンや手続きを実行することを可能にする技術 ということだそうです。 以下参考にいたしました。 https://en.wikipedia.org/wiki/GRPC https://ja.wikipedia.org/wiki/%E9%81%A0%E9%9A%9&hellip;</p>
+        <div class="post-list__meta"><time datetime="01 Feb 2019" class="post-list__meta--date date">01 Feb 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/g-R-P-C">gRPC</a>, <a href="http://tech.innovation.co.jp/tag/Java"> Java</a>, <a href="http://tech.innovation.co.jp/tag/Ruby"> Ruby</a>, <a href="http://tech.innovation.co.jp/tag/Shirota"> Shirota</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/02/01/Word-Press-My-S-Q-L.html" title="link to WordPressの投稿内容をMySQLで取得する">WordPressの投稿内容をMySQLで取得する</a></h2>
         <p class="excerpt">どうも、中村です。 先日WordPressで構築されたサイトを、Laravelにリプレイスする案件をおこないました。 その時に意外とWordPressで投稿していたデータを引き抜くのが大変だったので、共有したいと思います！ 新しいテーブル構成 こんな感じのtableを作成しようと思います。 [articles] id                   int(10) unsigned is_active            tinyint(1)           //公開・非公開 title                varchar(255)         //タイトル content              text                 //記事本文 list_&hellip;</p>
         <div class="post-list__meta"><time datetime="01 Feb 2019" class="post-list__meta--date date">01 Feb 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/nakamura">nakamura</a>, <a href="http://tech.innovation.co.jp/tag/Word-Press">WordPress</a>, <a href="http://tech.innovation.co.jp/tag/My-S-Q-L">MySQL</a>, <a href="http://tech.innovation.co.jp/tag/P-H-P">PHP</a>, <a href="http://tech.innovation.co.jp/tag/">投稿</a></span></div>
@@ -247,6 +263,12 @@ var _trackingid = 'LFT-10003-1';
         <hr class="post-list__divider" />
       </li>
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/01/13/.html" title="link to アプリケーションログ出力の見直し">アプリケーションログ出力の見直し</a></h2>
+        <p class="excerpt">こんにちは。 エンジニアのNew塚本です。 今回は、ログ出力についてのお話をのせたいと思います。 経緯 エラーが発生した際に出力するログに、stackが出力されず解析が困難になると弊社SREにつめられたため。  ごもっとも！なので見直します！！ 今回やりたいこと ログにstackを出力する。 修正前 例えば、文字列を数値に変換する関数では、この様に実装していました。 num, err := strconv.Atoi(target) if err != nil { 	return } エラー判定をして、呼び出し元に返却する。 targetが数値に変換されない"abcde"の様な値の場合には、err（*errors.errorString）には、 strconv.Atoi: parsing "&hellip;</p>
+        <div class="post-list__meta"><time datetime="13 Jan 2019" class="post-list__meta--date date">13 Jan 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/New-Tsukamoto">NewTsukamoto</a>, <a href="http://tech.innovation.co.jp/tag/mac"> mac</a>, <a href="http://tech.innovation.co.jp/tag/Golang"> Golang</a>, <a href="http://tech.innovation.co.jp/tag/seelog"> seelog</a>, <a href="http://tech.innovation.co.jp/tag/gorm"> gorm</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/01/06/G-A-S-Slack.html" title="link to GASでSlackをまとめて削除するやつ作ってみた">GASでSlackをまとめて削除するやつ作ってみた</a></h2>
         <p class="excerpt">あけましておめでとうございます！ 初詣でおみくじを３回引きましたが全て小吉だったすももです。 以前から「Slackを何件かまとめて消したい時に、一件一件削除するのは面倒くさいなぁ」と思っていたので、 GASを使って、対象チャンネルや対象期間を入力したら、メッセージを一括削除出来るようにしてみました〜！ 完成したもの 1.チャンネル名、開始日、終了日を入力してチェックボックスにチェックを付ける ※トリガーはスプレッドシート編集時、チェックが付いていたら実行するように設定しました 2.該当期間の自分のメッセージが削除され、「削除しました」のポップアップが表示される 3.OKを押すとチェックボックスのチェックが外れる 内容 &lt;使用したSlack API&gt; チャンネル情報取得 http&hellip;</p>
         <div class="post-list__meta"><time datetime="06 Jan 2019" class="post-list__meta--date date">06 Jan 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/sumomo">sumomo</a>, <a href="http://tech.innovation.co.jp/tag/G-A-S"> GAS</a>, <a href="http://tech.innovation.co.jp/tag/Google-Apps-Script"> GoogleAppsScript</a>, <a href="http://tech.innovation.co.jp/tag/Spreadsheet"> Spreadsheet</a>, <a href="http://tech.innovation.co.jp/tag/Slack"> Slack</a></span></div>
@@ -256,18 +278,6 @@ var _trackingid = 'LFT-10003-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/12/25/Akamai-Site-Shield-Terraform.html" title="link to AkamaiのSite Shieldを導入した際にTerraformを使ってみた件">AkamaiのSite Shieldを導入した際にTerraformを使ってみた件</a></h2>
         <p class="excerpt">先日AkamaiのSite Shieldという製品を導入しました。 この製品はCDNのエッジからオリジンへ通信する際の出口IPアドレスを固定化できるというものです。 これの何が良いかといいますと、 これによりオリジンのロードバランサの許可IPを絞ることができ、 様々な攻撃を防げるところです。 その設定の際のAWSのセキュリティグループの作成にTerraformを使ったので、 ブログに残しておきたいと思います。 前提 インフラはAWSを使っている 作業端末はMacを使っている IPアドレスの設定は手動ではやってられない AkamaiのSite Shieldを設定・申請して払い出されたIPを確認すると xxx.xxx.xxx.xxx/24 上記のような8ビット分のIPが26個も払い出されました&hellip;</p>
         <div class="post-list__meta"><time datetime="25 Dec 2018" class="post-list__meta--date date">25 Dec 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Akamai">Akamai</a>, <a href="http://tech.innovation.co.jp/tag/Site-Shield"> Site Shield</a>, <a href="http://tech.innovation.co.jp/tag/Terraform"> Terraform</a>, <a href="http://tech.innovation.co.jp/tag/Shirota"> Shirota</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/12/20/jira-howtouse.html" title="link to 社内共有も兼ねてJIRAの使い方をまとめてみます">社内共有も兼ねてJIRAの使い方をまとめてみます</a></h2>
-        <p class="excerpt">KTNです 今回は今まで開発の課題管理で使っていたJIRAの使い方をまとめて見ようと思います 色々あって今後JIRAの管理を引き継いで行く感じになるので、 その時の資料に使えればという思いで書きます 基本的に使い始めるときに気にしなくても良いような、細かい設定については説明を省いていこうと思います また2018年10月に新しいタイプのプロジェクト（次世代プロジェクト）が作成できるようになったようですが、 既存のプロジェクトの説明をするという趣旨のため 今までのもの（クラシックプロジェクト）を扱います JIRAの概要について 一番大きな単位として「プロジェクト」というものがあり、用途ごとに作成します 例えば弊社だと 開発タスク管理用として「ITトレンド開発」「リストファインダー開発」 承認ワ&hellip;</p>
-        <div class="post-list__meta"><time datetime="20 Dec 2018" class="post-list__meta--date date">20 Dec 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/jira">jira</a>, <a href="http://tech.innovation.co.jp/tag/howtouse"> howtouse</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/12/16/adams-method.html" title="link to 社内で行われた第一回アルゴリズム大会で優勝しました！">社内で行われた第一回アルゴリズム大会で優勝しました！</a></h2>
-        <p class="excerpt">どうも、Anti-Pattern初代テックリードのbigenです。 先日、社内で第一回アルゴリズム大会が開催されました。 社内エンジニアを対象に、参加者全員で同じ問題を解き、もっとも短い時間で解答を出力するコードを書いた人が優勝です。 なんとこの大会で僕が優勝しまして、初代テックリードの称号を頂きました。 数カ月後に第二回をするそうなので、次回も今から楽しみです。 今日はその大会で出題された問題について解説してみようと思います。 問題 各都道府県の人口が下記配列で与えられ、議席数の合計が289の時、アダムズ方式で各都道府県ごとの議席数を割り振る時、計算に用いる「各都道府県の人口を割る、ある整数」を求めよ。（制限時間30分くらい） // 各都道府県の人口 $pref = [5381733,&hellip;</p>
-        <div class="post-list__meta"><time datetime="16 Dec 2018" class="post-list__meta--date date">16 Dec 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/bigen">bigen</a>, <a href="http://tech.innovation.co.jp/tag/adams"> adams</a>, <a href="http://tech.innovation.co.jp/tag/algorithm"> algorithm</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
