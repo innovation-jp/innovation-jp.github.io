@@ -20,24 +20,11 @@ Pythonで書かれています。 +
 いくつか https://cirq.readthedocs.io/en/latest/examples.html[例] を見れば、
 最低限の使い方はわかると思います。 +
 
-Cirqを使って、前シリーズでも扱ったフーリエ変換のアルゴリズムを書いてみました。 +
+Cirqを使って、前にも扱ったフーリエ変換のアルゴリズムを書いてみました。 +
 フーリエ変換は公式ドキュメントにサンプルが載っているので、それを参考にしつつ書きました。
 
 ```
 import cirq
-
-# 制御回転ゲート
-def controlRotation(target, control, rotation):
-    # target=control=1ならtargetをexp(2πi**rotation)回転させる
-    yield cirq.CZ(target, control)**rotation
-
-# スワップゲート
-def allSwap(qubits):
-    bit_count = len(qubits)
-    for target_1 in range(bit_count // 2):
-        target_2 = bit_count - target_1 - 1
-        # 1番目とbit_count番目、2番目とbit_count-1番目...のビットを入れ替える
-        yield cirq.SWAP(qubits[target_1], qubits[target_2])
 
 # フーリエ変換
 def fourierTransform(qubits):
@@ -47,9 +34,17 @@ def fourierTransform(qubits):
         yield cirq.H(qubits[target])
         for index, control in enumerate(range(target + 1, bit_count)):
             # 制御回転ゲート
-            yield controlRotation(qubits[target], qubits[control], 1 / (2 ** (index + 1)))
+            yield cirq.CZ(qubits[target], qubits[control])**(1 / (2 ** (index + 1)))
     # スワップゲート
     yield allSwap(qubits)
+
+# スワップゲート
+def allSwap(qubits):
+    bit_count = len(qubits)
+    for target_1 in range(bit_count // 2):
+        target_2 = bit_count - target_1 - 1
+        # 1番目とbit_count番目、2番目とbit_count-1番目...のビットを入れ替える
+        yield cirq.SWAP(qubits[target_1], qubits[target_2])
 
 # 始状態
 def initialState(qubits, number):
@@ -91,5 +86,9 @@ if __name__ == '__main__':
 image:/images/yu/quantum/cirq_fourier.png[]
 
 ## おわりに
-前シリーズでフーリエ変換を書いた時はかなり大変でしたが、それに比べると今回は楽に書けました。
+前にフーリエ変換を1から書いた時はかなり大変でしたが、それに比べると今回は楽に書けました。
+やはりライブラリって偉大ですね。 +
 今後も少しずつ勉強していこうと思います。
+
+## 参考文献
+https://cirq.readthedocs.io/en/latest/index.html[Cirq: A python library for NISQ circuits — Cirq 0.5.0.dev documentation]
