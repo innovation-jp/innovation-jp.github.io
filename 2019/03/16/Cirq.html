@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>量子プログラミングライブラリ「Cirq」を触ってみた - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="量子プログラミングライブラリ「Cirq」を触ってみた">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="量子プログラミングライブラリ「Cirq」を触ってみた">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11927-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2019/03/16/Cirq.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="量子プログラミングライブラリ「Cirq」を触ってみた" />
+    <meta property="og:description" content="はじめに こんにちは、Yuです。 シリーズが終わってもまたまた量子コンピュータのお話です。 今回は実践的な量子プログラミングに挑戦しました。 Cirqとは Googleが開発しているオープンソースの量子プログラミングライブラリです。  Pythonで書かれています。 量子コンピュータを操作するための回路を比較的簡単に記述することができます。 公式ドキュメント： https://cirq.readthedocs.io/en/latest/index.html 使ってみた pip install cirq でインストールできます。 とりあえず上の公式ドキュ..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2019/03/16/Cirq.html" />
+    <meta property="article:published_time" content="2019-03-15T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2019-03-18T01:42:29.571Z" />
+    <meta property="article:tag" content="Python" />
+    <meta property="article:tag" content="Cirq" />
+    <meta property="article:tag" content="Yu" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="量子プログラミングライブラリ「Cirq」を触ってみた" />
+    <meta name="twitter:description" content="はじめに こんにちは、Yuです。 シリーズが終わってもまたまた量子コンピュータのお話です。 今回は実践的な量子プログラミングに挑戦しました。 Cirqとは Googleが開発しているオープンソースの量子プログラミングライブラリです。  Pythonで書かれています。 量子コンピュータを操作するための回路を比較的簡単に記述することができます。 公式ドキュメント： https://cirq.readthedocs.io/en/latest/index.html 使ってみた pip install cirq でインストールできます。 とりあえず上の公式ドキュ..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2019/03/16/Cirq.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": null,
+        "image": "https://avatars0.githubusercontent.com/u/39402415?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "量子プログラミングライブラリ「Cirq」を触ってみた",
+    "url": "http://tech.innovation.co.jp/2019/03/16/Cirq.html",
+    "datePublished": "2019-03-15T15:00:00.000Z",
+    "dateModified": "2019-03-18T01:42:29.571Z",
+    "keywords": "Python,  Cirq,  Yu",
+    "description": "はじめに こんにちは、Yuです。 シリーズが終わってもまたまた量子コンピュータのお話です。 今回は実践的な量子プログラミングに挑戦しました。 Cirqとは Googleが開発しているオープンソースの量子プログラミングライブラリです。  Pythonで書かれています。 量子コンピュータを操作するための回路を比較的簡単に記述することができます。 公式ドキュメント： https://cirq.readthedocs.io/en/latest/index.html 使ってみた pip install cirq でインストールできます。 とりあえず上の公式ドキュ..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Python tag-Cirq tag-Yu no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="16 Mar 2019" class="post-meta__date date">16 Mar 2019</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Python">Python</a>, <a href="http://tech.innovation.co.jp/tag/Cirq"> Cirq</a>, <a href="http://tech.innovation.co.jp/tag/Yu"> Yu</a></span>
+        <span class="post-meta__author author"><img src="https://avatars0.githubusercontent.com/u/39402415?v=4" alt="profile image for " class="avatar post-meta__avatar" /> by </span>
+      </div>
+      <h1 class="post-title">量子プログラミングライブラリ「Cirq」を触ってみた</h1>
+    </header>
+
+    <section class="post tag-Python tag-Cirq tag-Yu">
+      <div class="sect1">
+<h2 id="__">はじめに</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんにちは、Yuです。<br>
+シリーズが終わってもまたまた量子コンピュータのお話です。<br>
+今回は実践的な量子プログラミングに挑戦しました。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cirq">Cirqとは</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Googleが開発しているオープンソースの量子プログラミングライブラリです。 <br>
+Pythonで書かれています。<br>
+量子コンピュータを操作するための回路を比較的簡単に記述することができます。<br>
+公式ドキュメント： <a href="https://cirq.readthedocs.io/en/latest/index.html" class="bare">https://cirq.readthedocs.io/en/latest/index.html</a><br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">使ってみた</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>pip install cirq</code> でインストールできます。<br>
+とりあえず上の公式ドキュメントに載っている <a href="https://cirq.readthedocs.io/en/latest/tutorial.html">チュートリアル</a>をこなし、
+いくつか <a href="https://cirq.readthedocs.io/en/latest/examples.html">例</a> を見れば、
+最低限の使い方はわかると思います。<br></p>
+</div>
+<div class="paragraph">
+<p>Cirqを使って、前にも扱ったフーリエ変換のアルゴリズムを書いてみました。<br>
+フーリエ変換は公式ドキュメントにサンプルが載っているので、それを参考にしつつ書きました。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import cirq
+
+# フーリエ変換
+def fourierTransform(qubits):
+    bit_count = len(qubits)
+    for target in range(bit_count):
+        # アダマールゲート
+        yield cirq.H(qubits[target])
+        for index, control in enumerate(range(target + 1, bit_count)):
+            # 制御回転ゲート
+            yield cirq.CZ(qubits[target], qubits[control])**(1 / (2 ** (index + 1)))
+    # スワップゲート
+    yield allSwap(qubits)
+
+# スワップゲート
+def allSwap(qubits):
+    bit_count = len(qubits)
+    for target_1 in range(bit_count // 2):
+        target_2 = bit_count - target_1 - 1
+        # 1番目とbit_count番目、2番目とbit_count-1番目...のビットを入れ替える
+        yield cirq.SWAP(qubits[target_1], qubits[target_2])
+
+# 始状態
+def initialState(qubits, number):
+    bin_string = format(number, 'b')
+    bit_count = len(qubits)
+    for index, state in enumerate(reversed(bin_string)):
+        if state == '1':
+            # 初期値を1にするためにxゲートを通す
+            yield cirq.X(qubits[bit_count - index - 1])
+
+def main():
+    bit_count = int(input('Bit count : '))
+    number = int(input('Number : '))
+    # ビット数が足りていなければ終了
+    if len(format(number, 'b')) &gt; bit_count:
+        print('bit_count is too small')
+        return
+    # qubit、回路を生成
+    qubits = [cirq.GridQubit(i, 0) for i in range(bit_count)]
+    circuit = cirq.Circuit()
+    # 始状態、フーリエ変換を回路に追加
+    circuit.append(initialState(qubits, number))
+    circuit.append(fourierTransform(qubits))
+    print(circuit)
+
+    # シミュレーション
+    result = cirq.Simulator().simulate(circuit)
+    for index, state in enumerate(result.final_state):
+        print(index, state)
+
+if __name__ == '__main__':
+    main()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>実行すると、使用するビット数と変換対象の数字の入力を促してきます。
+それらを入力すると、回路とシミュレーション結果が表示されます。
+回路の変数をprint関数に渡すだけで、いい感じに回路を表示してくれます。
+<span class="image"><img src="/images/yu/quantum/cirq_fourier.png" alt="cirq_fourier.png"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">おわりに</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>前にフーリエ変換を1から書いた時はかなり大変でしたが、それに比べると今回は楽に書けました。
+やはりライブラリって偉大ですね。<br>
+今後も少しずつ勉強していこうと思います。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___4">参考文献</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://cirq.readthedocs.io/en/latest/index.html">Cirq: A python library for NISQ circuits — Cirq 0.5.0.dev documentation</a></p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2019. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11783-1';
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+</body>
+</html>
