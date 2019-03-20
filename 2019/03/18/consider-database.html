@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>改めてデータベースについて考えてみる - イノベーション　エンジニアブログ</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="改めてデータベースについて考えてみる">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="改めてデータベースについて考えてみる">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+    
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//test.list-finder.jp/js/ja/track_test.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-10003-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = document.location.protocol + '//track.list-finder.jp/js/ja/track_prod_wao.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11927-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+    <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="http://tech.innovation.co.jp/2019/03/18/consider-database.html" />
+    
+    <meta property="og:site_name" content="イノベーション　エンジニアブログ" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="改めてデータベースについて考えてみる" />
+    <meta property="og:description" content="こんにちは。はすみんです。 今回のブログでは、SQLやチューニングについて最近勉強したことをアウトプットしてみようと思います。 SQLでデータを引っ張ってくるまでの工程 アプリケーション側でSQLを実行 パーサ/リライタがSQLの構文を解析し、構文木を生成 プランナ/オプティマイザが、最適な実行計画を作成する。 エグゼキュータが、実行計画に沿ってクエリを実行し、データを取得する 処理結果をアプリケーション側に返す クエリの結果を取得するまでにこういった一連の処理があります。 大体処理が遅くなるのはエグゼキュータ部分で、 最適な実行計画が作られていないこ..." />
+    <meta property="og:url" content="http://tech.innovation.co.jp/2019/03/18/consider-database.html" />
+    <meta property="article:published_time" content="2019-03-17T15:00:00.000Z" />
+    <meta property="article:modified_time" content="2019-03-20T17:27:50.201Z" />
+    <meta property="article:tag" content="Database" />
+    <meta property="article:tag" content="SQL" />
+    <meta property="article:tag" content="Hasumin" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="改めてデータベースについて考えてみる" />
+    <meta name="twitter:description" content="こんにちは。はすみんです。 今回のブログでは、SQLやチューニングについて最近勉強したことをアウトプットしてみようと思います。 SQLでデータを引っ張ってくるまでの工程 アプリケーション側でSQLを実行 パーサ/リライタがSQLの構文を解析し、構文木を生成 プランナ/オプティマイザが、最適な実行計画を作成する。 エグゼキュータが、実行計画に沿ってクエリを実行し、データを取得する 処理結果をアプリケーション側に返す クエリの結果を取得するまでにこういった一連の処理があります。 大体処理が遅くなるのはエグゼキュータ部分で、 最適な実行計画が作られていないこ..." />
+    <meta name="twitter:url" content="http://tech.innovation.co.jp/2019/03/18/consider-database.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "イノベーション　エンジニアブログ",
+    "author": {
+        "@type": "Person",
+        "name": "takuya hasumi",
+        "image": "https://avatars0.githubusercontent.com/u/22537034?v=4",
+        "url": "undefined/author/undefined",
+        "sameAs": ""
+    },
+    "headline": "改めてデータベースについて考えてみる",
+    "url": "http://tech.innovation.co.jp/2019/03/18/consider-database.html",
+    "datePublished": "2019-03-17T15:00:00.000Z",
+    "dateModified": "2019-03-20T17:27:50.201Z",
+    "keywords": "Database,  SQL,  Hasumin",
+    "description": "こんにちは。はすみんです。 今回のブログでは、SQLやチューニングについて最近勉強したことをアウトプットしてみようと思います。 SQLでデータを引っ張ってくるまでの工程 アプリケーション側でSQLを実行 パーサ/リライタがSQLの構文を解析し、構文木を生成 プランナ/オプティマイザが、最適な実行計画を作成する。 エグゼキュータが、実行計画に沿ってクエリを実行し、データを取得する 処理結果をアプリケーション側に返す クエリの結果を取得するまでにこういった一連の処理があります。 大体処理が遅くなるのはエグゼキュータ部分で、 最適な実行計画が作られていないこ..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+
+</head>
+<body class="post-template tag-Database tag-S-Q-L tag-Hasumin no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="http://tech.innovation.co.jp" title="link to homepage for イノベーション　エンジニアブログ">イノベーション　エンジニアブログ</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">株式会社イノベーションのエンジニアたちの技術系ブログです。ITトレンド・List Finderの開発をベースに、業務外での技術研究などもブログとして発信していってます！</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="http://tech.innovation.co.jp/#blog" title="link to イノベーション　エンジニアブログ blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        
+    	<!-- ソーシャルボタンここから -->
+    	<div id="boxArea" style="display: table; padding: 0 0 0 2px;">
+    		<div style="width: 74px; height: 22px; float: left;">
+    			<a href="https://twitter.com/share" class="twitter-share-button"
+    				{count} data-lang="ja" data-dnt="true">ツイート</a>
+    			<script>
+    				!function(d, s, id) {
+    					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+    							.test(d.location) ? 'http' : 'https';
+    					if (!d.getElementById(id)) {
+    						js = d.createElement(s);
+    						js.id = id;
+    						js.src = p + '://platform.twitter.com/widgets.js';
+    						fjs.parentNode.insertBefore(js, fjs);
+    					}
+    				}(document, 'script', 'twitter-wjs');
+    			</script>
+    		</div>
+    		<div style="width: 76px; height: 22px; float: left;">
+    			<div class="g-plusone" data-size="medium"></div>
+    			<script type="text/javascript">
+    				window.___gcfg = {
+    					lang : 'ja'
+    				};
+    				(function() {
+    					var po = document.createElement('script');
+    					po.type = 'text/javascript';
+    					po.async = true;
+    					po.src = 'https://apis.google.com/js/platform.js';
+    					var s = document.getElementsByTagName('script')[0];
+    					s.parentNode.insertBefore(po, s);
+    				})();
+    			</script>
+    		</div>
+    		<div style="width: 126px; height: 22px; float: left;">
+    			<a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button"
+    				data-hatena-bookmark-layout="standard-balloon"
+    				data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img
+    				src="http://b.st-hatena.com/images/entry-button/button-only@2x.png"
+    				alt="このエントリーをはてなブックマークに追加" width="20" height="20"
+    				style="border: none;" /></a>
+    			<script type="text/javascript"
+    				src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8"
+    				async="async"></script>
+    		</div>
+    		<div style="width: 117px; height: 22px; float: left;">
+    			<a data-pocket-label="pocket" data-pocket-count="horizontal"
+    				class="pocket-btn" data-lang="en"></a>
+    		</div>
+    		<div style="width: 86px; height: 22px; float: left;">
+    			<span><script type="text/javascript"
+    					src="//media.line.me/js/line-button.js?v=20140411"></script>
+    				<script type="text/javascript">
+    					new media_line_me.LineButton({
+    						"pc" : true,
+    						"lang" : "ja",
+    						"type" : "a"
+    					});
+    				</script></span>
+    		</div>
+    		<div style="width: 114px; height: 22px; float: left;">
+    			<script src="//platform.linkedin.com/in.js" type="text/javascript">
+    				lang: ja_JP
+    			</script>
+    			<script type="IN/Share" data-counter="right"></script>
+    		</div>
+    		<div style="width: 112px; height: 22px; float: left;">
+    			<iframe
+    				scrolling="no" frameborder="0" id="fbframe"
+				width="164" height="46" style="border:none;overflow:hidden" 
+				allowTransparency="true"></iframe>
+    		</div>
+    		<script type="text/javascript">
+    			(function() {
+    				var url = encodeURIComponent(location.href);
+    				document.getElementById('fbframe').src="//www.facebook.com/plugins/like.php?href=" + url + 
+    				"&width=164&layout=button_count&action=like&show_faces=true&share=true&height=46&appId=1613776965579453"
+    			})();
+    		</script>
+    	</div>
+    	<script type="text/javascript">
+    		!function(d, i) {
+    			if (!d.getElementById(i)) {
+    				var j = d.createElement("script");
+    				j.id = i;
+    				j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+    				var w = d.getElementById(i);
+    				d.body.appendChild(j);
+    			}
+    		}(document, "pocket-btn-js");
+    	</script>
+    	<!-- ソーシャルボタンここまで -->
+	
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="18 Mar 2019" class="post-meta__date date">18 Mar 2019</time> &#8226; <span class="post-meta__tags tags">on <a href="http://tech.innovation.co.jp/tag/Database">Database</a>, <a href="http://tech.innovation.co.jp/tag/S-Q-L"> SQL</a>, <a href="http://tech.innovation.co.jp/tag/Hasumin"> Hasumin</a></span>
+        <span class="post-meta__author author"><img src="https://avatars0.githubusercontent.com/u/22537034?v=4" alt="profile image for takuya hasumi" class="avatar post-meta__avatar" /> by takuya hasumi</span>
+      </div>
+      <h1 class="post-title">改めてデータベースについて考えてみる</h1>
+    </header>
+
+    <section class="post tag-Database tag-S-Q-L tag-Hasumin">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>こんにちは。はすみんです。<br></p>
+</div>
+<div class="paragraph">
+<p>今回のブログでは、SQLやチューニングについて最近勉強したことをアウトプットしてみようと思います。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_sql">SQLでデータを引っ張ってくるまでの工程</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>アプリケーション側でSQLを実行<br></p>
+</li>
+<li>
+<p>パーサ/リライタがSQLの構文を解析し、構文木を生成<br></p>
+</li>
+<li>
+<p>プランナ/オプティマイザが、最適な実行計画を作成する。<br></p>
+</li>
+<li>
+<p>エグゼキュータが、実行計画に沿ってクエリを実行し、データを取得する<br></p>
+</li>
+<li>
+<p>処理結果をアプリケーション側に返す<br></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>クエリの結果を取得するまでにこういった一連の処理があります。<br>
+大体処理が遅くなるのはエグゼキュータ部分で、<br>
+最適な実行計画が作られていないことが遅い原因となっていることが多いようです。<br></p>
+</div>
+<div class="paragraph">
+<p>遅い=RDBMSが苦手な実行計画は、リレーショナルモデルでなかったりとか、以下のケースが多いようです。<br>
+・INDEXを利用できていない<br>
+・不要なデータの取得<br>
+・複数回クエリを実行している(N+1問題)<br>
+・テーブル設計が悪い<br>
+etc<br></p>
+</div>
+<div class="paragraph">
+<p>不要なデータ取得に関しては、1回のデータ取得で扱うデータ量を小さくすることで遅くなりにくくする工夫もできます。<br>
+具体的には、<br>
+・WHERE句で絞る<br>
+・不要なJOINをなくす<br>
+などです。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_index">INDEXに関して</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>INDEXの種類は思っていたよりも沢山あるようで、<br>
+B tree、B+tree、Hash、GiST、SP-GiST、GIN、BRINなどがあります。<br>
+B treeとB+treeの違いは、データをどこに持つかでして、<br>
+B+Treeはデータを分割した最下層のリーフノードに持ち、B Treeは最下層と子ノードにデータを持ちます。<br>
+そのためB+Treeは範囲検索に強く、B Treeは途中でデータが見つかればレスポンスが早いようです。<br>
+PostgreSQLやMysSQLといったメジャーなDBは、B Treeをデフォルト設定にしています。<br></p>
+</div>
+<div class="paragraph">
+<p>基本的にクエリの実行においては、INDEXが貼られていないと、テーブルをフルスキャンします。（重い）<br>
+また、結合するときに、INDEXが貼ってあるカラムでないと、フルスキャンされてしまうので、結合テーブルの数とレコード数分だけ遅くなります。<br>
+検索のときはINDEXを貼ったカラムで検索し、JOINのときはINDEXを貼ったカラムを条件句に設定するようにしたいですね。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_join_br">JOINに関して<br></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>種類は大きく3つで、<br>
+・Nested Loop Join<br>
+・Hash Join<br>
+・Merge Join<br>
+です。<br></p>
+</div>
+<div class="paragraph">
+<p>Nested Loop Joinを早くするためには、上記のINDEXと同様、結合キーにINDEXを貼ったり、結合キーがUNIQUEであることを利用するといいそうです。<br>
+また、Nested Loop Joinは、レコード同士をかけ合わせるので、テーブルのレコード量が多くなるほど重くなります。<br>
+ただし、INDEXが貼ってある結合キーであれば、両者のレコード数を足し合わせた数だけ結合すればいいので、処理速度に差が生まれやすいそうです。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_mysql_postgresql_br">MySQLとPostgreSQLの特徴に関して<br></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_mysql_br">MySQL<br></h3>
+<div class="paragraph">
+<p>・シンプル<br>
+・高速<br>
+→ そのため、INDEXがちゃんと効いていることが重要<br>
+・レコード更新型アーキテクチャを採用<br>
+更新処理の際は、対象レコード自身を更新します。<br></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_postgresql_br">PostgreSQL<br></h3>
+<div class="paragraph">
+<p>・高機能<br>
+JOINのアルゴリズムも複数あったりします。<br>
+・マルチインデックス<br>
+1つのテーブルに複数のINDEXを貼ることができます。<br>
+・追記型アーキテクチャ<br>
+更新処理の際は、レコードを追加し、元々のレコードから参照を消すことで更新とみなしています。<br></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__br">パフォーマンス改善に関して<br></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>パフォーマンス改善とは、ボトルネックを抽出し、数値的な改善を図ることです。<br>
+一口にWebサイトが遅いと言っても理由はいろいろあります。<br>
+改善を図るためには、遅い原因となっているボトルネックの抽出が大切です。<br></p>
+</div>
+<div class="paragraph">
+<p>例えば、Webアプリケーションでは、応答までに関わる領域は複数あります。<br>
+クライアントのリクエスト、ネットワーク、サーバー、DB、API、などなど。<br>
+介在する領域が多いので、どこで遅くなっているのかをまず計測することが大切です。<br>
+その際に数値的な比較対象が必要なので、短期的に計測して終わりではなく、<br>
+日々計測し、比較対象となるデータを貯めておく必要があります。<br>
+要は定常データを作りましょう、っていうことです。<br></p>
+</div>
+<div class="paragraph">
+<p>上記の計測の結果、Webアプリケーションにボトルネックが見つかった場合は、<br>
+パフォーマンス・チューニングツールを使ってWebアプリケーション全体を計測することから始めるといいでしょう。<br>
+プロファイルリングされたデータを用いて、改善していくループを回していくことが大切です。<br>
+データベースからクエリを実行する部分が遅いとなった場合は、実行計画をもとにチューニングしていきましょう。<br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">実行計画に関して</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>実行計画とは、クエリを実行するときに、どういう方法でテーブルを検索するか、検索コストはどれくらいかを表示してくれるコマンドです。<br>
+クエリのパフォーマンスを改善するためには、まず実行計画を出力して、現在どういった処理をしているのかやコストを把握する必要があります。<br>
+Explainすることで実行計画が出力されるのですが、Explainによって出力されたプランが最適なプランかどうかを確認して改善を図っていきます。<br>
+具体的にどうやるかは、まだ勉強中なので別の機会にしますが、PostgreSQLの実行計画の見方は以下の動画がわかりやすいので見てみるといいかと思います。<br>
+<a href="https://www.youtube.com/watch?v=gxsBi-6ub3k" class="bare">https://www.youtube.com/watch?v=gxsBi-6ub3k</a><br></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">おわりに</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>もっと勉強してデータベースおじさんになりたいと思いました。<br></p>
+</div>
+<div class="paragraph">
+<p>参考：<br>
+『SQL実践入門』https://www.amazon.co.jp/dp/B07JHRL1D3/ref=dp-kindle-redirect?_encoding=UTF8&amp;btkr=1<br>
+<a href="https://speakerdeck.com/soudai/basic-of-rdb" class="bare">https://speakerdeck.com/soudai/basic-of-rdb</a><br>
+<a href="https://speakerdeck.com/soudai/shi-xing-ji-hua-falsehua" class="bare">https://speakerdeck.com/soudai/shi-xing-ji-hua-falsehua</a><br>
+<a href="https://www.youtube.com/watch?v=gxsBi-6ub3k" class="bare">https://www.youtube.com/watch?v=gxsBi-6ub3k</a><br>
+<a href="https://speakerdeck.com/hanhan1978/web-application-tuning-guildline" class="bare">https://speakerdeck.com/hanhan1978/web-application-tuning-guildline</a><br>
+<a href="https://qiita.com/ucan-lab/items/12da9bf12268329bcf3a" class="bare">https://qiita.com/ucan-lab/items/12da9bf12268329bcf3a</a><br>
+<a href="http://nippondanji.blogspot.com/2009/03/mysqlexplain.html" class="bare">http://nippondanji.blogspot.com/2009/03/mysqlexplain.html</a><br></p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2019. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//tech.innovation.co.jp/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-105881090-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+<script type="text/javascript">
+var _trackingid = 'LFT-11783-1';
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
+</body>
+</html>
