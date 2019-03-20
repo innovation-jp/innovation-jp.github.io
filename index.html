@@ -220,6 +220,12 @@ var _trackingid = 'LFT-11927-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/03/18/.html" title="link to 改めてデータベースについて考えてみる">改めてデータベースについて考えてみる</a></h2>
+        <p class="excerpt">こんにちは。はすみんです。 今回のブログでは、SQLやチューニングについて最近勉強したことをアウトプットしてみようと思います。 SQLでデータを引っ張ってくるまでの工程 アプリケーション側でSQLを実行 パーサ/リライタがSQLの構文を解析し、構文木を生成 プランナ/オプティマイザが、最適な実行計画を作成する。 エグゼキュータが、実行計画に沿ってクエリを実行し、データを取得する 処理結果をアプリケーション側に返す クエリの結果を取得するまでにこういった一連の処理があります。 大体処理が遅くなるのはエグゼキュータ部分で、 最適な実行計画が作られていないことが遅い原因となっていることが多いようです。 遅い=RDBMSが苦手な実行計画は、リレーショナルモデルでなかったりとか、以下のケースが多いよ&hellip;</p>
+        <div class="post-list__meta"><time datetime="18 Mar 2019" class="post-list__meta--date date">18 Mar 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Hasumin">Hasumin</a>, <a href="http://tech.innovation.co.jp/tag/Database"> Database</a>, <a href="http://tech.innovation.co.jp/tag/sql"> sql</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/03/16/Cirq.html" title="link to 量子プログラミングライブラリ「Cirq」を触ってみた">量子プログラミングライブラリ「Cirq」を触ってみた</a></h2>
         <p class="excerpt">はじめに こんにちは、Yuです。 シリーズが終わってもまたまた量子コンピュータのお話です。 今回は実践的な量子プログラミングに挑戦しました。 Cirqとは Googleが開発しているオープンソースの量子プログラミングライブラリです。  Pythonで書かれています。 量子コンピュータを操作するための回路を比較的簡単に記述することができます。 公式ドキュメント： https://cirq.readthedocs.io/en/latest/index.html 使ってみた pip install cirq でインストールできます。 とりあえず上の公式ドキュメントに載っている チュートリアルをこなし、 いくつか 例 を見れば、 最低限の使い方はわかると思います。 Cirqを使って、前にも扱ったフ&hellip;</p>
         <div class="post-list__meta"><time datetime="16 Mar 2019" class="post-list__meta--date date">16 Mar 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Python">Python</a>, <a href="http://tech.innovation.co.jp/tag/Cirq"> Cirq</a>, <a href="http://tech.innovation.co.jp/tag/Yu"> Yu</a></span></div>
@@ -271,12 +277,6 @@ var _trackingid = 'LFT-11927-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/02/14/Google-Spread-Sheet.html" title="link to FW移行プロジェクトのLaravel,Golangの開発環境について考えてみる(Docker)">FW移行プロジェクトのLaravel,Golangの開発環境について考えてみる(Docker)</a></h2>
         <p class="excerpt">みなさんこんにちは こへです。 そろそろ、開発環境周りについていろいろ語りたい時期がきましたので記載 どんなプロジェクトか？ FW移行 サーバサイド Laravel フロントサイド Vuejs バッチ Golang 環境 Docker DB Postgres9系→10系へ table構成も変更 インフラ Kubernetes Gitリポジトリ構成 1つのリポジトリですべてを管理するにはあまりにもでかい golangとdocekrとlaravelとdocker-compose関係は触るメンバーが別々なので依存をなくしたいということで、 リポジトリを5つ使用＆submodule化 DevEnv (以下のリポジトリ＋docker-compose) Online (Laravel,Vue) Bat&hellip;</p>
         <div class="post-list__meta"><time datetime="14 Feb 2019" class="post-list__meta--date date">14 Feb 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/kohe">kohe</a>, <a href="http://tech.innovation.co.jp/tag/Docker"> Docker</a>, <a href="http://tech.innovation.co.jp/tag/git"> git</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/02/04/Google-Spread-Sheet.html" title="link to GoogleSpreadSheetで文字列から数字のみを抽出する方法のひとつ">GoogleSpreadSheetで文字列から数字のみを抽出する方法のひとつ</a></h2>
-        <p class="excerpt">困ったこと/したいこと 数値の分析とかしたいのに元データが文字列で表現されている！ このままだと加工できない！！ 数値だけ抽出したい！！ そんなことありますか？ありませんか？・・・そうですか 今回のデータ Excelか何かのデータをインポートしたてみたいな感じ！ アウトプットイメージ 簡素！ E列の数値を出すのが今回のメインです！ 今回E列に書いた式 =LOOKUP(10^18,ARRAYFORMULA(LEFT(対象文字列,COLUMN($1:$1))*1)) 解説 COLUMN($1:$1) 数値だけの配列をセットすることができます。 1,2,3,4といった並びです。 見かけ上は「1」と表示されます。 ただ単に昇順の数値配列が欲しいだけなので、 「$1:$1」じゃなくても「A1:Z1」&hellip;</p>
-        <div class="post-list__meta"><time datetime="04 Feb 2019" class="post-list__meta--date date">04 Feb 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/ozasa">ozasa</a>, <a href="http://tech.innovation.co.jp/tag/Google-Spread-Sheet"> GoogleSpreadSheet</a>, <a href="http://tech.innovation.co.jp/tag/Excel"> Excel</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
