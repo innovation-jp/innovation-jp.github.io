@@ -1,4 +1,4 @@
-# 改めてデータベースについて考えてみる
+# 改めてデータベースについて考えてみる（ボツ）
 
 :hp-alt-title: consider database
 :hp-tags: Database, SQL, Hasumin
