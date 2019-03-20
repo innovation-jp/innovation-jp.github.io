@@ -1,6 +1,6 @@
 # 改めてデータベースについて考えてみる
-:hp-alt-title: 改めてデータベースについて考えてみる
-:hp-tags: Hasumin, Database, sql
+
+:hp-tags: Hasumin, Database, SQL
 
 こんにちは。はすみんです。 +
 
