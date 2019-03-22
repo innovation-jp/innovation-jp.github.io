@@ -90,7 +90,7 @@ aws s3 cp <ファイルパス> s3://<バケット名>
 
 実行したコマンドの結果をAWSコンソールで確認
 
-image: /images/ahyung/bucket_screenshot.png[width="500"]
+image:/images/ahyung/bucket_screenshot.png[width="500"]
 
 バケットを削除するコマンド
 
