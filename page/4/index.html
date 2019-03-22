@@ -221,6 +221,12 @@ var _trackingid = 'LFT-11927-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/11/11/Vuejs-3.html" title="link to Vue.jsを使って量子コンピュータの並列演算を再現してみた ~その3~">Vue.jsを使って量子コンピュータの並列演算を再現してみた ~その3~</a></h2>
+        <p class="excerpt">はじめに こんにちは、Yuです。 3回目になりますが量子コンピュータのお話です。 よろしければ以前の記事もどうぞ。 その1 その2 前回はフーリエ変換を実装しましたが、今回はそれを応用して位相推定問題を解いてみます。 位相推定問題 ざっくり説明すると、 ユニタリ変換Uとその固有状態ψについて、対応する固有値をexp(2πiφ)と置いた時のφ (0 ≦ φ &lt; 1) を求める というものです。 作ったもの 実際にできたものがこちらになります。 画像内の各番号の機能の説明は以下の通りです。 使用するビットの数。最大9ビットまで計算できます。 ユニタリ行列。特定のユニタリ変換を行列で表して入力します。画像の0.7071&#8230;&#8203;は1/sqrt(2)のことです。 固有状態ψ&hellip;</p>
+        <div class="post-list__meta"><time datetime="11 Nov 2018" class="post-list__meta--date date">11 Nov 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Java-Script">JavaScript</a>, <a href="http://tech.innovation.co.jp/tag/Vuejs"> Vue.js</a>, <a href="http://tech.innovation.co.jp/tag/Yu"> Yu</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/11/11/Selenium-1.html" title="link to Seleniumを使用して工数入力を自動化する その1">Seleniumを使用して工数入力を自動化する その1</a></h2>
         <p class="excerpt">こんにちは。新卒一年目のオオタケです。 最近同期から「ゴブリン」に似ていると笑われ、傷ついています。ゴブリンってただの悪口ですよね？？？ 工数申請忘れすぎて上長に呆れられてる 今回は工数入力を自動化したいなと言う内容です。 イノベーションでは勤怠管理システムとしてSalesforceを使用しています。 Salesforce上で工数(何に対してどれくらいの時間働いたか)を入力することがルールとしてあるのですが、忘れがちでいつも上長に「工数入力した？」と確認されています。 確かに大事なことではあるのですが、作業のため面倒です。 そのため、今回は「工数入力の自動化」に挑戦します。 やりたいこと Salesforceにアクセスして工数を入力する 入力する内容(何に対してどれくらいの時間働いたか)は&hellip;</p>
         <div class="post-list__meta"><time datetime="11 Nov 2018" class="post-list__meta--date date">11 Nov 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/otake">otake</a>, <a href="http://tech.innovation.co.jp/tag/Selenium"> Selenium</a>, <a href="http://tech.innovation.co.jp/tag/Ruby"> Ruby</a></span></div>
@@ -272,12 +278,6 @@ var _trackingid = 'LFT-11927-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/10/15/Firebase-Firestore.html" title="link to Firebaseの匿名認証とFirestoreのリアルタイム更新で遊んでみたお話">Firebaseの匿名認証とFirestoreのリアルタイム更新で遊んでみたお話</a></h2>
         <p class="excerpt">涼しくなってきましたね。 koheです。 今回はFirebaseの 匿名認証　と  リアルタイムデータ更新 機能をVueで遊んで見ました。 匿名認証 GoogleやTwitterの認証を使わずに、匿名の認証をし、UUIDを発行したい！！ まずfirebaseのコンソール画面から匿名ログインを有効にします。  &lt;button  label="Use without login"  @click="signupByAnonymous" color="primary" /&gt; methods :{     checkLogin () {       firebase.auth().onAuthStateChanged((user) =&gt; {         if (user) {&hellip;</p>
         <div class="post-list__meta"><time datetime="15 Oct 2018" class="post-list__meta--date date">15 Oct 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/kohe">kohe</a>, <a href="http://tech.innovation.co.jp/tag/Firebase">Firebase</a>, <a href="http://tech.innovation.co.jp/tag/Firestroe">Firestroe</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/10/15/Docker-N-E-M-A-P-I-Account.html" title="link to DockerでNEMのAPIを使いAccount情報取得から送金まで使ってみる">DockerでNEMのAPIを使いAccount情報取得から送金まで使ってみる</a></h2>
-        <p class="excerpt">そろそろ肌寒くなってきましたね。 こんににはこへです。 ということで今回はNEMで遊びます。 環境構築 doker-compose.yml version: '3.7' services:   node:     image: node     tty: true     volumes:       - ./app:/var/www/app:cached     working_dir: /var/www/app     ports:       - 80:80 docker-compose up -d で起動 コンテナに入る docker exec -it コンテナ名 bash yarn add nem-library yarn add -D babel-cli babel-preset&hellip;</p>
-        <div class="post-list__meta"><time datetime="15 Oct 2018" class="post-list__meta--date date">15 Oct 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/kohe">kohe</a>, <a href="http://tech.innovation.co.jp/tag/N-E-M">NEM</a>, <a href="http://tech.innovation.co.jp/tag/Docker">Docker</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
