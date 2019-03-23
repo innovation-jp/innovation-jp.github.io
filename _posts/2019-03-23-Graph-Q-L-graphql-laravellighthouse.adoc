@@ -1,0 +1,159 @@
+# GraphQLを触ってみて
+:hp-alt-title:  GraphQLライブラリ graphql-laravelとlighthouseを比較してみる
+:hp-tags: GraphQL, Otake Masashi
+
+「こんにちは」、夜に見ている人には「こんばんは」、otakeです。
+
+12月頃からSeminarShelf( https://seminarshelf.com )というプロダクトの開発をしているのですが、SminarShelfではサーバとのAPI接続にGraphQLを採用しています。 +
+なので、今回はGraphQLの振り返りと触ってみての感想を書きたいと思います。
+
+#### GraphQLとは
+GraphQLはRESTful Web API（REST）の持つ問題を解決するために開発された規格です。
+GraphQLの公式ドキュメント( https://graphql.org/learn/ )のIntroductionには以下のように記載されています。
+
+```
+GraphQL is a query language for your API, and a server-side runtime for executing queries by using a type system you define for your data. GraphQL isn't tied to any specific database or storage engine and is instead backed by your existing code and data.
+```
+
+Google翻訳によると、
+
+```
+GraphQLはあなたのAPIのためのクエリ言語であり、あなたのデータのために定義した型システムを使ってクエリを実行するためのサーバーサイドランタイムです。 GraphQLは、特定のデータベースやストレージエンジンに結び付けられているのではなく、既存のコードやデータによって支えられています。
+```
+
+ということらしいです。
+
+これはどういうことかと言うと、僕は以下のように解釈しています。
+
+- アプリケーション側で、返却する値をデータベースとの紐付きではなく、コードで定義(GraphQL用語で`type`)する
+- クライアント側でGraphQLを使ってクエリ(GraphQL用語で`query`)を作成して、欲しい情報を受け取る
+
+
+#### GraphQLを触ってみてわかったこと
+
+GraphQLはサーバサイドではなく、クライアントサイドに主導権があるイメージです。 +
+通常のAPIではサーバサイドで決まった値を返す形になりますが、GraphQLを使用すると欲しい情報をクライアントサイドから指定することができます。
+
+例えば、以下のようにtypeを定義していたとします。
+
+```
+type Query {
+  me: User
+}
+
+type User {
+  id: ID
+  name: String
+}
+```
+
+これは`User`タイプは`id`と`name`という二つのカラムを持っていて、`me`と言うクエリは`User`タイプを返却すると言う意味です。 +
+この時、`me`クエリに対してクライアントサイドで欲しい情報を指定することができます。
+
+・nameのみ取得したい場合
+```
+// Request
+{
+  me {
+    name
+  }
+}
+
+// Response
+{
+  "me": {
+    "name": "otake"
+  }
+}
+```
+
+・idとnameを取得したい場合
+```
+// Request
+{
+  me {
+    id
+    name
+  }
+}
+
+// Response
+{
+  "me": {
+    "id": 1,
+    "name": "otake"
+  }
+}
+```
+
+このようにクライアントサイドで欲しい情報を指定することができます。 +
+また、ここから分かるのですが、GraphQLには以下のようなメリットがあります。 +
+
+- リクエストを見ればどういった情報がAPIから返却されてくるか分かる
+- リクエストに対するレスポンスの対応がわかりやすい
+
+また、例えば`User`タイプと`Company`タイプにリレーションがあった場合、リレーション情報もクライアントサイドで指定して取得することができます。
+
+type
+
+```
+type Query {
+  me: User
+}
+
+type User {
+  id: ID
+  name: String
+  company: Company
+}
+
+type Company {
+  id: ID
+  name: String
+  address: String
+}
+```
+
+request & response
+```
+// Request
+{
+  me {
+    name
+    company {
+      id
+      name
+      address
+    }
+  }
+}
+
+// Response
+{
+  "me": {
+    "name": "otake"
+    "company" : {
+      "id": 1,
+      "name": "株式会社イノベーション",
+      "address": "東京都渋谷区渋谷3-10-13 TOKYU REIT 渋谷R ビル3F"
+    }
+  }
+}
+```
+
+リレーション関係にあるタイプ(今回で言えば`Company`タイプ)に対しても欲しい情報を指定することができるのは便利ですね。
+
+
+#### GraphQLのメリット
+###### APIのHTTPエンドポイントが一つ
+GraphQLではAPIのHTTPエンドポイントが一つになっており、それぞれのリクエストはクエリに指定されている名前で判断されます。 +
+そのため、どのエンドポイントにリクエストを投げれば良いかと言う問題から解放されます。これもまたGraphQLの良さだと思います。
+
+###### 開発ツールGraphiQLが便利
+GraphiQL( https://electronjs.org/apps/graphiql )と言うツールを使用すると、特定のエンドポイントに対するQueryやTypeが一目でわかることができます。 +
+また、実際にリクエストを投げることもでき、そこでレスポンスを確認することもできます。
+
+
+#### まとめ
+GraphQLはクライアントサイドで自由に欲しいデータが指定できるのが魅力的です。 +
+皆さんもぜひ使ってみてください！
