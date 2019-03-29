@@ -220,6 +220,12 @@ var _trackingid = 'LFT-11927-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/03/23/Graph-Q-L-graphql-laravellighthouse.html" title="link to GraphQLを触ってみて">GraphQLを触ってみて</a></h2>
+        <p class="excerpt">「こんにちは」、夜に見ている人には「こんばんは」、otakeです。 12月頃からSeminarShelf( https://seminarshelf.com )というプロダクトの開発をしているのですが、SminarShelfではサーバとのAPI接続にGraphQLを採用しています。 なので、今回はGraphQLの振り返りと触ってみての感想を書きたいと思います。 GraphQLとは GraphQLはRESTful Web API（REST）の持つ問題を解決するために開発された規格です。 GraphQLの公式ドキュメント( https://graphql.org/learn/ )のIntroductionには以下のように記載されています。 GraphQL is a query language&hellip;</p>
+        <div class="post-list__meta"><time datetime="23 Mar 2019" class="post-list__meta--date date">23 Mar 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Graph-Q-L">GraphQL</a>, <a href="http://tech.innovation.co.jp/tag/Otake-Masashi"> Otake Masashi</a></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/03/22/A-W-S-C-L-I.html" title="link to AWS CLI を使いましょう〜">AWS CLI を使いましょう〜</a></h2>
         <p class="excerpt">Hello! 一年生のアヤンです。 AWSの勉強をし始めて、AWS コマンドラインインターフェースで便利なコマンドを使ってみました。 目的 AWS CLIの必要な初回設定し、S3バケット作成 使ったツール Amazon Web Services　CLI　https://github.com/aws/aws-cli PIP https://pip.pypa.io/en/stable/installing/ iterm2 https://www.iterm2.com/ 初回設定 Pythonがすでにインストールしている場合 PIPのバージョン確認 pip --version 現在(2019/3/22)最新版は19.0.3 最新するためのコマンド (Linux・MacOS) pip instal&hellip;</p>
         <div class="post-list__meta"><time datetime="22 Mar 2019" class="post-list__meta--date date">22 Mar 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/A-W-S">AWS</a>, <a href="http://tech.innovation.co.jp/tag/C-L-I"> CLI</a>, <a href="http://tech.innovation.co.jp/tag/beginner">　beginner</a>, <a href="http://tech.innovation.co.jp/tag/Ah-Yung"> AhYung</a></span></div>
@@ -271,12 +277,6 @@ var _trackingid = 'LFT-11927-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/02/22/docker-selenium-with-php.html" title="link to docker-selenium+phpで簡単E２Eテスト環境構築">docker-selenium+phpで簡単E２Eテスト環境構築</a></h2>
         <p class="excerpt">テスト大切！ お久しぶりです！！！ やばい、ここで記事書くのすっごい久々な気がします。 新卒2年目ブランドが終わりそうな小畑です。 先日のLaravel JP Conferenceは素敵でしたね。 私も会場にいたのですが、たくさんの刺激を受けて、非常に勉強になりました。 え、私のキャッチコピーや名前見覚えある？きのせいきのせい そこでやはり、テスト大切だなーってことを改めて感じたので、 今回はテスト関連の記事を書いてみました。 E2Eテスト？ E2Eというのは、(End to End)の略で、私達Web屋においては、 ユーザが入力をして、そしてユーザーの最終的に見る画面のテストを指します。 今回の記事は、 実際の画面のユーザーの入力 画面に出ている文字などの結果の確認 そんな、ポチポチと手&hellip;</p>
         <div class="post-list__meta"><time datetime="22 Feb 2019" class="post-list__meta--date date">22 Feb 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/obata">obata</a>, <a href="http://tech.innovation.co.jp/tag/docker"> docker</a>, <a href="http://tech.innovation.co.jp/tag/selenium"> selenium</a>, <a href="http://tech.innovation.co.jp/tag/php"> php</a>, <a href="http://tech.innovation.co.jp/tag/e2e"> e2e</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/02/17/Factory-Method-Pattern-For-Simple-but-many-I-F-branch.html" title="link to 単純だけど数の多いif分岐をFactory Methodパターンでテストコードまですっきり">単純だけど数の多いif分岐をFactory Methodパターンでテストコードまですっきり</a></h2>
-        <p class="excerpt">はじめに どうも、bigenです。 以前デザインパターンを勉強して、勉強しっぱなしだったんですが、最近その知識が業務に生きたのでここでご紹介します。 使ったのはFactoryMethodパターンで、数が多いIF分岐をすっきりリファクタリングできました。 前提条件：PHP7, Laravel5, phpunit リファクタリングしたいコード 今回リファクタリングしたい機能は、弊社メディアのITトレンド内で用いられる短縮URL機能です。 https://it-trend.jp/i/xxxx のような形式(xxxx部分は数字)でURLを生成し、アクセスすると予め登録されたページへリダイレクトするというものです。 リダイレクト先のページの種類によって必要なパラメータやセッション情報が変わるため、リダ&hellip;</p>
-        <div class="post-list__meta"><time datetime="17 Feb 2019" class="post-list__meta--date date">17 Feb 2019</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/bigen">bigen</a>, <a href="http://tech.innovation.co.jp/tag/Factory-Method-Pattern"> Factory Method Pattern</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
