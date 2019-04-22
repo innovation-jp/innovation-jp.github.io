@@ -31,6 +31,17 @@ Knativeで動いているらしく、GKE上にも構築できるようですが�
 
 ### Imageを作成
 今回は `Cloud　Shell` を使って作っていきます。
+GCPの大好きなサービスの一つである、コードエディタ（β）で作っていきます。
+
+image:/images/kohe/cloud_run01.png[width="500"]
+
+
+
+そしてCloud Buildを使用してビルド
+`gcloud builds submit --tag gcr.io/XXXXXXXX/helloworld`
+
+なんて便利。
+
 
 
 
