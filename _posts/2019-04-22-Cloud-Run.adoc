@@ -9,6 +9,8 @@ koheです
 
 まさに欲しかったサービスが大好きなGCPからローンチされたので使って見ようと思います。
 
+image::/images/kohe/cloud_run01.png[]
+
 # Cloud Run
 
 [quate, 'https://cloud.google.com/run/?hl=ja']
@@ -33,11 +35,20 @@ Knativeで動いているらしく、GKE上にも構築できるようですが�
 今回は `Cloud　Shell` を使って作っていきます。
 GCPの大好きなサービスの一つである、コードエディタ（β）で作っていきます。
 
-image:/images/kohe/cloud_run01.png[width="500"]
+
+## package.json
+image::/images/kohe/cloud_run02.png[]
+
+## index.js
+image::/images/kohe/cloud_run03.png[]
+
+## Dockerfile
+image::/images/kohe/cloud_run04.png[]
 
 
 
-そしてCloud Buildを使用してビルド
+
+そして`Cloud SHell`で`Cloud Build`を使用してビルド + 
 `gcloud builds submit --tag gcr.io/XXXXXXXX/helloworld`
 
 なんて便利。
@@ -45,102 +56,18 @@ image:/images/kohe/cloud_run01.png[width="500"]
 
 
 
-### 使ったツール
-Amazon Web Services　CLI　https://github.com/aws/aws-cli
-PIP https://pip.pypa.io/en/stable/installing/
-iterm2 https://www.iterm2.com/
+# Cloud Build
 
-#### 初回設定
+Buildの成功を確認することができます。
 
-##### Pythonがすでにインストールしている場合
+image::/images/kohe/cloud_run05.png[]
 
-- PIPのバージョン確認
-----
-pip --version
-----
-
-- 現在(2019/3/22)最新版は19.0.3
-最新するためのコマンド (Linux・MacOS)
-----
-pip install -U pip
-----
-
-##### Pythonがまだインストールしていない場合
-
-1.	Pythonをインストール
-https://www.python.org/downloads/
-
-2.	Pythonバージョン3.4以上インストールすると、PIPもインストール済みとなる
-3.	PIP入っていなければ上の手順でインストールする
-
-##### AWS CLIをインストールする
-
-グローバルスコープでインストールするコマンド
-----
-sudo pip install awscli
-----
-また、各ユーザーのアカウントでインストールする
-----
-pip install --user awscli
-----
-*OS X でsixに関するエラーが出る場合のコマンド
-----
-sudo pip install awscli --ignore-installed six
-----
-
-ユーザー情報の設定
-設定するコマンド
-----
-aws configure
-----
-
-デフォルトユーザー情報を記入
-----
-AWS Access Key ID [None]: <aws access key>
-AWS Secret Access Key [None]: <aws secret access key>
-Default region name [us-east-1]: us-east-1 (好きなリージョンに設定する）
-Default output format [None]: json
-----
-
-#### CLIコマンドでS3バケットを作ってみよ！
-
-S3バケット作成
-
-----
-aws s3 mb s3://<バケット名前>
-----
-
-S3バケット一覧
-
-----
-aws s3 ls
-----
-
-バケットにファイルを追加
-
-----
-aws s3 cp <ファイルパス> s3://<バケット名>
-----
-
-実行したコマンドの結果をAWSコンソールで確認
-
-image:/images/ahyung/bucket_screenshot.png[width="500"]
-
-バケットを削除するコマンド
-
-----
-aws s3 rb s3://<バケット名>
-----
+image::/images/kohe/cloud_run06.png[]
 
 
-#### まとめ
-AWSのコンセプトはとても面白くて、これからもっと勉強していきます！
+# Container  Registry
 
-###### References
-- https://github.com/aws/aws-cli
-- https://qiita.com/suzuki_y/items/3261ffa9b67410803443
-- https://pip.pypa.io/en/stable/installing/#upgrading-pip
-- https://www.python.org/downloads/
+Container ResistryにImageを確認できます。
+image::/images/kohe/cloud_run07.png[]
 
 
-Done
