@@ -1,0 +1,113 @@
+# 大好きなCloud Runを使う
+:hp-alt-title:  Cloud Run
+:hp-tags: Cloud Run, kohe, GCP
+
+Hello! +
+koheです
+
+まさに欲しかったサービスが大好きなGCPからローンチされたので使って見ようと思います。
+
+
+### 目的
+AWS CLIの必要な初回設定し、S3バケット作成
+
+
+### 使ったツール
+Amazon Web Services　CLI　https://github.com/aws/aws-cli
+PIP https://pip.pypa.io/en/stable/installing/
+iterm2 https://www.iterm2.com/
+
+#### 初回設定
+
+##### Pythonがすでにインストールしている場合
+
+- PIPのバージョン確認
+----
+pip --version
+----
+
+- 現在(2019/3/22)最新版は19.0.3
+最新するためのコマンド (Linux・MacOS)
+----
+pip install -U pip
+----
+
+##### Pythonがまだインストールしていない場合
+
+1.	Pythonをインストール
+https://www.python.org/downloads/
+
+2.	Pythonバージョン3.4以上インストールすると、PIPもインストール済みとなる
+3.	PIP入っていなければ上の手順でインストールする
+
+##### AWS CLIをインストールする
+
+グローバルスコープでインストールするコマンド
+----
+sudo pip install awscli
+----
+また、各ユーザーのアカウントでインストールする
+----
+pip install --user awscli
+----
+*OS X でsixに関するエラーが出る場合のコマンド
+----
+sudo pip install awscli --ignore-installed six
+----
+
+ユーザー情報の設定
+設定するコマンド
+----
+aws configure
+----
+
+デフォルトユーザー情報を記入
+----
+AWS Access Key ID [None]: <aws access key>
+AWS Secret Access Key [None]: <aws secret access key>
+Default region name [us-east-1]: us-east-1 (好きなリージョンに設定する）
+Default output format [None]: json
+----
+
+#### CLIコマンドでS3バケットを作ってみよ！
+
+S3バケット作成
+
+----
+aws s3 mb s3://<バケット名前>
+----
+
+S3バケット一覧
+
+----
+aws s3 ls
+----
+
+バケットにファイルを追加
+
+----
+aws s3 cp <ファイルパス> s3://<バケット名>
+----
+
+実行したコマンドの結果をAWSコンソールで確認
+
+image:/images/ahyung/bucket_screenshot.png[width="500"]
+
+バケットを削除するコマンド
+
+----
+aws s3 rb s3://<バケット名>
+----
+
+
+#### まとめ
+AWSのコンセプトはとても面白くて、これからもっと勉強していきます！
+
+###### References
+- https://github.com/aws/aws-cli
+- https://qiita.com/suzuki_y/items/3261ffa9b67410803443
+- https://pip.pypa.io/en/stable/installing/#upgrading-pip
+- https://www.python.org/downloads/
+
+
+Done
