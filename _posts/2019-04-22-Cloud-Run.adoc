@@ -71,4 +71,38 @@ Container ResistryにImageを確認できます。
 
 image::/images/kohe/cloud_run07.png[]
 
+# Cloud Runにデプロイしていく
 
+Cloud Runのページからサービスを作成を教えていく。
+
+image::/images/kohe/cloud_run08.png[]
+
+コンテナのイメージとサービス名、ロケーションを選択していく。 + 
+※まだ、us-central1しか選択できない。
+
+また、今回は試しに作って見るだけなので、メモリは最小の128MBにしておく
+
+image::/images/kohe/cloud_run09.png[]
+
+# デプロイ！！！！！
+
+image::/images/kohe/cloud_run10.png[]
+
+表示されたURLにアクセスしてみると…
+
+`Hello Kooooohe`　が表示された！！
+
+
+
+image::/images/kohe/cloud_run11.png[]
+
+
+このまま放置しておいても課金がされない。なんて素晴らしいサービなのだろう。
+
+0→1のサービスを作るのが好きな私にぴったりで、いちいちお金を気にせず、作りたいものを作り、バズにも対応できる。
+
+なんて素晴らしく楽しいサービスなのだろう。
+
+今後かなり使っていきます。
+
+おわり
