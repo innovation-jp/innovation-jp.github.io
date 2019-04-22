@@ -5,7 +5,28 @@
 Hello! +
 koheです
 
+暖かくなってきましたね。
+
 まさに欲しかったサービスが大好きなGCPからローンチされたので使って見ようと思います。
+
+# Cloud Run
+
+[quate, 'https://cloud.google.com/run/?hl=ja']
+____
+
+Bringing serverless to containers
+Cloud Run is a managed compute platform that enables you to run stateless containers that are
+invocable via HTTP requests. Cloud Run is serverless: it abstracts away all infrastructure management, 
+____
+
+ 
+
+
+めちゃくちゃ簡単にまとめると。
+httpのリクエストを受け付けているコンテナをサーバレスでローンチできるという、なんと0→1のコスパを抑えられそうなサービス。
+
+
+Knativeで動いているらしく、GKE上にも構築できるようですが、コスパを愛している私はフルマネージド・サービスの方を使ってみようと思います。
 
 
 ### 目的
