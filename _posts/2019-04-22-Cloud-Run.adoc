@@ -68,6 +68,7 @@ image::/images/kohe/cloud_run06.png[]
 # Container  Registry
 
 Container ResistryにImageを確認できます。
+
 image::/images/kohe/cloud_run07.png[]
 
 
