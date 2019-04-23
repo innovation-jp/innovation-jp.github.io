@@ -45,10 +45,19 @@ var _trackingid = 'LFT-10003-1';
 })();
 </script>
 
+<script type="text/javascript">
+var _trackingid = 'LFT-11927-1';
+
+(function() {
+  var lft = document.createElement('script'); lft.type = 'text/javascript'; lft.async = true;
+  lft.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//track.list-finder.jp/js/ja/track.js';
+  var snode = document.getElementsByTagName('script')[0]; snode.parentNode.insertBefore(lft, snode);
+})();
+</script>
+
     <link rel="stylesheet" type="text/css" href="//tech.innovation.co.jp/themes/uno/assets/css/uno.css?v=1.0.0" />
 
     <link rel="canonical" href="http://tech.innovation.co.jp" />
-    <link rel="next" href="http://tech.innovation.co.jp/page/2/" />
     <meta name="generator" content="Ghost ?" />
     <link rel="alternate" type="application/rss+xml" title="イノベーション　エンジニアブログ" href="http://tech.innovation.co.jp/rss" />
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
@@ -214,92 +223,20 @@ var _trackingid = 'LFT-10003-1';
 
     <ol class="post-list">
       <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/02/14/Google-Spread-Sheet.html" title="link to FW移行プロジェクトのLaravel,Golangの開発環境について考えてみる(Docker)">FW移行プロジェクトのLaravel,Golangの開発環境について考えてみる(Docker)</a></h2>
-        <p class="excerpt">みなさんこんにちは こへです。 そろそろ、開発環境周りについていろいろ語りたい時期がきましたので記載 どんなプロジェクトか？ FW移行 サーバサイド Laravel フロントサイド Vuejs バッチ Golang 環境 Docker DB Postgres9系→10系へ table構成も変更 インフラ Kubernetes Gitリポジトリ構成 1つのリポジトリですべてを管理するにはあまりにもでかい golangとdocekrとlaravelとdocker-compose関係は触るメンバーが別々なので依存をなくしたいということで、 リポジトリを5つ使用＆submodule化 DevEnv (以下のリポジトリ＋docker-compose) Online (Laravel,Vue) Bat&hellip;</p>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2019/04/22/Cloud-Run.html" title="link to 大好きなGCPの最高にいかしているサービスCloud Runを使うお話">大好きなGCPの最高にいかしているサービスCloud Runを使うお話</a></h2>
+        <p class="excerpt">Hello! koheです 暖かくなってきましたね。 まさに欲しかったサービスが大好きなGCPからローンチされたので使って見ようと思います。 Cloud Run Bringing serverless to containers Cloud Run is a managed compute platform that enables you to run stateless containers that are invocable via HTTP requests. Cloud Run is serverless: it abstracts away all infrastructure management, &#8212; https://cloud.google.com/run/&hellip;</p>
         <div class="post-list__meta">
-            <time datetime="14 Feb 2019" class="post-list__meta--date date">14 Feb 2019</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="kohe">kohe</a>, <a href="#blog" title=" Docker"> Docker</a>, <a href="#blog" title=" git"> git</a></span>
+            <time datetime="22 Apr 2019" class="post-list__meta--date date">22 Apr 2019</time> &#8226;
+            <span class="post-list__meta--tags tags"><a href="#blog" title="Cloud Run">Cloud Run</a>, <a href="#blog" title=" kohe"> kohe</a>, <a href="#blog" title=" GCP"> GCP</a></span>
         </div>
         <hr class="post-list__divider" />
       </li>
       <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/12/05/vr-programing.html" title="link to Amazon Aurora Serverless でWordpressを構築してみた話">Amazon Aurora Serverless でWordpressを構築してみた話</a></h2>
-        <p class="excerpt">こんにちは。koheです。 そろそろ寒くなってきたので、Aamazon Aurora ServerlessでWordpressを構築したいと思います。 コスパが良いサービスが好きなので、Aurora Serverlessは発表があってから使って見たいとずっと思っていました。 まずはRDSを使わずに構築する 構成図 EC2を２台たて、片方にwordpress,もう片方にmyqlをinstallする そして、これをAurora Serverlessを使う方式に移行 Wordpress by Aurora Serverless 構成図 一般的な感じ。 今回はロードバランサやオートスケールの設定はしない。 Aurora Serverless for Mysql Auroraを選択 設定を Serv&hellip;</p>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2016/11/24/G-A-S.html" title="link to 誕生日を覚えるのも、メールを送るのも忘れてしまいがちな私がGASを使って全自動化した話">誕生日を覚えるのも、メールを送るのも忘れてしまいがちな私がGASを使って全自動化した話</a></h2>
+        <p class="excerpt">こんばんはこへです。 下準備 まずはスプレットシートに必要な情報を記入していく。 こ～んな感じで、 A列に日付 B列に誕生日の人の名前 C列に誕生日の人のメアド D列にメールの件名 E列にメール本文 F列にデフォルトのメールの件名 G列にデフォルトのメールの本文 を書いていく。 これで表側の準備終了！ 仕組みとしては簡単！ 誕生日の日に指定したメアドにメールを送る。 何も指定がなければ、デフォルトの件名と内容が自動的に入る。 指定すれば、指定した件名と内容が送信される！! コードを書いていこう 全部で40行もかからない。なんとお手軽。 ってことで解説。  var sh_id    =　 SpreadsheetApp.openById('ここにスプレットシートのIDが入るよ') まず、どのシ&hellip;</p>
         <div class="post-list__meta">
-            <time datetime="05 Dec 2018" class="post-list__meta--date date">05 Dec 2018</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="kohe">kohe</a>, <a href="#blog" title=" aws"> aws</a>, <a href="#blog" title=" aurora"> aurora</a>, <a href="#blog" title=" serverless"> serverless</a></span>
-        </div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/10/15/Firebase-Firestore.html" title="link to Firebaseの匿名認証とFirestoreのリアルタイム更新で遊んでみたお話">Firebaseの匿名認証とFirestoreのリアルタイム更新で遊んでみたお話</a></h2>
-        <p class="excerpt">涼しくなってきましたね。 koheです。 今回はFirebaseの 匿名認証　と  リアルタイムデータ更新 機能をVueで遊んで見ました。 匿名認証 GoogleやTwitterの認証を使わずに、匿名の認証をし、UUIDを発行したい！！ まずfirebaseのコンソール画面から匿名ログインを有効にします。  &lt;button  label="Use without login"  @click="signupByAnonymous" color="primary" /&gt; methods :{     checkLogin () {       firebase.auth().onAuthStateChanged((user) =&gt; {         if (user) {&hellip;</p>
-        <div class="post-list__meta">
-            <time datetime="15 Oct 2018" class="post-list__meta--date date">15 Oct 2018</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="kohe">kohe</a>, <a href="#blog" title="Firebase">Firebase</a>, <a href="#blog" title="Firestroe">Firestroe</a></span>
-        </div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/10/15/Docker-N-E-M-A-P-I-Account.html" title="link to DockerでNEMのAPIを使いAccount情報取得から送金まで使ってみる">DockerでNEMのAPIを使いAccount情報取得から送金まで使ってみる</a></h2>
-        <p class="excerpt">そろそろ肌寒くなってきましたね。 こんににはこへです。 ということで今回はNEMで遊びます。 環境構築 doker-compose.yml version: '3.7' services:   node:     image: node     tty: true     volumes:       - ./app:/var/www/app:cached     working_dir: /var/www/app     ports:       - 80:80 docker-compose up -d で起動 コンテナに入る docker exec -it コンテナ名 bash yarn add nem-library yarn add -D babel-cli babel-preset&hellip;</p>
-        <div class="post-list__meta">
-            <time datetime="15 Oct 2018" class="post-list__meta--date date">15 Oct 2018</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="kohe">kohe</a>, <a href="#blog" title="NEM">NEM</a>, <a href="#blog" title="Docker">Docker</a></span>
-        </div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/08/10/P-W-A-for-mahjong.html" title="link to Vuejs とFirebase,Firestoreでサーバレスの麻雀成績管理(α版)AppをPWAで作ってみたお話。">Vuejs とFirebase,Firestoreでサーバレスの麻雀成績管理(α版)AppをPWAで作ってみたお話。</a></h2>
-        <p class="excerpt">こんばんはkoheです。 元雀荘店員エンジニアとして、最新技術を駆使し、サーバレスで麻雀成績管理Appを作る責務があるため作りました。 背景 雀荘に行くたびに、成績を紙で管理している人を多く見かける。 かくいう自分もアプリを使うより、紙を使ったほうが楽という理由で毎回紙を使って成績管理をしてしまっていた。 なぜか？ それは、アプリの入力において 入力箇所をタップ 数値を入力 Enterをおす（キーボードを下げる） という作業を4人分行わなくてはならない。 であるのであれば、雀卓を前にして雀士はその工数をかけることはしないだろう。 そこで スライダーによる⇡の3ステップを1ステップに短縮 自動点数計算機能による4人目の点数入力の省略 自動成績同期機能による、点数の確認作業の簡略化 の3機能を&hellip;</p>
-        <div class="post-list__meta">
-            <time datetime="10 Aug 2018" class="post-list__meta--date date">10 Aug 2018</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="kohe">kohe</a>, <a href="#blog" title="Vue">Vue</a>, <a href="#blog" title="Firebase">Firebase</a>, <a href="#blog" title="PWA">PWA</a></span>
-        </div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/04/20/deploy-by-kubernetes.html" title="link to kubernets でNginx php-fpm コンテナをデプロイする">kubernets でNginx php-fpm コンテナをデプロイする</a></h2>
-        <p class="excerpt">皆様こんばんはこへです。 そろそろk8sを使って色々やっていきたい時期が来ましたので作成。 http://tech.innovation.co.jp/2018/02/26/make-book-manage-App.html 以前作った↑のアプリをk8sでデプロイしていきます。 構成 準備 GCRに Nginx と BusyboxとPHP-FPMのimageをぶち込む 今回は GKE を使用。 こ～んな感じで指定していく 1 お金を掛けたくないのでmicroインスタンスを使用 2 nodeのスケールは3~6に指定 3 なんとなくus-westリージョン Pod デザインパターン https://kubernetes.io/blog/2015/06/the-distributed-system&hellip;</p>
-        <div class="post-list__meta">
-            <time datetime="20 Apr 2018" class="post-list__meta--date date">20 Apr 2018</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="k8s">k8s</a>, <a href="#blog" title="Laravel">Laravel</a>, <a href="#blog" title="kohe">kohe</a>, <a href="#blog" title="Nginx">Nginx</a>, <a href="#blog" title="GKE">GKE</a></span>
-        </div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/02/26/make-book-manage-App.html" title="link to 本の管理アプリをVue.js,Laravel,Docker,GCP,gitlab,ElementUIを使って作った話。">本の管理アプリをVue.js,Laravel,Docker,GCP,gitlab,ElementUIを使って作った話。</a></h2>
-        <p class="excerpt">こへです。 そろそろ Vue.js Laravel Docker  GCP gitlab を使って社内の本の管理アプリを作りたい時期が来ましたので作成することにしました。 お金を1円もかけたくない と言う裏目標も持ちます。 完成物 Version管理 version管理に githubではなくgitlabを使います。 理由: private repository が無料 Container Registory が使える デザイン Vue.js用のライブラリElementを使います。 簡単にいい感じのデザインを作れる予感がするので選択。 http://element.eleme.io/#/en-US/component/installation 構成 ├── docker-compose.y&hellip;</p>
-        <div class="post-list__meta">
-            <time datetime="26 Feb 2018" class="post-list__meta--date date">26 Feb 2018</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="kohe">kohe</a>, <a href="#blog" title=" Vuejs"> Vuejs</a>, <a href="#blog" title="Laravel">Laravel</a>, <a href="#blog" title="Docker">Docker</a>, <a href="#blog" title="GCP">GCP</a>, <a href="#blog" title="gitlab">gitlab</a>, <a href="#blog" title="ElementUI">ElementUI</a></span>
-        </div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/01/05/carry-out-tutorial-on-Laravel-amp-Docker.html" title="link to Vue.js のチュートリアルをLaravel＆Docker環境で行う">Vue.js のチュートリアルをLaravel＆Docker環境で行う</a></h2>
-        <p class="excerpt">2018年になりました。 koheです。 年が明けたということで、そろそろ Vue.jsをLaravelとDocker環境上で使いたい 時期が来ましたので、作成。 環境構築 といっても、Vue.jsはLaravelの環境を作れば既に使えるようになっているため、Laravelの環境をつくれば良いだけ。 ※nginx使います docker-compose.yml version: '3' services:   nginx:     build:       context: ./nginx     depends_on:       - php     ports:       - 80:80     volumes:       - ./www:/var/www:cached   php:&hellip;</p>
-        <div class="post-list__meta">
-            <time datetime="05 Jan 2018" class="post-list__meta--date date">05 Jan 2018</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="kohe">kohe</a>, <a href="#blog" title="Vue.js">Vue.js</a>, <a href="#blog" title="Laravel">Laravel</a>, <a href="#blog" title="Docker">Docker</a></span>
-        </div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/11/13/Mautic-Docker-Kohe.html" title="link to Docker上でMauticを動かしたお話。">Docker上でMauticを動かしたお話。</a></h2>
-        <p class="excerpt">こへです。 そろそろ紅葉を見に行きたくなる季節になり Docker上でMauticを動かしたい気分になってきましたのでやってみました。 そして、いずれかはMauticのcontributorに・・・ Mauticとは？ オープンソースのマーティングオートメーションツールです。 https://www.ossnews.jp/oss_info/Mautic　　より引用 今回必要なツール ・Docker (↓のリンクからDLしておいてください。) https://store.docker.com/editions/community/docker-ce-desktop-mac 早速やっていこう！ Dockerfileをゴリゴリ書いていこうと思ったのですが、Docker HubにすでにMautic&hellip;</p>
-        <div class="post-list__meta">
-            <time datetime="13 Nov 2017" class="post-list__meta--date date">13 Nov 2017</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="Mautic">Mautic</a>, <a href="#blog" title="Docker">Docker</a>, <a href="#blog" title="kohe">kohe</a></span>
-        </div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2017/09/22/aa.html" title="link to Laradockを使ってDockerでLaravelの環境構築をし、Container Registryを使いGCPにイメージをおいたお話。">Laradockを使ってDockerでLaravelの環境構築をし、Container Registryを使いGCPにイメージをおいたお話。</a></h2>
-        <p class="excerpt">皆様こんばんは。こへです。 そろそろ寒くなって来ており、 Laradockを使ってDockerでLaravelの環境構築をし、Google Cloud Platform(以下GCP)にimageをおきたい 時期が来ましたので、やってみました。 ※まずDockerが入ってない人は https://docs.docker.com/docker-for-mac/install/#download-docker-for-mac からdownload。私はStable の方をdownloadしました。 Laradock編 巷の噂でLaravelの環境構築はLaradockを使うと楽と言うことを聞いた気がするので使ってみます。 ※あとDockerを使いたかったってのもあります。 適当なディレクトリを作&hellip;</p>
-        <div class="post-list__meta">
-            <time datetime="22 Sep 2017" class="post-list__meta--date date">22 Sep 2017</time> &#8226;
-            <span class="post-list__meta--tags tags"><a href="#blog" title="kohe">kohe</a>, <a href="#blog" title="Docker">Docker</a>, <a href="#blog" title="Laradock">Laradock</a>, <a href="#blog" title="GCP">GCP</a>, <a href="#blog" title="Container Registry">Container Registry</a></span>
+            <time datetime="24 Nov 2016" class="post-list__meta--date date">24 Nov 2016</time> &#8226;
+            <span class="post-list__meta--tags tags"><a href="#blog" title="GooleAppScript">GooleAppScript</a>, <a href="#blog" title="GAS">GAS</a>, <a href="#blog" title="gas">gas</a>, <a href="#blog" title=" kohe"> kohe</a></span>
         </div>
         <hr class="post-list__divider" />
       </li>
@@ -308,8 +245,7 @@ var _trackingid = 'LFT-10003-1';
     <hr class="post-list__divider " />
 
 <nav class="pagination" role="navigation">
-    <span class="pagination__page-number">Page 1 of 2</span>
-        <a class="older-posts pagination__older btn btn-small btn-tertiary" href="http://tech.innovation.co.jp/tag/kohe/page/2/#blog">Older Posts &rarr;</a>
+    <span class="pagination__page-number">Page 1 of 1</span>
 </nav>
 
 
