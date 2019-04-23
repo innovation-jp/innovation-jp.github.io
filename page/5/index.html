@@ -221,6 +221,12 @@ var _trackingid = 'LFT-11927-1';
 
     <ol class="post-list">
       <li>
+        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/10/21/O-O-P.html" title="link to リクルートコミュニケーションズのコーディング試験の過去問を題材にOOPの練習してみた">リクルートコミュニケーションズのコーディング試験の過去問を題材にOOPの練習してみた</a></h2>
+        <p class="excerpt">はじめに どうも、bigenです。 10月に入って、僕もとうとう入社後2年が経過しました。やっと3年目です。 最近めっきりコーディングをする機会が減ってしまったので、練習もかねてリクルートコミュニケーションズさんのコーディング試験の過去問を題材にプログラミングしてみました。 問題はこちら https://www.rco.recruit.co.jp/career/engineer/entry/ 問題文を引用すると、 A,B,Cの3人が1～5の5枚のカードを使ってインディアンポーカーをします。 3人は、ランダムに1枚のカードを引いて額にかざします。相手のカードは見えますが、自分のカードは見えません。 この状態で、A-&gt;B-&gt;Cの順番に、自分が1番大きい（MAX）、自分は2番目に大き&hellip;</p>
+        <div class="post-list__meta"><time datetime="21 Oct 2018" class="post-list__meta--date date">21 Oct 2018</time> &#8226; <span class="post-list__meta--tags tags"></span></div>
+        <hr class="post-list__divider" />
+      </li>
+      <li>
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/10/15/Firebase-Firestore.html" title="link to Firebaseの匿名認証とFirestoreのリアルタイム更新で遊んでみたお話">Firebaseの匿名認証とFirestoreのリアルタイム更新で遊んでみたお話</a></h2>
         <p class="excerpt">涼しくなってきましたね。 koheです。 今回はFirebaseの 匿名認証　と  リアルタイムデータ更新 機能をVueで遊んで見ました。 匿名認証 GoogleやTwitterの認証を使わずに、匿名の認証をし、UUIDを発行したい！！ まずfirebaseのコンソール画面から匿名ログインを有効にします。  &lt;button  label="Use without login"  @click="signupByAnonymous" color="primary" /&gt; methods :{     checkLogin () {       firebase.auth().onAuthStateChanged((user) =&gt; {         if (user) {&hellip;</p>
         <div class="post-list__meta"><time datetime="15 Oct 2018" class="post-list__meta--date date">15 Oct 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/kohe">kohe</a>, <a href="http://tech.innovation.co.jp/tag/Firebase">Firebase</a>, <a href="http://tech.innovation.co.jp/tag/Firestroe">Firestroe</a></span></div>
@@ -272,12 +278,6 @@ var _trackingid = 'LFT-11927-1';
         <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/09/16/Vuex.html" title="link to Vuexを学ぶ">Vuexを学ぶ</a></h2>
         <p class="excerpt">こんにちは。「おしゃべりクソメガネ」こと大竹です。 現在List Finderの開発をVue.jsを使って行っているのですが、最近Vuexという言葉をよく耳にします。 「ネストの深いコンポーネント間でのデータの受け渡しをいい感じにしてくれるもの」という認識はなんとなく持っていた(事実そうなのかはわからないが)のですが、あまり詳しく理解していなかったので、今後List Finderで活用できそうかも踏まえてVuexについて調べてみます。 Vuexとは 「Vuex」とは、データとその状態に関する全てを一元管理する「状態管理」のための拡張ライブラリです。 Vueのコンポーネント間での値の受け渡しは、親→子であればprops(props down)を、子→親であれば$emit(event up)を&hellip;</p>
         <div class="post-list__meta"><time datetime="16 Sep 2018" class="post-list__meta--date date">16 Sep 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Masashi-Otake">Masashi Otake</a>, <a href="http://tech.innovation.co.jp/tag/Vuejs"> Vue.js</a>, <a href="http://tech.innovation.co.jp/tag/Vuex"> Vuex</a></span></div>
-        <hr class="post-list__divider" />
-      </li>
-      <li>
-        <h2 class="post-list__post-title post-title"><a href="http://tech.innovation.co.jp/2018/09/16/Introduction-of-Computational-Complexity.html" title="link to Vue.jsを使って量子コンピュータの並列演算を再現してみた ~その2~">Vue.jsを使って量子コンピュータの並列演算を再現してみた ~その2~</a></h2>
-        <p class="excerpt">はじめに こんにちは、Yuです。 前回の続きで、量子コンピュータのお話です。 前回はとりあえず形になるものを作って終わりましたが、せっかくなので意味のある計算をしてみたいと思い、機能を追加しました。 詳しい説明は省略しますので、興味のある方はググってください。 やりたかったこと 状態を複素数に拡張 フーリエ変換 （正確には「量子離散的フーリエ変換」というらしいです） 作ったもの 実際にできたものがこちらになります。 レイアウトは特に変わっていません。手打ちで回路を入力するのが面倒になってきたので、フーリエ変換の回路を追加するボタンを実装しました。 書いたコード GitHubにあげていますので、興味のある方はどうぞ。 追加したゲートは以下の2つです。 制御回転ゲート 制御ビット側に「U」また&hellip;</p>
-        <div class="post-list__meta"><time datetime="16 Sep 2018" class="post-list__meta--date date">16 Sep 2018</time> &#8226; <span class="post-list__meta--tags tags">on <a href="http://tech.innovation.co.jp/tag/Java-Script">JavaScript</a>, <a href="http://tech.innovation.co.jp/tag/Vuejs"> Vue.js</a>, <a href="http://tech.innovation.co.jp/tag/Yu"> Yu</a></span></div>
         <hr class="post-list__divider" />
       </li>
     </ol>
