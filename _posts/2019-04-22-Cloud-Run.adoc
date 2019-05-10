@@ -55,7 +55,6 @@ image::/images/kohe/cloud_run04.png[]
 
 
 
-
 # Cloud Build
 
 Buildの成功を確認することができます。
@@ -88,7 +87,7 @@ image::/images/kohe/cloud_run09.png[]
 
 image::/images/kohe/cloud_run10.png[]
 
-表示されたURLにアクセスしてみると…
+表示されたURLにアクセスしてみると…。
 
 `Hello Kooooohe`　が表示された！！
 
